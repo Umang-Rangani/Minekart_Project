@@ -1,0 +1,24 @@
+// login ma
+
+🛒 Add to Cart વખતે
+
+જે component માં તમારું Add to Cart button છે, ત્યાં:
+
+const { user, setShowLogin } = useUser()
+
+અને:
+
+const handleAddToCart = () => {
+  if (!user) {
+    setShowLogin(true)
+    return
+  }
+
+  // અહીં actual add to cart logic
+}
+
+Button:
+
+<button onClick={handleAddToCart}>
+  Add to Cart
+</button>

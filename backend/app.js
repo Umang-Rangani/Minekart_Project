@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users')
 var productRouter = require('./routes/product')
 var cartRouter = require('./routes/cart')
 var orderRouter = require('./routes/order')
+var uploadRouter = require('./routes/upload')
 
 dotenv.config()
 var app = express()
@@ -24,7 +25,7 @@ app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 app.use(
   cors({
@@ -38,6 +39,8 @@ app.use('/users', usersRouter)
 app.use('/product', productRouter)
 app.use('/cart', cartRouter)
 app.use('/order', orderRouter)
+app.use('/uploads', uploadRouter)
+
 
 mongoose
   .connect(process.env.MONGO_URI)
