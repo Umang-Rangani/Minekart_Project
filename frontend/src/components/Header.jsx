@@ -1,30 +1,42 @@
 import React from 'react'
-import { Search, MapPin, ChevronDown, ShoppingCart, UserCircle, Zap, Store, Shirt, Smartphone, Laptop, Sparkles, Home, Tv, Baby, Utensils, Car, Dumbbell, Armchair, BookOpen, Bike, LogIn } from 'lucide-react'
+import { Search, MapPin, ChevronDown, ShoppingCart, UserCircle, Zap, Store, Shirt, Smartphone, Laptop, Sparkles, Home, Tv, Baby, Utensils, Car, Dumbbell, Armchair, BookOpen, Bike, LogIn, LogInIcon } from 'lucide-react'
 import { User, UserPlus, Package, LogOut } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useUser } from '../context/userProvider'
-
-const categories = [
-  { name: 'For You', icon: Zap },
-  { name: 'Fashion', icon: Shirt },
-  { name: 'Mobiles', icon: Smartphone },
-  { name: 'Electronics', icon: Laptop },
-  { name: 'Beauty', icon: Sparkles },
-  { name: 'Home', icon: Home },
-  { name: 'Appliances', icon: Tv },
-  { name: 'Toys', icon: Baby },
-  { name: 'Food', icon: Utensils },
-  { name: 'Auto', icon: Car },
-  { name: 'Sports', icon: Dumbbell },
-  { name: 'Furniture', icon: Armchair },
-  { name: 'Books', icon: BookOpen },
-  { name: '2 Wheelers', icon: Bike },
-]
+import { axiosInstance } from '../config/axiosConfig'
+import { useEffect } from 'react'
+import { iconMap } from '../data/iconMap'
 
 export default function Header() {
+  const [categories, setCategories] = useState([])
+
+  // category theme mate
+  const [activeCategory, setActiveCategory] = useState(null)
+
+  // account button dropdown
   const [accountOpen, setAccountOpen] = useState(false)
-  const { logout, user } = useUser()
+  const { logout, user, setShowLogin } = useUser()
+
+  const getCategories = async () => {
+    try {
+      // setLoading(true)
+
+      const res = await axiosInstance.get('/category')
+      setCategories(res.data)
+      //   console.log(res.data.data);
+    } catch (error) {
+      console.log('Get Categories Error:', error.response?.data || error.message)
+    } finally {
+      // setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getCategories()
+  }, [])
+
+  console.log('categories', categories)
 
   return (
     <header className="w-full border-b border-[#E2E8F0] bg-white">
@@ -48,24 +60,28 @@ export default function Header() {
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-2 text-sm">
-          <MapPin size={19} className="fill-[#1D4ED8] text-[#1D4ED8]" />
+        {user ? (
+          <div className="flex items-center gap-2 text-sm">
+            <MapPin size={19} className="fill-[#1D4ED8] text-[#1D4ED8]" />
 
-          <span className="font-semibold text-[#172033]">Delivery Location at</span>
+            <span className="font-semibold text-[#172033]">Delivery Location at</span>
 
-          <button className="font-semibold text-[#1D4ED8] transition hover:text-[#F59E0B]">
-            {user.address}, {user.city},{user.pincode}
-          </button>
+            <button className="font-semibold text-[#1D4ED8] transition hover:text-[#F59E0B]">
+              {user.address}, {user.city},{user.pincode}
+            </button>
 
-          {/* <span className="text-lg text-[#94A3B8]">›</span> */}
+            {/* <span className="text-lg text-[#94A3B8]">›</span> */}
 
-          {/* Coin */}
-          <div className="ml-6 flex items-center gap-1 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] px-3 py-2 text-[#B45309]">
-            <Zap size={17} className="fill-[#F59E0B] text-[#F59E0B]" />
+            {/* Coin */}
+            <div className="ml-6 flex items-center gap-1 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] px-3 py-2 text-[#B45309]">
+              <Zap size={17} className="fill-[#F59E0B] text-[#F59E0B]" />
 
-            <span className="font-semibold">0</span>
+              <span className="font-semibold">0</span>
+            </div>
           </div>
-        </div>
+        ) : (
+          ''
+        )}
       </div>
 
       {/* ================= SEARCH + ACCOUNT ================= */}
@@ -81,11 +97,11 @@ export default function Header() {
           />
         </div>
 
-        {/* Account */} 
+        {/* Account */}
         <div className="relative" onMouseEnter={() => setAccountOpen(true)} onMouseLeave={() => setAccountOpen(false)}>
           {/* Account */}
           <button className="flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
-            {!user.avatar ? (
+            {!user?.avatar ? (
               <UserCircle size={30} />
             ) : (
               <div className="size-10 shrink-0 overflow-hidden rounded-full bg-[#dfe5e7]">
@@ -108,10 +124,10 @@ export default function Header() {
                 </button>
 
                 {!user && (
-                  <Link to={'/register'} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
-                    <UserPlus size={19} />
-                    <span>Register</span>
-                  </Link>
+                  <button onClick={() => setShowLogin(true)} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
+                    <LogInIcon size={19} />
+                    <span>Login</span>
+                  </button>
                 )}
 
                 <button className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
@@ -149,20 +165,37 @@ export default function Header() {
         </button>
       </div>
 
-      {/* ================= CATEGORY BAR ================= */}
-      <div className="flex items-center justify-between border-t border-[#E2E8F0] bg-[#F8FAFC] px-7">
-        {categories.map((category, index) => {
-          const Icon = category.icon
-          const active = index === 0
+      {/* category bar */}
+      <div className="flex items-center  border-t border-[#E2E8F0] bg-[#F8FAFC] px-7">
+        {/* For You */}
+        <NavLink
+          to="/"
+          onClick={() => setActiveCategory(null)}
+          className={`group relative flex min-w-18 flex-col items-center gap-1 px-2 py-4 text-sm transition ${activeCategory === null ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'}`}
+        >
+          <Zap size={27} strokeWidth={1.8} className={`transition ${activeCategory === null ? 'text-[#1D4ED8]' : 'text-[#64748B] group-hover:text-[#1D4ED8]'}`} />
+
+          <span className="whitespace-nowrap">For You</span>
+
+          {activeCategory === null && <span className="absolute bottom-0 left-2 right-2 h-1 rounded-t-full bg-[#1D4ED8]" />}
+        </NavLink>
+
+        {/* map category */}
+        {categories?.data?.map((category) => {
+          const Icon = iconMap[category.categoryLucideIcons]
+          const active = activeCategory === category._id
 
           return (
-            <button key={category.name} className={` group relative flex min-w-18 flex-col items-center gap-1 px-2 py-4 text-sm transition ${active ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'} `}>
-              <Icon size={27} strokeWidth={1.8} className={` transition ${active ? 'text-[#1D4ED8]' : 'text-[#64748B] group-hover:text-[#1D4ED8]'} `} />
+            <button
+              key={category._id}
+              onClick={() => setActiveCategory(category._id)}
+              className={`group relative flex min-w-18 flex-col items-center gap-1 px-2 py-4 text-sm transition ${active ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'}`}
+            >
+              {Icon && <Icon size={27} strokeWidth={1.8} className={`transition ${active ? 'text-[#1D4ED8]' : 'text-[#64748B] group-hover:text-[#1D4ED8]'}`} />}
 
-              <span className="whitespace-nowrap">{category.name}</span>
+              <span className="whitespace-nowrap">{category.categoryName}</span>
 
-              {/* Active underline */}
-              {active && <span className=" absolute bottom-0 left-2 right-2 h-1 rounded-t-full bg-[#1D4ED8] " />}
+              {active && <span className="absolute bottom-0 left-2 right-2 h-1 rounded-t-full bg-[#1D4ED8]" />}
             </button>
           )
         })}

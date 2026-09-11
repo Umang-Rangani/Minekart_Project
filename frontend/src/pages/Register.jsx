@@ -1,14 +1,19 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
+import { Camera, Mail, Lock, User, Phone, MapPin, MapPinned, Hash, X, UserPlus, ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
-import { Camera, User, Mail, Lock, Phone, RotateCcw, UserPlus, Image, MapPinned, Building2, MapPin } from 'lucide-react'
-import { useRef } from 'react'
 import { uploadFile } from '../utils/uploadFile'
 import { useUser } from '../context/userProvider'
 
 export default function Register() {
+  const navigate = useNavigate()
+  const { setShowLogin } = useUser()
+  const fileInputRef = useRef(null)
+
+  const [imageFile, setImageFile] = useState(null)
+  const [preview, setPreview] = useState('')
+
   const [signUp, setSignUp] = useState({
-    avatar: '',
     name: '',
     email: '',
     password: '',
@@ -22,18 +27,8 @@ export default function Register() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  const navigate = useNavigate()
-  const { setShowLogin } = useUser()
-
-  // upload file mate
-  const fileInputRef = useRef(null)
-  const [imageFile, setImageFile] = useState(null)
-
-  // img ne select krta create ma btava mte
-  const [preview, setPreview] = useState(null)
-
-  // ! text input mate
-  const changeHandle = (e) => {
+  // ! Input Change
+  const handleChange = (e) => {
     const { name, value } = e.target
 
     setSignUp((prev) => ({
@@ -42,281 +37,328 @@ export default function Register() {
     }))
 
     setError('')
-    setSuccess('')
   }
 
-  // ! file input mate
-  const handleImage = (e) => {
+  // ! Image Select
+  const handleImageChange = (e) => {
     const file = e.target.files?.[0]
 
     if (!file) return
 
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image')
+      return
+    }
+
     setImageFile(file)
-
-    // purpose  preview img btava mte
-    const imageUrl = URL.createObjectURL(file)
-    setPreview(imageUrl)
-
-    // console.log('imageUrl', imageUrl)
-    // console.log('file', file)
+    setPreview(URL.createObjectURL(file))
+    setError('')
   }
 
-  // ! submit handle
+  // ! Clear Form
+  const clearHandle = () => {
+    setSignUp({
+      name: '',
+      email: '',
+      password: '',
+      phone: '',
+      address: '',
+      city: '',
+      pincode: '',
+    })
+
+    setImageFile(null)
+    setPreview('')
+    setError('')
+    setSuccess('')
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  // ! Submit
   const submitHandle = async (e) => {
     e.preventDefault()
 
+    setError('')
+    setSuccess('')
+
+    if (!signUp.name || !signUp.email || !signUp.password) {
+      setError('Name, email and password are required')
+      return
+    }
+
     try {
       setLoading(true)
-      setError('')
-      setSuccess('')
 
+      // ! Upload Avatar
       let avatarPath = ''
 
-      // AVATAR UPLOAD
       if (imageFile) {
         try {
           avatarPath = await uploadFile(imageFile.name, imageFile, 'Avatar')
-        } catch (error) {
-          console.log('File Upload Error:', error)
+        } catch (uploadError) {
+          console.log('Upload Error:', uploadError.response?.data || uploadError.message)
+
           setError('Profile photo upload failed')
           return
         }
       }
 
-      // REGISTER DATA
+      // ! Register Data
       const registerData = {
         ...signUp,
         avatar: avatarPath,
       }
 
-      // console.log('Register Data:', registerData)
-
-      // REGISTER API
       const res = await axiosInstance.post('/users/register', registerData)
 
-      // console.log('Signup Response:', res.data)
-
       if (res.data.success) {
-        setSuccess('Account created successfully!')
+        setSuccess('Account created successfully')
 
-        // Clear form
-        setSignUp({
-          avatar: '',
-          name: '',
-          email: '',
-          password: '',
-          phone: '',
-          address: '',
-          city: '',
-          pincode: '',
-        })
-
-        setImageFile(null)
-        setPreview(null)
-
-        // Login page
         setTimeout(() => {
-          navigate('/')
           setShowLogin(true)
         }, 1000)
       }
     } catch (error) {
-      console.log('Signup Error:', error)
+      console.log('Register Error:', error.response?.data || error.message)
 
-      setError(error.response?.data?.message || 'Signup failed. Please try again.')
+      setError(error.response?.data?.message || 'Registration failed. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] px-6 py-10">
-      <div className="mx-auto max-w-4xl">
-        <div className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-xl">
-          {/* header */}
-          <div className="border-b border-[#E2E8F0] bg-[#1D4ED8] px-8 py-5">
-            <h2 className="text-2xl font-bold text-white">Create Account</h2>
+    <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] px-4 py-4">
+      {/* ! Register Dialog */}
+      <div className="flex max-h-[calc(100vh-32px)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-xl">
+        {/* ! Header */}
+        <div className="flex shrink-0 items-center justify-between border-b border-blue-700 bg-[#1D4ED8] px-6 py-4 sm:px-8">
+          <div>
+            <h1 className="text-xl font-semibold text-white sm:text-2xl">Create Account</h1>
 
-            <p className="mt-1 text-sm text-blue-100">Create your MineKart account</p>
+            <p className="mt-1 text-sm text-blue-100">Join MineKart and start shopping</p>
           </div>
 
-          {/* two side */}
-          <form onSubmit={submitHandle} className="grid grid-cols-1 md:grid-cols-[280px_1fr]">
-            {/* left side */}
-            <div className="flex flex-col items-center justify-center border-b border-[#E2E8F0] bg-[#F8FAFC] px-8 py-10 md:border-b-0 md:border-r">
-              {/* Avatar */}
+          <button type="button" onClick={() => navigate('/')} className="flex size-9 items-center justify-center rounded-full text-white transition hover:bg-white/15">
+            <X size={21} />
+          </button>
+        </div>
 
-              <div className="relative">
-                <div className="flex size-60 items-center justify-center overflow-hidden rounded-full border-4 border-black/30 border-x-0 bg-[#EFF6FF] shadow-lg">
-                  {preview ? <img src={preview} onClick={() => fileInputRef.current?.click()} alt="preview" className=" rounded-lg object-contain" /> : <User size={80} strokeWidth={1.5} className="text-[#1D4ED8]" />}
-                </div>
+        {/* ! Form */}
+        <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[280px_1fr]">
+          {/* ! Left Avatar Section */}
+          <div className="flex shrink-0 flex-col items-center justify-center border-b border-[#E2E8F0] bg-[#F8FAFC] px-8 py-6 md:border-b-0 md:border-r">
+            <div className="mb-5 text-center">
+              <h2 className="text-lg font-semibold text-[#172033]">Profile Photo</h2>
 
-                {/* file input */}
-                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImage} className="hidden" />
-
-                {/* Camera */}
-                {!preview && (
-                  <button onClick={() => fileInputRef.current?.click()} type="button" className="absolute bottom-1 right-7 flex h-11 w-11 items-center justify-center rounded-full bg-[#1D4ED8] text-white shadow-lg transition hover:bg-[#1E40AF]">
-                    <Image size={20} />
-                  </button>
-                )}
-              </div>
-
-              <h3 className="mt-5 text-lg font-semibold text-[#172033]">Profile Photo</h3>
-
-              <p className="mt-1 text-center text-sm text-[#64748B]">Upload your profile picture</p>
-
-              <p className="mt-2 text-xs text-[#94A3B8]">JPG, PNG up to 2MB</p>
+              <p className="mt-1 text-sm text-[#64748B]">Add a profile picture</p>
             </div>
 
-            {/* ================= RIGHT SIDE ================= */}
-            <div className="p-8">
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                {/* Name */}
+            {/* ! Avatar */}
+            <div className="relative">
+              <div className="flex size-60 items-center justify-center overflow-hidden rounded-full border-4 border-black/30 border-x-0 bg-[#EFF6FF] shadow-lg">
+                {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={100} strokeWidth={1.3} className="text-[#1D4ED8]" />}
+              </div>
+
+              {/* ! Camera Button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute bottom-2 right-2 flex size-12 items-center justify-center rounded-full border-4 border-white bg-[#1D4ED8] text-white shadow-lg transition hover:bg-blue-700"
+              >
+                <Camera size={21} />
+              </button>
+
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+            </div>
+
+            <p className="mt-5 text-center text-xs text-[#64748B]">JPG, PNG or WEBP</p>
+          </div>
+
+          {/* ! Right Form Area */}
+          <div className="min-h-0 overflow-y-auto p-5 sm:p-7">
+            {/* ! Form Heading */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2">
+                <div className="flex size-9 items-center justify-center rounded-lg bg-[#DBEAFE]">
+                  <UserPlus size={19} className="text-[#1D4ED8]" />
+                </div>
+
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-[#172033]">Name</label>
+                  <h2 className="font-semibold text-[#172033]">Personal Information</h2>
 
-                  <div className="relative">
-                    <User size={19} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                    <input
-                      onChange={changeHandle}
-                      name="name"
-                      type="text"
-                      placeholder="Enter your name"
-                      className="h-12 w-full rounded-lg border border-[#CBD5E1] bg-white pl-11 pr-4 text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
+                  <p className="text-xs text-[#64748B]">Enter your details below</p>
                 </div>
+              </div>
+            </div>
 
-                {/* Email */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-[#172033]">Email</label>
+            {/* ! Error */}
+            {error && <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
 
-                  <div className="relative">
-                    <Mail size={19} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]" />
+            {/* ! Success */}
+            {success && <div className="mb-5 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-600">{success}</div>}
 
-                    <input
-                      onChange={changeHandle}
-                      name="email"
-                      type="email"
-                      placeholder="Enter your email"
-                      className="h-12 w-full rounded-lg border border-[#CBD5E1] bg-white pl-11 pr-4 text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-                </div>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {/* ! Name */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-[#172033]">Full Name</label>
 
-                {/* Password */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-[#172033]">Password</label>
+                <div className="relative">
+                  <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
 
-                  <div className="relative">
-                    <Lock size={19} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                    <input
-                      onChange={changeHandle}
-                      name="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      className="h-12 w-full rounded-lg border border-[#CBD5E1] bg-white pl-11 pr-4 text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-[#172033]">Phone</label>
-
-                  <div className="relative">
-                    <Phone size={19} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                    <input
-                      onChange={changeHandle}
-                      name="phone"
-                      type="tel"
-                      placeholder="Enter phone number"
-                      className="h-12 w-full rounded-lg border border-[#CBD5E1] bg-white pl-11 pr-4 text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-                </div>
-
-                {/* Address */}
-                <div className="sm:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-[#172033]">Address</label>
-
-                  <div className="relative">
-                    <MapPin size={19} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                    <input
-                      onChange={changeHandle}
-                      name="address"
-                      type="text"
-                      placeholder="Enter your address"
-                      className="h-12 w-full rounded-lg border border-[#CBD5E1] bg-white pl-11 pr-4 text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-                </div>
-
-                {/* City */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-[#172033]">City</label>
-
-                  <div className="relative">
-                    <Building2 size={19} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                    <input
-                      onChange={changeHandle}
-                      name="city"
-                      type="text"
-                      placeholder="Enter your city"
-                      className="h-12 w-full rounded-lg border border-[#CBD5E1] bg-white pl-11 pr-4 text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-                </div>
-
-                {/* Pincode */}
-                <div className="">
-                  <label className="mb-2 block text-sm font-medium text-[#172033]">Pincode</label>
-
-                  <div className="relative">
-                    <MapPinned size={19} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                    <input
-                      onChange={changeHandle}
-                      name="pincode"
-                      type="text"
-                      placeholder="Enter your pincode"
-                      maxLength={6}
-                      className="h-12 w-full rounded-lg border border-[#CBD5E1] bg-white pl-11 pr-4 text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={signUp.name}
+                    onChange={handleChange}
+                    placeholder="Enter your name"
+                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                  />
                 </div>
               </div>
 
-              {/* ================= BUTTONS ================= */}
-              <div className="mt-8 flex justify-end gap-3 border-t border-[#E2E8F0] pt-6">
-                <button type="button" className="flex items-center gap-2 rounded-lg border border-[#CBD5E1] px-6 py-3 font-semibold text-[#475569] transition hover:bg-[#F8FAFC]">
-                  <RotateCcw size={18} />
-                  Clear
-                </button>
+              {/* ! Email */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-[#172033]">Email Address</label>
 
-                {/* <button type="submit" className="flex items-center gap-2 rounded-lg bg-[#1D4ED8] px-7 py-3 font-semibold text-white shadow-md shadow-blue-100 transition hover:bg-[#1E40AF] active:scale-[0.98]">
-                  <UserPlus size={18} />
-                  Create Account
-                </button> */}
+                <div className="relative">
+                  <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
+
+                  <input
+                    type="email"
+                    name="email"
+                    value={signUp.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                  />
+                </div>
+              </div>
+
+              {/* ! Password */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-[#172033]">Password</label>
+
+                <div className="relative">
+                  <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
+
+                  <input
+                    type="password"
+                    name="password"
+                    value={signUp.password}
+                    onChange={handleChange}
+                    placeholder="Create password"
+                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                  />
+                </div>
+              </div>
+
+              {/* ! Phone */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-[#172033]">Phone Number</label>
+
+                <div className="relative">
+                  <Phone size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={signUp.phone}
+                    onChange={handleChange}
+                    placeholder="Enter phone number"
+                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                  />
+                </div>
+              </div>
+
+              {/* ! Address */}
+              <div className="sm:col-span-2">
+                <label className="mb-2 block text-sm font-medium text-[#172033]">Address</label>
+
+                <div className="relative">
+                  <MapPin size={18} className="absolute left-3.5 top-3.5 text-[#64748B]" />
+
+                  <textarea
+                    name="address"
+                    value={signUp.address}
+                    onChange={handleChange}
+                    placeholder="Enter your full address"
+                    rows={2}
+                    className="w-full resize-none rounded-lg border border-[#E2E8F0] bg-white py-3 pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                  />
+                </div>
+              </div>
+
+              {/* ! City */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-[#172033]">City</label>
+
+                <div className="relative">
+                  <MapPinned size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
+
+                  <input
+                    type="text"
+                    name="city"
+                    value={signUp.city}
+                    onChange={handleChange}
+                    placeholder="Enter city"
+                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                  />
+                </div>
+              </div>
+
+              {/* ! Pincode */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-[#172033]">Pincode</label>
+
+                <div className="relative">
+                  <Hash size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
+
+                  <input
+                    type="text"
+                    name="pincode"
+                    value={signUp.pincode}
+                    onChange={handleChange}
+                    placeholder="Enter pincode"
+                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* ! Buttons */}
+            <div className="mt-7 flex flex-col-reverse gap-3 border-t border-[#E2E8F0] pt-5 sm:flex-row sm:justify-between">
+              <button
+                type="button"
+                onClick={clearHandle}
+                className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-5 text-sm font-medium text-[#64748B] transition hover:border-[#CBD5E1] hover:bg-[#F8FAFC] hover:text-[#172033]"
+              >
+                <X size={17} />
+                Clear
+              </button>
+
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button type="button" onClick={() => navigate('/')} className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-5 text-sm font-medium text-[#172033] transition hover:bg-[#F8FAFC]">
+                  <ArrowLeft size={17} />
+                  Back
+                </button>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center gap-2 rounded-lg bg-[#1D4ED8] px-7 py-3 font-semibold text-white shadow-md shadow-blue-100 transition hover:bg-[#1E40AF] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex h-11 items-center justify-center gap-2 rounded-lg bg-[#1D4ED8] px-7 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <UserPlus size={18} />
+                  <UserPlus size={17} />
+
                   {loading ? 'Creating...' : 'Create Account'}
                 </button>
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   )

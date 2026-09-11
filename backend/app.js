@@ -8,11 +8,13 @@ const mongoose = require('mongoose')
 var dotenv = require('dotenv')
 
 var indexRouter = require('./routes/index')
+var uploadRouter = require('./routes/upload')
 var usersRouter = require('./routes/users')
+var categoryRouter = require('./routes/category')
+
 var productRouter = require('./routes/product')
 var cartRouter = require('./routes/cart')
 var orderRouter = require('./routes/order')
-var uploadRouter = require('./routes/upload')
 
 dotenv.config()
 var app = express()
@@ -36,6 +38,8 @@ app.use(
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
+app.use('/category', categoryRouter)
+
 app.use('/product', productRouter)
 app.use('/cart', cartRouter)
 app.use('/order', orderRouter)

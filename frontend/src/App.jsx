@@ -11,6 +11,7 @@ import AdminProducts from './admin/AdminProducts'
 import AdminOrders from './admin/AdminOrders'
 import { useUser } from './context/userProvider'
 import { useEffect } from 'react'
+import AdminCategory from './admin/AdminCategory'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -50,6 +51,7 @@ export default function App() {
           <Route index element={<AdminDashboard />} />
 
           <Route path="products" element={<AdminProducts />} />
+          <Route path="category" element={<AdminCategory />} />
 
           <Route path="orders" element={<AdminOrders />} />
         </Route>
