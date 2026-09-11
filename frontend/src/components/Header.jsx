@@ -1,62 +1,27 @@
-import React from 'react'
-import { Search, MapPin, ChevronDown, ShoppingCart, UserCircle, Zap, Store, Shirt, Smartphone, Laptop, Sparkles, Home, Tv, Baby, Utensils, Car, Dumbbell, Armchair, BookOpen, Bike, LogIn, LogInIcon } from 'lucide-react'
-import { User, UserPlus, Package, LogOut } from 'lucide-react'
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Search, MapPin, ChevronDown, ShoppingCart, UserCircle, Zap, Store, Bike, LogInIcon } from 'lucide-react'
+import { User, Package, LogOut } from 'lucide-react'
 import { useUser } from '../context/userProvider'
-import { axiosInstance } from '../config/axiosConfig'
-import { useEffect } from 'react'
-import { iconMap } from '../data/iconMap'
+// import CategoryList from '../user/CategoryList'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Header() {
-  const [categories, setCategories] = useState([])
-
-  // category theme mate
-  const [activeCategory, setActiveCategory] = useState(null)
-
+  const { logout, user, setShowLogin } = useUser()
   // account button dropdown
   const [accountOpen, setAccountOpen] = useState(false)
-  const { logout, user, setShowLogin } = useUser()
-
-  const getCategories = async () => {
-    try {
-      // setLoading(true)
-
-      const res = await axiosInstance.get('/category')
-      setCategories(res.data)
-      //   console.log(res.data.data);
-    } catch (error) {
-      console.log('Get Categories Error:', error.response?.data || error.message)
-    } finally {
-      // setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    getCategories()
-  }, [])
-
-  console.log('categories', categories)
 
   return (
     <header className="w-full border-b border-[#E2E8F0] bg-white">
-      {/* ================= TOP HEADER ================= */}
+      {/*  TOP HEADER  */}
       <div className="flex items-center justify-between px-6 py-4">
         {/* Left - Brand */}
         <div className="flex items-center gap-4">
           {/* Brand */}
-          <div className="flex h-14 w-40 items-center justify-center gap-2 rounded-xl bg-[#1D4ED8] text-white shadow-md shadow-blue-100">
+          <Link to={'/'} className="flex h-14 w-40 items-center justify-center gap-2 rounded-xl bg-[#1D4ED8] text-white shadow-md shadow-blue-100">
             <Store size={25} strokeWidth={2} />
 
             <span className="text-lg font-bold tracking-wide">MineKart</span>
-          </div>
-
-          {/* Travel */}
-          <div className="flex h-14 w-36 items-center justify-center gap-2 rounded-xl border border-[#DBEAFE] bg-[#EFF6FF] text-[#1D4ED8]">
-            <Bike size={25} />
-
-            <span className="font-semibold">Travel</span>
-          </div>
+          </Link>
         </div>
 
         {/* Location */}
@@ -84,7 +49,7 @@ export default function Header() {
         )}
       </div>
 
-      {/* ================= SEARCH + ACCOUNT ================= */}
+      {/*  SEARCH + ACCOUNT  */}
       <div className="flex items-center gap-5 px-7 pb-3">
         {/* Search */}
         <div className="relative flex-1">
@@ -148,11 +113,11 @@ export default function Header() {
         </div>
 
         {/* More */}
-        <button className="flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
+        {/* <button className="flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
           <span className="text-[16px]">More</span>
 
           <ChevronDown size={17} />
-        </button>
+        </button> */}
 
         {/* Cart */}
         <button className="relative flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
@@ -163,42 +128,6 @@ export default function Header() {
           {/* Cart Count */}
           <span className=" absolute -right-1 -top-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#F59E0B] px-1 text-xs font-bold text-white shadow-sm ">1</span>
         </button>
-      </div>
-
-      {/* category bar */}
-      <div className="flex items-center  border-t border-[#E2E8F0] bg-[#F8FAFC] px-7">
-        {/* For You */}
-        <NavLink
-          to="/"
-          onClick={() => setActiveCategory(null)}
-          className={`group relative flex min-w-18 flex-col items-center gap-1 px-2 py-4 text-sm transition ${activeCategory === null ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'}`}
-        >
-          <Zap size={27} strokeWidth={1.8} className={`transition ${activeCategory === null ? 'text-[#1D4ED8]' : 'text-[#64748B] group-hover:text-[#1D4ED8]'}`} />
-
-          <span className="whitespace-nowrap">For You</span>
-
-          {activeCategory === null && <span className="absolute bottom-0 left-2 right-2 h-1 rounded-t-full bg-[#1D4ED8]" />}
-        </NavLink>
-
-        {/* map category */}
-        {categories?.data?.map((category) => {
-          const Icon = iconMap[category.categoryLucideIcons]
-          const active = activeCategory === category._id
-
-          return (
-            <button
-              key={category._id}
-              onClick={() => setActiveCategory(category._id)}
-              className={`group relative flex min-w-18 flex-col items-center gap-1 px-2 py-4 text-sm transition ${active ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'}`}
-            >
-              {Icon && <Icon size={27} strokeWidth={1.8} className={`transition ${active ? 'text-[#1D4ED8]' : 'text-[#64748B] group-hover:text-[#1D4ED8]'}`} />}
-
-              <span className="whitespace-nowrap">{category.categoryName}</span>
-
-              {active && <span className="absolute bottom-0 left-2 right-2 h-1 rounded-t-full bg-[#1D4ED8]" />}
-            </button>
-          )
-        })}
       </div>
     </header>
   )

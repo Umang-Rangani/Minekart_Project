@@ -8,6 +8,8 @@ import { useUser } from '../context/userProvider'
 export default function Register() {
   const navigate = useNavigate()
   const { setShowLogin } = useUser()
+  
+  // ! img state
   const fileInputRef = useRef(null)
 
   const [imageFile, setImageFile] = useState(null)
@@ -24,6 +26,7 @@ export default function Register() {
   })
 
   const [loading, setLoading] = useState(false)
+  
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 

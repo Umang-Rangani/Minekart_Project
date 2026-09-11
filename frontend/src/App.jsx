@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './user/Home'
-import Products from './user/Products'
 import Cart from './user/Cart'
 import Checkout from './user/Checkout'
 import Login from './pages/Login'
@@ -12,6 +11,8 @@ import AdminOrders from './admin/AdminOrders'
 import { useUser } from './context/userProvider'
 import { useEffect } from 'react'
 import AdminCategory from './admin/AdminCategory'
+import AdminBrand from './admin/AdminBrand'
+import UserLayout from './user/UserLayout'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -31,13 +32,13 @@ export default function App() {
       <Routes>
         {/*  USER  */}
 
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<UserLayout />}>
+          <Route path="/" element={<Home />} />
 
-        <Route path="/products" element={<Products />} />
+          <Route path="/cart" element={<Cart />} />
 
-        <Route path="/cart" element={<Cart />} />
-
-        <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout" element={<Checkout />} />
+        </Route>
 
         {/*  AUTH  */}
 
@@ -52,6 +53,7 @@ export default function App() {
 
           <Route path="products" element={<AdminProducts />} />
           <Route path="category" element={<AdminCategory />} />
+          <Route path="brand" element={<AdminBrand />} />
 
           <Route path="orders" element={<AdminOrders />} />
         </Route>
