@@ -2,6 +2,30 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Plus, Search, Pencil, Trash2, Package, ShoppingBag, CircleDollarSign, AlertTriangle, X, Image as ImageIcon, Upload, Eye } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile, deleteFile } from '../utils/uploadFile'
+// ! main product input object
+const resetProductData = {
+  productName: '',
+  slug: '',
+  description: '',
+  category: '',
+  subCategory: '',
+  brand: '',
+  images: [],
+  price: '',
+  discount: 0,
+  discountPrice: '',
+  status: 'Active',
+  homeSection: 'Normal',
+  rating: 0,
+  stock: 0,
+  soldCount: 0,
+
+  warranty: '',
+  warrantyDuration: '',
+  warrantyType: 'No Warranty',
+  returnPolicy: '',
+  deliveryInfo: '',
+}
 
 export default function AdminProducts() {
   const [search, setSearch] = useState('')
@@ -9,30 +33,6 @@ export default function AdminProducts() {
 
   const [loading, setLoading] = useState(false)
 
-  // ! main product input object
-  const resetProductData = {
-    productName: '',
-    slug: '',
-    description: '',
-    category: '',
-    subCategory: '',
-    brand: '',
-    images: [],
-    price: '',
-    discount: 0,
-    discountPrice: '',
-    status: 'Active',
-    homeSection: 'Normal',
-    rating: 0,
-    stock: 0,
-    soldCount: 0,
-
-    warranty: '',
-    warrantyDuration: '',
-    warrantyType: 'No Warranty',
-    returnPolicy: '',
-    deliveryInfo: '',
-  }
   const [productData, setProductData] = useState(resetProductData)
 
   // ! table ma product btava mate
@@ -97,10 +97,6 @@ export default function AdminProducts() {
 
   const filteredProducts = products.filter((product) => product.productName?.toLowerCase().includes(search.toLowerCase()))
 
-  const viewHandle = (product) => {
-    setViewProductId((prev) => (prev === product._id ? null : product._id))
-  }
-
   const editHandle = async (id) => {
     try {
       const res = await axiosInstance.get(`/product/${id}`)
@@ -132,7 +128,7 @@ export default function AdminProducts() {
       })
 
       const existingImages = (product.images || []).map((imagePath) => ({
-        url: imagePath,
+        url: getImageUrl(imagePath),
         type: 'existing',
         path: imagePath,
       }))
@@ -159,6 +155,20 @@ export default function AdminProducts() {
     } catch (error) {
       console.error('Delete product error:', error.response?.data || error.message)
     }
+  }
+
+  const viewHandle = (product) => {
+    setViewProductId((prev) => (prev === product._id ? null : product._id))
+  }
+
+  const getImageUrl = (image) => {
+    if (!image) return ''
+
+    if (image.startsWith('http')) {
+      return image
+    }
+
+    return `http://localhost:3000${image}`
   }
 
   useEffect(() => {
@@ -245,7 +255,7 @@ export default function AdminProducts() {
     try {
       setLoading(true)
 
-      // ! New images upload
+      // ! 4. new images upload
       const newImages = previewImages.filter((image) => image.type === 'new')
 
       const uploadedImages = []
@@ -322,6 +332,38 @@ export default function AdminProducts() {
     setShowForm(true)
   }
 
+  // ! product dashboard
+  const totalProducts = products.length
+
+  const activeProducts = products.filter((product) => product.status === 'Active').length
+
+  const bestSellingProducts = products.filter((product) => product.homeSection === 'BestSelling').length
+
+  const outOfStockProducts = products.filter((product) => product.stock === 0).length
+
+  const stats = [
+    {
+      title: 'Total Products',
+      value: totalProducts,
+      icon: Package,
+    },
+    {
+      title: 'Active Products',
+      value: activeProducts,
+      icon: ShoppingBag,
+    },
+    {
+      title: 'Best Selling',
+      value: bestSellingProducts,
+      icon: CircleDollarSign,
+    },
+    {
+      title: 'Out of Stock',
+      value: outOfStockProducts,
+      icon: AlertTriangle,
+    },
+  ]
+
   return (
     <div className="space-y-6">
       {/* HEADER */}
@@ -336,6 +378,29 @@ export default function AdminProducts() {
           <Plus size={18} />
           Add Product
         </button>
+      </div>
+
+      {/* STATS */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map((item) => {
+          const Icon = item.icon
+
+          return (
+            <div key={item.title} className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-[#99938B]">{item.title}</p>
+
+                  <h2 className="mt-2 text-2xl font-bold text-[#292725]">{item.value}</h2>
+                </div>
+
+                <div className="flex size-11 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                  <Icon size={21} />
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
       {/* CREATE / EDIT FORM */}
@@ -879,7 +944,7 @@ export default function AdminProducts() {
                     {/* view product jova mate */}
                     {viewProductId === product._id && (
                       <tr>
-                        <td colSpan="7" className="border-b border-[#E3DED6] bg-[#F8F6F2] px-5 py-5">
+                        <td colSpan="8" className="border-b border-[#E3DED6] bg-[#F8F6F2] px-5 py-5">
                           <div className="rounded-2xl border border-[#E3DED6] bg-white p-5">
                             {/* View Header */}
                             <div className="mb-5 flex items-center justify-between">
@@ -898,13 +963,13 @@ export default function AdminProducts() {
                             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                               {/*  IMAGES  */}
                               <div>
-                                <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#6F6A64]">Product Images</p>
+                                <p className="mb-3 text-xs fonat-semibold uppercase tracking-wide text-[#6F6A64]">Product Images</p>
 
                                 <div className="grid grid-cols-2 gap-3">
                                   {product.images?.length > 0 ? (
                                     product.images.map((image, imageIndex) => (
                                       <div key={imageIndex} className="aspect-square overflow-hidden rounded-xl border border-[#E3DED6] bg-[#F7F7F5]">
-                                        <img src={image} alt={`${product.productName} ${imageIndex + 1}`} className="h-full w-full object-cover" />
+                                        <img src={getImageUrl(image)} alt={`${product.productName} ${imageIndex + 1}`} className="h-full w-full object-contain" />
                                       </div>
                                     ))
                                   ) : (

@@ -11,10 +11,19 @@ const User = require('../model/users')
 // ! check API
 router.get('/', async (req, res) => {
   try {
-    const data = await User.find()
-    res.json(data)
+    const data = await User.find().select('-password')
+
+    res.status(200).json({
+      success: true,
+      data,
+    })
   } catch (error) {
-    console.log(error)
+    console.error('Get Users Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get users',
+    })
   }
 })
 
@@ -209,7 +218,6 @@ router.get('/profile', authMiddleware, async (req, res) => {
     })
   }
 })
-
 
 router.delete('/', async (req, res) => {
   try {

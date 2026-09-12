@@ -14,6 +14,7 @@ import AdminCategory from './admin/AdminCategory'
 import AdminBrand from './admin/AdminBrand'
 import UserLayout from './user/UserLayout'
 import AdminSubCategory from './admin/AdminSubCategory'
+import AdminUsers from './admin/AdminUsers'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="category" element={<AdminCategory />} />
           <Route path="subcategory" element={<AdminSubCategory />} />
           <Route path="brand" element={<AdminBrand />} />
+          <Route path="users" element={<AdminUsers />} />
 
           <Route path="orders" element={<AdminOrders />} />
         </Route>
