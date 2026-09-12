@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Package, ShoppingBag, Users, Settings, Store, LayoutGrid, Tag } from 'lucide-react'
+import { LayoutDashboard, Package, ShoppingBag, Users, Settings, Store, LayoutGrid, Tag, Grid2X2 } from 'lucide-react'
 
 export default function AdminLayout() {
   const menuItems = [
@@ -13,6 +13,12 @@ export default function AdminLayout() {
       name: 'Category',
       path: '/admin/category',
       icon: LayoutGrid,
+    },
+
+    {
+      name: 'SubCategory',
+      path: '/admin/subcategory',
+      icon: Grid2X2,
     },
 
     {

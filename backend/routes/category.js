@@ -17,7 +17,7 @@ var router = express.Router()
 router.get('/', async (req, res) => {
   try {
     const data = await Category.find().sort({
-      createdAt: -1,
+      createdAt: 1,
     })
 
     res.status(200).json({
