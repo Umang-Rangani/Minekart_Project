@@ -44,8 +44,8 @@ app.use('/category', categoryRouter)
 app.use('/subcategory', subcategoryRouter)
 app.use('/brand', brandRouter)
 app.use('/product', productRouter)
-
 app.use('/cart', cartRouter)
+
 app.use('/order', orderRouter)
 app.use('/uploads', uploadRouter)
 

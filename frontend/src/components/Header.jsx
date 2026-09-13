@@ -12,9 +12,10 @@ export default function Header() {
 
   return (
     <header className="w-full border-b border-[#E2E8F0] bg-white">
-      {/*  TOP HEADER  */}
-      <div className="flex items-center justify-between px-6 py-4">
-        {/* Left - Brand */}
+    
+
+      {/*  SEARCH + ACCOUNT  */}
+      <div className="flex items-center gap-5 px-7 py-4 ">
         <div className="flex items-center gap-4">
           {/* Brand */}
           <Link to={'/'} className="flex h-14 w-40 items-center justify-center gap-2 rounded-xl bg-[#1D4ED8] text-white shadow-md shadow-blue-100">
@@ -23,34 +24,6 @@ export default function Header() {
             <span className="text-lg font-bold tracking-wide">MineKart</span>
           </Link>
         </div>
-
-        {/* Location */}
-        {user ? (
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin size={19} className="fill-[#1D4ED8] text-[#1D4ED8]" />
-
-            <span className="font-semibold text-[#172033]">Delivery Location at</span>
-
-            <button className="font-semibold text-[#1D4ED8] transition hover:text-[#F59E0B]">
-              {user.address}, {user.city},{user.pincode}
-            </button>
-
-            {/* <span className="text-lg text-[#94A3B8]">›</span> */}
-
-            {/* Coin */}
-            <div className="ml-6 flex items-center gap-1 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] px-3 py-2 text-[#B45309]">
-              <Zap size={17} className="fill-[#F59E0B] text-[#F59E0B]" />
-
-              <span className="font-semibold">0</span>
-            </div>
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
-
-      {/*  SEARCH + ACCOUNT  */}
-      <div className="flex items-center gap-5 px-7 pb-3">
         {/* Search */}
         <div className="relative flex-1">
           <Search size={23} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#64748B]" />
@@ -102,7 +75,10 @@ export default function Header() {
 
                 <div className="border-t border-[#E2E8F0]" />
                 {user && (
-                  <button onClick={logout} className="flex w-full items-center gap-3 px-4 py-3 text-left text-red-600 hover:bg-red-50">
+                  <button onClick={() =>  {
+                    logout()
+                    setAccountOpen(false)
+                  }} className="flex w-full items-center gap-3 px-4 py-3 text-left text-red-600 hover:bg-red-50">
                     <LogOut size={19} />
                     <span>Logout</span>
                   </button>

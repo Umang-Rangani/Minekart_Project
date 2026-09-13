@@ -48,13 +48,11 @@ export default function Login({ onClose }) {
 
       const res = await axiosInstance.post('/users/login', logIn)
 
-      console.log('Login Response:', res.data)
+      // console.log('Login Response:', res.data)
 
       if (res.data.success) {
         setUser(res.data.user)
         setShowLogin(false)
-
-        navigate('/')
       }
     } catch (error) {
       console.log('Login Error:', error)
@@ -66,8 +64,8 @@ export default function Login({ onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#172033]/70 px-4 backdrop-blur-[2px]" onClick={closeHandle}>
-      <div onClick={(e) => e.stopPropagation()} className="relative flex w-full max-w-[760px] overflow-hidden rounded-lg bg-white shadow-2xl">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-[#172033]/70 px-4 backdrop-blur-[2px]" onClick={closeHandle}>
+      <div onClick={(e) => e.stopPropagation()} className="relative flex w-full max-w-190 overflow-hidden rounded-lg bg-white shadow-2xl">
         {/* ================= CLOSE ================= */}
         <button type="button" onClick={closeHandle} className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full text-[#64748B] transition hover:bg-[#F1F5F9] hover:text-[#172033]">
           <X size={20} />

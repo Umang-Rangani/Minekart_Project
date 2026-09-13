@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { Zap } from 'lucide-react'
 import { iconMap } from '../data/iconMap'
 
@@ -9,7 +9,6 @@ export default function CategoryList() {
 
   // category theme mate
   const [activeCategory, setActiveCategory] = useState(null)
-
 
   const getCategories = async () => {
     try {
@@ -52,8 +51,9 @@ export default function CategoryList() {
         const active = activeCategory === category._id
 
         return (
-          <button
+          <Link
             key={category._id}
+            to={`/category/${category._id}`}
             onClick={() => setActiveCategory(category._id)}
             className={`group relative flex min-w-18 flex-col items-center gap-1 px-2 py-4 text-sm transition ${active ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'}`}
           >
@@ -62,7 +62,7 @@ export default function CategoryList() {
             <span className="whitespace-nowrap">{category.categoryName}</span>
 
             {active && <span className="absolute bottom-0 left-2 right-2 h-1 rounded-t-full bg-[#1D4ED8]" />}
-          </button>
+          </Link>
         )
       })}
     </div>

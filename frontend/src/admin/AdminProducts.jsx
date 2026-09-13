@@ -11,6 +11,7 @@ const resetProductData = {
   subCategory: '',
   brand: '',
   images: [],
+  sizes: [],
   price: '',
   discount: 0,
   discountPrice: '',
@@ -112,6 +113,7 @@ export default function AdminProducts() {
         subCategory: product.subCategory?._id || product.subCategory || '',
         brand: product.brand?._id || product.brand || '',
         images: product.images || [],
+        sizes: product.sizes || [],
         price: product.price ?? '',
         discount: product.discount ?? 0,
         discountPrice: product.discountPrice ?? '',
@@ -136,6 +138,8 @@ export default function AdminProducts() {
       setPreviewImages(existingImages)
 
       setShowForm(true)
+
+      setViewProductId(null)
     } catch (error) {
       console.error('Get product error:', error.response?.data || error.message)
     }
@@ -159,6 +163,7 @@ export default function AdminProducts() {
 
   const viewHandle = (product) => {
     setViewProductId((prev) => (prev === product._id ? null : product._id))
+    setShowForm(false)
   }
 
   const getImageUrl = (image) => {
@@ -185,6 +190,14 @@ export default function AdminProducts() {
     setProductData((prev) => ({
       ...prev,
       [name]: value,
+    }))
+  }
+
+  // Size select karva mate function ['S', 'M'] aavu bne
+  const handleSizeChange = (size) => {
+    setProductData((prev) => ({
+      ...prev,
+      sizes: prev.sizes.includes(size) ? prev.sizes.filter((item) => item !== size) : [...prev.sizes, size],
     }))
   }
 
@@ -277,7 +290,7 @@ export default function AdminProducts() {
         brand: productData.brand || null,
 
         images: finalImages,
-
+        sizes: productData.sizes,
         price: Number(productData.price),
         discount: Number(productData.discount || 0),
         discountPrice: Number(productData.discountPrice || 0),
@@ -365,7 +378,7 @@ export default function AdminProducts() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 transition-all duration-700">
       {/* HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -410,7 +423,6 @@ export default function AdminProducts() {
           <div className="flex items-center justify-between border-b border-[#E3DED6] bg-[#F7F7F5] px-5 py-4">
             <div>
               <h2 className="text-base font-semibold text-[#292725]">{editId ? 'Edit Product' : 'Create Product'}</h2>
-
               <p className="mt-0.5 text-xs text-[#99938B]">{editId ? 'Update product information' : 'Add a new store product'}</p>
             </div>
 
@@ -506,6 +518,32 @@ export default function AdminProducts() {
                       ))}
                     </select>
                   </div>
+
+                  {/* SIZE */}
+                  <div className="lg:col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-[#292725]">Available Sizes</label>
+
+                    <div className="flex flex-wrap gap-3">
+                      {['S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'].map((size) => {
+                        const selected = productData.sizes.includes(size)
+
+                        return (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => handleSizeChange(size)}
+                            className={`flex h-12 min-w-16 items-center justify-center rounded-xl border px-4 text-sm font-medium transition ${
+                              selected ? 'border-[#6B6258] bg-[#6B6258] text-white' : 'border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#F8F6F2]'
+                            }`}
+                          >
+                            {size}
+                          </button>
+                        )
+                      })}
+                    </div>
+
+                    <p className="mt-2 text-xs text-[#99938B]">Select the sizes available for this product.</p>
+                  </div>
                 </div>
               </section>
 
@@ -597,20 +635,7 @@ export default function AdminProducts() {
                     />
                   </div>
 
-                  {/* Sold Countf */}
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-[#292725]">Sold Count</label>
-
-                    <input
-                      type="number"
-                      name="soldCount"
-                      value={productData.soldCount}
-                      onChange={handleChange}
-                      placeholder="0"
-                      min="0"
-                      className="h-14 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                    />
-                  </div>
+                 
                 </div>
               </section>
 
@@ -623,13 +648,13 @@ export default function AdminProducts() {
                 <div className="flex flex-wrap gap-4">
                   {/* preview img map */}
                   {previewImages.map((image, index) => (
-                    <div key={`${image.type}-${index}`} className="relative h-40 w-40 overflow-hidden rounded-xl border border-[#E3DED6] bg-white">
+                    <div key={`${image.type}-${index}`} className="relative h-40 w-30 overflow-hidden rounded-xl border border-[#E3DED6] bg-white">
                       <img src={image.url} alt={`Product ${index + 1}`} className="h-full w-full object-contain" />
 
                       {/* Remove Button */}
 
-                      <button type="button" onClick={() => removeImage(index)} className="absolute right-2 top-2 flex size-5 items-center justify-center rounded-full bg-[#EF4444] text-white shadow-md transition hover:bg-[#DC2626]">
-                        <X size={15} strokeWidth={2.5} />
+                      <button type="button" onClick={() => removeImage(index)} className="absolute right-2 top-2 flex size-4 items-center justify-center rounded-full bg-[#EF4444] text-white shadow-md transition hover:bg-[#DC2626]">
+                        <X size={10} strokeWidth={2.5} />
                       </button>
                     </div>
                   ))}
@@ -638,7 +663,7 @@ export default function AdminProducts() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex h-40 w-40 flex-col items-center justify-center rounded-xl border border-dashed border-[#D8D2C9] bg-white text-[#6F6A64] transition hover:border-[#6B6258] hover:bg-[#FAF9F7]"
+                    className="flex h-40 w-30 flex-col items-center justify-center rounded-xl border border-dashed border-[#D8D2C9] bg-white text-[#6F6A64] transition hover:border-[#6B6258] hover:bg-[#FAF9F7]"
                   >
                     <Plus size={30} strokeWidth={1.7} className="text-[#292725]" />
 
@@ -934,7 +959,16 @@ export default function AdminProducts() {
                           </button>
 
                           {/* Delete */}
-                          <button type="button" onClick={() => deleteHandle(product._id)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Product">
+                          <button
+                            type="button"
+                            onMouseEnter={() => {
+                              setShowForm(false)
+                              setViewProductId(null)
+                            }}
+                            onClick={() => deleteHandle(product._id)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]"
+                            title="Delete Product"
+                          >
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -1011,6 +1045,22 @@ export default function AdminProducts() {
                                     <p className="text-[11px] text-[#99938B]">Brand</p>
 
                                     <p className="mt-1 text-sm text-[#292725]">{product.brand?.brandName || '-'}</p>
+                                  </div>
+
+                                  <div>
+                                    <p className="text-[11px] text-[#99938B]">Sizes</p>
+
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                      {product.sizes?.length > 0 ? (
+                                        product.sizes.map((size) => (
+                                          <span key={size} className="rounded-lg border border-[#E3DED6] bg-[#F8F6F2] px-3 py-1.5 text-xs font-semibold text-[#6B6258]">
+                                            {size}
+                                          </span>
+                                        ))
+                                      ) : (
+                                        <p className="text-sm text-[#6F6A64]">-</p>
+                                      )}
+                                    </div>
                                   </div>
 
                                   <div>

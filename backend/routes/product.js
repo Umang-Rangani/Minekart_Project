@@ -2,10 +2,9 @@ const express = require('express')
 const Product = require('../model/product')
 const router = express.Router()
 
-
 router.get('/', async (req, res) => {
   try {
-    const data = await Product.find().populate('category', 'categoryName').populate('subCategory', 'subCategoryName').populate('brand', 'brandName').sort({ createdAt: -1 })
+    const data = await Product.find().populate('category', 'categoryName').populate('subCategory', 'subCategoryName').populate('brand', 'brandName brandLogo').sort({ createdAt: -1 })
 
     res.status(200).json({
       success: true,
@@ -46,7 +45,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { productName, description, category, subCategory, brand, images, price, discount, discountPrice, status, homeSection, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } = req.body
+    const { productName, description, category, subCategory, brand, images, sizes, price, discount, discountPrice, status, homeSection, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } = req.body
 
     // Product Name
     if (!productName?.trim()) {
@@ -103,6 +102,8 @@ router.post('/', async (req, res) => {
       brand: brand || null,
 
       images: Array.isArray(images) ? images : [],
+
+      sizes: Array.isArray(sizes) ? sizes : [],
 
       price: Number(price),
 
@@ -162,7 +163,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const { productName, description, category, subCategory, brand, images, price, discount, discountPrice, status, homeSection, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } = req.body
+    const { productName, description, category, subCategory, brand, images,  sizes, price, discount, discountPrice, status, homeSection, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } = req.body
 
     // Check product
     const existingProduct = await Product.findById(req.params.id)
@@ -220,6 +221,7 @@ router.put('/:id', async (req, res) => {
         brand: brand || null,
 
         images: Array.isArray(images) ? images : [],
+        sizes: Array.isArray(sizes) ? sizes : [],
 
         price: Number(price),
 

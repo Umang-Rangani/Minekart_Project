@@ -1,7 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './user/Home'
-import Cart from './user/Cart'
-import Checkout from './user/Checkout'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import AdminLayout from './admin/AdminLayout'
@@ -15,6 +13,10 @@ import AdminBrand from './admin/AdminBrand'
 import UserLayout from './user/UserLayout'
 import AdminSubCategory from './admin/AdminSubCategory'
 import AdminUsers from './admin/AdminUsers'
+import ProductDetail from './user/ProductDetail'
+import BrandProducts from './user/BrandProducts'
+import CategoryProducts from './user/CategoryProducts'
+import Cart from './user/Cart'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -37,26 +39,25 @@ export default function App() {
         <Route path="/" element={<UserLayout />}>
           <Route path="/" element={<Home />} />
 
+          <Route path="product/:id" element={<ProductDetail />} />
+          <Route path="/category/:id" element={<CategoryProducts />} />
+          <Route path="/brand/:id" element={<BrandProducts />} />
+
           <Route path="/cart" element={<Cart />} />
 
-          <Route path="/checkout" element={<Checkout />} />
         </Route>
 
         {/*  AUTH  */}
-
         <Route path="/register" element={<Register />} />
-
         {/* <Route path="/login" element={<Login />} /> */}
 
         {/*  ADMIN  */}
-
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-
-          <Route path="products" element={<AdminProducts />} />
           <Route path="category" element={<AdminCategory />} />
           <Route path="subcategory" element={<AdminSubCategory />} />
           <Route path="brand" element={<AdminBrand />} />
+          <Route path="products" element={<AdminProducts />} />
           <Route path="users" element={<AdminUsers />} />
 
           <Route path="orders" element={<AdminOrders />} />

@@ -43,7 +43,11 @@ export default function BrandList() {
         <div className="flex min-w-max gap-4 ">
           {brand?.data?.map((value) => {
             return (
-              <Link key={value._id} className="group w-48 shrink-0 overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-sm transition-all duration-700 hover:w-55 hover:-translate-y-1 hover:border-[#BFDBFE] hover:shadow-lg">
+              <Link
+                to={`/brand/${value._id}`}
+                key={value._id}
+                className="group w-48 shrink-0 overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-sm transition-all duration-700 hover:w-55 hover:-translate-y-1 hover:border-[#BFDBFE] hover:shadow-lg"
+              >
                 {/* Logo */}
                 <div className="flex h-24 w-full items-center justify-center bg-[#F8FAFC] ">
                   <img src={`http://localhost:3000${value.brandLogo}`} alt={value.brandName} className="h-16 w-full object-fill transition-transform duration-300 group-hover:scale-103" />
@@ -58,7 +62,7 @@ export default function BrandList() {
               </Link>
             )
           })}
-        </div>  
+        </div>
       </div>
     </div>
   )
