@@ -8,7 +8,7 @@ export default function UserLayout() {
     <div className="min-h-screen bg-[#F8FAFC]">
       <Header />
 
-      <main className="w-full">
+      <main className="w-full pt-25">
         <div className="mx-auto w-full max-w-[1600px] px-6  pb-10">
           <Outlet />
         </div>

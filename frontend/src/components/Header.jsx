@@ -11,7 +11,7 @@ export default function Header() {
   const [accountOpen, setAccountOpen] = useState(false)
 
   return (
-    <header className="w-full border-b border-[#E2E8F0] bg-white">
+    <header className="fixed left-0 top-0 z-50 w-full border-b border-[#E2E8F0] bg-white">
     
 
       {/*  SEARCH + ACCOUNT  */}

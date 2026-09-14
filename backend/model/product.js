@@ -52,7 +52,7 @@ const productSchema = new mongoose.Schema(
       type: [
         {
           type: String,
-          enum: ['S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'],
+          enum: ['S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL', '28', '30', '32', '34', '36', '38', '40'],
         },
       ],
       default: [],
@@ -151,6 +151,6 @@ const productSchema = new mongoose.Schema(
   },
 )
 
-const Product = mongoose.model('ProductMineKart', productSchema)
+const Product = mongoose.models.ProductMineKart || mongoose.model('ProductMineKart', productSchema)
 
 module.exports = Product

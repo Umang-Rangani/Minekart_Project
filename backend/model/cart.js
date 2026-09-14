@@ -1,17 +1,27 @@
 const mongoose = require('mongoose')
 
-const cartSchema = new mongoose.Schema(
+const cartItemSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserMineKart',
-      required: true,
-    },
-
-    product: {
+    productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'ProductMineKart',
       required: true,
+    },
+
+    size: {
+      type: String,
+      default: null,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
+    discountPrice: {
+      type: Number,
+      required: true,
+      min: 0,
     },
 
     quantity: {
@@ -21,15 +31,43 @@ const cartSchema = new mongoose.Schema(
       min: 1,
     },
 
-    size: {
-      type: String,
-      enum: ['S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'],
-      default: null,
-    },
-
     totalPrice: {
       type: Number,
       required: true,
+    },
+  },
+  {
+    _id: false,
+  },
+)
+
+const cartSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserMineKart',
+      required: true,
+    },
+
+    items: [cartItemSchema],
+
+    totalQuantity: {
+      type: Number,
+      default: 0,
+    },
+
+    subtotal: {
+      type: Number,
+      default: 0,
+    },
+
+    tax: {
+      type: Number,
+      default: 0,
+    },
+
+    totalAmount: {
+      type: Number,
       default: 0,
     },
   },
@@ -41,12 +79,3 @@ const cartSchema = new mongoose.Schema(
 const Cart = mongoose.model('CartMineKart', cartSchema)
 
 module.exports = Cart
-
-// Step 1 → Cart Model
-// Step 2 → Cart POST API
-// Step 3 → AddToCart API call
-// Step 4 → GET /cart
-// Step 5 → Cart.jsx UI
-// Step 6 → + / - quantity API
-// Step 7 → Remove Cart API
-// Step 8 → Checkout

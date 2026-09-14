@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Star } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Star, ShoppingCart, Zap } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 
 export default function ProductList() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   // ! Get Products
   const getProducts = async () => {
@@ -21,6 +22,11 @@ export default function ProductList() {
   }
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+
     getProducts()
   }, [])
 
@@ -50,10 +56,14 @@ export default function ProductList() {
         ) : (
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {products.map((product) => (
-              <Link key={product._id} to={`/product/${product._id}`} className="group overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+              <Link key={product._id} className="group overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white transition duration-200 hover:-translate-y-1 hover:shadow-lg">
                 {/* Product Image */}
                 <div className="flex h-64 items-center justify-center bg-white p-5">
-                  {product.images?.length > 0 ? <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="h-full w-full object-contain transition duration-300 group-hover:scale-105" /> : <div className="text-sm text-[#99938B]">No Image</div>}
+                  {product.images?.length > 0 ? (
+                    <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="h-full w-full object-contain transition duration-300 group-hover:scale-105" />
+                  ) : (
+                    <div className="text-sm text-[#99938B]">No Image</div>
+                  )}
                 </div>
 
                 {/* Product Info */}
@@ -70,7 +80,6 @@ export default function ProductList() {
                       {product.rating}
                       <Star size={12} fill="currentColor" />
                     </span>
-
                   </div>
 
                   {/* Price */}
@@ -85,6 +94,20 @@ export default function ProductList() {
                       </>
                     )}
                   </div>
+
+                  {/* Add To Cart */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      navigate(`/product/${product._id}`)
+                    }}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#F59E0B] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-[#D97706] hover:shadow-md active:scale-[0.98]"
+                  >
+                    <Zap size={17} strokeWidth={2.2} />
+                    Buy Now
+                  </button>
                 </div>
               </Link>
             ))}

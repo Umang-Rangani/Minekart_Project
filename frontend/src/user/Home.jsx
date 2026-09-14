@@ -1,14 +1,12 @@
 import BrandList from './BrandList'
 import CategoryList from './CategoryList'
-import LocationHeading from './LocationHeading'
 import ProductList from './ProductList'
 
 export default function Home() {
   return (
-    <div>
-      <LocationHeading />
-      <div className="space-y-8">
+    <div className="">
       <CategoryList />
+      <div className='pt-25 space-y-8'>
         <BrandList />
         <ProductList />
       </div>
