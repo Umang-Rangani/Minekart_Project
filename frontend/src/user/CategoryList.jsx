@@ -59,7 +59,7 @@ export default function CategoryList() {
             return (
               <Link
                 key={category._id}
-                to={`/category/${category._id}`}
+                to={`/category/${category._id}/products`}
                 onClick={() => setActiveCategory(category._id)}
                 className={`group relative flex min-w-18 shrink-0 flex-col items-center gap-1 px-3 py-4 text-sm transition ${active ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'}`}
               >

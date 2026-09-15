@@ -17,6 +17,7 @@ import ProductDetail from './user/ProductDetail'
 import BrandProducts from './user/BrandProducts'
 import CategoryProducts from './user/CategoryProducts'
 import Cart from './user/Cart'
+import Categories from './user/Categories'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -40,8 +41,11 @@ export default function App() {
           <Route path="/" element={<Home />} />
 
           <Route path="product/:id" element={<ProductDetail />} />
-          <Route path="/category/:id" element={<CategoryProducts />} />
-          <Route path="/brand/:id" element={<BrandProducts />} />
+
+          <Route path="/category" element={<Categories />} />
+          <Route path="/category/:id/products" element={<CategoryProducts />} />
+
+          <Route path="/brand/:id/products" element={<BrandProducts />} />
 
           <Route path="/cart" element={<Cart />} />
 

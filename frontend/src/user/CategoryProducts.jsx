@@ -3,12 +3,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Star, ArrowLeft } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import { iconMap } from '../data/iconMap'
+import BreadCrumb from './BreadCrumb'
 
 export default function CategoryProducts() {
   const { id } = useParams()
   const navigate = useNavigate()
 
   const [products, setProducts] = useState([])
+  const [allProducts, setAllProducts] = useState([])
+
   const [category, setCategory] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -25,6 +28,7 @@ export default function CategoryProducts() {
       const filteredProducts = allProducts.filter((product) => product.category?._id === id)
 
       setProducts(filteredProducts)
+      setAllProducts(filteredProducts)
 
       // Get category information
       const categoryRes = await axiosInstance.get('/category')
@@ -52,12 +56,38 @@ export default function CategoryProducts() {
 
   const Icon = category ? iconMap[category.categoryLucideIcons] : null
 
+  // console.log('category', products)
+
+  // ! Header ma SubCategory btava mate
+  const uniqueNames = [...new Set(allProducts.map((item) => item.subCategory?.subCategoryName))]
+  // console.log(uniqueNames)
+
+  const filterBySubCategory = (subCategoryName) => {
+    const filteredProducts = products.filter((item) => item.subCategory.subCategoryName === subCategoryName)
+
+    // console.log(filteredProducts)
+
+    if (subCategoryName === '') {
+      setProducts(allProducts)
+      return
+    }
+
+    setProducts(allProducts.filter((item) => item.subCategory?.subCategoryName === subCategoryName))
+  } 
+
+  const items = [
+    { title: 'Category', link: "/category" },
+    { title: `${category?.categoryName}`, link: null },
+  ]
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC]  py-6">
-      <div className="mx-auto ">
+    <div className="min-h-screen bg-[#F8FAFC]  py-b">
+      <BreadCrumb items={items} />
+
+      <div className="mx-auto pt-5">
         {/* Product Heading */}
         {!loading && products.length > 0 && (
-          <div className="mb-5 flex items-center justify-between gap-4">
+          <div className="mb-5 flex items-center justify-between gap-4 ">
             {/* Left Side */}
             <div className="flex items-center gap-4">
               {/* Category Icon */}
@@ -81,6 +111,22 @@ export default function CategoryProducts() {
             </span>
           </div>
         )}
+
+        {/* header subcategory */}
+        <div className=" pb-6 flex items-center gap-2 flex-wrap">
+          <button onClick={() => filterBySubCategory('')} className=" text-sm font-medium  hover:text-white cursor-pointer transition-colors duration-600 bg-blue-500 px-2 py-1 rounded-sm text-gray-200">
+            All
+          </button>
+          {uniqueNames.map((unique, i) => {
+            return (
+              <React.Fragment key={i}>
+                <button onClick={() => filterBySubCategory(unique)} className=" text-sm font-medium  hover:text-[#3F3A35] cursor-pointer transition-colors duration-600  bg-blue-500 px-2 py-1 rounded-sm text-white">
+                  {unique}
+                </button>
+              </React.Fragment>
+            )
+          })}
+        </div>
 
         {/* Loading */}
         {loading ? (

@@ -44,7 +44,7 @@ export default function BrandList() {
           {brand?.data?.map((value) => {
             return (
               <Link
-                to={`/brand/${value._id}`}
+                to={`/brand/${value._id}/products`}
                 key={value._id}
                 className="group w-48 shrink-0 overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-sm transition-all duration-700 hover:w-55 hover:-translate-y-1 hover:border-[#BFDBFE] hover:shadow-lg"
               >

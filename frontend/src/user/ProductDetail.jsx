@@ -145,6 +145,7 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen bg-[#F8FAFC]  py-6 ">
       <div className="mx-auto pb-10 ">
+        
         {/* Breadcrumb */}
         <div className="mb-5 flex items-center gap-2 overflow-x-auto whitespace-nowrap text-sm">
           <button type="button" onClick={() => navigate('/')} className="font-semibold text-[#1D4ED8] transition hover:text-[#1E40AF]">
@@ -153,7 +154,7 @@ export default function ProductDetail() {
 
           <span className="text-[#CBD5E1]">/</span>
 
-          <Link to={`/category/${product?.category?._id}`} type="button" className="font-medium text-[#64748B] transition hover:text-[#1D4ED8]">
+          <Link to={`/category/${product?.category?._id}/products`} type="button" className="font-medium text-[#64748B] transition hover:text-[#1D4ED8]">
             {product.category?.categoryName}
           </Link>
 
