@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
+import BreadCrumb from './BreadCrumb'
 
 export default function Cart() {
   const navigate = useNavigate()
@@ -65,25 +66,48 @@ export default function Cart() {
   // ! Grand Total
   const grandTotal = subtotal + deliveryCharge
 
-  console.log('cart', cart)
-  console.log('cartItems', cartItems)
+  // console.log('cart', cart)
+  // console.log('cartItems', cartItems)
+
+  // ! BreadCrumb
+
+  const items = [{ title: `cart`, link: null }]
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-8">
-      <div className="mx-auto ">
+    <div className="min-h-screen ">
+      <BreadCrumb items={items} />
+
+      <div className="mx-auto  pt-5">
         {/*  HEADER */}
-        <div className="mb-5 pb-3 flex items-center justify-between  border-b-2 border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#1D4ED8] border border-blue-200">
-              <ShoppingBag size={24} strokeWidth={2} />
+        <div className="mb-5 rounded-md bg-white p-4 shadow-sm">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            {/* Left Side */}
+            <div className="flex items-center gap-4">
+              {/* Cart Icon */}
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#EFF6FF] text-[#1D4ED8] shadow-sm sm:h-15 sm:w-15">
+                <ShoppingBag size={32} strokeWidth={1.8} />
+              </div>
+
+              {/* Heading */}
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-1 rounded-full bg-[#1D4ED8]" />
+
+                  <h1 className="text-2xl font-extrabold tracking-tight text-[#172033] sm:text-3xl">My Cart</h1>
+                </div>
+
+                <p className="mt-1 ml-3 text-sm text-[#64748B] sm:text-base">
+                  {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
+                </p>
+              </div>
             </div>
 
-            <div>
-              <h1 className="text-2xl font-extrabold tracking-tight text-[#172033] border-l-6 rounded-md pl-1 border-blue-500 ">My Cart</h1>
-
-              <p className="text-sm text-[#64748B]">
-                {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
-              </p>
+            {/* Cart Count */}
+            <div className="flex w-fit shrink-0 items-center gap-2 rounded-full border border-[#DBEAFE] bg-[#EFF6FF] px-4 py-2 text-sm font-semibold text-[#2563EB]">
+              <ShoppingBag size={16} />
+              <span>
+                {totalItems} {totalItems === 1 ? 'Item' : 'Items'}
+              </span>
             </div>
           </div>
         </div>
@@ -91,9 +115,9 @@ export default function Cart() {
         {/*   MAIN GRID  */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-6">
           {/*  LEFT SIDE - CART ITEMS = */}
-          <div className="min-w-0 space-y-5 lg:col-span-4">
+          <div className="min-w-0 space-y-5  col-span-full">
             {cartItems.length === 0 ? (
-              <div className="rounded-2xl border border-[#E2E8F0] bg-white px-6 py-16 text-center shadow-sm">
+              <div className="rounded-2xl w-full border border-[#E2E8F0] bg-white px-6 py-16 text-center shadow-sm">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1D4ED8]">
                   <ShoppingBag size={30} />
                 </div>
@@ -115,8 +139,12 @@ export default function Cart() {
                     const product = item.productId
 
                     // console.log('product', product)
+                    // to={`/product/${product._id}`}
                     return (
-                      <div key={`${product._id}-${item.size || 'no-size'}`} className="rounded-2xl border border-[#E2E8F0] bg-white p-4 shadow-sm transition hover:shadow-md">
+                      <Link
+                        key={`${product._id}-${item.size || 'no-size'}`}
+                        className="rounded-2xl border-2 border-white bg-white p-4 shadow-sm transition hover:shadow-md hover:border-r-blue-400 hover:border-b-blue-400 hover:border-2"
+                      >
                         <div className="flex gap-4">
                           {/*    IMAGE + QUANTITY  */}
                           <div className="w-28 shrink-0">
@@ -193,7 +221,7 @@ export default function Cart() {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     )
                   })}
                 </div>

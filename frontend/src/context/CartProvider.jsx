@@ -72,20 +72,58 @@ export function CartProvider({ children }) {
       }
     }
 
+    // ! Save old cart for rollback
+    const oldCart = cart
+
+    // ! Optimistic UI Update
+    if (cart) {
+      const updatedItems = cart.items.map((item) => {
+        if (item.productId?._id?.toString() === productId?.toString() && item.size === size) {
+          return {
+            ...item,
+            quantity,
+            totalPrice: (item.discountPrice || item.price) * quantity,
+          }
+        }
+
+        return item
+      })
+
+      const updatedSubtotal = updatedItems.reduce((total, item) => total + item.totalPrice, 0)
+
+      const updatedTotalQuantity = updatedItems.reduce((total, item) => total + item.quantity, 0)
+
+      setCart({
+        ...cart,
+        items: updatedItems,
+        totalQuantity: updatedTotalQuantity,
+        subtotal: updatedSubtotal,
+        totalAmount: updatedSubtotal + (cart.tax || 0),
+      })
+    }
+
     try {
+      // ! API call
       const res = await axiosInstance.patch('/cart/item', {
         productId,
         size,
         quantity,
       })
 
+      // ! API success
       if (res.data.success) {
-        await getCart()
+        return res.data
       }
+
+      // ! API failed
+      setCart(oldCart)
 
       return res.data
     } catch (error) {
       console.log('Update Cart Item Error:', error.response?.data || error.message)
+
+      // ! Rollback UI
+      setCart(oldCart)
 
       return {
         success: false,

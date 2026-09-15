@@ -19,6 +19,7 @@ import CategoryProducts from './user/CategoryProducts'
 import Cart from './user/Cart'
 import Categories from './user/Categories'
 import Brands from './user/Brands'
+import Checkout from './user/Checkout'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -50,6 +51,8 @@ export default function App() {
           <Route path="/brand/:id/products" element={<BrandProducts />} />
 
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
+
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
 
         {/*  AUTH  */}
