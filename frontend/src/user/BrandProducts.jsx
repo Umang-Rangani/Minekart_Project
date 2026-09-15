@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Star } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
+import BreadCrumb from './BreadCrumb'
 
 export default function BrandProducts() {
   const { id } = useParams()
@@ -50,20 +51,25 @@ export default function BrandProducts() {
     )
   }
 
+  // console.log("brand.brandLogo", brand);
 
-  console.log("brand.brandLogo", brand);
+  const items = [
+    { title: 'Brand', link: '/brand' },
+    { title: `${brand?.brandName}`, link: null },
+  ]
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]  py-6 ">
-      <div className="mx-auto">
+    <div className="min-h-screen ">
+      <BreadCrumb items={items} />
+      <div className="mx-auto pt-5 ">
         {/*  PRODUCT HEADING  */}
         {!loading && products.length > 0 && (
-          <div className="mb-5 pb-5 flex items-center justify-between gap-4 border-b-2 border-gray-300 ">
-            {/* Left */}
+          <div className="mb-5 flex items-center justify-between gap-4 rounded-md bg-white p-3 shadow-sm">
+            {/* Left Side */}
             <div className="flex items-center gap-4">
               {/* Brand Logo */}
               {brand?.brandLogo && (
-                <div className="flex h-18 w-22 shrink-0 items-center justify-center overflow-hidden  border border-[#E2E8F0] bg-white p-2 shadow-sm">
+                <div className="flex h-12 w-15 shrink-0 items-center justify-center overflow-hidden rounded-md border border-[#E2E8F0] bg-white shadow-sm sm:h-15 sm:w-19">
                   <img src={`http://localhost:3000${brand.brandLogo}`} alt={brand.brandName} className="h-full w-full object-contain" />
                 </div>
               )}

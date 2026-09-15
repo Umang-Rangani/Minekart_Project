@@ -73,25 +73,25 @@ export default function CategoryProducts() {
     }
 
     setProducts(allProducts.filter((item) => item.subCategory?.subCategoryName === subCategoryName))
-  } 
+  }
 
   const items = [
-    { title: 'Category', link: "/category" },
+    { title: 'Category', link: '/category' },
     { title: `${category?.categoryName}`, link: null },
   ]
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]  py-b">
+    <div className="min-h-screen">
       <BreadCrumb items={items} />
 
       <div className="mx-auto pt-5">
         {/* Product Heading */}
         {!loading && products.length > 0 && (
-          <div className="mb-5 flex items-center justify-between gap-4 ">
+          <div className="mb-5 flex items-center justify-between gap-4 bg-white p-3 shadow-sm rounded-md">
             {/* Left Side */}
             <div className="flex items-center gap-4">
               {/* Category Icon */}
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#EFF6FF] text-[#1D4ED8] shadow-sm sm:h-24 sm:w-24">{Icon && <Icon size={40} strokeWidth={1.8} />}</div>
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#EFF6FF] text-[#1D4ED8] shadow-sm sm:h-15 sm:w-15">{Icon && <Icon size={40} strokeWidth={1.8} />}</div>
 
               {/* Category Name */}
               <div>
@@ -113,14 +113,18 @@ export default function CategoryProducts() {
         )}
 
         {/* header subcategory */}
-        <div className=" pb-6 flex items-center gap-2 flex-wrap">
-          <button onClick={() => filterBySubCategory('')} className=" text-sm font-medium  hover:text-white cursor-pointer transition-colors duration-600 bg-blue-500 px-2 py-1 rounded-sm text-gray-200">
+        <div className="flex flex-wrap items-center gap-2 pb-6">
+          <button onClick={() => filterBySubCategory('')} className="cursor-pointer rounded-lg border border-[#1D4ED8] bg-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#1E40AF] active:scale-95">
             All
           </button>
+
           {uniqueNames.map((unique, i) => {
             return (
               <React.Fragment key={i}>
-                <button onClick={() => filterBySubCategory(unique)} className=" text-sm font-medium  hover:text-[#3F3A35] cursor-pointer transition-colors duration-600  bg-blue-500 px-2 py-1 rounded-sm text-white">
+                <button
+                  onClick={() => filterBySubCategory(unique)}
+                  className="cursor-pointer rounded-lg border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-medium text-[#475569] transition-all duration-200 hover:border-[#1D4ED8] hover:bg-[#EFF6FF] hover:text-[#1D4ED8] active:scale-95"
+                >
                   {unique}
                 </button>
               </React.Fragment>

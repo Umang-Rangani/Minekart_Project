@@ -22,7 +22,9 @@ export function CartProvider({ children }) {
 
       const res = await axiosInstance.get('/cart')
 
-      setCart(res.data.data)
+      if (res.data.success) {
+        setCart(res.data.data)
+      }
     } catch (error) {
       console.log('Get Cart Error:', error.response?.data || error.message)
     } finally {
@@ -47,12 +49,141 @@ export function CartProvider({ children }) {
       })
 
       if (res.data.success) {
-        setCart(res.data.data)
+        await getCart()
       }
 
       return res.data
     } catch (error) {
       console.log('Add To Cart Error:', error.response?.data || error.message)
+
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Something went wrong',
+      }
+    }
+  }
+
+  // ! Update Cart Item Quantity
+  const updateCartItem = async ({ productId, size = null, quantity }) => {
+    if (!user) {
+      return {
+        success: false,
+        message: 'Please login first',
+      }
+    }
+
+    try {
+      const res = await axiosInstance.patch('/cart/item', {
+        productId,
+        size,
+        quantity,
+      })
+
+      if (res.data.success) {
+        await getCart()
+      }
+
+      return res.data
+    } catch (error) {
+      console.log('Update Cart Item Error:', error.response?.data || error.message)
+
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Something went wrong',
+      }
+    }
+  }
+
+  // ! Remove Cart Item
+  const removeCartItem = async ({ productId, size = null }) => {
+    if (!user) {
+      return {
+        success: false,
+        message: 'Please login first',
+      }
+    }
+
+    try {
+      const res = await axiosInstance.delete('/cart/item', {
+        data: {
+          productId,
+          size,
+        },
+      })
+
+      if (res.data.success) {
+        await getCart()
+      }
+
+      return res.data
+    } catch (error) {
+      console.log('Remove Cart Item Error:', error.response?.data || error.message)
+
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Something went wrong',
+      }
+    }
+  }
+
+  // ! Clear Complete Cart
+  const clearCart = async () => {
+    if (!user) {
+      return {
+        success: false,
+        message: 'Please login first',
+      }
+    }
+
+    try {
+      const res = await axiosInstance.delete('/cart')
+
+      if (res.data.success) {
+        await getCart()
+      }
+
+      return res.data
+    } catch (error) {
+      console.log('Clear Cart Error:', error.response?.data || error.message)
+
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Something went wrong',
+      }
+    }
+  }
+
+  // ! Merge Guest Cart
+  const mergeGuestCart = async () => {
+    if (!user) {
+      return {
+        success: false,
+        message: 'Please login first',
+      }
+    }
+
+    try {
+      const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]')
+
+      if (guestCart.length === 0) {
+        return {
+          success: true,
+          message: 'Guest cart is empty',
+        }
+      }
+
+      const res = await axiosInstance.post('/cart/merge', {
+        items: guestCart,
+      })
+
+      if (res.data.success) {
+        await getCart()
+        localStorage.removeItem('guest_cart')
+      }
+
+      return res.data
+    } catch (error) {
+      console.log('Merge Guest Cart Error:', error.response?.data || error.message)
 
       return {
         success: false,
@@ -71,8 +202,13 @@ export function CartProvider({ children }) {
       value={{
         cart,
         cartLoading,
+
         getCart,
         addToCart,
+        updateCartItem,
+        removeCartItem,
+        clearCart,
+        mergeGuestCart,
       }}
     >
       {children}

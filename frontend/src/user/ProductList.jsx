@@ -39,7 +39,7 @@ export default function ProductList() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] ">
+    <div className="min-h-screen  ">
       <div className="mx-auto ">
         {/* Header */}
         <div className="mb-6">

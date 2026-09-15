@@ -46,15 +46,16 @@ export default function BrandList() {
               <Link
                 to={`/brand/${value._id}/products`}
                 key={value._id}
-                className="group w-48 shrink-0 overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-sm transition-all duration-700 hover:w-55 hover:-translate-y-1 hover:border-[#BFDBFE] hover:shadow-lg"
+                className="group w-48 shrink-0 overflow-hidden rounded-xl border border-[#E2E8F0] shadow-sm transition-all duration-700 hover:w-55 hover:-translate-y-1 hover:border-[#BFDBFE] hover:shadow-lg"
               >
                 {/* Logo */}
-                <div className="flex h-24 w-full items-center justify-center bg-[#F8FAFC] ">
+                
+                <div className="flex h-28 w-full items-center justify-center bg-white ">
                   <img src={`http://localhost:3000${value.brandLogo}`} alt={value.brandName} className="h-16 w-full object-fill transition-transform duration-300 group-hover:scale-103" />
                 </div>
 
                 {/* Brand Details */}
-                <div className="border-t border-[#E2E8F0] px-3 py-3">
+                <div className="border-t border-[#E2E8F0] bg-[#F8FAFC] h-20  px-3 py-3">
                   <h3 className="text-sm font-bold text-[#172033]">{value.brandName}</h3>
 
                   <p className="mt-1 line-clamp-2 text-xs leading-4 text-[#64748B]">{value.description}</p>

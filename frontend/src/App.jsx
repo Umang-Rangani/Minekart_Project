@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Home from './user/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -18,6 +18,7 @@ import BrandProducts from './user/BrandProducts'
 import CategoryProducts from './user/CategoryProducts'
 import Cart from './user/Cart'
 import Categories from './user/Categories'
+import Brands from './user/Brands'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -45,10 +46,10 @@ export default function App() {
           <Route path="/category" element={<Categories />} />
           <Route path="/category/:id/products" element={<CategoryProducts />} />
 
+          <Route path="/brand" element={<Brands />} />
           <Route path="/brand/:id/products" element={<BrandProducts />} />
 
-          <Route path="/cart" element={<Cart />} />
-
+          <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
         </Route>
 
         {/*  AUTH  */}

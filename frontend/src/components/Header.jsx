@@ -3,17 +3,20 @@ import { User, Package, LogOut } from 'lucide-react'
 import { useUser } from '../context/userProvider'
 // import CategoryList from '../user/CategoryList'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useCart } from '../context/CartProvider'
 
 export default function Header() {
   const { logout, user, setShowLogin } = useUser()
+  const { cart } = useCart()
+  const navigate = useNavigate()
   // account button dropdown
   const [accountOpen, setAccountOpen] = useState(false)
 
+  // ! Total Items
+
   return (
     <header className="fixed left-0 top-0 z-50 w-full border-b border-[#E2E8F0] bg-white">
-    
-
       {/*  SEARCH + ACCOUNT  */}
       <div className="flex items-center gap-5 px-7 py-4 ">
         <div className="flex items-center gap-4">
@@ -75,10 +78,13 @@ export default function Header() {
 
                 <div className="border-t border-[#E2E8F0]" />
                 {user && (
-                  <button onClick={() =>  {
-                    logout()
-                    setAccountOpen(false)
-                  }} className="flex w-full items-center gap-3 px-4 py-3 text-left text-red-600 hover:bg-red-50">
+                  <button
+                    onClick={() => {
+                      logout()
+                      setAccountOpen(false)
+                    }}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-red-600 hover:bg-red-50"
+                  >
                     <LogOut size={19} />
                     <span>Logout</span>
                   </button>
@@ -88,22 +94,17 @@ export default function Header() {
           )}
         </div>
 
-        {/* More */}
-        {/* <button className="flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
-          <span className="text-[16px]">More</span>
-
-          <ChevronDown size={17} />
-        </button> */}
-
         {/* Cart */}
-        <button className="relative flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
-          <ShoppingCart size={27} />
+        {user && (
+          <button onClick={() => navigate('/cart')} className="relative flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
+            <ShoppingCart size={27} />
 
-          <span className="text-[16px]">Cart</span>
+            <span className="text-[16px]">Cart</span>
 
-          {/* Cart Count */}
-          <span className=" absolute -right-1 -top-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#F59E0B] px-1 text-xs font-bold text-white shadow-sm ">1</span>
-        </button>
+            {/* Cart Count */}
+            <span className=" absolute -right-1 -top-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#F59E0B] px-1 text-xs font-bold text-white shadow-sm ">{cart?.totalQuantity}</span>
+          </button>
+        )}
       </div>
     </header>
   )

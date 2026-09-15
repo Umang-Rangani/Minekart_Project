@@ -1,79 +1,72 @@
 import React, { useState } from 'react'
 import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useCart } from '../context/CartProvider'
 
 export default function Cart() {
   const navigate = useNavigate()
-
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      productName: 'Nike Air Max Running Shoes',
-      brand: 'Nike',
-      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600',
-      size: 'M',
-      price: 2499,
-      quantity: 2,
-      totalPrice: 4998,
-    },
-    {
-      id: 2,
-      productName: 'Premium Casual T-Shirt',
-      brand: 'Puma',
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600',
-      size: 'L',
-      price: 999,
-      quantity: 1,
-      totalPrice: 999,
-    },
-  ])
+  const { cart, cartLoading, updateCartItem, removeCartItem, clearCart } = useCart()
+  const cartItems = cart?.items || []
 
   // ! Increase Quantity
-  const increaseQuantity = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-              totalPrice: item.price * (item.quantity + 1),
-            }
-          : item,
-      ),
-    )
+  const increaseQuantity = async (item) => {
+    const newQuantity = item.quantity + 1
+
+    const productStock = item.productId?.stock || 0
+
+    if (newQuantity > productStock) {
+      return
+    }
+
+    await updateCartItem({
+      productId: item.productId._id,
+      size: item.size || null,
+      quantity: newQuantity,
+    })
   }
 
   // ! Decrease Quantity
-  const decreaseQuantity = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id && item.quantity > 1
-          ? {
-              ...item,
-              quantity: item.quantity - 1,
-              totalPrice: item.price * (item.quantity - 1),
-            }
-          : item,
-      ),
-    )
+  const decreaseQuantity = async (item) => {
+    if (item.quantity === 1) {
+      await removeCartItem({
+        productId: item.productId._id,
+        size: item.size || null,
+      })
+
+      return
+    }
+
+    const newQuantity = item.quantity - 1
+
+    await updateCartItem({
+      productId: item.productId._id,
+      size: item.size || null,
+      quantity: newQuantity,
+    })
   }
 
   // ! Remove Item
-  const removeItem = (id) => {
-    setCartItems((items) => items.filter((item) => item.id !== id))
+  const removeItem = async (item) => {
+    await removeCartItem({
+      productId: item.productId._id,
+      size: item.size || null,
+    })
   }
 
   // ! Total Items
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0)
 
   // ! Subtotal
-  const subtotal = cartItems.reduce((total, item) => total + item.totalPrice, 0)
+  const subtotal = cart?.subtotal || 0
 
   // ! Delivery Charge
   const deliveryCharge = subtotal >= 499 ? 0 : 40
 
   // ! Grand Total
   const grandTotal = subtotal + deliveryCharge
+
+  console.log('cart', cart)
+  console.log('cartItems', cartItems)
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-8">
@@ -118,91 +111,91 @@ export default function Cart() {
               <>
                 {/* Cart Products - 2 Column Grid */}
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                  {cartItems.map((item) => (
-                    <div key={item.id} className="rounded-2xl border border-[#E2E8F0] bg-white p-4 shadow-sm transition hover:shadow-md">
-                      <div className="flex gap-4">
-                        {/*    IMAGE + QUANTITY  */}
-                        <div className="w-28 shrink-0">
-                          {/* Image */}
-                          <div className="h-32 w-28 overflow-hidden rounded-xl bg-[#F8FAFC]">
-                            <img src={item.image} alt={item.productName} className="h-full w-full object-cover" />
-                          </div>
+                  {cartItems.map((item) => {
+                    const product = item.productId
 
-                          {/* Quantity - Image ni niche */}
-                          <div className="mt-3 flex h-9 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
-                            <button
-                              type="button"
-                              onClick={() => decreaseQuantity(item.id)}
-                              disabled={item.quantity <= 1}
-                              className="flex h-full w-9 items-center justify-center text-[#64748B] transition hover:bg-[#F1F5F9] disabled:cursor-not-allowed disabled:opacity-40"
-                            >
-                              <Minus size={14} />
-                            </button>
-
-                            <span className="flex h-full min-w-10 items-center justify-center border-x border-[#E2E8F0] text-sm font-bold text-[#172033]">{item.quantity}</span>
-
-                            <button type="button" onClick={() => increaseQuantity(item.id)} className="flex h-full w-9 items-center justify-center text-[#1D4ED8] transition hover:bg-[#EFF6FF]">
-                              <Plus size={14} />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/*   PRODUCT DETAILS  */}
-                        <div className="min-w-0 flex-1">
-                          {/* Brand + Delete */}
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="truncate text-[10px] font-bold uppercase tracking-[0.12em] text-[#64748B]">{item.brand}</p>
-
-                            <button
-                              type="button"
-                              onClick={() => removeItem(item.id)}
-                              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#94A3B8] transition-all duration-200 hover:bg-[#FEF2F2] hover:text-[#EF4444]"
-                              title="Remove"
-                            >
-                              <Trash2 size={16} strokeWidth={2} />
-                            </button>
-                          </div>
-
-                          {/* Product Name */}
-                          <h3 className="mt-1.5 line-clamp-2 text-[15px] font-bold leading-5 text-[#172033] sm:text-base">{item.productName}</h3>
-
-                          {/* Size */}
-                          {item.size && (
-                            <div className="mt-2.5 inline-flex items-center rounded-md bg-[#F1F5F9] px-2.5 py-1 text-[11px] font-semibold text-[#475569]">
-                              Size:
-                              <span className="ml-1 text-[#172033]">{item.size}</span>
-                            </div>
-                          )}
-
-                          {/* Price Details */}
-                          <div className="mt-4 space-y-1.5">
-                            {/* Original Price */}
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-[11px] font-medium text-[#94A3B8]">Price</span>
-
-                              <span className="text-xs font-medium text-[#94A3B8] line-through">₹{item.price.toLocaleString('en-IN')}</span>
+                    // console.log('product', product)
+                    return (
+                      <div key={`${product._id}-${item.size || 'no-size'}`} className="rounded-2xl border border-[#E2E8F0] bg-white p-4 shadow-sm transition hover:shadow-md">
+                        <div className="flex gap-4">
+                          {/*    IMAGE + QUANTITY  */}
+                          <div className="w-28 shrink-0">
+                            {/* Image */}
+                            <div className="h-32 w-28 overflow-hidden rounded-xl bg-[#F8FAFC]">
+                              <img src={`http://localhost:3000${product?.images?.[0]}`} alt={product?.productName} className="h-full w-full object-contain" />
                             </div>
 
-                            {/* Discount Price */}
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-[11px] font-semibold text-[#64748B]">Discount Price</span>
+                            {/* Quantity - Image ni niche */}
+                            <div className="mt-3 flex h-9 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
+                              <button type="button" onClick={() => decreaseQuantity(item)} className="flex h-full w-9 items-center justify-center text-[#64748B] transition hover:bg-[#F1F5F9] disabled:cursor-not-allowed disabled:opacity-40">
+                                <Minus size={14} />
+                              </button>
 
-                              <span className="text-base font-extrabold text-[#1D4ED8]">₹{(item.discountPrice || item.price).toLocaleString('en-IN')}</span>
+                              <span className="flex h-full min-w-10 items-center justify-center border-x border-[#E2E8F0] text-sm font-bold text-[#172033]">{item.quantity}</span>
+
+                              <button type="button" onClick={() => increaseQuantity(item)} className="flex h-full w-9 items-center justify-center text-[#1D4ED8] transition hover:bg-[#EFF6FF]">
+                                <Plus size={14} />
+                              </button>
                             </div>
                           </div>
 
-                          {/* Item Total */}
-                          <div className="mt-3 border-t border-[#F1F5F9] pt-3">
+                          {/*   PRODUCT DETAILS  */}
+                          <div className="min-w-0 flex-1">
+                            {/* Brand + Delete */}
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-[11px] font-semibold text-[#64748B]">Item Total</span>
+                              <p className="truncate text-[10px] font-bold uppercase tracking-[0.12em] text-[#64748B]">{product.brand?.brandName}</p>
 
-                              <span className="text-base font-extrabold text-[#172033]">₹{((item.discountPrice || item.price) * item.quantity).toLocaleString('en-IN')}</span>
+                              <button
+                                type="button"
+                                onClick={() => removeItem(item)}
+                                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#94A3B8] transition-all duration-200 hover:bg-[#FEF2F2] hover:text-[#EF4444]"
+                                title="Remove"
+                              >
+                                <Trash2 size={16} strokeWidth={2} />
+                              </button>
+                            </div>
+
+                            {/* Product Name */}
+                            <h3 className="mt-1.5 line-clamp-2 text-[15px] font-bold leading-5 text-[#172033] sm:text-base">{product.productName}</h3>
+
+                            {/* Size */}
+                            {item.size && (
+                              <div className="mt-2.5 inline-flex items-center rounded-md bg-[#F1F5F9] px-2.5 py-1 text-[11px] font-semibold text-[#475569]">
+                                Size:
+                                <span className="ml-1 text-[#172033]">{item.size}</span>
+                              </div>
+                            )}
+
+                            {/* Price Details */}
+                            <div className="mt-4 space-y-1.5">
+                              {/* Original Price */}
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-[11px] font-medium text-[#94A3B8]">Price</span>
+
+                                <span className="text-xs font-medium text-[#94A3B8] line-through">₹{item.price.toLocaleString('en-IN')}</span>
+                              </div>
+
+                              {/* Discount Price */}
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-[11px] font-semibold text-[#64748B]">Discount Price</span>
+
+                                <span className="text-base font-extrabold text-[#1D4ED8]">₹{(item.discountPrice || item.price).toLocaleString('en-IN')}</span>
+                              </div>
+                            </div>
+
+                            {/* Item Total */}
+                            <div className="mt-3 border-t border-[#F1F5F9] pt-3">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-[11px] font-semibold text-[#64748B]">Item Total</span>
+
+                                <span className="text-base font-extrabold text-[#172033]">₹{((item.discountPrice || item.price) * item.quantity).toLocaleString('en-IN')}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
                 {/*  BENEFITS  */}
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -276,15 +269,15 @@ export default function Cart() {
 
                     <tbody>
                       {cartItems.map((item, index) => (
-                        <tr key={item.id} className="border-b border-[#F1F5F9]">
+                        <tr key={index} className="border-b border-[#F1F5F9]">
                           {/* Index */}
                           <td className="py-4 align-top text-xs font-semibold text-[#94A3B8]">{index + 1}</td>
 
                           {/* Product */}
                           <td className="min-w-0 py-4 pr-2 align-top">
-                            <p className="truncate text-xs font-bold text-[#172033]">{item.productName}</p>
+                            <p className="truncate text-xs font-bold text-[#172033]">{item.productId?.productName}</p>
 
-                            <p className="mt-1 truncate text-[11px] text-[#64748B]">{item.brand}</p>
+                            <p className="mt-1 truncate text-[11px] text-[#64748B]">{item.productId?.brand?.brandName}</p>
 
                             {item.size && <p className="mt-1 text-[11px] text-[#94A3B8]">Size: {item.size}</p>}
                           </td>

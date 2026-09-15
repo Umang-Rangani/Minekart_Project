@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
 import { Link, NavLink } from 'react-router-dom'
-import { ArrowRight, MapPin, ShoppingBag, Sparkles, Zap } from 'lucide-react'
+import { ArrowRight, LayoutGrid, MapPin, ShoppingBag, Sparkles, Zap } from 'lucide-react'
 import { iconMap } from '../data/iconMap'
 import { useUser } from '../context/userProvider'
 import BreadCrumb from './BreadCrumb'
@@ -38,20 +38,33 @@ export default function Categories() {
   const items = [{ title: 'Categories', link: null }]
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF] pt-2 px-4 ">
-      <div className="mx-auto ">
+    <div className="min-h-screen  ">
+      <BreadCrumb items={items} />
+      <div className="mx-auto pt-5">
         {/* Header */}
-        <div className="mb-8">
-          <BreadCrumb items={items} />
+        <div className="mb-5 rounded-md bg-white p-4 shadow-sm">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            {/* Left Side */}
+            <div className="flex items-center gap-4">
+              {/* Category Icon */}
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#EFF6FF] text-[#1D4ED8] shadow-sm sm:h-15 sm:w-15">
+                <LayoutGrid size={32} strokeWidth={1.8} />
+              </div>
 
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight text-[#1E293B] sm:text-4xl">Explore Categories</h1>
+              {/* Heading */}
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-1 rounded-full bg-[#1D4ED8]" />
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#64748B] sm:text-base">Browse all categories and discover products available on MineKart.</p>
+                  <h1 className="text-2xl font-extrabold tracking-tight text-[#172033] sm:text-3xl">Explore Categories</h1>
+                </div>
+
+                <p className="mt-1 ml-3 text-sm text-[#64748B] sm:text-base">Browse all categories and discover products available on MineKart.</p>
+              </div>
             </div>
 
-            <div className="flex w-fit items-center gap-2 rounded-full border border-[#DBEAFE] bg-white px-4 py-2 text-sm text-[#2563EB]">
+            {/* Category Count */}
+            <div className="flex w-fit shrink-0 items-center gap-2 rounded-full border border-[#DBEAFE] bg-[#EFF6FF] px-4 py-2 text-sm font-semibold text-[#2563EB]">
               <Sparkles size={16} />
               <span>{categoryList.length} Categories</span>
             </div>
@@ -95,7 +108,7 @@ export default function Categories() {
           </div>
         ) : (
           /* Empty State */
-          <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-[#BFDBFE] bg-white px-6 text-center">
+          <div className="flex min-h-100 flex-col items-center justify-center rounded-2xl border border-dashed border-[#BFDBFE] bg-white px-6 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF] text-[#2563EB]">
               <ShoppingBag size={30} strokeWidth={1.6} />
             </div>
