@@ -16,6 +16,9 @@ var brandRouter = require('./routes/brand')
 
 var productRouter = require('./routes/product')
 var cartRouter = require('./routes/cart')
+var addressRouter = require('./routes/address')
+var paymentRouter = require('./routes/payment')
+
 var orderRouter = require('./routes/order')
 
 dotenv.config()
@@ -45,10 +48,11 @@ app.use('/subcategory', subcategoryRouter)
 app.use('/brand', brandRouter)
 app.use('/product', productRouter)
 app.use('/cart', cartRouter)
+app.use('/address', addressRouter)
+app.use('/payment', paymentRouter)
 
 app.use('/order', orderRouter)
 app.use('/uploads', uploadRouter)
-
 
 mongoose
   .connect(process.env.MONGO_URI)

@@ -59,10 +59,10 @@ export default function Header() {
           {accountOpen && (
             <div className="absolute right-0 top-full z-50 pt-2">
               <div className="w-52 overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-lg">
-                <button className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
+                <Link to={"/profile"}  className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
                   <User size={19} />
                   <span>Profile</span>
-                </button>
+                </Link>
 
                 {!user && (
                   <button onClick={() => setShowLogin(true)} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">

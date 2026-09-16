@@ -115,9 +115,9 @@ export default function Cart() {
         {/*   MAIN GRID  */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-6">
           {/*  LEFT SIDE - CART ITEMS = */}
-          <div className="min-w-0 space-y-5  col-span-full">
+          <div className="min-w-0  space-y-5  lg:col-span-4">
             {cartItems.length === 0 ? (
-              <div className="rounded-2xl w-full border border-[#E2E8F0] bg-white px-6 py-16 text-center shadow-sm">
+              <div className="rounded-2xl   border border-[#E2E8F0] bg-white px-6 py-16 text-center shadow-sm">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1D4ED8]">
                   <ShoppingBag size={30} />
                 </div>
@@ -141,15 +141,12 @@ export default function Cart() {
                     // console.log('product', product)
                     // to={`/product/${product._id}`}
                     return (
-                      <Link
-                        key={`${product._id}-${item.size || 'no-size'}`}
-                        className="rounded-2xl border-2 border-white bg-white p-4 shadow-sm transition hover:shadow-md hover:border-r-blue-400 hover:border-b-blue-400 hover:border-2"
-                      >
+                      <Link key={`${product._id}-${item.size || 'no-size'}`} className="rounded-2xl border-2 border-white bg-white p-4 shadow-sm transition hover:shadow-md hover:border-r-blue-400 hover:border-b-blue-400 hover:border-2">
                         <div className="flex gap-4">
                           {/*    IMAGE + QUANTITY  */}
                           <div className="w-28 shrink-0">
                             {/* Image */}
-                            <div className="h-32 w-28 overflow-hidden rounded-xl bg-[#F8FAFC]">
+                            <div onClick={() => navigate(`/product/${product._id}`)} className="h-32 w-28 overflow-hidden rounded-xl bg-[#F8FAFC]">
                               <img src={`http://localhost:3000${product?.images?.[0]}`} alt={product?.productName} className="h-full w-full object-contain" />
                             </div>
 
@@ -225,8 +222,9 @@ export default function Cart() {
                     )
                   })}
                 </div>
+
                 {/*  BENEFITS  */}
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 ">
                   <div className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#ECFDF5] text-[#16A34A]">
                       <Truck size={19} />

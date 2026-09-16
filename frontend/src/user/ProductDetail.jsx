@@ -89,6 +89,9 @@ export default function ProductDetail() {
 
   // ! addtocart button
   const addProductToCart = async () => {
+
+     
+
     // Guest User
     if (!user) {
       setShowLogin(true)
@@ -101,15 +104,23 @@ export default function ProductDetail() {
       return
     }
 
+    
+
     // Check Guest Cart
     const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]')
 
+
+
+    
     // Guest cart available
     if (guestCart.length > 0) {
       const res = await mergeGuestCart()
+        console.log("hiiiiiiiiiiii");
+
 
       if (res.success) {
         navigate('/cart')
+        console.log("hiiiiiiiiiiii");
       } else {
         console.log('Merge cart error:', res.message)
       }
@@ -185,19 +196,21 @@ export default function ProductDetail() {
   ]
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
+      {/* Breadcrumb */}
       <BreadCrumb items={items} />
 
-      <div className="mx-auto pt-5 ">
-        {/* Main Product */}
-        <div className="overflow-hidden rounded-[14px] border border-[#E2E8F0] bg-white shadow-[0_10px_40px_rgba(15,23,42,0.06)]">
+      {/* Product Section */}
+      <div className="mx-auto pt-5">
+        {/*  main product */}
+        <div className="rounded-[14px] border border-[#E2E8F0] shadow-[0_10px_40px_rgba(15,23,42,0.06)]">
           <div className="grid grid-cols-1 lg:grid-cols-[53%_47%]">
             {/* leftside */}
-            <div className="border-b border-[#E2E8F0] bg-[#FBFCFE] p-4 sm:p-6 lg:border-b-0 lg:border-r lg:p-7">
+            <div className=" self-start border-b border-[#E2E8F0] bg-[#FBFCFE] p-4 sm:p-6 lg:sticky lg:top-25 lg:border-b-0 lg:border-r lg:p-7 ">
               {/* Image Area */}
               <div className="rounded-3xl border border-[#E2E8F0] bg-white p-3 shadow-sm sm:p-4">
                 <div className="flex flex-col gap-4 sm:flex-row">
-                  {/* Thumbnails */}
+                  {/* map img */}
                   <div className="order-2 flex gap-3 overflow-x-auto sm:order-1 sm:w-19 sm:flex-col sm:overflow-visible">
                     {product.images?.map((image, index) => (
                       <button
@@ -213,7 +226,7 @@ export default function ProductDetail() {
                     ))}
                   </div>
 
-                  {/* Main Image */}
+                  {/* main img */}
                   <div className="relative order-1 flex min-h-95 flex-1 items-center justify-center overflow-hidden rounded-[20px] bg-linear-to-br from-[#F8FAFC] via-white to-[#EFF6FF] p-6 sm:min-h-125">
                     {selectedImage ? (
                       <img src={`http://localhost:3000${selectedImage}`} alt={product.productName} className="relative z-10 max-h-117 w-full object-contain transition duration-500 hover:scale-[1.03]" />
@@ -238,9 +251,9 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* rightside */}
-            <div className="max-h-[calc(100vh-100px)] no-scrollbar overflow-y-auto bg-white p-5 sm:p-6 lg:p-7">
-              {/* Product Header */}
+            {/* right side */}
+            <div className="bg-white p-5 sm:p-6 lg:p-7">
+              {/* product header */}
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <span className="inline-flex items-center rounded-md bg-[#FFF7ED] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#B45309]">{product.category?.categoryName}</span>
@@ -257,7 +270,7 @@ export default function ProductDetail() {
                 </button>
               </div>
 
-              {/* Brand */}
+              {/* brand */}
               {product.brand?.brandName && (
                 <div className="mt-3 flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#FFF7ED]">
@@ -270,7 +283,7 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* Rating */}
+              {/* rating */}
               <div className="mt-4 flex flex-wrap items-center gap-2.5">
                 <div className="flex items-center gap-1.5 rounded-md bg-[#16A34A] px-2.5 py-1 text-xs font-bold text-white">
                   <Star size={13} fill="currentColor" strokeWidth={2} />
@@ -292,7 +305,7 @@ export default function ProductDetail() {
               {/* Divider */}
               <div className="my-5 h-px bg-[#E3DED6]" />
 
-              {/* Price Card */}
+              {/* price */}
               <div className="rounded-xl border border-[#E3DED6] bg-[#FFFBF5] p-4">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="text-2xl font-extrabold tracking-tight text-[#292725]">₹{product.discountPrice}</span>
@@ -313,7 +326,7 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Description */}
+              {/* description */}
               <div className="mt-6">
                 <div className="mb-2.5 flex items-center gap-2">
                   <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#FFF7ED]">
@@ -328,7 +341,7 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Sizes */}
+              {/* size */}
               {product.sizes?.length > 0 && (
                 <div className="mt-6">
                   <div className="mb-3 flex items-center justify-between">
@@ -368,6 +381,7 @@ export default function ProductDetail() {
                     })}
                   </div>
 
+                  {/* No Size */}
                   {!selectedSize && (
                     <div className="mt-2.5 flex items-center gap-1.5 rounded-lg bg-[#FFFBEB] px-3 py-2">
                       <Info size={13} className="shrink-0 text-[#D97706]" />
@@ -376,6 +390,7 @@ export default function ProductDetail() {
                     </div>
                   )}
 
+                  {/* Selected Size */}
                   {selectedSize && (
                     <div className="mt-2.5 flex items-center gap-1.5 rounded-lg bg-[#FFFBEB] px-3 py-2">
                       <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#F59E0B] text-[9px] font-bold text-white">✓</div>
@@ -388,7 +403,7 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* Quantity */}
+              {/* quantity */}
               <div className="mt-6">
                 <h2 className="mb-2.5 text-sm font-bold text-[#292725]">Quantity</h2>
 
@@ -421,7 +436,7 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Delivery */}
+              {/* delivery */}
               <div className="mt-5 flex items-center gap-3 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] p-3.5">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
                   <Truck size={18} strokeWidth={2} className="text-[#D97706]" />
@@ -438,7 +453,7 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Warranty */}
+              {/* wraranty */}
               {product.warrantyType !== 'No Warranty' && (
                 <div className="mt-3 flex items-center gap-3 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3.5 py-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
@@ -457,7 +472,7 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* Add To Cart */}
+              {/* add to cart */}
               <div className="mt-6">
                 <button
                   type="button"
@@ -482,7 +497,7 @@ export default function ProductDetail() {
                 </button>
               </div>
 
-              {/* Bottom Benefits */}
+              {/* benefits */}
               <div className="mt-5 grid grid-cols-3 overflow-hidden rounded-xl border border-[#E3DED6] bg-white">
                 {/* Returns */}
                 <div className="flex flex-col items-center justify-center px-2 py-3.5 text-center">
@@ -516,7 +531,7 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {/* 2. product loop mate */}
+      {/* products map */}
       {relatedProducts.length > 0 && (
         <section className="mt-6">
           <div className="mb-4">
@@ -540,13 +555,13 @@ export default function ProductDetail() {
                     <span className="text-sm text-[#94A3B8]">No Image</span>
                   )}
 
-                  {/* Discount Badge */}
+                  {/* Discount */}
                   {item.price > item.discountPrice && <span className="absolute left-3 top-3 rounded-md bg-[#16A34A] px-2 py-1 text-[10px] font-bold text-white">{item.discount}% OFF</span>}
                 </div>
 
                 {/* Product Info */}
                 <div className="border-t border-[#E2E8F0] p-4">
-                  {/* Product Name */}
+                  {/* Name */}
                   <h3 className="line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-[#172033] transition-colors group-hover:text-[#1D4ED8]">{item.productName}</h3>
 
                   {/* Price */}
@@ -560,6 +575,7 @@ export default function ProductDetail() {
                   <div className="mt-2 flex items-center gap-2">
                     <span className="flex items-center gap-1 rounded-md bg-[#16A34A] px-2 py-1 text-xs font-bold text-white">
                       {item.rating}
+
                       <Star size={11} fill="currentColor" strokeWidth={2} />
                     </span>
 

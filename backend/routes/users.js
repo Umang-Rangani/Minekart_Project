@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
 // ! signup
 router.post('/register', async (req, res) => {
   try {
-    const { avatar, name, email, password, phone, address, city, pincode } = req.body
+    const { avatar, name, email, password, phone } = req.body
 
     // Required fields
     if (!name || !email || !password) {
@@ -62,9 +62,6 @@ router.post('/register', async (req, res) => {
       email: email.toLowerCase(),
       password: hashedPassword,
       phone,
-      address,
-      city,
-      pincode,
     })
 
     return res.status(201).json({
@@ -153,9 +150,6 @@ router.post('/login', async (req, res) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
-        address: user.address,
-        city: user.city,
-        pincode: user.pincode,
         status: user.status,
       },
     })

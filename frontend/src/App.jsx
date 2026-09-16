@@ -20,6 +20,7 @@ import Cart from './user/Cart'
 import Categories from './user/Categories'
 import Brands from './user/Brands'
 import Checkout from './user/Checkout'
+import Profile from './user/Profile'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -53,6 +54,8 @@ export default function App() {
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
 
           <Route path="/checkout" element={<Checkout />} />
+
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         {/*  AUTH  */}

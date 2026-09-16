@@ -20,9 +20,6 @@ export default function Register() {
     email: '',
     password: '',
     phone: '',
-    address: '',
-    city: '',
-    pincode: '',
   })
 
   const [loading, setLoading] = useState(false)
@@ -65,9 +62,6 @@ export default function Register() {
       email: '',
       password: '',
       phone: '',
-      address: '',
-      city: '',
-      pincode: '',
     })
 
     setImageFile(null)
@@ -277,59 +271,6 @@ export default function Register() {
                 </div>
               </div>
 
-              {/* ! Address */}
-              <div className="sm:col-span-2">
-                <label className="mb-2 block text-sm font-medium text-[#172033]">Address</label>
-
-                <div className="relative">
-                  <MapPin size={18} className="absolute left-3.5 top-3.5 text-[#64748B]" />
-
-                  <textarea
-                    name="address"
-                    value={signUp.address}
-                    onChange={handleChange}
-                    placeholder="Enter your full address"
-                    rows={2}
-                    className="w-full resize-none rounded-lg border border-[#E2E8F0] bg-white py-3 pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
-                </div>
-              </div>
-
-              {/* ! City */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#172033]">City</label>
-
-                <div className="relative">
-                  <MapPinned size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                  <input
-                    type="text"
-                    name="city"
-                    value={signUp.city}
-                    onChange={handleChange}
-                    placeholder="Enter city"
-                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
-                </div>
-              </div>
-
-              {/* ! Pincode */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#172033]">Pincode</label>
-
-                <div className="relative">
-                  <Hash size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                  <input
-                    type="text"
-                    name="pincode"
-                    value={signUp.pincode}
-                    onChange={handleChange}
-                    placeholder="Enter pincode"
-                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
-                </div>
-              </div>
             </div>
 
             {/* ! Buttons */}

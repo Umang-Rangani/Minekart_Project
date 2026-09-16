@@ -75,7 +75,7 @@ export default function CategoryList() {
       </div>
 
       {/* Delivery Location - Fixed Right */}
-      {user && (
+      {/* {user && (
         <div className="shrink-0 border-l border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4">
           <div className="flex items-center gap-2 text-sm">
             <MapPin size={19} className="fill-[#1D4ED8] text-[#1D4ED8]" />
@@ -87,7 +87,7 @@ export default function CategoryList() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   )
 }

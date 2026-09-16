@@ -31,21 +31,6 @@ const userSchema = new mongoose.Schema(
       default: '',
     },
 
-    address: {
-      type: String,
-      default: '',
-    },
-
-    city: {
-      type: String,
-      default: '',
-    },
-
-    pincode: {
-      type: String,
-      default: '',
-    },
-
     status: {
       type: String,
       enum: ['Active', 'Inactive'],

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ArrowLeft, Check, ChevronRight, CreditCard, MapPin, Plus, ShieldCheck, ShoppingBag, Smartphone, Truck, Wallet } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
 
@@ -14,6 +14,7 @@ export default function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState(1)
   const [selectedPayment, setSelectedPayment] = useState('COD')
   const [showAddressForm, setShowAddressForm] = useState(false)
+  const [paymentOption, setPaymentOption] = useState(false)
 
   const [addressForm, setAddressForm] = useState({
     fullName: '',
@@ -147,276 +148,10 @@ export default function Checkout() {
       </div>
 
       {/* CHECKOUT GRID */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-6">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-6">
         {/* LEFT SIDE */}
-        <div className="space-y-5 lg:col-span-4">
-          {/* DELIVERY ADDRESS */}
-          <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm">
-            {/* Heading */}
-            <div className="mb-5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EFF6FF] text-[#1D4ED8]">
-                  <MapPin size={20} />
-                </div>
-
-                <div>
-                  <h2 className="text-lg font-extrabold text-[#172033]">Delivery Address</h2>
-
-                  <p className="text-xs text-[#64748B]">Where should we deliver your order?</p>
-                </div>
-              </div>
-
-              {!showAddressForm && (
-                <button type="button" onClick={() => setShowAddressForm(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-3 py-2 text-xs font-bold text-[#1D4ED8] transition hover:bg-[#DBEAFE]">
-                  <Plus size={15} />
-                  Add New
-                </button>
-              )}
-            </div>
-
-            {/* SAVED ADDRESSES */}
-            {!showAddressForm && (
-              <div className="space-y-3">
-                {addresses.map((address) => (
-                  <button
-                    key={address.id}
-                    type="button"
-                    onClick={() => setSelectedAddress(address.id)}
-                    className={`w-full rounded-xl border p-4 text-left transition ${selectedAddress === address.id ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] bg-white hover:border-[#BFDBFE]'}`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${selectedAddress === address.id ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white' : 'border-[#CBD5E1]'}`}>
-                        {selectedAddress === address.id && <Check size={13} strokeWidth={3} />}
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-extrabold text-[#172033]">{address.fullName}</p>
-
-                          <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-[#64748B]">{address.addressType}</span>
-
-                          <span className="text-xs font-semibold text-[#64748B]">{address.phone}</span>
-                        </div>
-
-                        <p className="mt-2 text-xs leading-5 text-[#64748B]">
-                          {address.addressLine}, {address.city}, {address.state} - {address.pincode}
-                        </p>
-
-                        {address.landmark && <p className="mt-1 text-[11px] text-[#94A3B8]">Landmark: {address.landmark}</p>}
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* ADD ADDRESS FORM */}
-            {showAddressForm && (
-              <form onSubmit={handleAddAddress} className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {/* Full Name */}
-                  <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">Full Name</label>
-
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={addressForm.fullName}
-                      onChange={handleAddressChange}
-                      placeholder="Enter full name"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-
-                  {/* Phone */}
-                  <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">Phone Number</label>
-
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={addressForm.phone}
-                      onChange={handleAddressChange}
-                      placeholder="Enter phone number"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-                </div>
-
-                {/* Address */}
-                <div>
-                  <label className="mb-1.5 block text-xs font-bold text-[#475569]">Address</label>
-
-                  <textarea
-                    name="addressLine"
-                    value={addressForm.addressLine}
-                    onChange={handleAddressChange}
-                    placeholder="House no., building, street, area"
-                    rows={3}
-                    required
-                    className="w-full resize-none rounded-lg border border-[#E2E8F0] bg-white px-3 py-3 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
-                </div>
-
-                {/* City / State / Pincode */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                  <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">City</label>
-
-                    <input
-                      type="text"
-                      name="city"
-                      value={addressForm.city}
-                      onChange={handleAddressChange}
-                      placeholder="City"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] px-3 text-sm outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">State</label>
-
-                    <input
-                      type="text"
-                      name="state"
-                      value={addressForm.state}
-                      onChange={handleAddressChange}
-                      placeholder="State"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] px-3 text-sm outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">Pincode</label>
-
-                    <input
-                      type="text"
-                      name="pincode"
-                      value={addressForm.pincode}
-                      onChange={handleAddressChange}
-                      placeholder="Pincode"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] px-3 text-sm outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
-                  </div>
-                </div>
-
-                {/* Landmark */}
-                <div>
-                  <label className="mb-1.5 block text-xs font-bold text-[#475569]">
-                    Landmark
-                    <span className="ml-1 font-normal text-[#94A3B8]">(Optional)</span>
-                  </label>
-
-                  <input
-                    type="text"
-                    name="landmark"
-                    value={addressForm.landmark}
-                    onChange={handleAddressChange}
-                    placeholder="Nearby landmark"
-                    className="h-11 w-full rounded-lg border border-[#E2E8F0] px-3 text-sm outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
-                </div>
-
-                {/* Address Type */}
-                <div>
-                  <label className="mb-2 block text-xs font-bold text-[#475569]">Address Type</label>
-
-                  <div className="flex gap-2">
-                    {['Home', 'Work', 'Other'].map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() =>
-                          setAddressForm((prev) => ({
-                            ...prev,
-                            addressType: type,
-                          }))
-                        }
-                        className={`rounded-lg border px-4 py-2 text-xs font-bold transition ${addressForm.addressType === type ? 'border-[#1D4ED8] bg-[#EFF6FF] text-[#1D4ED8]' : 'border-[#E2E8F0] bg-white text-[#64748B] hover:border-[#BFDBFE]'}`}
-                      >
-                        {type}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex justify-end gap-3 border-t border-[#E2E8F0] pt-4">
-                  <button type="button" onClick={() => setShowAddressForm(false)} className="rounded-lg border border-[#E2E8F0] px-4 py-2.5 text-xs font-bold text-[#475569] transition hover:border-[#94A3B8]">
-                    Cancel
-                  </button>
-
-                  <button type="submit" className="rounded-lg bg-[#1D4ED8] px-5 py-2.5 text-xs font-bold text-white transition hover:bg-[#1E40AF]">
-                    Save Address
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-
+        <div className="min-w-0 space-y-5 lg:col-span-4">
           {/* PAYMENT METHOD */}
-          <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EFF6FF] text-[#1D4ED8]">
-                <CreditCard size={20} />
-              </div>
-
-              <div>
-                <h2 className="text-lg font-extrabold text-[#172033]">Payment Method</h2>
-
-                <p className="text-xs text-[#64748B]">Choose how you want to pay</p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {/* COD */}
-              <button
-                type="button"
-                onClick={() => setSelectedPayment('COD')}
-                className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition ${selectedPayment === 'COD' ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] hover:border-[#BFDBFE]'}`}
-              >
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${selectedPayment === 'COD' ? 'bg-white text-[#1D4ED8]' : 'bg-[#F8FAFC] text-[#64748B]'}`}>
-                  <Wallet size={20} />
-                </div>
-
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-[#172033]">Cash on Delivery</p>
-
-                  <p className="mt-0.5 text-xs text-[#64748B]">Pay when your order is delivered</p>
-                </div>
-
-                <div className={`flex h-5 w-5 items-center justify-center rounded-full border ${selectedPayment === 'COD' ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white' : 'border-[#CBD5E1]'}`}>
-                  {selectedPayment === 'COD' && <Check size={13} strokeWidth={3} />}
-                </div>
-              </button>
-
-              {/* ONLINE */}
-              <button
-                type="button"
-                onClick={() => setSelectedPayment('ONLINE')}
-                className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition ${selectedPayment === 'ONLINE' ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] hover:border-[#BFDBFE]'}`}
-              >
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${selectedPayment === 'ONLINE' ? 'bg-white text-[#1D4ED8]' : 'bg-[#F8FAFC] text-[#64748B]'}`}>
-                  <Smartphone size={20} />
-                </div>
-
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-[#172033]">Online Payment</p>
-
-                  <p className="mt-0.5 text-xs text-[#64748B]">UPI, Card, Net Banking and more</p>
-                </div>
-
-                <div className={`flex h-5 w-5 items-center justify-center rounded-full border ${selectedPayment === 'ONLINE' ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white' : 'border-[#CBD5E1]'}`}>
-                  {selectedPayment === 'ONLINE' && <Check size={13} strokeWidth={3} />}
-                </div>
-              </button>
-            </div>
-          </div>
 
           {/* ORDER ITEMS */}
           <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm">
@@ -484,7 +219,7 @@ export default function Checkout() {
         </div>
 
         {/* RIGHT SIDE - SUMMARY */}
-        <div className="min-w-0 lg:col-span-2">
+        <div className="min-w-0  self-start lg:col-span-2">
           <div className="h-fit rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm lg:sticky lg:top-24">
             <div className="mb-5">
               <h2 className="text-lg font-extrabold text-[#172033]">Order Summary</h2>
@@ -544,9 +279,59 @@ export default function Checkout() {
 
             {/* PAYMENT SELECTED */}
             <div className="mt-4 rounded-xl bg-[#F8FAFC] px-4 py-3">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Payment Method</p>
+              <div className="flex justify-between">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Payment Method</p>
+
+                <button onClick={() => setPaymentOption(!paymentOption)} className="text-xs font-bold text-blue-700  hover:underline">
+                  Change
+                </button>
+              </div>
 
               <p className="mt-1 text-xs font-bold text-[#172033]">{selectedPayment === 'COD' ? 'Cash on Delivery' : 'Online Payment'}</p>
+            </div>
+
+            {/* address */}
+            <div className="mt-4 rounded-xl bg-[#F8FAFC] px-4 py-3">
+              <div className="flex justify-between">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Delivery Address</p>
+
+                <Link to={"/profile"} onClick={() => setPaymentOption(!paymentOption)} className="text-xs font-bold text-blue-700  hover:underline">
+                  Change
+                </Link>
+              </div>
+
+              <div className="space-y-3 mt-5">
+                {addresses.map((address) => (
+                  <button
+                    key={address.id}
+                    type="button"
+                    onClick={() => setSelectedAddress(address.id)}
+                    className={`w-full rounded-xl border p-4 text-left transition ${selectedAddress === address.id ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] bg-white hover:border-[#BFDBFE]'}`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${selectedAddress === address.id ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white' : 'border-[#CBD5E1]'}`}>
+                        {selectedAddress === address.id && <Check size={13} strokeWidth={3} />}
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-sm font-extrabold text-[#172033]">{address.fullName}</p>
+
+                          <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-[#64748B]">{address.addressType}</span>
+
+                          <span className="text-xs font-semibold text-[#64748B]">{address.phone}</span>
+                        </div>
+
+                        <p className="mt-2 text-xs leading-5 text-[#64748B]">
+                          {address.addressLine}, {address.city}, {address.state} - {address.pincode}
+                        </p>
+
+                        {address.landmark && <p className="mt-1 text-[11px] text-[#94A3B8]">Landmark: {address.landmark}</p>}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* PLACE ORDER */}
