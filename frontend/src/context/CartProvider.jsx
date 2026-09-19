@@ -63,6 +63,8 @@ export function CartProvider({ children }) {
     }
   }
 
+
+  
   // ! Update Cart Item Quantity
   const updateCartItem = async ({ productId, size = null, quantity }) => {
     if (!user) {
@@ -191,45 +193,6 @@ export function CartProvider({ children }) {
     }
   }
 
-  // ! Merge Guest Cart
-  const mergeGuestCart = async () => {
-    if (!user) {
-      return {
-        success: false,
-        message: 'Please login first',
-      }
-    }
-
-    try {
-      const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]')
-
-      if (guestCart.length === 0) {
-        return {
-          success: true,
-          message: 'Guest cart is empty',
-        }
-      }
-
-      const res = await axiosInstance.post('/cart/merge', {
-        items: guestCart,
-      })
-
-      if (res.data.success) {
-        await getCart()
-        localStorage.removeItem('guest_cart')
-      }
-
-      return res.data
-    } catch (error) {
-      console.log('Merge Guest Cart Error:', error.response?.data || error.message)
-
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Something went wrong',
-      }
-    }
-  }
-
   // ! Get Cart when user changes
   useEffect(() => {
     getCart()
@@ -246,7 +209,6 @@ export function CartProvider({ children }) {
         updateCartItem,
         removeCartItem,
         clearCart,
-        mergeGuestCart,
       }}
     >
       {children}

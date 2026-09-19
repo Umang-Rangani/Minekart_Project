@@ -42,6 +42,8 @@ export const UserProvider = ({ children }) => {
       await axiosInstance.post('/users/logout')
       setUser(null)
       setShowLogin(true)
+
+      window.location.reload()
     } catch (error) {
       console.error('Logout Error:', error.response?.data || error.message)
     }

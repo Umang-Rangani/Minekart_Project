@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
-import { ShoppingCart, Star, Minus, Plus, Heart, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, IndianRupee } from 'lucide-react'
+import { ShoppingCart, Star, Minus, Plus, Trash2, Heart, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, IndianRupee } from 'lucide-react'
 import { useUser } from '../context/userProvider'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
@@ -10,16 +10,17 @@ export default function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { user, setShowLogin } = useUser()
-  const { addToCart, mergeGuestCart } = useCart()
-
+  const { cart, addToCart, updateCartItem, removeCartItem } = useCart()
   // para Id
   const [product, setProduct] = useState(null)
 
   // img ne select krin show krvamate
   const [selectedImage, setSelectedImage] = useState('')
 
+  // add to cart
+
   const [selectedSize, setSelectedSize] = useState('')
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(0)
 
   // ! 1. product loop mate
   const [relatedProducts, setRelatedProducts] = useState([])
@@ -66,119 +67,94 @@ export default function ProductDetail() {
       behavior: 'smooth',
     })
     getProduct()
-  }, [id])
+  }, [id, cart])
 
-  // ! Guest bnavu login pela value localstorage ma rakhva mate
-  const saveGuestCart = (newQuantity, newSize = selectedSize) => {
-    const existingCart = JSON.parse(localStorage.getItem('guest_cart') || '[]')
+  useEffect(() => {
+    if (!cart?.items || !product) return
 
-    const existingItemIndex = existingCart.findIndex((item) => item.productId === product._id && item.size === (newSize || null))
+    const cartItem = cart.items.find((item) => item.productId?._id?.toString() === product._id?.toString() && item.size === (selectedSize || null))
 
-    if (existingItemIndex !== -1) {
-      existingCart[existingItemIndex].quantity = newQuantity
+    if (cartItem) {
+      setQuantity(cartItem.quantity)
     } else {
-      existingCart.push({
-        productId: product._id,
-        quantity: newQuantity,
-        size: newSize || null,
-      })
+      setQuantity(0)
     }
-
-    localStorage.setItem('guest_cart', JSON.stringify(existingCart))
-  }
+  }, [cart, product, selectedSize])
 
   // ! addtocart button
   const addProductToCart = async () => {
-
-     
-
-    // Guest User
     if (!user) {
       setShowLogin(true)
-      saveGuestCart(quantity, selectedSize)
       return
     }
 
-    // Size check
     if (product.sizes?.length > 0 && !selectedSize) {
       return
     }
 
-    
-
-    // Check Guest Cart
-    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]')
-
-
-
-    
-    // Guest cart available
-    if (guestCart.length > 0) {
-      const res = await mergeGuestCart()
-        console.log("hiiiiiiiiiiii");
-
-
-      if (res.success) {
-        navigate('/cart')
-        console.log("hiiiiiiiiiiii");
-      } else {
-        console.log('Merge cart error:', res.message)
-      }
-
-      return
-    }
-
-    // Normal Logged-in User
     const res = await addToCart({
       productId: product._id,
-      quantity,
+      quantity: 1,
       size: selectedSize || null,
     })
 
     if (res.success) {
-      navigate('/cart')
+      setQuantity(1)
     } else {
       console.log('Add to cart error:', res.message)
     }
   }
 
-  const increaseQuantity = () => {
-    if (quantity < product.stock) {
-      const newQuantity = quantity + 1
-
-      setQuantity(newQuantity)
-
-      if (!user) {
-        saveGuestCart(newQuantity)
-      }
-    }
-  }
-
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      const newQuantity = quantity - 1
-
-      setQuantity(newQuantity)
-
-      if (!user) {
-        saveGuestCart(newQuantity)
-      }
-    }
-  }
-
-  // ! localstorage mathi value get kri ne SHOW krva mate
-  useEffect(() => {
-    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]')
-
-    const item = guestCart.find((item) => item.productId === id)
-
-    if (!item) {
+  const increaseQuantity = async () => {
+    if (quantity >= product.stock) {
       return
     }
 
-    setQuantity(item.quantity || 1)
-    setSelectedSize(item.size || '')
-  }, [id])
+    const newQuantity = quantity + 1
+
+    const res = await updateCartItem({
+      productId: product._id,
+      size: selectedSize || null,
+      quantity: newQuantity,
+    })
+
+    if (res.success) {
+      setQuantity(newQuantity)
+    } else {
+      console.log('Increase quantity error:', res.message)
+    }
+  }
+
+  const decreaseQuantity = async () => {
+    if (quantity === 1) {
+      const res = await removeCartItem({
+        productId: product._id,
+        size: selectedSize || null,
+      })
+
+      if (res.success) {
+        setQuantity(0)
+      } else {
+        console.log('Remove cart error:', res.message)
+      }
+
+      return
+    }
+
+    const newQuantity = quantity - 1
+
+    const res = await updateCartItem({
+      productId: product._id,
+      size: selectedSize || null,
+      quantity: newQuantity,
+    })
+
+    if (res.success) {
+      setQuantity(newQuantity)
+    } else {
+      console.log('Decrease quantity error:', res.message)
+    }
+  }
 
   if (!product) {
     return (
@@ -188,8 +164,9 @@ export default function ProductDetail() {
     )
   }
 
-  // ! BreadCrumb
+  console.log('quantity', quantity)
 
+  // ! BreadCrumb
   const items = [
     { title: `${product.category?.categoryName}`, link: `/category/${product?.category?._id}/products` },
     { title: `${product.subCategory?.subCategoryName}`, link: null },
@@ -203,21 +180,21 @@ export default function ProductDetail() {
       {/* Product Section */}
       <div className="mx-auto pt-5">
         {/*  main product */}
-        <div className="rounded-[14px] border border-[#E2E8F0] shadow-[0_10px_40px_rgba(15,23,42,0.06)]">
-          <div className="grid grid-cols-1 lg:grid-cols-[53%_47%]">
+        <div className="rounded-[14px] ">
+          <div className="grid grid-cols-1 lg:grid-cols-[53%_47%] gap-5 ">
             {/* leftside */}
-            <div className=" self-start border-b border-[#E2E8F0] bg-[#FBFCFE] p-4 sm:p-6 lg:sticky lg:top-25 lg:border-b-0 lg:border-r lg:p-7 ">
+            <div className=" self-start border border-[#E2E8F0]   lg:sticky lg:top-25  rounded-2xl overflow-hidden ">
               {/* Image Area */}
-              <div className="rounded-3xl border border-[#E2E8F0] bg-white p-3 shadow-sm sm:p-4">
+              <div className=" bg-white p-3 shadow-sm sm:p-4">
                 <div className="flex flex-col gap-4 sm:flex-row">
                   {/* map img */}
-                  <div className="order-2 flex gap-3 overflow-x-auto sm:order-1 sm:w-19 sm:flex-col sm:overflow-visible">
+                  <div className="order-2 flex gap-5 overflow-x-auto sm:order-1 sm:w-19 sm:flex-col sm:overflow-visible">
                     {product.images?.map((image, index) => (
                       <button
                         key={index}
                         type="button"
-                        onClick={() => setSelectedImage(image)}
-                        className={`group relative flex h-17 w-17 shrink-0 items-center justify-center rounded-xl border bg-white p-2 transition-all duration-200 ${
+                        onMouseEnter={() => setSelectedImage(image)}
+                        className={`group relative flex h-20 w-20 shrink-0 items-center justify-center rounded-xl border bg-white p-2 transition-all duration-200 ${
                           selectedImage === image ? 'border-[#1D4ED8] bg-[#EFF6FF] shadow-md ring-2 ring-[#DBEAFE]' : 'border-[#E2E8F0] hover:-translate-y-0.5 hover:border-[#93C5FD] hover:shadow-sm'
                         }`}
                       >
@@ -252,7 +229,7 @@ export default function ProductDetail() {
             </div>
 
             {/* right side */}
-            <div className="bg-white p-5 sm:p-6 lg:p-7">
+            <div className="bg-white p-5 sm:p-6 lg:p-7 rounded-2xl border border-[#E2E8F0] overflow-hidden">
               {/* product header */}
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
@@ -262,12 +239,12 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Wishlist */}
-                <button
+                {/* <button
                   type="button"
                   className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#E3DED6] bg-white text-[#6F6A64] shadow-sm transition-all duration-200 hover:border-[#F9A8D4] hover:bg-[#FDF2F8] hover:text-[#DB2777]"
                 >
                   <Heart size={19} strokeWidth={2} className="transition-transform duration-200 group-hover:scale-110" />
-                </button>
+                </button> */}
               </div>
 
               {/* brand */}
@@ -366,10 +343,6 @@ export default function ProductDetail() {
                           type="button"
                           onClick={() => {
                             setSelectedSize(size)
-
-                            if (!user) {
-                              saveGuestCart(quantity, size)
-                            }
                           }}
                           className={`flex h-10 min-w-14 items-center justify-center rounded-lg border px-4 text-xs font-bold transition-all duration-200 ${
                             selected ? 'border-[#D97706] bg-[#F59E0B] text-white shadow-sm' : 'border-[#E3DED6] bg-white text-[#292725] hover:border-[#F59E0B] hover:bg-[#FFF7ED] hover:text-[#B45309]'
@@ -402,39 +375,6 @@ export default function ProductDetail() {
                   )}
                 </div>
               )}
-
-              {/* quantity */}
-              <div className="mt-6">
-                <h2 className="mb-2.5 text-sm font-bold text-[#292725]">Quantity</h2>
-
-                <div className="flex w-fit items-center overflow-hidden rounded-lg border border-[#E3DED6] bg-white">
-                  <button
-                    type="button"
-                    onClick={decreaseQuantity}
-                    disabled={quantity <= 1}
-                    className="flex h-10 w-10 items-center justify-center text-[#6F6A64] transition hover:bg-[#FFF7ED] hover:text-[#D97706] disabled:cursor-not-allowed disabled:opacity-30"
-                  >
-                    <Minus size={15} strokeWidth={2.5} />
-                  </button>
-
-                  <span className="flex h-10 w-12 items-center justify-center border-x border-[#E3DED6] text-sm font-bold text-[#292725]">{quantity}</span>
-
-                  <button
-                    type="button"
-                    onClick={increaseQuantity}
-                    disabled={quantity >= product.stock}
-                    className="flex h-10 w-10 items-center justify-center text-[#6F6A64] transition hover:bg-[#FFF7ED] hover:text-[#D97706] disabled:cursor-not-allowed disabled:opacity-30"
-                  >
-                    <Plus size={15} strokeWidth={2.5} />
-                  </button>
-                </div>
-
-                <div className="mt-2 flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
-
-                  <p className="text-[11px] font-medium text-[#16A34A]">{product.stock} items available</p>
-                </div>
-              </div>
 
               {/* delivery */}
               <div className="mt-5 flex items-center gap-3 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] p-3.5">
@@ -472,29 +412,46 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* add to cart */}
-              <div className="mt-6">
-                <button
-                  type="button"
-                  onClick={addProductToCart}
-                  className="flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-[#F59E0B] px-5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-[#D97706] hover:shadow-md active:scale-[0.99]"
-                >
-                  <ShoppingCart size={18} strokeWidth={2.2} />
+              {/* add to cartx */}
+              <div className="mt-6 w-80 mx-auto">
+                {quantity === 0 ? (
+                  // Add To Cart
+                  <button
+                    type="button"
+                    onClick={addProductToCart}
+                    className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#FCD200] bg-[#FFD814] px-5 text-sm font-semibold text-[#0F1111] shadow-sm transition hover:bg-[#F7CA00] hover:shadow-md active:scale-[0.99]"
+                  >
+                    <ShoppingCart size={18} strokeWidth={2.2} />
 
-                  <span>{user ? 'Add to Cart' : 'Login to Add'}</span>
+                    <span>Add to cart</span>
+                  </button>
+                ) : (
+                  // Quantity Control
+                  <div className="flex h-11 w-full items-center  overflow-hidden rounded-xl border border-[#FCD200] bg-white shadow-sm">
+                    {/* Left - Trash / Minus */}
+                    <button type="button" onClick={decreaseQuantity} className="flex h-full w-12 shrink-0 items-center justify-center text-[#0F1111] transition hover:bg-[#F7CA00] border-x border-[#FCD200]">
+                      {quantity === 1 ? <Trash2 size={18} strokeWidth={2.3} /> : <Minus size={19} strokeWidth={2.5} />}
+                    </button>
 
-                  {user && (
-                    <>
-                      <span className="h-5 w-px bg-white/40" />
+                    {/* Quantity */}
+                    <div className="flex h-full flex-1 items-center justify-center ">
+                      <span className="text-sm font-bold text-[#0F1111]">{quantity} in cart</span>
+                    </div>
 
-                      <span className="flex items-center gap-0.5 text-lg font-extrabold">
-                        <IndianRupee size={16} strokeWidth={2.5} />
+                    {/* Plus */}
+                    <button
+                      type="button"
+                      onClick={increaseQuantity}
+                      disabled={quantity >= product.stock}
+                      className="flex h-full w-12 shrink-0 items-center justify-center text-[#0F1111] transition hover:bg-[#F7CA00] disabled:cursor-not-allowed disabled:opacity-40 border-x border-[#FCD200]"
+                    >
+                      <Plus size={19} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                )}
 
-                        {(product.discountPrice * quantity).toLocaleString('en-IN')}
-                      </span>
-                    </>
-                  )}
-                </button>
+                {/* Stock */}
+                <p className="mt-2 text-[11px] text-[#565959]">{product.stock} items available</p>
               </div>
 
               {/* benefits */}

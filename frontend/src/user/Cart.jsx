@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
@@ -6,8 +6,15 @@ import BreadCrumb from './BreadCrumb'
 
 export default function Cart() {
   const navigate = useNavigate()
-  const { cart, cartLoading, updateCartItem, removeCartItem, clearCart } = useCart()
+  const { cart, updateCartItem, removeCartItem } = useCart()
   const cartItems = cart?.items || []
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }, [cart])
 
   // ! Increase Quantity
   const increaseQuantity = async (item) => {

@@ -11,21 +11,10 @@ export default function Checkout() {
 
   const cartItems = cart?.items || []
 
-  const [selectedAddress, setSelectedAddress] = useState(1)
   const [selectedPayment, setSelectedPayment] = useState('COD')
-  const [showAddressForm, setShowAddressForm] = useState(false)
   const [paymentOption, setPaymentOption] = useState(false)
 
-  const [addressForm, setAddressForm] = useState({
-    fullName: '',
-    phone: '',
-    addressLine: '',
-    city: '',
-    state: '',
-    pincode: '',
-    landmark: '',
-    addressType: 'Home',
-  })
+  const [selectedAddress, setSelectedAddress] = useState(1)
 
   // ! Dummy Saved Addresses
   // Later API mathi aavse
@@ -52,25 +41,6 @@ export default function Checkout() {
   const grandTotal = subtotal + deliveryCharge + tax
 
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0)
-
-  // ! Address Change
-  const handleAddressChange = (e) => {
-    const { name, value } = e.target
-
-    setAddressForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  // ! Add New Address
-  const handleAddAddress = (e) => {
-    e.preventDefault()
-
-    console.log('New Address:', addressForm)
-
-    setShowAddressForm(false)
-  }
 
   // ! Place Order
   const handlePlaceOrder = () => {
@@ -278,24 +248,76 @@ export default function Checkout() {
             )}
 
             {/* PAYMENT SELECTED */}
+
+            {/* PAYMENT SELECTED */}
             <div className="mt-4 rounded-xl bg-[#F8FAFC] px-4 py-3">
               <div className="flex justify-between">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Payment Method</p>
 
                 <button onClick={() => setPaymentOption(!paymentOption)} className="text-xs font-bold text-blue-700  hover:underline">
-                  Change
+                  Change{' '}
                 </button>
               </div>
 
               <p className="mt-1 text-xs font-bold text-[#172033]">{selectedPayment === 'COD' ? 'Cash on Delivery' : 'Online Payment'}</p>
             </div>
 
-            {/* address */}
+            {paymentOption && (
+              <div className="rounded-2xl border mt-2 border-[#E2E8F0] bg-white p-5 shadow-sm">
+                <div className="space-y-3">
+                  {/* COD */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPayment('COD')}
+                    className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition ${selectedPayment === 'COD' ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] hover:border-[#BFDBFE]'}`}
+                  >
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${selectedPayment === 'COD' ? 'bg-white text-[#1D4ED8]' : 'bg-[#F8FAFC] text-[#64748B]'}`}>
+                      <Wallet size={20} />
+                    </div>
+
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-[#172033]">Cash on Delivery</p>
+
+                      <p className="mt-0.5 text-xs text-[#64748B]">Pay when your order is delivered</p>
+                    </div>
+
+                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border ${selectedPayment === 'COD' ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white' : 'border-[#CBD5E1]'}`}>
+                      {selectedPayment === 'COD' && <Check size={13} strokeWidth={3} />}
+                    </div>
+                  </button>
+
+                  {/* ONLINE */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPayment('ONLINE')}
+                    className={`flex w-full items-center gap-4 rounded-xl border p-4 text-left transition ${selectedPayment === 'ONLINE' ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] hover:border-[#BFDBFE]'}`}
+                  >
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${selectedPayment === 'ONLINE' ? 'bg-white text-[#1D4ED8]' : 'bg-[#F8FAFC] text-[#64748B]'}`}>
+                      <Smartphone size={20} />
+                    </div>
+
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-[#172033]">Online Payment</p>
+
+                      <p className="mt-0.5 text-xs text-[#64748B]">UPI, Card, Net Banking and more</p>
+                    </div>
+
+                    <div className={`flex h-5 w-5 items-center justify-center rounded-full border ${selectedPayment === 'ONLINE' ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white' : 'border-[#CBD5E1]'}`}>
+                      {selectedPayment === 'ONLINE' && <Check size={13} strokeWidth={3} />}
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            
+
+            {/* address main*/}
             <div className="mt-4 rounded-xl bg-[#F8FAFC] px-4 py-3">
               <div className="flex justify-between">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Delivery Address</p>
 
-                <Link to={"/profile"} onClick={() => setPaymentOption(!paymentOption)} className="text-xs font-bold text-blue-700  hover:underline">
+                <Link to={'/profile'} onClick={() => setPaymentOption(!paymentOption)} className="text-xs font-bold text-blue-700  hover:underline">
                   Change
                 </Link>
               </div>

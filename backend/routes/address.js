@@ -66,30 +66,6 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 })
 
-// Get Default Address
-router.get('/default', authMiddleware, async (req, res) => {
-  try {
-    const { userId } = req.user
 
-    const address = await Address.findOne({
-      userId,
-      isDefault: true,
-    })
-
-    res.status(200).json({
-      success: true,
-      message: address ? 'Default address fetched successfully' : 'Default address not found',
-      data: address,
-    })
-  } catch (error) {
-    console.log('Get Default Address Error:', error)
-
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-      error: error.message,
-    })
-  }
-})
 
 module.exports = router

@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { User, Mail, Phone, MapPin, Building2, MapPinned, Hash, ShieldCheck, Pencil, Camera, Plus, Check } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { MapPin, Mail, Plus, CheckCircle2, User, Phone, Hash, Building2, ShieldCheck, Navigation, Home, Camera, Pencil, BriefcaseBusiness, Check, MapPinned, X, Save } from 'lucide-react'
 import { useUser } from '../context/userProvider'
+import { axiosInstance } from '../config/axiosConfig'
 
 export default function Profile() {
   const { user } = useUser()
@@ -16,24 +17,10 @@ export default function Profile() {
     addressType: 'Home',
   })
 
+  const [addresses, setAddresses] = useState([])
+  const [addressLoading, setAddressLoading] = useState(false)
+  const [addressSaving, setAddressSaving] = useState(false)
   const [showAddressForm, setShowAddressForm] = useState(false)
-  const [selectedAddress, setSelectedAddress] = useState(1)
-
-  // ! Dummy Saved Addresses
-  // Later API mathi aavse
-  const [addresses] = useState([
-    {
-      id: 1,
-      fullName: 'Umang Rangani',
-      phone: '9876543210',
-      addressLine: '123, Main Road',
-      city: 'Ahmedabad',
-      state: 'Gujarat',
-      pincode: '380001',
-      landmark: '',
-      addressType: 'Home',
-    },
-  ])
 
   if (!user) {
     return (
@@ -45,6 +32,23 @@ export default function Profile() {
         </div>
       </div>
     )
+  }
+
+  // ! get address API
+  const getAddresses = async () => {
+    try {
+      setAddressLoading(true)
+
+      const res = await axiosInstance.get('/address')
+
+      if (res.data.success) {
+        setAddresses(res.data.data || [])
+      }
+    } catch (error) {
+      console.log('Get Addresses Error:', error.response?.data || error.message)
+    } finally {
+      setAddressLoading(false)
+    }
   }
 
   // ! Address Change
@@ -231,209 +235,279 @@ export default function Profile() {
           </section>
 
           {/* Address Information */}
-
-          <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm">
-            {/* Heading */}
-            <div className="mb-5 flex items-center justify-between">
-              <div className="grid grid-cols-[1fr_auto] items-center gap-4 border-b border-[#E2E8F0] px-5 py-4">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FFF7ED] text-[#F59E0B]">
-                  <MapPin size={18} />
+          <div className="rounded-xl border border-[#E2E8F0] bg-white shadow-sm">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-[#E2E8F0] px-4 py-3">
+              <div className="flex items-center gap-3">
+                {/* Icon */}
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#EFF6FF] text-[#1D4ED8]">
+                  <MapPin size={18} strokeWidth={2} />
                 </div>
-                
+
+                {/* Title */}
                 <div>
-                  <h3 className="font-semibold text-[#172033]">Address Information</h3>
+                  <h3 className="text-sm font-bold text-[#172033]">Delivery Address</h3>
 
-                  <p className="mt-0.5 text-xs text-[#64748B]">Your saved delivery address</p>
+                  <p className="text-[11px] text-[#64748B]">Where should we deliver your order?</p>
                 </div>
-
               </div>
 
+              {/* Add New */}
               {!showAddressForm && (
-                <button type="button" onClick={() => setShowAddressForm(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-3 py-2 text-xs font-bold text-[#1D4ED8] transition hover:bg-[#DBEAFE]">
-                  <Plus size={15} />
+                <button type="button" onClick={() => setShowAddressForm(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-3 py-2 text-[11px] font-bold text-[#1D4ED8] transition hover:bg-[#DBEAFE]">
+                  <Plus size={14} strokeWidth={2.5} />
                   Add New
                 </button>
               )}
             </div>
 
-            {/* SAVED ADDRESSES */}
+            {/* Saved Addresses */}
             {!showAddressForm && (
-              <div className="space-y-3">
-                {addresses.map((address) => (
-                  <button
-                    key={address.id}
-                    type="button"
-                    onClick={() => setSelectedAddress(address.id)}
-                    className={`w-full rounded-xl border p-4 text-left transition ${selectedAddress === address.id ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] bg-white hover:border-[#BFDBFE]'}`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${selectedAddress === address.id ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white' : 'border-[#CBD5E1]'}`}>
-                        {selectedAddress === address.id && <Check size={13} strokeWidth={3} />}
-                      </div>
+              <div className="space-y-2.5 p-4">
+                {addresses.map((address) => {
+                  const isSelected = selectedAddress === address.id
 
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-extrabold text-[#172033]">{address.fullName}</p>
+                  return (
+                    <button
+                      key={address.id}
+                      type="button"
+                      onClick={() => setSelectedAddress(address.id)}
+                      className={`group w-full rounded-lg border p-3 text-left transition-all ${isSelected ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] bg-white hover:border-[#BFDBFE] hover:bg-[#F8FAFC]'}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        {/* Selection Icon */}
+                        <div className="pt-0.5">{isSelected ? <CheckCircle2 size={18} className="text-[#1D4ED8]" strokeWidth={2.5} /> : <div className="h-4.5 w-4.5 rounded-full border-2 border-[#CBD5E1]" />}</div>
 
-                          <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-bold text-[#64748B]">{address.addressType}</span>
+                        {/* Address Content */}
+                        <div className="min-w-0 flex-1">
+                          {/* Name + Type + Phone */}
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="text-xs font-extrabold text-[#172033]">{address.fullName}</p>
 
-                          <span className="text-xs font-semibold text-[#64748B]">{address.phone}</span>
+                            <span className={`rounded-md px-2 py-0.5 text-[9px] font-bold ${isSelected ? 'bg-white text-[#1D4ED8]' : 'bg-[#F1F5F9] text-[#64748B]'}`}>{address.addressType}</span>
+
+                            <span className="flex items-center gap-1 text-[10px] font-semibold text-[#64748B]">
+                              <Phone size={11} />
+                              {address.phone}
+                            </span>
+                          </div>
+
+                          {/* Address */}
+                          <p className="mt-1.5 text-[11px] leading-4 text-[#64748B]">
+                            {address.addressLine}, {address.city}, {address.state} - {address.pincode}
+                          </p>
+
+                          {/* Landmark */}
+                          {address.landmark && (
+                            <div className="mt-1 flex items-center gap-1 text-[10px] text-[#94A3B8]">
+                              <Navigation size={10} />
+                              <span>Near {address.landmark}</span>
+                            </div>
+                          )}
                         </div>
-
-                        <p className="mt-2 text-xs leading-5 text-[#64748B]">
-                          {address.addressLine}, {address.city}, {address.state} - {address.pincode}
-                        </p>
-
-                        {address.landmark && <p className="mt-1 text-[11px] text-[#94A3B8]">Landmark: {address.landmark}</p>}
                       </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  )
+                })}
               </div>
             )}
 
-            {/* ADD ADDRESS FORM */}
+            {/* Add Address Form */}
             {showAddressForm && (
-              <form onSubmit={handleAddAddress} className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <form onSubmit={handleAddAddress} className="space-y-3 p-4">
+                {/* Name + Phone */}
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {/* Full Name */}
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">Full Name</label>
+                    <label className="mb-1.5 block text-[11px] font-bold text-[#475569]">Full Name</label>
 
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={addressForm.fullName}
-                      onChange={handleAddressChange}
-                      placeholder="Enter full name"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
+                    <div className="relative">
+                      <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+
+                      <input
+                        type="text"
+                        name="fullName"
+                        value={addressForm.fullName}
+                        onChange={handleAddressChange}
+                        placeholder="Enter full name"
+                        required
+                        className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white pl-9 pr-3 text-xs text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                      />
+                    </div>
                   </div>
 
                   {/* Phone */}
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">Phone Number</label>
+                    <label className="mb-1.5 block text-[11px] font-bold text-[#475569]">Phone Number</label>
 
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={addressForm.phone}
-                      onChange={handleAddressChange}
-                      placeholder="Enter phone number"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
+                    <div className="relative">
+                      <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={addressForm.phone}
+                        onChange={handleAddressChange}
+                        placeholder="Enter phone number"
+                        required
+                        className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white pl-9 pr-3 text-xs text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* Address */}
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold text-[#475569]">Address</label>
+                  <label className="mb-1.5 block text-[11px] font-bold text-[#475569]">Address</label>
 
-                  <textarea
-                    name="addressLine"
-                    value={addressForm.addressLine}
-                    onChange={handleAddressChange}
-                    placeholder="House no., building, street, area"
-                    rows={3}
-                    required
-                    className="w-full resize-none rounded-lg border border-[#E2E8F0] bg-white px-3 py-3 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
+                  <div className="relative">
+                    <MapPin size={15} className="absolute left-3 top-3 text-[#94A3B8]" />
+
+                    <textarea
+                      name="addressLine"
+                      value={addressForm.addressLine}
+                      onChange={handleAddressChange}
+                      placeholder="House no., building, street, area"
+                      rows={2}
+                      required
+                      className="w-full resize-none rounded-lg border border-[#E2E8F0] bg-white py-2.5 pl-9 pr-3 text-xs text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                    />
+                  </div>
                 </div>
 
                 {/* City / State / Pincode */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  {/* City */}
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">City</label>
+                    <label className="mb-1.5 block text-[11px] font-bold text-[#475569]">City</label>
 
-                    <input
-                      type="text"
-                      name="city"
-                      value={addressForm.city}
-                      onChange={handleAddressChange}
-                      placeholder="City"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] px-3 text-sm outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
+                    <div className="relative">
+                      <Building2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+
+                      <input
+                        type="text"
+                        name="city"
+                        value={addressForm.city}
+                        onChange={handleAddressChange}
+                        placeholder="City"
+                        required
+                        className="h-10 w-full rounded-lg border border-[#E2E8F0] pl-9 pr-3 text-xs outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                      />
+                    </div>
                   </div>
 
+                  {/* State */}
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">State</label>
+                    <label className="mb-1.5 block text-[11px] font-bold text-[#475569]">State</label>
 
-                    <input
-                      type="text"
-                      name="state"
-                      value={addressForm.state}
-                      onChange={handleAddressChange}
-                      placeholder="State"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] px-3 text-sm outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
+                    <div className="relative">
+                      <MapPinned size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+
+                      <input
+                        type="text"
+                        name="state"
+                        value={addressForm.state}
+                        onChange={handleAddressChange}
+                        placeholder="State"
+                        required
+                        className="h-10 w-full rounded-lg border border-[#E2E8F0] pl-9 pr-3 text-xs outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                      />
+                    </div>
                   </div>
 
+                  {/* Pincode */}
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-[#475569]">Pincode</label>
+                    <label className="mb-1.5 block text-[11px] font-bold text-[#475569]">Pincode</label>
 
-                    <input
-                      type="text"
-                      name="pincode"
-                      value={addressForm.pincode}
-                      onChange={handleAddressChange}
-                      placeholder="Pincode"
-                      required
-                      className="h-11 w-full rounded-lg border border-[#E2E8F0] px-3 text-sm outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                    />
+                    <div className="relative">
+                      <Navigation size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+
+                      <input
+                        type="text"
+                        name="pincode"
+                        value={addressForm.pincode}
+                        onChange={handleAddressChange}
+                        placeholder="Pincode"
+                        required
+                        className="h-10 w-full rounded-lg border border-[#E2E8F0] pl-9 pr-3 text-xs outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* Landmark */}
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold text-[#475569]">
+                  <label className="mb-1.5 block text-[11px] font-bold text-[#475569]">
                     Landmark
                     <span className="ml-1 font-normal text-[#94A3B8]">(Optional)</span>
                   </label>
 
-                  <input
-                    type="text"
-                    name="landmark"
-                    value={addressForm.landmark}
-                    onChange={handleAddressChange}
-                    placeholder="Nearby landmark"
-                    className="h-11 w-full rounded-lg border border-[#E2E8F0] px-3 text-sm outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
+                  <div className="relative">
+                    <Navigation size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+
+                    <input
+                      type="text"
+                      name="landmark"
+                      value={addressForm.landmark}
+                      onChange={handleAddressChange}
+                      placeholder="Nearby landmark"
+                      className="h-10 w-full rounded-lg border border-[#E2E8F0] pl-9 pr-3 text-xs outline-none transition focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
+                    />
+                  </div>
                 </div>
 
                 {/* Address Type */}
                 <div>
-                  <label className="mb-2 block text-xs font-bold text-[#475569]">Address Type</label>
+                  <label className="mb-2 block text-[11px] font-bold text-[#475569]">Address Type</label>
 
                   <div className="flex gap-2">
-                    {['Home', 'Work', 'Other'].map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() =>
-                          setAddressForm((prev) => ({
-                            ...prev,
-                            addressType: type,
-                          }))
-                        }
-                        className={`rounded-lg border px-4 py-2 text-xs font-bold transition ${addressForm.addressType === type ? 'border-[#1D4ED8] bg-[#EFF6FF] text-[#1D4ED8]' : 'border-[#E2E8F0] bg-white text-[#64748B] hover:border-[#BFDBFE]'}`}
-                      >
-                        {type}
-                      </button>
-                    ))}
+                    {[
+                      {
+                        name: 'Home',
+                        icon: Home,
+                      },
+                      {
+                        name: 'Work',
+                        icon: BriefcaseBusiness,
+                      },
+                      {
+                        name: 'Other',
+                        icon: MapPinned,
+                      },
+                    ].map(({ name, icon: Icon }) => {
+                      const isActive = addressForm.addressType === name
+
+                      return (
+                        <button
+                          key={name}
+                          type="button"
+                          onClick={() =>
+                            setAddressForm((prev) => ({
+                              ...prev,
+                              addressType: name,
+                            }))
+                          }
+                          className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] font-bold transition ${
+                            isActive ? 'border-[#1D4ED8] bg-[#EFF6FF] text-[#1D4ED8]' : 'border-[#E2E8F0] bg-white text-[#64748B] hover:border-[#BFDBFE] hover:bg-[#F8FAFC]'
+                          }`}
+                        >
+                          <Icon size={14} />
+                          {name}
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
 
                 {/* Buttons */}
-                <div className="flex justify-end gap-3 border-t border-[#E2E8F0] pt-4">
-                  <button type="button" onClick={() => setShowAddressForm(false)} className="rounded-lg border border-[#E2E8F0] px-4 py-2.5 text-xs font-bold text-[#475569] transition hover:border-[#94A3B8]">
+                <div className="flex justify-end gap-2 border-t border-[#E2E8F0] pt-3">
+                  <button type="button" onClick={() => setShowAddressForm(false)} className="inline-flex items-center gap-1.5 rounded-lg border border-[#E2E8F0] px-4 py-2 text-[11px] font-bold text-[#475569] transition hover:bg-[#F8FAFC]">
+                    <X size={14} />
                     Cancel
                   </button>
 
-                  <button type="submit" className="rounded-lg bg-[#1D4ED8] px-5 py-2.5 text-xs font-bold text-white transition hover:bg-[#1E40AF]">
+                  <button type="submit" className="inline-flex items-center gap-1.5 rounded-lg bg-[#1D4ED8] px-4 py-2 text-[11px] font-bold text-white transition hover:bg-[#1E40AF]">
+                    <Save size={14} />
                     Save Address
                   </button>
                 </div>
