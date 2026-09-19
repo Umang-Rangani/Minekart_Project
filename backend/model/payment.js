@@ -48,6 +48,6 @@ const paymentSchema = new mongoose.Schema(
   },
 )
 
-const Payment = mongoose.model('PaymentMineKart', paymentSchema)
+const Payment =  mongoose.model('PaymentMineKart', paymentSchema)
 
 module.exports = Payment

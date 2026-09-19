@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { MapPin, Mail, Plus, CheckCircle2, User, Phone, Hash, Building2, ShieldCheck, Navigation, Home, Camera, Pencil, BriefcaseBusiness, Check, MapPinned, X, Save } from 'lucide-react'
 import { useUser } from '../context/userProvider'
 import { axiosInstance } from '../config/axiosConfig'
+import { useNavigate } from 'react-router-dom'
+import { useCart } from '../context/CartProvider'
 
 export default function Profile() {
   const { user } = useUser()
+  const { cart } = useCart()
+  const navigate = useNavigate()
 
   const [addressForm, setAddressForm] = useState({
     fullName: '',
@@ -17,10 +21,55 @@ export default function Profile() {
     addressType: 'Home',
   })
 
-  const [addresses, setAddresses] = useState([])
   const [addressLoading, setAddressLoading] = useState(false)
   const [addressSaving, setAddressSaving] = useState(false)
   const [showAddressForm, setShowAddressForm] = useState(false)
+
+  // get
+  const [addresses, setAddresses] = useState([])
+
+  // put update
+  const [editingAddressId, setEditingAddressId] = useState(null)
+
+  // delete
+  const [addressDeleting, setAddressDeleting] = useState(false)
+
+  const resetAddressForm = () => {
+    setAddressForm({
+      fullName: '',
+      phone: '',
+      addressLine: '',
+      city: '',
+      state: '',
+      pincode: '',
+      landmark: '',
+      addressType: 'Home',
+    })
+  }
+
+  // ! get address API
+  const getAddresses = async () => {
+    try {
+      setAddressLoading(true)
+
+      const res = await axiosInstance.get('/address')
+
+      if (res.data.success) {
+        const addressList = res.data.data || []
+        setAddresses(addressList)
+      }
+    } catch (error) {
+      console.log('Get Addresses Error:', error.response?.data || error.message)
+    } finally {
+      setAddressLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (user) {
+      getAddresses()
+    }
+  }, [user])
 
   if (!user) {
     return (
@@ -34,23 +83,6 @@ export default function Profile() {
     )
   }
 
-  // ! get address API
-  const getAddresses = async () => {
-    try {
-      setAddressLoading(true)
-
-      const res = await axiosInstance.get('/address')
-
-      if (res.data.success) {
-        setAddresses(res.data.data || [])
-      }
-    } catch (error) {
-      console.log('Get Addresses Error:', error.response?.data || error.message)
-    } finally {
-      setAddressLoading(false)
-    }
-  }
-
   // ! Address Change
   const handleAddressChange = (e) => {
     const { name, value } = e.target
@@ -61,12 +93,100 @@ export default function Profile() {
     }))
   }
 
-  const handleAddAddress = (e) => {
+  // ! put edit logic
+  const handleAddAddress = async (e) => {
     e.preventDefault()
 
-    console.log('New Address:', addressForm)
+    try {
+      setAddressSaving(true)
 
-    setShowAddressForm(false)
+      const res = await axiosInstance.post('/address', addressForm)
+
+      if (res.data.success) {
+        const newAddress = res.data.data
+
+        setAddresses((prev) => [newAddress, ...prev])
+
+        // Form reset
+        setAddressForm({
+          fullName: '',
+          phone: '',
+          addressLine: '',
+          city: '',
+          state: '',
+          pincode: '',
+          landmark: '',
+          addressType: 'Home',
+        })
+
+        setShowAddressForm(false)
+      }
+    } catch (error) {
+      console.log('Add Address Error:', error.response?.data || error.message)
+    } finally {
+      setAddressSaving(false)
+    }
+  }
+
+  const handleEditAddress = async (e) => {
+    e.preventDefault()
+
+    try {
+      setAddressSaving(true)
+
+      const res = await axiosInstance.put(`/address/${editingAddressId}`, addressForm)
+
+      if (res.data.success) {
+        const updatedAddress = res.data.data
+
+        setAddresses((prev) => prev.map((address) => (address._id === editingAddressId ? updatedAddress : address)))
+
+        resetAddressForm()
+        setEditingAddressId(null)
+        setShowAddressForm(false)
+      }
+    } catch (error) {
+      console.log('Update Address Error:', error.response?.data || error.message)
+    } finally {
+      setAddressSaving(false)
+    }
+  }
+
+  // ! delete logic
+  const handleDeleteAddress = async (addressId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this address?')
+
+    if (!confirmDelete) return
+
+    try {
+      setAddressDeleting(true)
+
+      const res = await axiosInstance.delete(`/address/${addressId}`)
+
+      if (res.data.success) {
+        setAddresses((prev) => prev.filter((address) => address._id !== addressId))
+      }
+    } catch (error) {
+      console.log('Delete Address Error:', error.response?.data || error.message)
+    } finally {
+      setAddressDeleting(false)
+    }
+  }
+
+  const startEditAddress = (address) => {
+    setAddressForm({
+      fullName: address.fullName || '',
+      phone: address.phone || '',
+      addressLine: address.addressLine || '',
+      city: address.city || '',
+      state: address.state || '',
+      pincode: address.pincode || '',
+      landmark: address.landmark || '',
+      addressType: address.addressType || 'Home',
+    })
+
+    setEditingAddressId(address._id)
+    setShowAddressForm(true)
   }
 
   const initials =
@@ -254,7 +374,15 @@ export default function Profile() {
 
               {/* Add New */}
               {!showAddressForm && (
-                <button type="button" onClick={() => setShowAddressForm(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-3 py-2 text-[11px] font-bold text-[#1D4ED8] transition hover:bg-[#DBEAFE]">
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetAddressForm()
+                    setEditingAddressId(null)
+                    setShowAddressForm(true)
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-3 py-2 text-[11px] font-bold text-[#1D4ED8] transition hover:bg-[#DBEAFE]"
+                >
                   <Plus size={14} strokeWidth={2.5} />
                   Add New
                 </button>
@@ -264,57 +392,118 @@ export default function Profile() {
             {/* Saved Addresses */}
             {!showAddressForm && (
               <div className="space-y-2.5 p-4">
-                {addresses.map((address) => {
-                  const isSelected = selectedAddress === address.id
+                {addressLoading ? (
+                  <div className="rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] p-5 text-center">
+                    <p className="text-xs font-semibold text-[#64748B]">Loading addresses...</p>
+                  </div>
+                ) : addresses.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-[#CBD5E1] bg-[#F8FAFC] p-6 text-center">
+                    <MapPin size={24} className="mx-auto mb-2 text-[#94A3B8]" />
 
-                  return (
-                    <button
-                      key={address.id}
-                      type="button"
-                      onClick={() => setSelectedAddress(address.id)}
-                      className={`group w-full rounded-lg border p-3 text-left transition-all ${isSelected ? 'border-[#1D4ED8] bg-[#EFF6FF]' : 'border-[#E2E8F0] bg-white hover:border-[#BFDBFE] hover:bg-[#F8FAFC]'}`}
-                    >
-                      <div className="flex items-start gap-3">
-                        {/* Selection Icon */}
-                        <div className="pt-0.5">{isSelected ? <CheckCircle2 size={18} className="text-[#1D4ED8]" strokeWidth={2.5} /> : <div className="h-4.5 w-4.5 rounded-full border-2 border-[#CBD5E1]" />}</div>
+                    <p className="text-xs font-semibold text-[#64748B]">No saved address found</p>
 
-                        {/* Address Content */}
-                        <div className="min-w-0 flex-1">
-                          {/* Name + Type + Phone */}
-                          <div className="flex flex-wrap items-center gap-2">
-                            <p className="text-xs font-extrabold text-[#172033]">{address.fullName}</p>
+                    <p className="mt-1 text-[11px] text-[#94A3B8]">Add an address to use it during checkout.</p>
+                  </div>
+                ) : (
+                  addresses.map((address) => {
+                    const isDefault = address.isDefault
 
-                            <span className={`rounded-md px-2 py-0.5 text-[9px] font-bold ${isSelected ? 'bg-white text-[#1D4ED8]' : 'bg-[#F1F5F9] text-[#64748B]'}`}>{address.addressType}</span>
-
-                            <span className="flex items-center gap-1 text-[10px] font-semibold text-[#64748B]">
-                              <Phone size={11} />
-                              {address.phone}
-                            </span>
+                    return (
+                      <div key={address._id} className={`rounded-lg border p-3 transition ${isDefault ? 'border-[#BFDBFE] bg-[#EFF6FF]' : 'border-[#E2E8F0] bg-white'}`}>
+                        <div className="flex items-start gap-3">
+                          {/* Address Icon */}
+                          <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${isDefault ? 'bg-white text-[#1D4ED8]' : 'bg-[#F8FAFC] text-[#64748B]'}`}>
+                            <MapPin size={15} />
                           </div>
 
-                          {/* Address */}
-                          <p className="mt-1.5 text-[11px] leading-4 text-[#64748B]">
-                            {address.addressLine}, {address.city}, {address.state} - {address.pincode}
-                          </p>
+                          {/* Address Content */}
+                          <div className="min-w-0 flex-1">
+                            {/* Name + Type + Phone */}
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-xs font-extrabold text-[#172033]">{address.fullName}</p>
 
-                          {/* Landmark */}
-                          {address.landmark && (
-                            <div className="mt-1 flex items-center gap-1 text-[10px] text-[#94A3B8]">
-                              <Navigation size={10} />
-                              <span>Near {address.landmark}</span>
+                              <span className={`rounded-md px-2 py-0.5 text-[9px] font-bold ${isDefault ? 'bg-white text-[#1D4ED8]' : 'bg-[#F1F5F9] text-[#64748B]'}`}>{address.addressType}</span>
+
+                              {isDefault && (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#ECFDF5] px-2 py-0.5 text-[9px] font-bold text-[#16A34A]">
+                                  <CheckCircle2 size={10} />
+                                  Default Address
+                                </span>
+                              )}
+
+                              <span className="flex items-center gap-1 text-[10px] font-semibold text-[#64748B]">
+                                <Phone size={11} />
+                                {address.phone}
+                              </span>
                             </div>
-                          )}
+
+                            {/* Address */}
+                            <p className="mt-1.5 text-[11px] leading-4 text-[#64748B]">
+                              {address.addressLine}, {address.city}, {address.state} - {address.pincode}
+                            </p>
+
+                            {/* Landmark */}
+                            {address.landmark && (
+                              <div className="mt-1 flex items-center gap-1 text-[10px] text-[#94A3B8]">
+                                <Navigation size={10} />
+                                <span>Near {address.landmark}</span>
+                              </div>
+                            )}
+
+                            {/* Address Actions */}
+                            <div className="mt-3 flex items-center gap-2 border-t border-[#E2E8F0] pt-3">
+                              <button
+                                type="button"
+                                onClick={() => startEditAddress(address)}
+                                className="inline-flex items-center gap-1.5 rounded-md border border-[#E2E8F0] bg-white px-3 py-1.5 text-[10px] font-bold text-[#475569] transition hover:border-[#BFDBFE] hover:bg-[#EFF6FF] hover:text-[#1D4ED8]"
+                              >
+                                <Pencil size={12} />
+                                Edit
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteAddress(address._id)}
+                                disabled={addressDeleting}
+                                className="inline-flex items-center gap-1.5 rounded-md border border-[#FECACA] bg-white px-3 py-1.5 text-[10px] font-bold text-[#DC2626] transition hover:bg-[#FEF2F2] disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+                                <X size={12} />
+                                Delete
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </button>
-                  )
-                })}
+                    )
+                  })
+                )}
               </div>
             )}
 
             {/* Add Address Form */}
             {showAddressForm && (
-              <form onSubmit={handleAddAddress} className="space-y-3 p-4">
+              <form onSubmit={editingAddressId ? handleEditAddress : handleAddAddress} className="space-y-3 p-4">
+                {/* Form Header */}
+                <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+                  <div>
+                    <h3 className="text-sm font-bold text-[#172033]">{editingAddressId ? 'Edit Address' : 'Add New Address'}</h3>
+
+                    <p className="mt-0.5 text-[11px] text-[#64748B]">{editingAddressId ? 'Update your delivery address details' : 'Add a new delivery address'}</p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      resetAddressForm()
+                      setEditingAddressId(null)
+                      setShowAddressForm(false)
+                    }}
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-[#64748B] transition hover:bg-[#F8FAFC] hover:text-[#172033]"
+                  >
+                    <X size={15} />
+                  </button>
+                </div>
+
                 {/* Name + Phone */}
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {/* Full Name */}
@@ -501,17 +690,36 @@ export default function Profile() {
 
                 {/* Buttons */}
                 <div className="flex justify-end gap-2 border-t border-[#E2E8F0] pt-3">
-                  <button type="button" onClick={() => setShowAddressForm(false)} className="inline-flex items-center gap-1.5 rounded-lg border border-[#E2E8F0] px-4 py-2 text-[11px] font-bold text-[#475569] transition hover:bg-[#F8FAFC]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      resetAddressForm()
+                      setEditingAddressId(null)
+                      setShowAddressForm(false)
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#E2E8F0] px-4 py-2 text-[11px] font-bold text-[#475569] transition hover:bg-[#F8FAFC]"
+                  >
                     <X size={14} />
                     Cancel
                   </button>
 
-                  <button type="submit" className="inline-flex items-center gap-1.5 rounded-lg bg-[#1D4ED8] px-4 py-2 text-[11px] font-bold text-white transition hover:bg-[#1E40AF]">
+                  <button
+                    type="submit"
+                    disabled={addressSaving}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#1D4ED8] px-4 py-2 text-[11px] font-bold text-white transition hover:bg-[#1E40AF] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
                     <Save size={14} />
-                    Save Address
+
+                    {addressSaving ? 'Saving...' : editingAddressId ? 'Update Address' : 'Save Address'}
                   </button>
                 </div>
               </form>
+            )}
+
+            {cart && (
+              <div className="self-end m-5 bg-blue-400 w-fit px-4 py-1" onClick={() => navigate('/cart')}>
+                continue cart
+              </div>
             )}
           </div>
 

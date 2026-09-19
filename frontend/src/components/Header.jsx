@@ -71,10 +71,10 @@ export default function Header() {
                   </button>
                 )}
 
-                <button className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
+                <Link to={"/orders"} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
                   <Package size={19} />
                   <span>Orders</span>
-                </button>
+                </Link>
 
                 <div className="border-t border-[#E2E8F0]" />
                 {user && (

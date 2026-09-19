@@ -47,7 +47,7 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-[#F4F2EE] text-[#292725]">
-      {/* ================= HEADER ================= */}
+      {/*  HEADER  */}
       <header className="fixed left-0 right-0 top-0 z-50 h-17 border-b border-[#E3DED6] bg-[#FBFAF7]/95 backdrop-blur-md">
         <div className="flex h-full items-center justify-between px-5 lg:px-7">
           {/* Logo */}
@@ -77,7 +77,7 @@ export default function AdminLayout() {
         </div>
       </header>
 
-      {/* ================= SIDEBAR ================= */}
+      {/*  SIDEBAR  */}
       <aside className={`fixed bottom-0 left-0 top-17 z-40 border-r border-[#E3DED6] bg-[#F8F6F2] transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-18'}`}>
         <div className={`flex h-full flex-col py-5 ${sidebarOpen ? 'px-4' : 'px-2'}`}>
           {/* Menu Title */}
@@ -140,7 +140,7 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/*  MAIN CONTENT  */}
       <main className={`min-h-screen pt-17 transition-all duration-300 ${sidebarOpen ? 'lg:pl-60' : 'lg:pl-18'}`}>
         <div className="min-h-[calc(100vh-70px)] p-5 sm:p-6 lg:p-7">
           <Outlet />

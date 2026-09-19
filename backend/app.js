@@ -18,8 +18,8 @@ var productRouter = require('./routes/product')
 var cartRouter = require('./routes/cart')
 var addressRouter = require('./routes/address')
 var paymentRouter = require('./routes/payment')
-
 var orderRouter = require('./routes/order')
+const adminOrderRoutes = require('./routes/adminOrderRoutes')
 
 dotenv.config()
 var app = express()
@@ -50,9 +50,10 @@ app.use('/product', productRouter)
 app.use('/cart', cartRouter)
 app.use('/address', addressRouter)
 app.use('/payment', paymentRouter)
-
 app.use('/order', orderRouter)
 app.use('/uploads', uploadRouter)
+
+app.use('/admin/orders', adminOrderRoutes)
 
 mongoose
   .connect(process.env.MONGO_URI)
