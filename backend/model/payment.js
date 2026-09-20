@@ -16,13 +16,13 @@ const paymentSchema = new mongoose.Schema(
 
     paymentMethod: {
       type: String,
-      enum: ['COD', 'ONLINE'],
+      enum: ['COD', 'ONLINE_ON_DELIVERY'],
       required: true,
     },
 
     paymentStatus: {
       type: String,
-      enum: ['Pending', 'Paid', 'Failed', 'Cancelled', 'Refunded'],
+      enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
       default: 'Pending',
     },
 
@@ -43,11 +43,9 @@ const paymentSchema = new mongoose.Schema(
       default: null,
     },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 )
 
-const Payment =  mongoose.model('PaymentMineKart', paymentSchema)
+const Payment = mongoose.models.PaymentMineKart || mongoose.model('PaymentMineKart', paymentSchema)
 
 module.exports = Payment

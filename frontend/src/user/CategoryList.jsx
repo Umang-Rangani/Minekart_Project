@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
 import { Link, NavLink } from 'react-router-dom'
-import { MapPin, Zap } from 'lucide-react'
+import { Zap } from 'lucide-react'
 import { iconMap } from '../data/iconMap'
-import { useUser } from '../context/userProvider'
 
 export default function CategoryList() {
   const [categories, setCategories] = useState([])
-  const { user } = useUser()
-
-  // category theme mate
   const [activeCategory, setActiveCategory] = useState(null)
 
   const getCategories = async () => {
     try {
-      // setLoading(true)
-
       const res = await axiosInstance.get('/category')
       setCategories(res.data)
-      //   console.log(res.data.data);
     } catch (error) {
       console.log('Get Categories Error:', error.response?.data || error.message)
-    } finally {
-      // setLoading(false)
     }
   }
 
@@ -30,28 +21,98 @@ export default function CategoryList() {
     getCategories()
   }, [])
 
-  //   console.log('categories', categories)
-
   return (
-    <div className="flex fixed left-0 top-22 z-40  w-full items-center border-y border-[#E2E8F0] bg-[#F8FAFC]">
-      {/* For You */}
-      <div className="shrink-0">
+    <div
+      className="
+        fixed
+        left-0
+        top-[121px]
+        z-40
+        flex
+        w-full
+        items-center
+        border-y
+        border-[#E8DDD4]
+        bg-[#FFFDFC]/95
+        shadow-[0_4px_18px_rgba(73,54,49,0.07)]
+        backdrop-blur-md
+      "
+    >
+      {/* ================= FOR YOU ================= */}
+      <div className="shrink-0 border-r border-[#E8DDD4] bg-[#FBF7F2]">
         <NavLink
           to="/"
           onClick={() => setActiveCategory(null)}
-          className={`group relative flex min-w-18 flex-col items-center gap-1 px-4 py-4 text-sm transition ${activeCategory === null ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'}`}
+          className={`
+            group
+            relative
+            flex
+            min-w-[88px]
+            flex-col
+            items-center
+            gap-1.5
+            px-4
+            py-3
+            text-xs
+            transition-all
+            duration-300
+            sm:min-w-[100px]
+            sm:px-5
+            sm:py-3.5
+            sm:text-sm
+            ${activeCategory === null ? 'font-semibold text-[#8E181F]' : 'text-[#67544D] hover:bg-[#F7EEE7] hover:text-[#8E181F]'}
+          `}
         >
-          <Zap size={27} strokeWidth={1.8} className={`transition ${activeCategory === null ? 'text-[#1D4ED8]' : 'text-[#64748B] group-hover:text-[#1D4ED8]'}`} />
+          {/* Icon Circle */}
+          <div
+            className={`
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              rounded-xl
+              transition-all
+              duration-300
+              ${activeCategory === null ? 'bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md shadow-[#7D171C]/20' : 'bg-[#F4E9E2] text-[#67544D] group-hover:scale-105 group-hover:bg-[#F2DDD5] group-hover:text-[#8E181F]'}
+            `}
+          >
+            <Zap size={19} strokeWidth={2} />
+          </div>
 
           <span className="whitespace-nowrap">For You</span>
 
-          {activeCategory === null && <span className="absolute bottom-0 left-2 right-2 h-1 rounded-t-full bg-[#1D4ED8]" />}
+          {/* Active Indicator */}
+          {activeCategory === null && (
+            <span
+              className="
+                absolute
+                bottom-0
+                left-4
+                right-4
+                h-[3px]
+                rounded-t-full
+                bg-linear-to-r
+                from-[#7D171C]
+                to-[#B5262D]
+              "
+            />
+          )}
         </NavLink>
       </div>
 
-      {/* Categories - Only this part scrolls */}
+      {/* ================= CATEGORIES ================= */}
       <div className="min-w-0 flex-1 overflow-hidden">
-        <div className="no-scrollbar flex w-full items-center overflow-x-auto">
+        <div
+          className="
+            no-scrollbar
+            flex
+            w-full
+            items-center
+            overflow-x-auto
+            scroll-smooth
+          "
+        >
           {categories?.data?.map((category) => {
             const Icon = iconMap[category.categoryLucideIcons]
             const active = activeCategory === category._id
@@ -61,33 +122,68 @@ export default function CategoryList() {
                 key={category._id}
                 to={`/category/${category._id}/products`}
                 onClick={() => setActiveCategory(category._id)}
-                className={`group relative flex min-w-18 shrink-0 flex-col items-center gap-1 px-3 py-4 text-sm transition ${active ? 'font-semibold text-[#1D4ED8]' : 'text-[#64748B] hover:text-[#1D4ED8]'}`}
+                className={`
+                  group
+                  relative
+                  flex
+                  min-w-[82px]
+                  shrink-0
+                  flex-col
+                  items-center
+                  gap-1.5
+                  px-3
+                  py-3
+                  text-xs
+                  transition-all
+                  duration-300
+                  sm:min-w-[94px]
+                  sm:px-4
+                  sm:py-3.5
+                  sm:text-sm
+                  ${active ? 'font-semibold text-[#8E181F]' : 'text-[#67544D] hover:bg-[#FCF5F0] hover:text-[#8E181F]'}
+                `}
               >
-                {Icon && <Icon size={27} strokeWidth={1.8} className={`transition ${active ? 'text-[#1D4ED8]' : 'text-[#64748B] group-hover:text-[#1D4ED8]'}`} />}
+                {/* Category Icon */}
+                <div
+                  className={`
+                    flex
+                    h-9
+                    w-9
+                    items-center
+                    justify-center
+                    rounded-xl
+                    transition-all
+                    duration-300
+                    ${active ? 'bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md shadow-[#7D171C]/20' : 'bg-[#F7EEE7] text-[#67544D] group-hover:scale-105 group-hover:bg-[#F2DDD5] group-hover:text-[#8E181F]'}
+                  `}
+                >
+                  {Icon && <Icon size={19} strokeWidth={1.9} />}
+                </div>
 
-                <span className="whitespace-nowrap">{category.categoryName}</span>
+                {/* Category Name */}
+                <span className="max-w-[90px] truncate whitespace-nowrap">{category.categoryName}</span>
 
-                {active && <span className="absolute bottom-0 left-2 right-2 h-1 rounded-t-full bg-[#1D4ED8]" />}
+                {/* Active Indicator */}
+                {active && (
+                  <span
+                    className="
+                      absolute
+                      bottom-0
+                      left-3
+                      right-3
+                      h-[3px]
+                      rounded-t-full
+                      bg-linear-to-r
+                      from-[#7D171C]
+                      to-[#B5262D]
+                    "
+                  />
+                )}
               </Link>
             )
           })}
         </div>
       </div>
-
-      {/* Delivery Location - Fixed Right */}
-      {/* {user && (
-        <div className="shrink-0 border-l border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4">
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin size={19} className="fill-[#1D4ED8] text-[#1D4ED8]" />
-
-            <span className="whitespace-nowrap font-semibold text-[#172033]">Delivery Location at</span>
-
-            <button className="max-w-55 truncate font-semibold text-[#1D4ED8] transition hover:text-[#F59E0B]">
-              {user.address}, {user.city}, {user.pincode}
-            </button>
-          </div>
-        </div>
-      )} */}
     </div>
   )
 }

@@ -5,15 +5,28 @@ import Footer from '../components/Footer'
 
 export default function UserLayout() {
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#FBF7F2] text-[#351C18]">
+      {/* Header */}
       <Header />
 
-      <main className="w-full pt-25 pb-20 bg-[#EFF6FF]">
-        <div className="mx-auto w-full max-w-[1600px] px-6  ">
+      {/* Main Content */}
+      <main
+        className="
+          w-full
+          bg-linear-to-b
+          from-[#FFFDFC]
+          via-[#FBF5EF]
+          to-[#F7EEE7]
+          pb-20
+          pt-[165px]
+        "
+      >
+        <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-7">
           <Outlet />
         </div>
       </main>
 
+      {/* Footer */}
       <Footer />
     </div>
   )

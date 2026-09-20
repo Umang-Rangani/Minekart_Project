@@ -1,110 +1,441 @@
-import { Search, MapPin, ChevronDown, ShoppingCart, UserCircle, Zap, Store, Bike, LogInIcon } from 'lucide-react'
-import { User, Package, LogOut } from 'lucide-react'
-import { useUser } from '../context/userProvider'
-// import CategoryList from '../user/CategoryList'
+import { Search, ChevronDown, ShoppingCart, UserCircle, Store, User, Package, LogOut, LogInIcon } from 'lucide-react'
+
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+
+import { useUser } from '../context/userProvider'
 import { useCart } from '../context/CartProvider'
 
 export default function Header() {
   const { logout, user, setShowLogin } = useUser()
   const { cart } = useCart()
   const navigate = useNavigate()
-  // account button dropdown
+
   const [accountOpen, setAccountOpen] = useState(false)
 
-  // ! Total Items
-
   return (
-    <header className="fixed left-0 top-0 z-50 w-full border-b border-[#E2E8F0] bg-white">
-      {/*  SEARCH + ACCOUNT  */}
-      <div className="flex items-center gap-5 px-7 py-4 ">
-        <div className="flex items-center gap-4">
-          {/* Brand */}
-          <Link to={'/'} className="flex h-14 w-40 items-center justify-center gap-2 rounded-xl bg-[#1D4ED8] text-white shadow-md shadow-blue-100">
-            <Store size={25} strokeWidth={2} />
+    <header className="fixed left-0 top-0 z-50 w-full bg-[#FFFDFC] text-[#351C18] shadow-[0_4px_25px_rgba(63,37,30,0.10)]">
+      {/* =====================================================
+          TOP OFFER BAR
+      ====================================================== */}
+      <div className="bg-linear-to-r from-[#321411] via-[#6F171C] to-[#9F2027] text-white">
+        <div className="mx-auto flex h-9 max-w-[1600px] items-center justify-between px-5 text-xs font-medium sm:px-7">
+          <div className="flex items-center gap-5 sm:gap-7">
+            <span className="hidden sm:inline">Free Shipping on Orders Above ₹999</span>
 
-            <span className="text-lg font-bold tracking-wide">MineKart</span>
+            <span className="hidden h-4 w-px bg-white/30 sm:block" />
+
+            <span className="hidden md:inline">100% Genuine Products</span>
+
+            <span className="hidden sm:inline">Easy Returns</span>
+          </div>
+
+          <span className="hidden sm:inline">Need Help? 1800-123-4567</span>
+        </div>
+      </div>
+
+      {/* =====================================================
+          MAIN HEADER
+      ====================================================== */}
+      <div className="border-b border-[#E9DED6] bg-[#FFFDFC]">
+        <div className="mx-auto flex max-w-[1600px] items-center gap-4 px-5 py-4 sm:px-7 lg:gap-6">
+          {/* =================================================
+              LOGO
+          ================================================== */}
+          <Link to="/" className="group flex shrink-0 items-center gap-3">
+            {/* Logo Icon */}
+            <div
+              className="
+                flex h-12 w-12 items-center justify-center
+                rounded-2xl
+                bg-linear-to-br
+                from-[#75171C]
+                to-[#B3262D]
+                text-white
+                shadow-lg
+                shadow-[#75171C]/20
+                transition-all
+                duration-300
+                group-hover:-translate-y-0.5
+                group-hover:scale-105
+              "
+            >
+              <Store size={25} strokeWidth={2} className="transition-transform duration-300 group-hover:rotate-6" />
+            </div>
+
+            {/* Brand Name */}
+            <div className="hidden leading-none sm:block">
+              <h1 className="text-[25px] font-extrabold tracking-tight text-[#351C18]">
+                Mine
+                <span className="text-[#A51D26]">Kart</span>
+              </h1>
+
+              <p className="mt-1 text-[9px] font-semibold tracking-[0.18em] text-[#907A70]">SHOP MORE • LIVE BETTER</p>
+            </div>
           </Link>
-        </div>
-        {/* Search */}
-        <div className="relative flex-1">
-          <Search size={23} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#64748B]" />
 
-          <input
-            type="text"
-            placeholder="Search for Products, Brands and More"
-            className=" h-14 w-full rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] pl-14 pr-5 text-[17px] text-[#172033] outline-none placeholder:text-[#64748B] transition focus:border-[#1D4ED8] focus:bg-white focus:ring-2 focus:ring-[#DBEAFE] "
-          />
-        </div>
+          {/* =================================================
+              SEARCH
+          ================================================== */}
+          <div className="group relative min-w-0 flex-1">
+            <div
+              className="
+                flex h-12 w-full items-center
+                overflow-hidden
+                rounded-2xl
+                border border-[#E3D6CE]
+                bg-[#FCF8F4]
+                transition-all
+                duration-300
+                focus-within:border-[#A51D26]
+                focus-within:bg-white
+                focus-within:shadow-[0_0_0_4px_rgba(165,29,38,0.07)]
+              "
+            >
+              <Search
+                size={21}
+                strokeWidth={2}
+                className="
+                  ml-4 shrink-0
+                  text-[#806C63]
+                  transition-colors
+                  duration-300
+                  group-focus-within:text-[#A51D26]
+                "
+              />
 
-        {/* Account */}
-        <div className="relative" onMouseEnter={() => setAccountOpen(true)} onMouseLeave={() => setAccountOpen(false)}>
-          {/* Account */}
-          <button className="flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
-            {!user?.avatar ? (
-              <UserCircle size={30} />
-            ) : (
-              <div className="size-10 shrink-0 overflow-hidden rounded-full bg-[#dfe5e7]">
-                <img src={`http://localhost:3000${user.avatar}`} alt={user.name} className="h-full w-full object-cover transition duration-300 hover:scale-105" />
+              <input
+                type="text"
+                placeholder="Search for Products, Brands and More..."
+                className="
+                  h-full
+                  min-w-0
+                  flex-1
+                  bg-transparent
+                  px-3
+                  text-[15px]
+                  text-[#351C18]
+                  outline-none
+                  placeholder:text-[#9A8981]
+                "
+              />
+
+              <button
+                type="button"
+                className="
+                  mr-1.5
+                  flex h-9
+                  items-center
+                  gap-2
+                  rounded-xl
+                  bg-linear-to-r
+                  from-[#75171C]
+                  to-[#A51D26]
+                  px-5
+                  text-sm
+                  font-semibold
+                  text-white
+                  shadow-md
+                  shadow-[#75171C]/20
+                  transition-all
+                  duration-300
+                  hover:from-[#611217]
+                  hover:to-[#8E181F]
+                  hover:shadow-lg
+                  active:scale-95
+                "
+              >
+                <span className="hidden sm:inline">Search</span>
+
+                <Search size={16} className="sm:hidden" />
+              </button>
+            </div>
+          </div>
+
+          {/* =================================================
+              ACCOUNT
+          ================================================== */}
+          <div className="relative shrink-0" onMouseEnter={() => setAccountOpen(true)} onMouseLeave={() => setAccountOpen(false)}>
+            <button
+              type="button"
+              className="
+                flex
+                items-center
+                gap-2
+                rounded-xl
+                px-2
+                py-2
+                text-[#493631]
+                transition-all
+                duration-300
+                hover:bg-[#F6ECE5]
+                hover:text-[#8E181F]
+              "
+            >
+              {/* Avatar */}
+              {!user?.avatar ? (
+                <div
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-[#E4D7CF]
+                    bg-[#F7EFE9]
+                    text-[#7D171C]
+                  "
+                >
+                  <UserCircle size={27} />
+                </div>
+              ) : (
+                <div
+                  className="
+                    h-10
+                    w-10
+                    shrink-0
+                    overflow-hidden
+                    rounded-full
+                    border-2
+                    border-[#E7D4CA]
+                  "
+                >
+                  <img
+                    src={`http://localhost:3000${user.avatar}`}
+                    alt={user.name}
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      transition-transform
+                      duration-300
+                      hover:scale-110
+                    "
+                  />
+                </div>
+              )}
+
+              {/* Name */}
+              <div className="hidden text-left xl:block">
+                <p className="text-[10px] font-medium text-[#9A857B]">Welcome</p>
+
+                <p className="max-w-[110px] truncate text-sm font-semibold text-[#351C18]">{user ? user.name : 'Account'}</p>
+              </div>
+
+              <ChevronDown
+                size={16}
+                className={`
+                  transition-transform
+                  duration-300
+                  ${accountOpen ? 'rotate-180 text-[#A51D26]' : 'text-[#725E55]'}
+                `}
+              />
+            </button>
+
+            {/* =================================================
+                ACCOUNT DROPDOWN
+            ================================================== */}
+            {accountOpen && (
+              <div className="absolute right-0 top-full z-50 pt-2">
+                <div
+                  className="
+                    w-56
+                    overflow-hidden
+                    rounded-2xl
+                    border
+                    border-[#E5D8D0]
+                    bg-[#FFFDFC]
+                    p-1.5
+                    shadow-[0_18px_45px_rgba(65,35,28,0.16)]
+                    animate-[fadeIn_.2s_ease-out]
+                  "
+                >
+                  {/* Profile */}
+                  <Link
+                    to="/profile"
+                    className="
+                      flex
+                      items-center
+                      gap-3
+                      rounded-xl
+                      px-4
+                      py-3
+                      text-sm
+                      font-medium
+                      text-[#493631]
+                      transition-all
+                      duration-200
+                      hover:bg-[#F8ECE6]
+                      hover:pl-5
+                      hover:text-[#8E181F]
+                    "
+                  >
+                    <User size={18} />
+
+                    <span>Profile</span>
+                  </Link>
+
+                  {/* Login */}
+                  {!user && (
+                    <button
+                      type="button"
+                      onClick={() => setShowLogin(true)}
+                      className="
+                        flex
+                        w-full
+                        items-center
+                        gap-3
+                        rounded-xl
+                        px-4
+                        py-3
+                        text-left
+                        text-sm
+                        font-medium
+                        text-[#493631]
+                        transition-all
+                        duration-200
+                        hover:bg-[#F8ECE6]
+                        hover:pl-5
+                        hover:text-[#8E181F]
+                      "
+                    >
+                      <LogInIcon size={18} />
+
+                      <span>Login</span>
+                    </button>
+                  )}
+
+                  {/* Orders */}
+                  <Link
+                    to="/orders"
+                    className="
+                      flex
+                      items-center
+                      gap-3
+                      rounded-xl
+                      px-4
+                      py-3
+                      text-sm
+                      font-medium
+                      text-[#493631]
+                      transition-all
+                      duration-200
+                      hover:bg-[#F8ECE6]
+                      hover:pl-5
+                      hover:text-[#8E181F]
+                    "
+                  >
+                    <Package size={18} />
+
+                    <span>Orders</span>
+                  </Link>
+
+                  {/* Divider */}
+                  <div className="my-1 border-t border-[#EDE2DB]" />
+
+                  {/* Logout */}
+                  {user && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        logout()
+                        setAccountOpen(false)
+                      }}
+                      className="
+                        flex
+                        w-full
+                        items-center
+                        gap-3
+                        rounded-xl
+                        px-4
+                        py-3
+                        text-left
+                        text-sm
+                        font-medium
+                        text-[#A51D26]
+                        transition-all
+                        duration-200
+                        hover:bg-[#FFF0F0]
+                        hover:pl-5
+                      "
+                    >
+                      <LogOut size={18} />
+
+                      <span>Logout</span>
+                    </button>
+                  )}
+                </div>
               </div>
             )}
+          </div>
 
-            <span className="text-[16px]">{user ? user.name : 'Account'}</span>
+          {/* =================================================
+              CART
+          ================================================== */}
+          {user && (
+            <button
+              type="button"
+              onClick={() => navigate('/cart')}
+              className="
+                group
+                relative
+                flex
+                shrink-0
+                items-center
+                gap-2
+                rounded-xl
+                px-2
+                py-2
+                text-[#493631]
+                transition-all
+                duration-300
+                hover:bg-[#F6ECE5]
+                hover:text-[#8E181F]
+              "
+            >
+              <div className="relative">
+                <ShoppingCart
+                  size={26}
+                  strokeWidth={1.8}
+                  className="
+                    transition-transform
+                    duration-300
+                    group-hover:-rotate-6
+                  "
+                />
 
-            <ChevronDown size={17} className={`transition-transform ${accountOpen ? 'rotate-180' : ''}`} />
-          </button>
-
-          {/* Dropdown */}
-          {accountOpen && (
-            <div className="absolute right-0 top-full z-50 pt-2">
-              <div className="w-52 overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-lg">
-                <Link to={"/profile"}  className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
-                  <User size={19} />
-                  <span>Profile</span>
-                </Link>
-
-                {!user && (
-                  <button onClick={() => setShowLogin(true)} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
-                    <LogInIcon size={19} />
-                    <span>Login</span>
-                  </button>
-                )}
-
-                <Link to={"/orders"} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#EFF6FF] hover:text-[#1D4ED8]">
-                  <Package size={19} />
-                  <span>Orders</span>
-                </Link>
-
-                <div className="border-t border-[#E2E8F0]" />
-                {user && (
-                  <button
-                    onClick={() => {
-                      logout()
-                      setAccountOpen(false)
-                    }}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-red-600 hover:bg-red-50"
-                  >
-                    <LogOut size={19} />
-                    <span>Logout</span>
-                  </button>
-                )}
+                {/* Cart Count */}
+                <span
+                  className="
+                    absolute
+                    -right-2
+                    -top-2
+                    flex
+                    h-[18px]
+                    min-w-[18px]
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-linear-to-r
+                    from-[#8E181F]
+                    to-[#B5262D]
+                    px-1
+                    text-[10px]
+                    font-bold
+                    text-white
+                    shadow-sm
+                  "
+                >
+                  {cart?.totalQuantity || 0}
+                </span>
               </div>
-            </div>
+
+              <span className="hidden text-sm font-semibold sm:block">Cart</span>
+            </button>
           )}
         </div>
-
-        {/* Cart */}
-        {user && (
-          <button onClick={() => navigate('/cart')} className="relative flex items-center gap-2 px-2 text-[#172033] transition hover:text-[#1D4ED8]">
-            <ShoppingCart size={27} />
-
-            <span className="text-[16px]">Cart</span>
-
-            {/* Cart Count */}
-            <span className=" absolute -right-1 -top-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#F59E0B] px-1 text-xs font-bold text-white shadow-sm ">{cart?.totalQuantity}</span>
-          </button>
-        )}
       </div>
     </header>
   )

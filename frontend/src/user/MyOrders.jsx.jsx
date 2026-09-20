@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ArrowLeft, ChevronRight, Package, ShoppingBag } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
+import BreadCrumb from './BreadCrumb'
 
 export default function MyOrders() {
   const navigate = useNavigate()
@@ -51,9 +52,13 @@ export default function MyOrders() {
     )
   }
 
+  // ! BreadCrumb
+  const items = [{ title: `orders`, link: null }]
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] ">
-      <div className="mx-auto \">
+      <BreadCrumb items={items} />
+      <div className="mx-auto">
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
           <button type="button" onClick={() => navigate('/profile')} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E2E8F0] bg-white text-[#64748B] transition hover:border-[#1D4ED8] hover:text-[#1D4ED8]">
@@ -143,13 +148,12 @@ export default function MyOrders() {
 
                       <p className="mt-1 text-sm font-extrabold text-[#1D4ED8]">₹{Number(order.totalAmount || 0).toLocaleString('en-IN')}</p>
                     </div>
-
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Payment</p>
 
-                      <p className="mt-1 text-sm font-bold text-[#172033]">{order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online'}</p>
+                      <p className="mt-1 text-sm font-bold text-[#172033]">{order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online on Delivery'}</p>
 
-                      <p className="text-xs font-semibold text-[#F59E0B]">{order.paymentStatus}</p>
+                      <p className={`text-xs font-semibold ${order.paymentStatus === 'Paid' ? 'text-green-600' : order.paymentStatus === 'Failed' ? 'text-red-500' : 'text-[#F59E0B]'}`}>{order.paymentStatus || 'Pending'}</p>
                     </div>
 
                     <div>

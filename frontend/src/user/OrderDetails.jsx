@@ -3,6 +3,7 @@ import { ArrowLeft, CheckCircle2, Clock3, MapPin, Package, ShoppingBag, Truck } 
 import { Check, CircleCheck } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
+import BreadCrumb from './BreadCrumb'
 
 // !  Order Tracking  logic
 const orderStatuses = [
@@ -87,6 +88,9 @@ export default function OrderDetails() {
   // !  Order Tracking  logic
   const currentStatusIndex = orderStatuses.findIndex((item) => item.status === order?.orderStatus)
 
+  const isCancelled = order?.orderStatus === 'Cancelled'
+  const isReturned = order?.orderStatus === 'Returned'
+
   // ! order return 2.
   const handleReturnOrder = async () => {
     if (!returnReason.trim()) {
@@ -147,8 +151,15 @@ export default function OrderDetails() {
 
   const isCOD = order.paymentMethod === 'COD'
 
+  const items = [
+    { title: `Orders`, link: "/orders" },
+    { title: `Detail`, link: null },
+  ]
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] ">
+      <BreadCrumb items={items} />
+
       <div className="mx-auto ">
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
@@ -170,7 +181,7 @@ export default function OrderDetails() {
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Order Status</p>
 
               <div className="mt-2 flex items-center gap-2">
-                <CheckCircle2 size={20} className="text-[#16A34A]" />
+                {isCancelled ? <Package size={20} className="text-red-600" /> : isReturned ? <Package size={20} className="text-orange-600" /> : <CheckCircle2 size={20} className="text-[#16A34A]" />}
 
                 <p className="text-lg font-extrabold text-[#172033]">{order.orderStatus}</p>
               </div>
@@ -236,6 +247,42 @@ export default function OrderDetails() {
                   </div>
                 )
               })}
+
+              {isCancelled && (
+                <div className="mt-2 rounded-xl border border-red-200 bg-red-50 p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                      <Package size={18} />
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-extrabold text-red-700">Order Cancelled</h3>
+
+                      <p className="mt-1 text-xs leading-5 text-red-600">This order has been cancelled.</p>
+
+                      {order.cancellationReason && <p className="mt-2 text-xs font-semibold text-red-700">Reason: {order.cancellationReason}</p>}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {isReturned && (
+                <div className="mt-2 rounded-xl border border-orange-200 bg-orange-50 p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-100 text-orange-600">
+                      <Package size={18} />
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-extrabold text-orange-700">Order Returned</h3>
+
+                      <p className="mt-1 text-xs leading-5 text-orange-600">Your return request has been submitted successfully.</p>
+
+                      {order.cancellationReason && <p className="mt-2 text-xs font-semibold text-orange-700">Reason: {order.cancellationReason}</p>}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -294,6 +341,7 @@ export default function OrderDetails() {
             </div>
 
             {/* Payment */}
+            {/* Payment */}
             <div className="rounded-2xl border border-[#E2E8F0] bg-white shadow-sm">
               <div className="flex items-center gap-2 border-b border-[#E2E8F0] px-5 py-4">
                 <Truck size={19} className="text-[#1D4ED8]" />
@@ -305,13 +353,20 @@ export default function OrderDetails() {
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Payment Method</p>
 
-                  <p className="mt-1 text-sm font-bold text-[#172033]">{isCOD ? 'Cash on Delivery' : 'Online Payment'}</p>
+                  <p className="mt-1 text-sm font-bold text-[#172033]">{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
                 </div>
 
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Payment Status</p>
 
-                  <p className="mt-1 text-sm font-bold text-[#F59E0B]">{order.paymentStatus}</p>
+                  <p className={`mt-1 text-sm font-bold ${order.paymentStatus === 'Paid' ? 'text-green-600' : order.paymentStatus === 'Failed' ? 'text-red-500' : 'text-[#F59E0B]'}`}>{order.paymentStatus || 'Pending'}</p>
+                </div>
+              </div>
+
+              {/* Payment Info */}
+              <div className="border-t border-[#E2E8F0] px-5 py-4">
+                <div className="rounded-xl bg-[#EFF6FF] px-4 py-3">
+                  <p className="text-xs font-semibold leading-5 text-[#1E40AF]">{isCOD ? 'Payment will be collected in cash when your order is delivered.' : 'Payment will be collected online when your order is delivered.'}</p>
                 </div>
               </div>
             </div>

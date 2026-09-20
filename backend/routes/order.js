@@ -22,7 +22,7 @@ router.post('/', authMiddleware, async (req, res) => {
     }
 
     // Validate payment method
-    if (!['COD', 'ONLINE'].includes(paymentMethod)) {
+    if (!['COD', 'ONLINE_ON_DELIVERY'].includes(paymentMethod)) {
       return res.status(400).json({
         success: false,
         message: 'Invalid payment method',

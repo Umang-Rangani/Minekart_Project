@@ -151,13 +151,13 @@ const orderSchema = new mongoose.Schema(
     // Payment
     paymentMethod: {
       type: String,
-      enum: ['COD', 'ONLINE'],
+      enum: ['COD', 'ONLINE_ON_DELIVERY'],
       required: true,
     },
 
     paymentStatus: {
       type: String,
-      enum: ['Pending', 'Paid', 'Failed', 'Cancelled', 'Refunded'],
+      enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
       default: 'Pending',
     },
 
@@ -185,6 +185,6 @@ const orderSchema = new mongoose.Schema(
   },
 )
 
-const Order =  mongoose.model('OrderMineKart', orderSchema)
+const Order = mongoose.model('OrderMineKart', orderSchema)
 
 module.exports = Order

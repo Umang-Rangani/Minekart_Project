@@ -1,6 +1,7 @@
 import React from 'react'
 import { Check, ShoppingBag, ArrowRight, Package } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import BreadCrumb from './BreadCrumb'
 
 export default function OrderSuccess() {
   const navigate = useNavigate()
@@ -31,9 +32,18 @@ export default function OrderSuccess() {
   }
 
   const isCOD = payment?.paymentMethod === 'COD'
+  const isOnlineOnDelivery = payment?.paymentMethod === 'ONLINE_ON_DELIVERY'
+
+  // ! BreadCrumb
+  const items = [
+    { title: `cart`, link: '/cart' },
+    { title: `checkout`, link: '/checkout' },
+    { title: `success`, link: null },
+  ]
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] ">
+      <BreadCrumb items={items} />
       <div className="mx-auto ">
         {/* SUCCESS CARD */}
         <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-sm sm:p-8">
@@ -64,7 +74,7 @@ export default function OrderSuccess() {
             <div className="rounded-xl border border-[#E2E8F0] bg-white p-4">
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">Payment Method</p>
 
-              <p className="mt-1 text-sm font-bold text-[#172033]">{isCOD ? 'Cash on Delivery' : 'Online Payment'}</p>
+              <p className="mt-1 text-sm font-bold text-[#172033]">{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
 
               <p className="mt-1 text-xs font-semibold text-[#F59E0B]">{payment?.paymentStatus || 'Pending'}</p>
             </div>
@@ -90,6 +100,12 @@ export default function OrderSuccess() {
           {isCOD && (
             <div className="mt-4 rounded-xl bg-[#FFFBEB] px-4 py-3">
               <p className="text-xs font-semibold leading-5 text-[#92400E]">Please keep the exact amount ready when your order is delivered.</p>
+            </div>
+          )}
+
+          {isOnlineOnDelivery && (
+            <div className="mt-4 rounded-xl bg-[#EFF6FF] px-4 py-3">
+              <p className="text-xs font-semibold leading-5 text-[#1E40AF]">Your payment will be collected online when your order is delivered.</p>
             </div>
           )}
 

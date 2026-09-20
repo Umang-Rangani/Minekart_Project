@@ -5,92 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware')
 const Payment = require('../model/payment')
 const Order = require('../model/order')
 
-// Create Payment
-router.post('/', authMiddleware, async (req, res) => {
-  try {
-    const { userId } = req.user
-
-    const { orderId, paymentMethod, amount, transactionId = '' } = req.body
-
-    // Required fields
-    if (!orderId || !paymentMethod || amount === undefined) {
-      return res.status(400).json({
-        success: false,
-        message: 'Order ID, payment method and amount are required',
-      })
-    }
-
-    // Validate payment method
-    if (!['COD', 'ONLINE'].includes(paymentMethod)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid payment method',
-      })
-    }
-
-    // Validate amount
-    if (Number(amount) <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Payment amount must be greater than 0',
-      })
-    }
-
-    // Check order
-    const order = await Order.findOne({
-      _id: orderId,
-      userId,
-    })
-
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found',
-      })
-    }
-
-    // Check if payment already exists
-    const existingPayment = await Payment.findOne({
-      orderId,
-      userId,
-    })
-
-    if (existingPayment) {
-      return res.status(400).json({
-        success: false,
-        message: 'Payment already exists for this order',
-        data: existingPayment,
-      })
-    }
-
-    // Create payment
-    const payment = await Payment.create({
-      userId,
-      orderId,
-      paymentMethod,
-      paymentStatus: 'Pending',
-      transactionId,
-      amount: Number(amount),
-      paidAt: null,
-    })
-
-    res.status(201).json({
-      success: true,
-      message: 'Payment created successfully',
-      data: payment,
-    })
-  } catch (error) {
-    console.log('Create Payment Error:', error)
-
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-      error: error.message,
-    })
-  }
-})
-
-// GET ALL ORDERS
+// GET ALL ORDERS WITH PAYMENT
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const orders = await Order.find()
@@ -133,8 +48,8 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 })
 
-// Confirm Payment
-router.put('admin/:id/confirm', authMiddleware, async (req, res) => {
+// CONFIRM PAYMENT
+router.put('/admin/:id/confirm', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params
 
@@ -147,11 +62,19 @@ router.put('admin/:id/confirm', authMiddleware, async (req, res) => {
       })
     }
 
-    // Already paid
+    // Payment already paid
     if (payment.paymentStatus === 'Paid') {
       return res.status(400).json({
         success: false,
         message: 'Payment is already confirmed',
+      })
+    }
+
+    // Only pay-on-delivery methods
+    if (!['COD', 'ONLINE_ON_DELIVERY'].includes(payment.paymentMethod)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid payment method for delivery payment',
       })
     }
 
@@ -161,7 +84,7 @@ router.put('admin/:id/confirm', authMiddleware, async (req, res) => {
 
     await payment.save()
 
-    // Update order
+    // Find related order
     const order = await Order.findById(payment.orderId)
 
     if (!order) {
@@ -171,11 +94,8 @@ router.put('admin/:id/confirm', authMiddleware, async (req, res) => {
       })
     }
 
+    // Update order payment status
     order.paymentStatus = 'Paid'
-
-    if (order.orderStatus === 'Pending') {
-      order.orderStatus = 'Confirmed'
-    }
 
     await order.save()
 
