@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { ChevronDown, Eye, Package, Search, ShoppingBag } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
@@ -79,15 +81,9 @@ export default function AdminOrders() {
             if (order._id === res.data.data.order._id) {
               return {
                 ...order,
-
-                // Updated order payment status
-                paymentStatus: res.data.data.order.paymentStatus || 'Paid',
-
-                // Updated payment document
+                ...res.data.data.order,
                 payment: res.data.data.payment,
-
-                // Keep latest order status
-                orderStatus: res.data.data.order.orderStatus,
+                paymentStatus: res.data.data.order.paymentStatus || 'Paid',
               }
             }
 
@@ -97,6 +93,8 @@ export default function AdminOrders() {
       }
     } catch (error) {
       console.log('Confirm Payment Error:', error.response?.data || error.message)
+
+      alert(error.response?.data?.message || 'Payment confirmation failed')
     } finally {
       setConfirmingPaymentId(null)
     }
@@ -270,7 +268,7 @@ export default function AdminOrders() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] text-left">
+            <table className="w-full min-w-275 text-left">
               {/* 
                   TABLE HEADER
               = */}
@@ -309,8 +307,7 @@ export default function AdminOrders() {
 
                   const isOnlineOnDelivery = order.paymentMethod === 'ONLINE_ON_DELIVERY'
 
-                  const canConfirmPayment = isOnlineOnDelivery && paymentStatus === 'Pending' && order.payment?._id
-
+                  const canConfirmPayment = ['Out for Delivery', 'Delivered'].includes(order.orderStatus) && paymentStatus === 'Pending' && order.payment?._id && !isLocked
                   return (
                     <tr key={order._id} className="border-b border-[#E3DED6] last:border-b-0 hover:bg-[#FBFAF7]">
                       {/*    ORDER  = */}
@@ -347,6 +344,7 @@ export default function AdminOrders() {
                       </td>
 
                       {/*   PAYMENT   = */}
+                      {/* PAYMENT */}
                       <td className="px-5 py-4">
                         <p className="text-xs font-bold text-[#292725]">{order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online on Delivery'}</p>
 
@@ -390,7 +388,9 @@ export default function AdminOrders() {
 
                               <option value="Out for Delivery">Out for Delivery</option>
 
-                              <option value="Delivered">Delivered</option>
+                              <option value="Delivered" disabled={paymentStatus !== 'Paid'}>
+                                Delivered
+                              </option>
 
                               <option value="Cancelled">Cancelled</option>
 
@@ -407,9 +407,14 @@ export default function AdminOrders() {
                         <p className="text-xs font-semibold text-[#6F6A64]">{formatDate(order.createdAt)}</p>
                       </td>
 
-                      {/*   ACTION  = */}
+                      {/* ACTION */}
                       <td className="px-5 py-4">
-                        <button type="button" className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#F8F6F2] hover:text-[#292725]" title="View Order">
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/admin/orders/${order._id}`)}
+                          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#F8F6F2] hover:text-[#292725]"
+                          title="View Order"
+                        >
                           <Eye size={17} />
                         </button>
                       </td>

@@ -24,6 +24,7 @@ import Profile from './user/Profile'
 import OrderSuccess from './user/OrderSuccess'
 import MyOrders from './user/MyOrders.jsx'
 import OrderDetails from './user/OrderDetails.jsx'
+import AdminOrderDetails from './admin/AdminOrderDetails.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -46,20 +47,16 @@ export default function App() {
         <Route path="/" element={<UserLayout />}>
           <Route path="/" element={<Home />} />
 
+          <Route path="/category" element={<Categories />} />
+          <Route path="/brand" element={<Brands />} />
           <Route path="product/:id" element={<ProductDetail />} />
 
-          <Route path="/category" element={<Categories />} />
           <Route path="/category/:id/products" element={<CategoryProducts />} />
-
-          <Route path="/brand" element={<Brands />} />
           <Route path="/brand/:id/products" element={<BrandProducts />} />
 
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
-
           <Route path="/checkout" element={<Checkout />} />
-
           <Route path="/profile" element={<Profile />} />
-
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="orders/:id" element={<OrderDetails />} />
@@ -79,6 +76,7 @@ export default function App() {
           <Route path="users" element={<AdminUsers />} />
 
           <Route path="orders" element={<AdminOrders />} />
+          <Route path="orders/:id" element={<AdminOrderDetails />} />
         </Route>
       </Routes>
 

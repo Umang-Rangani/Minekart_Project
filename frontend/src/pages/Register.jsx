@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Camera, Mail, Lock, User, Phone, MapPin, MapPinned, Hash, X, UserPlus, ArrowLeft } from 'lucide-react'
+import { Camera, Mail, Lock, User, Phone, X, UserPlus, ArrowLeft, ShieldCheck } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile } from '../utils/uploadFile'
@@ -8,8 +8,7 @@ import { useUser } from '../context/userProvider'
 export default function Register() {
   const navigate = useNavigate()
   const { setShowLogin } = useUser()
-  
-  // ! img state
+
   const fileInputRef = useRef(null)
 
   const [imageFile, setImageFile] = useState(null)
@@ -23,11 +22,9 @@ export default function Register() {
   })
 
   const [loading, setLoading] = useState(false)
-  
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  // ! Input Change
   const handleChange = (e) => {
     const { name, value } = e.target
 
@@ -39,7 +36,6 @@ export default function Register() {
     setError('')
   }
 
-  // ! Image Select
   const handleImageChange = (e) => {
     const file = e.target.files?.[0]
 
@@ -55,7 +51,6 @@ export default function Register() {
     setError('')
   }
 
-  // ! Clear Form
   const clearHandle = () => {
     setSignUp({
       name: '',
@@ -74,7 +69,6 @@ export default function Register() {
     }
   }
 
-  // ! Submit
   const submitHandle = async (e) => {
     e.preventDefault()
 
@@ -89,7 +83,6 @@ export default function Register() {
     try {
       setLoading(true)
 
-      // ! Upload Avatar
       let avatarPath = ''
 
       if (imageFile) {
@@ -97,13 +90,11 @@ export default function Register() {
           avatarPath = await uploadFile(imageFile.name, imageFile, 'Avatar')
         } catch (uploadError) {
           console.log('Upload Error:', uploadError.response?.data || uploadError.message)
-
           setError('Profile photo upload failed')
           return
         }
       }
 
-      // ! Register Data
       const registerData = {
         ...signUp,
         avatar: avatarPath,
@@ -120,7 +111,6 @@ export default function Register() {
       }
     } catch (error) {
       console.log('Register Error:', error.response?.data || error.message)
-
       setError(error.response?.data?.message || 'Registration failed. Please try again.')
     } finally {
       setLoading(false)
@@ -128,175 +118,144 @@ export default function Register() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] px-4 py-4">
-      {/* ! Register Dialog */}
-      <div className="flex max-h-[calc(100vh-32px)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-xl">
-        {/* ! Header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-blue-700 bg-[#1D4ED8] px-6 py-4 sm:px-8">
-          <div>
-            <h1 className="text-xl font-semibold text-white sm:text-2xl">Create Account</h1>
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-[#F7EEE7] via-[#FBF7F2] to-[#F3E8E0] px-4 py-5 sm:py-8">
+      <div className="flex max-h-[calc(100vh-40px)] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_25px_70px_rgba(73,54,49,0.16)]">
+        {/* Header */}
+        <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#351C18] via-[#6F171C] to-[#A51D26] px-5 py-5 text-white sm:px-8">
+          <div className="absolute -right-12 -top-16 h-40 w-40 rounded-full bg-white/5" />
+          <div className="absolute -bottom-20 right-24 h-36 w-36 rounded-full bg-[#D4A373]/10" />
 
-            <p className="mt-1 text-sm text-blue-100">Join MineKart and start shopping</p>
-          </div>
-
-          <button type="button" onClick={() => navigate('/')} className="flex size-9 items-center justify-center rounded-full text-white transition hover:bg-white/15">
-            <X size={21} />
-          </button>
-        </div>
-
-        {/* ! Form */}
-        <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[280px_1fr]">
-          {/* ! Left Avatar Section */}
-          <div className="flex shrink-0 flex-col items-center justify-center border-b border-[#E2E8F0] bg-[#F8FAFC] px-8 py-6 md:border-b-0 md:border-r">
-            <div className="mb-5 text-center">
-              <h2 className="text-lg font-semibold text-[#172033]">Profile Photo</h2>
-
-              <p className="mt-1 text-sm text-[#64748B]">Add a profile picture</p>
+          <div className="relative flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                  <UserPlus size={19} />
+                </div>
+                <h1 className="text-xl font-extrabold tracking-tight sm:text-2xl">Create Account</h1>
+              </div>
+              <p className="mt-1.5 text-xs text-[#F3DCD5] sm:text-sm">Join MineKart and start shopping</p>
             </div>
 
-            {/* ! Avatar */}
+            <button type="button" onClick={() => navigate('/')} className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-white transition-all duration-300 hover:bg-white/10 hover:rotate-90">
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[290px_1fr]">
+          {/* Avatar */}
+          <div className="flex shrink-0 flex-col items-center justify-center border-b border-[#E8DDD4] bg-linear-to-b from-[#FBF7F2] to-[#F7EEE7] px-6 py-6 md:border-b-0 md:border-r md:px-8">
+            <div className="mb-5 text-center">
+              <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#F3E5DE] text-[#8E181F]">
+                <User size={18} />
+              </div>
+              <h2 className="text-base font-extrabold text-[#351C18]">Profile Photo</h2>
+              <p className="mt-1 text-xs text-[#806C63]">Add a profile picture</p>
+            </div>
+
             <div className="relative">
-              <div className="flex size-60 items-center justify-center overflow-hidden rounded-full border-4 border-black/30 border-x-0 bg-[#EFF6FF] shadow-lg">
-                {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={100} strokeWidth={1.3} className="text-[#1D4ED8]" />}
+              <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-4 border-[#FFFDFC] bg-[#F3E5DE] shadow-[0_10px_30px_rgba(73,54,49,0.15)] ring-1 ring-[#E2D5CC] sm:h-48 sm:w-48">
+                {preview ? (
+                  <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" />
+                ) : (
+                  <User size={82} strokeWidth={1.2} className="text-[#8E181F]" />
+                )}
               </div>
 
-              {/* ! Camera Button */}
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute bottom-2 right-2 flex size-12 items-center justify-center rounded-full border-4 border-white bg-[#1D4ED8] text-white shadow-lg transition hover:bg-blue-700"
-              >
-                <Camera size={21} />
+              <button type="button" onClick={() => fileInputRef.current?.click()} className="absolute bottom-1 right-1 flex h-11 w-11 items-center justify-center rounded-full border-4 border-[#FFFDFC] bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-105">
+                <Camera size={19} />
               </button>
 
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
             </div>
 
-            <p className="mt-5 text-center text-xs text-[#64748B]">JPG, PNG or WEBP</p>
+            <div className="mt-5 flex items-center gap-1.5 rounded-full border border-[#E2D5CC] bg-[#FFFDFC] px-3 py-1.5 text-[10px] font-semibold text-[#806C63]">
+              <ShieldCheck size={13} className="text-[#3E8B62]" />
+              JPG, PNG or WEBP
+            </div>
           </div>
 
-          {/* ! Right Form Area */}
+          {/* Form Area */}
           <div className="min-h-0 overflow-y-auto p-5 sm:p-7">
-            {/* ! Form Heading */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2">
-                <div className="flex size-9 items-center justify-center rounded-lg bg-[#DBEAFE]">
-                  <UserPlus size={19} className="text-[#1D4ED8]" />
-                </div>
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md shadow-[#7D171C]/15">
+                <UserPlus size={19} />
+              </div>
 
-                <div>
-                  <h2 className="font-semibold text-[#172033]">Personal Information</h2>
-
-                  <p className="text-xs text-[#64748B]">Enter your details below</p>
-                </div>
+              <div>
+                <h2 className="font-extrabold text-[#351C18]">Personal Information</h2>
+                <p className="text-xs text-[#806C63]">Enter your details below</p>
               </div>
             </div>
 
-            {/* ! Error */}
-            {error && <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>}
+            {/* Error */}
+            {error && (
+              <div className="mb-5 flex items-center rounded-xl border border-[#E7C8C5] bg-[#FFF2F1] px-4 py-3 text-sm font-medium text-[#A51D26]">
+                {error}
+              </div>
+            )}
 
-            {/* ! Success */}
-            {success && <div className="mb-5 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-600">{success}</div>}
+            {/* Success */}
+            {success && (
+              <div className="mb-5 flex items-center rounded-xl border border-[#CFE4D7] bg-[#F0F8F3] px-4 py-3 text-sm font-medium text-[#3E8B62]">
+                {success}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {/* ! Name */}
+              {/* Name */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#172033]">Full Name</label>
-
-                <div className="relative">
-                  <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                  <input
-                    type="text"
-                    name="name"
-                    value={signUp.name}
-                    onChange={handleChange}
-                    placeholder="Enter your name"
-                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
+                <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Full Name</label>
+                <div className="group relative">
+                  <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F]" />
+                  <input type="text" name="name" value={signUp.name} onChange={handleChange} placeholder="Enter your name" className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5" />
                 </div>
               </div>
 
-              {/* ! Email */}
+              {/* Email */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#172033]">Email Address</label>
-
-                <div className="relative">
-                  <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                  <input
-                    type="email"
-                    name="email"
-                    value={signUp.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email"
-                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
+                <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Email Address</label>
+                <div className="group relative">
+                  <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F]" />
+                  <input type="email" name="email" value={signUp.email} onChange={handleChange} placeholder="Enter your email" className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5" />
                 </div>
               </div>
 
-              {/* ! Password */}
+              {/* Password */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#172033]">Password</label>
-
-                <div className="relative">
-                  <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                  <input
-                    type="password"
-                    name="password"
-                    value={signUp.password}
-                    onChange={handleChange}
-                    placeholder="Create password"
-                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
+                <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Password</label>
+                <div className="group relative">
+                  <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F]" />
+                  <input type="password" name="password" value={signUp.password} onChange={handleChange} placeholder="Create password" className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5" />
                 </div>
               </div>
 
-              {/* ! Phone */}
+              {/* Phone */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#172033]">Phone Number</label>
-
-                <div className="relative">
-                  <Phone size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
-
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={signUp.phone}
-                    onChange={handleChange}
-                    placeholder="Enter phone number"
-                    className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white pl-11 pr-4 text-sm text-[#172033] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#DBEAFE]"
-                  />
+                <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Phone Number</label>
+                <div className="group relative">
+                  <Phone size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F]" />
+                  <input type="tel" name="phone" value={signUp.phone} onChange={handleChange} placeholder="Enter phone number" className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5" />
                 </div>
               </div>
-
             </div>
 
-            {/* ! Buttons */}
-            <div className="mt-7 flex flex-col-reverse gap-3 border-t border-[#E2E8F0] pt-5 sm:flex-row sm:justify-between">
-              <button
-                type="button"
-                onClick={clearHandle}
-                className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-5 text-sm font-medium text-[#64748B] transition hover:border-[#CBD5E1] hover:bg-[#F8FAFC] hover:text-[#172033]"
-              >
+            {/* Buttons */}
+            <div className="mt-7 flex flex-col-reverse gap-3 border-t border-[#E8DDD4] pt-5 sm:flex-row sm:items-center sm:justify-between">
+              <button type="button" onClick={clearHandle} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-5 text-sm font-semibold text-[#806C63] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] hover:text-[#493631]">
                 <X size={17} />
                 Clear
               </button>
 
               <div className="flex flex-col gap-3 sm:flex-row">
-                <button type="button" onClick={() => navigate('/')} className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-5 text-sm font-medium text-[#172033] transition hover:bg-[#F8FAFC]">
+                <button type="button" onClick={() => navigate('/')} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-5 text-sm font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8]">
                   <ArrowLeft size={17} />
                   Back
                 </button>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="flex h-11 items-center justify-center gap-2 rounded-lg bg-[#1D4ED8] px-7 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-                >
+                <button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-7 text-sm font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0">
                   <UserPlus size={17} />
-
                   {loading ? 'Creating...' : 'Create Account'}
                 </button>
               </div>

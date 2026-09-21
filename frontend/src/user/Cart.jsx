@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag, Sparkles } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
 
@@ -16,10 +16,8 @@ export default function Cart() {
     })
   }, [cart])
 
-  // ! Increase Quantity
   const increaseQuantity = async (item) => {
     const newQuantity = item.quantity + 1
-
     const productStock = item.productId?.stock || 0
 
     if (newQuantity > productStock) {
@@ -33,7 +31,6 @@ export default function Cart() {
     })
   }
 
-  // ! Decrease Quantity
   const decreaseQuantity = async (item) => {
     if (item.quantity === 1) {
       await removeCartItem({
@@ -53,7 +50,6 @@ export default function Cart() {
     })
   }
 
-  // ! Remove Item
   const removeItem = async (item) => {
     await removeCartItem({
       productId: item.productId._id,
@@ -61,57 +57,41 @@ export default function Cart() {
     })
   }
 
-  // ! Total Items
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0)
-
-  // ! Subtotal
   const subtotal = cart?.subtotal || 0
-
-  // ! Delivery Charge
   const deliveryCharge = subtotal >= 499 ? 0 : 40
-
-  // ! Grand Total
   const grandTotal = subtotal + deliveryCharge
 
-  // console.log('cart', cart)
-  // console.log('cartItems', cartItems)
-
-  // ! BreadCrumb
-
-  const items = [{ title: `cart`, link: null }]
+  const items = [{ title: 'Cart', link: null }]
 
   return (
     <div className="min-h-screen ">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto  pt-5">
-        {/*  HEADER */}
-        <div className="mb-5 rounded-md bg-white p-4 shadow-sm">
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            {/* Left Side */}
-            <div className="flex items-center gap-4">
-              {/* Cart Icon */}
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#EFF6FF] text-[#1D4ED8] shadow-sm sm:h-15 sm:w-15">
-                <ShoppingBag size={32} strokeWidth={1.8} />
+      <div className="mx-auto pt-5">
+        {/* PAGE HEADER */}
+        <div className="mb-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] shadow-[0_4px_18px_rgba(73,54,49,0.06)]">
+          <div className="flex min-h-19 items-center justify-between gap-4 px-4 py-3 sm:px-5">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md shadow-[#7D171C]/15 sm:h-12 sm:w-12">
+                <ShoppingBag size={23} strokeWidth={1.8} />
+                <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#FFFDFC] bg-[#D4A373]" />
               </div>
 
-              {/* Heading */}
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <div className="h-6 w-1 rounded-full bg-[#1D4ED8]" />
-
-                  <h1 className="text-2xl font-extrabold tracking-tight text-[#172033] sm:text-3xl">My Cart</h1>
+                  <div className="h-5 w-1 shrink-0 rounded-full bg-linear-to-b from-[#7D171C] to-[#B5262D]" />
+                  <h1 className="truncate text-lg font-extrabold tracking-tight text-[#351C18] sm:text-xl">My Cart</h1>
                 </div>
 
-                <p className="mt-1 ml-3 text-sm text-[#64748B] sm:text-base">
-                  {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
+                <p className="ml-3 mt-0.5 truncate text-[11px] text-[#806C63] sm:text-xs">
+                  {totalItems} {totalItems === 1 ? 'item' : 'items'} ready for checkout
                 </p>
               </div>
             </div>
 
-            {/* Cart Count */}
-            <div className="flex w-fit shrink-0 items-center gap-2 rounded-full border border-[#DBEAFE] bg-[#EFF6FF] px-4 py-2 text-sm font-semibold text-[#2563EB]">
-              <ShoppingBag size={16} />
+            <div className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[#E2D5CC] bg-[#FFFDFC] px-3 py-2 text-[11px] font-bold text-[#8E181F] shadow-sm sm:px-3.5">
+              <ShoppingBag size={14} />
               <span>
                 {totalItems} {totalItems === 1 ? 'Item' : 'Items'}
               </span>
@@ -119,152 +99,159 @@ export default function Cart() {
           </div>
         </div>
 
-        {/*   MAIN GRID  */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-6">
-          {/*  LEFT SIDE - CART ITEMS = */}
-          <div className="min-w-0  space-y-5  lg:col-span-4">
+        {/* MAIN CONTENT */}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_400px]">
+          {/* LEFT */}
+          <div className="min-w-0">
             {cartItems.length === 0 ? (
-              <div className="rounded-2xl   border border-[#E2E8F0] bg-white px-6 py-16 text-center shadow-sm">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1D4ED8]">
-                  <ShoppingBag size={30} />
+              <div className="flex min-h-105 flex-col items-center justify-center rounded-3xl border border-dashed border-[#D8C9C0] bg-[#FFFDFC] px-6 text-center shadow-sm">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+                  <ShoppingBag size={30} strokeWidth={1.6} />
                 </div>
 
-                <h2 className="mt-5 text-xl font-bold text-[#172033]">Your cart is empty</h2>
+                <h2 className="mt-5 text-xl font-extrabold text-[#351C18]">Your cart is empty</h2>
 
-                <p className="mt-2 text-sm text-[#64748B]">Looks like you haven't added anything to your cart yet.</p>
+                <p className="mt-2 max-w-sm text-sm leading-6 text-[#806C63]">Looks like you haven't added anything to your cart yet. Explore our products and find something you love.</p>
 
-                <button type="button" onClick={() => navigate('/')} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1D4ED8] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1E40AF]">
+                <button
+                  type="button"
+                  onClick={() => navigate('/')}
+                  className="mt-6 flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-3 text-sm font-bold text-white shadow-md shadow-[#7D171C]/15 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                >
                   Start Shopping
-                  <ChevronRight size={18} />
+                  <ChevronRight size={17} />
                 </button>
               </div>
             ) : (
               <>
-                {/* Cart Products - 2 Column Grid */}
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                {/* CART TITLE */}
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-base font-extrabold text-[#351C18]">Shopping Cart</h2>
+                    <p className="mt-0.5 text-xs text-[#806C63]">Review your selected products</p>
+                  </div>
+
+                  <span className="hidden rounded-lg bg-[#F7EEE7] px-3 py-1.5 text-[10px] font-bold text-[#8E181F] sm:block">
+                    {totalItems} {totalItems === 1 ? 'PRODUCT' : 'PRODUCTS'}
+                  </span>
+                </div>
+
+                {/* PRODUCTS */}
+                <div className="space-y-3">
                   {cartItems.map((item) => {
                     const product = item.productId
 
-                    // console.log('product', product)
-                    // to={`/product/${product._id}`}
                     return (
-                      <Link key={`${product._id}-${item.size || 'no-size'}`} className="rounded-2xl border-2 border-white bg-white p-4 shadow-sm transition hover:shadow-md hover:border-r-blue-400 hover:border-b-blue-400 hover:border-2">
-                        <div className="flex gap-4">
-                          {/*    IMAGE + QUANTITY  */}
-                          <div className="w-28 shrink-0">
-                            {/* Image */}
-                            <div onClick={() => navigate(`/product/${product._id}`)} className="h-32 w-28 overflow-hidden rounded-xl bg-[#F8FAFC]">
-                              <img src={`http://localhost:3000${product?.images?.[0]}`} alt={product?.productName} className="h-full w-full object-contain" />
-                            </div>
+                      <div
+                        key={`${product._id}-${item.size || 'no-size'}`}
+                        className="group rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] p-3.5 shadow-[0_3px_12px_rgba(73,54,49,0.05)] transition-all duration-300 hover:border-[#CDAFA4] hover:shadow-[0_10px_25px_rgba(73,54,49,0.10)] sm:p-4"
+                      >
+                        <div className="flex gap-3 sm:gap-4">
+                          {/* IMAGE */}
+                          <div className="w-23 shrink-0 sm:w-28">
+                            <button
+                              type="button"
+                              onClick={() => navigate(`/product/${product._id}`)}
+                              className="group/image relative block h-28 w-23 overflow-hidden rounded-xl border border-[#E8DDD4] bg-linear-to-br from-[#FFFDFC] to-[#F7EEE7] sm:h-32 sm:w-28"
+                            >
+                              <div className="absolute -right-5 -top-5 h-14 w-14 rounded-full bg-[#A51D26]/5" />
 
-                            {/* Quantity - Image ni niche */}
-                            <div className="mt-3 flex h-9 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
-                              <button type="button" onClick={() => decreaseQuantity(item)} className="flex h-full w-9 items-center justify-center text-[#64748B] transition hover:bg-[#F1F5F9] disabled:cursor-not-allowed disabled:opacity-40">
-                                <Minus size={14} />
+                              <img src={`http://localhost:3000${product?.images?.[0]}`} alt={product?.productName} className="relative z-10 h-full w-full object-contain p-2 transition-transform duration-500 group-hover/image:scale-110" />
+
+                              {product.stock <= 0 && <span className="absolute bottom-2 left-1/2 z-20 -translate-x-1/2 rounded-md bg-[#351C18]/90 px-2 py-1 text-[9px] font-bold text-white">Out of Stock</span>}
+                            </button>
+
+                            {/* QUANTITY */}
+                            <div className="mt-2.5 flex h-9 items-center justify-center overflow-hidden rounded-lg border border-[#E2D5CC] bg-[#FFFDFC]">
+                              <button type="button" onClick={() => decreaseQuantity(item)} className="flex h-full w-8 items-center justify-center text-[#806C63] transition-colors duration-200 hover:bg-[#F7EEE7] hover:text-[#8E181F]">
+                                <Minus size={13} />
                               </button>
 
-                              <span className="flex h-full min-w-10 items-center justify-center border-x border-[#E2E8F0] text-sm font-bold text-[#172033]">{item.quantity}</span>
+                              <span className="flex h-full min-w-9 items-center justify-center border-x border-[#E2D5CC] text-xs font-extrabold text-[#351C18]">{item.quantity}</span>
 
-                              <button type="button" onClick={() => increaseQuantity(item)} className="flex h-full w-9 items-center justify-center text-[#1D4ED8] transition hover:bg-[#EFF6FF]">
-                                <Plus size={14} />
+                              <button type="button" onClick={() => increaseQuantity(item)} className="flex h-full w-8 items-center justify-center text-[#8E181F] transition-colors duration-200 hover:bg-[#F7EEE7]">
+                                <Plus size={13} />
                               </button>
                             </div>
                           </div>
 
-                          {/*   PRODUCT DETAILS  */}
+                          {/* DETAILS */}
                           <div className="min-w-0 flex-1">
-                            {/* Brand + Delete */}
-                            <div className="flex items-center justify-between gap-2">
-                              <p className="truncate text-[10px] font-bold uppercase tracking-[0.12em] text-[#64748B]">{product.brand?.brandName}</p>
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <p className="truncate text-[9px] font-bold uppercase tracking-[0.13em] text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
+
+                                <h3 className="mt-1 line-clamp-2 text-sm font-extrabold leading-5 text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F] sm:text-[15px]">{product.productName}</h3>
+                              </div>
 
                               <button
                                 type="button"
                                 onClick={() => removeItem(item)}
-                                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#94A3B8] transition-all duration-200 hover:bg-[#FEF2F2] hover:text-[#EF4444]"
+                                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#B3A39B] transition-all duration-200 hover:bg-[#FFF0F0] hover:text-[#A51D26]"
                                 title="Remove"
                               >
-                                <Trash2 size={16} strokeWidth={2} />
+                                <Trash2 size={16} strokeWidth={1.8} />
                               </button>
                             </div>
 
-                            {/* Product Name */}
-                            <h3 className="mt-1.5 line-clamp-2 text-[15px] font-bold leading-5 text-[#172033] sm:text-base">{product.productName}</h3>
-
-                            {/* Size */}
                             {item.size && (
-                              <div className="mt-2.5 inline-flex items-center rounded-md bg-[#F1F5F9] px-2.5 py-1 text-[11px] font-semibold text-[#475569]">
-                                Size:
-                                <span className="ml-1 text-[#172033]">{item.size}</span>
+                              <div className="mt-2 inline-flex items-center rounded-lg border border-[#E8DDD4] bg-[#F7EEE7] px-2.5 py-1 text-[10px] font-semibold text-[#67544D]">
+                                Size <span className="ml-1 font-extrabold text-[#351C18]">{item.size}</span>
                               </div>
                             )}
 
-                            {/* Price Details */}
-                            <div className="mt-4 space-y-1.5">
-                              {/* Original Price */}
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="text-[11px] font-medium text-[#94A3B8]">Price</span>
+                            <div className="mt-3 flex items-end justify-between gap-3">
+                              <div>
+                                <p className="text-[10px] text-[#9A857B]">Price</p>
 
-                                <span className="text-xs font-medium text-[#94A3B8] line-through">₹{item.price.toLocaleString('en-IN')}</span>
+                                <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                                  <span className="text-base font-extrabold text-[#351C18]">₹{(item.discountPrice || item.price).toLocaleString('en-IN')}</span>
+
+                                  {item.price > (item.discountPrice || item.price) && <span className="text-[11px] text-[#9A857B] line-through">₹{item.price.toLocaleString('en-IN')}</span>}
+                                </div>
                               </div>
 
-                              {/* Discount Price */}
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="text-[11px] font-semibold text-[#64748B]">Discount Price</span>
-
-                                <span className="text-base font-extrabold text-[#1D4ED8]">₹{(item.discountPrice || item.price).toLocaleString('en-IN')}</span>
-                              </div>
-                            </div>
-
-                            {/* Item Total */}
-                            <div className="mt-3 border-t border-[#F1F5F9] pt-3">
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="text-[11px] font-semibold text-[#64748B]">Item Total</span>
-
-                                <span className="text-base font-extrabold text-[#172033]">₹{((item.discountPrice || item.price) * item.quantity).toLocaleString('en-IN')}</span>
+                              <div className="text-right">
+                                <p className="text-[10px] text-[#9A857B]">Item Total</p>
+                                <p className="mt-0.5 text-base font-extrabold text-[#8E181F]">₹{((item.discountPrice || item.price) * item.quantity).toLocaleString('en-IN')}</p>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     )
                   })}
                 </div>
 
-                {/*  BENEFITS  */}
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 ">
-                  <div className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#ECFDF5] text-[#16A34A]">
-                      <Truck size={19} />
+                {/* BENEFITS */}
+                <div className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+                  <div className="flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FFFDFC] p-3.5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F0F8F3] text-[#3E8B62]">
+                      <Truck size={17} />
                     </div>
-
                     <div>
-                      <p className="text-xs font-bold text-[#172033]">Free Delivery</p>
-
-                      <p className="text-[11px] text-[#64748B]">On orders ₹499+</p>
+                      <p className="text-[11px] font-extrabold text-[#351C18]">Free Delivery</p>
+                      <p className="mt-0.5 text-[10px] text-[#806C63]">On orders ₹499+</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#EFF6FF] text-[#1D4ED8]">
-                      <ShieldCheck size={19} />
+                  <div className="flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FFFDFC] p-3.5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                      <ShieldCheck size={17} />
                     </div>
-
                     <div>
-                      <p className="text-xs font-bold text-[#172033]">Secure Payment</p>
-
-                      <p className="text-[11px] text-[#64748B]">100% secure checkout</p>
+                      <p className="text-[11px] font-extrabold text-[#351C18]">Secure Payment</p>
+                      <p className="mt-0.5 text-[10px] text-[#806C63]">Safe checkout</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFF7ED] text-[#D97706]">
-                      <Tag size={19} />
+                  <div className="flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FFFDFC] p-3.5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F8EEE1] text-[#B87935]">
+                      <Tag size={17} />
                     </div>
-
                     <div>
-                      <p className="text-xs font-bold text-[#172033]">Best Prices</p>
-
-                      <p className="text-[11px] text-[#64748B]">Great deals for you</p>
+                      <p className="text-[11px] font-extrabold text-[#351C18]">Best Prices</p>
+                      <p className="mt-0.5 text-[10px] text-[#806C63]">Great deals for you</p>
                     </div>
                   </div>
                 </div>
@@ -272,143 +259,106 @@ export default function Cart() {
             )}
           </div>
 
-          {/*   RIGHT SIDE - ORDER SUMMARY  */}
+          {/* RIGHT - SUMMARY */}
           {cartItems.length > 0 && (
-            <div className="min-w-0 lg:col-span-2">
-              <div className="h-fit rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm lg:sticky lg:top-24">
-                {/* Heading */}
-                <div className="mb-5">
-                  <h2 className="text-lg font-extrabold text-[#172033]">Order Summary</h2>
+            <div className="min-w-0">
+              <div className="h-fit overflow-hidden rounded-2xl border border-[#E2D5CC] bg-[#FFFDFC] shadow-[0_8px_30px_rgba(73,54,49,0.09)] lg:sticky lg:top-24">
+                {/* SUMMARY HEADER */}
+                <div className="border-b border-[#E8DDD4] bg-linear-to-r from-[#FBF7F2] to-[#F7EEE7] px-5 py-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-base font-extrabold text-[#351C18]">Order Summary</h2>
+                      <p className="mt-0.5 text-[11px] text-[#806C63]">Review before checkout</p>
+                    </div>
 
-                  <p className="mt-1 text-xs text-[#64748B]">Check your items before placing the order</p>
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm">
+                      <ShoppingBag size={17} />
+                    </div>
+                  </div>
                 </div>
 
-                {/* 
-                    SUMMARY TABLE
-                = */}
-                <div className="w-full">
-                  <table className="w-full table-fixed border-collapse text-sm">
-                    <thead>
-                      <tr className="border-b border-[#E2E8F0]">
-                        <th className="w-[10%] pb-3 text-left text-xs font-bold text-[#64748B]">#</th>
+                <div className="p-5">
+                  {/* ITEMS */}
+                  <div className="space-y-3">
+                    {cartItems.map((item, index) => (
+                      <div key={index} className="flex items-start justify-between gap-3">
+                        <div className="flex min-w-0 gap-2.5">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#F7EEE7] text-[10px] font-extrabold text-[#8E181F]">{index + 1}</span>
 
-                        <th className="w-[42%] pb-3 text-left text-xs font-bold text-[#64748B]">Product</th>
-
-                        <th className="w-[15%] pb-3 text-center text-xs font-bold text-[#64748B]">Qty</th>
-
-                        <th className="w-[33%] pb-3 text-right text-xs font-bold text-[#64748B]">Price</th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {cartItems.map((item, index) => (
-                        <tr key={index} className="border-b border-[#F1F5F9]">
-                          {/* Index */}
-                          <td className="py-4 align-top text-xs font-semibold text-[#94A3B8]">{index + 1}</td>
-
-                          {/* Product */}
-                          <td className="min-w-0 py-4 pr-2 align-top">
-                            <p className="truncate text-xs font-bold text-[#172033]">{item.productId?.productName}</p>
-
-                            <p className="mt-1 truncate text-[11px] text-[#64748B]">{item.productId?.brand?.brandName}</p>
-
-                            {item.size && <p className="mt-1 text-[11px] text-[#94A3B8]">Size: {item.size}</p>}
-                          </td>
-
-                          {/* Quantity */}
-                          <td className="py-4 text-center align-top text-xs font-bold text-[#172033]">{item.quantity}</td>
-
-                          {/* Price */}
-                          <td className="py-4 text-right align-top">
-                            <p className="text-xs font-bold text-[#172033]">₹{item.totalPrice.toLocaleString('en-IN')}</p>
-
-                            <p className="mt-1 text-[10px] text-[#94A3B8]">
-                              ₹{item.price.toLocaleString('en-IN')} × {item.quantity}
+                          <div className="min-w-0">
+                            <p className="truncate text-xs font-bold text-[#351C18]">{item.productId?.productName}</p>
+                            <p className="mt-0.5 truncate text-[10px] text-[#9A857B]">
+                              {item.productId?.brand?.brandName} · Qty {item.quantity}
                             </p>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
+                            {item.size && <p className="mt-0.5 text-[10px] text-[#9A857B]">Size: {item.size}</p>}
+                          </div>
+                        </div>
 
-                    {/* 
-                        TABLE FOOTER
-                    = */}
-                    <tfoot>
-                      <tr>
-                        <td colSpan="2" className="pt-4 text-sm font-extrabold text-[#172033]">
-                          Total
-                        </td>
-
-                        <td className="pt-4 text-center text-sm font-extrabold text-[#172033]">{totalItems}</td>
-
-                        <td className="pt-4 text-right text-sm font-extrabold text-[#1D4ED8]">₹{subtotal.toLocaleString('en-IN')}</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-
-                {/* 
-                    PRICE DETAILS
-                = */}
-                <div className="mt-5 space-y-3 border-t border-[#E2E8F0] pt-5">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#64748B]">Subtotal</span>
-
-                    <span className="font-semibold text-[#172033]">₹{subtotal.toLocaleString('en-IN')}</span>
+                        <span className="shrink-0 text-xs font-extrabold text-[#351C18]">₹{item.totalPrice.toLocaleString('en-IN')}</span>
+                      </div>
+                    ))}
                   </div>
 
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#64748B]">Delivery</span>
+                  {/* PRICE */}
+                  <div className="mt-5 space-y-3 border-t border-[#E8DDD4] pt-5">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-[#806C63]">Subtotal</span>
+                      <span className="font-bold text-[#351C18]">₹{subtotal.toLocaleString('en-IN')}</span>
+                    </div>
 
-                    {deliveryCharge === 0 ? <span className="font-bold text-[#16A34A]">FREE</span> : <span className="font-semibold text-[#172033]">₹{deliveryCharge}</span>}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-[#806C63]">Delivery</span>
+                      {deliveryCharge === 0 ? <span className="font-bold text-[#3E8B62]">FREE</span> : <span className="font-bold text-[#351C18]">₹{deliveryCharge}</span>}
+                    </div>
+
+                    <div className="flex items-end justify-between border-t border-[#E8DDD4] pt-4">
+                      <div>
+                        <p className="text-sm font-extrabold text-[#351C18]">Grand Total</p>
+                        <p className="mt-0.5 text-[10px] text-[#9A857B]">{totalItems} items</p>
+                      </div>
+
+                      <span className="text-2xl font-extrabold tracking-tight text-[#8E181F]">₹{grandTotal.toLocaleString('en-IN')}</span>
+                    </div>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-                    <span className="text-base font-extrabold text-[#172033]">Grand Total</span>
+                  {/* DELIVERY MESSAGE */}
+                  {subtotal < 499 ? (
+                    <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-[#EADCC8] bg-[#FBF4E8] px-3.5 py-3">
+                      <Truck size={16} className="mt-0.5 shrink-0 text-[#B87935]" />
+                      <p className="text-[10px] font-semibold leading-4 text-[#79562F]">Add ₹{(499 - subtotal).toLocaleString('en-IN')} more to unlock free delivery.</p>
+                    </div>
+                  ) : (
+                    <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-[#D5E8DA] bg-[#F0F8F3] px-3.5 py-3">
+                      <Truck size={16} className="shrink-0 text-[#3E8B62]" />
+                      <p className="text-[10px] font-bold text-[#34704F]">Free delivery unlocked!</p>
+                    </div>
+                  )}
 
-                    <span className="text-xl font-extrabold text-[#1D4ED8]">₹{grandTotal.toLocaleString('en-IN')}</span>
+                  {/* CTA */}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/checkout')}
+                    className="group mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] text-sm font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F] hover:shadow-lg"
+                  >
+                    Proceed to Checkout
+                    <ChevronRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
+
+                  {/* CONTINUE */}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/')}
+                    className="mt-2.5 flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] text-xs font-bold text-[#67544D] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] hover:text-[#8E181F]"
+                  >
+                    <ChevronLeft size={15} />
+                    Continue Shopping
+                  </button>
+
+                  {/* SECURE */}
+                  <div className="mt-4 flex items-center justify-center gap-1.5 text-[10px] font-medium text-[#9A857B]">
+                    <ShieldCheck size={13} className="text-[#3E8B62]" />
+                    Safe & Secure Checkout
                   </div>
-                </div>
-
-                {/* Free Delivery Message */}
-                {subtotal < 499 && (
-                  <div className="mt-4 rounded-xl bg-[#FFFBEB] px-4 py-3">
-                    <p className="text-xs font-semibold leading-5 text-[#92400E]">Add ₹{(499 - subtotal).toLocaleString('en-IN')} more to get free delivery.</p>
-                  </div>
-                )}
-
-                {subtotal >= 499 && (
-                  <div className="mt-4 flex items-center gap-2 rounded-xl bg-[#ECFDF5] px-4 py-3">
-                    <Truck size={17} className="shrink-0 text-[#16A34A]" />
-
-                    <p className="text-xs font-semibold text-[#166534]">Congratulations! You got free delivery.</p>
-                  </div>
-                )}
-
-                {/* 
-                    PLACE ORDER BUTTON
-                = */}
-                <button type="button" onClick={() => navigate('/checkout')} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1D4ED8] px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#1E40AF]">
-                  Place Order
-                  <ChevronRight size={18} />
-                </button>
-
-                {/* 
-                    CONTINUE SHOPPING
-                = */}
-                <button
-                  type="button"
-                  onClick={() => navigate('/')}
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 py-3 text-sm font-bold text-[#172033] transition hover:border-[#1D4ED8] hover:text-[#1D4ED8]"
-                >
-                  <ChevronLeft size={17} />
-                  Continue Shopping
-                </button>
-
-                {/* Secure Checkout */}
-                <div className="mt-5 flex items-center justify-center gap-2 text-[11px] text-[#94A3B8]">
-                  <ShieldCheck size={14} />
-                  <span>Safe & Secure Checkout</span>
                 </div>
               </div>
             </div>

@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
 import { Link } from 'react-router-dom'
-import { ChevronRight, Sparkles, Store } from 'lucide-react'
+import { ChevronRight, Sparkles, Store, ShoppingBag } from 'lucide-react'
 import BreadCrumb from './BreadCrumb'
 
 export default function Brands() {
   const [brand, setBrand] = useState([])
 
-  // category theme mate
-  const [activeCategory, setActiveCategory] = useState(null)
-
   const getBrand = async () => {
     try {
       const res = await axiosInstance.get('/brand')
       setBrand(res.data)
-      //   console.log(res.data.data);
     } catch (error) {
-      console.log('Get Categories Error:', error.response?.data || error.message)
-    } finally {
+      console.log('Get Brands Error:', error.response?.data || error.message)
     }
   }
 
@@ -25,78 +20,90 @@ export default function Brands() {
     getBrand()
   }, [])
 
-  //   console.log('brand', brand?.data)
+  const activeBrands = brand?.data?.filter((value) => value.status === 'Active') || []
 
-  const items = [{ title: 'Brand', link: '/brand' }]
+  const items = [{ title: 'Brands', link: null }]
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <BreadCrumb items={items} />
+
       {/* Heading */}
-      <div className="mb-5 mt-5 rounded-md bg-white p-4 shadow-sm">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="mb-6 mt-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] shadow-[0_6px_24px_rgba(73,54,49,0.07)]">
+        <div className="flex flex-col justify-between gap-5 p-5 sm:flex-row sm:items-center sm:p-6">
           {/* Left Side */}
-          <div className="flex items-center gap-4">
-            {/* Brand Icon */}
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#EFF6FF] text-[#1D4ED8] shadow-sm sm:h-15 sm:w-15">
-              <Store size={32} strokeWidth={1.8} />
+          <div className="flex min-w-0 items-center gap-4">
+            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/20 sm:h-16 sm:w-16">
+              <Store size={30} strokeWidth={1.8} />
+              <span className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-[#FFFDFC] bg-[#D4A373]" />
             </div>
 
-            {/* Heading */}
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <div className="h-6 w-1 rounded-full bg-[#1D4ED8]" />
-
-                <h1 className="text-2xl font-extrabold tracking-tight text-[#172033] sm:text-3xl">All Brands</h1>
+                <div className="h-6 w-1 shrink-0 rounded-full bg-linear-to-b from-[#7D171C] to-[#B5262D]" />
+                <h1 className="text-xl font-extrabold tracking-tight text-[#351C18] sm:text-2xl lg:text-3xl">All Brands</h1>
               </div>
 
-              <p className="mt-1 ml-3 text-sm text-[#64748B] sm:text-base">Explore products from popular brands</p>
+              <p className="ml-3 mt-1 text-xs text-[#806C63] sm:text-sm">Explore products from popular brands</p>
             </div>
           </div>
 
           {/* Brand Count */}
-          <div className="flex w-fit shrink-0 items-center gap-2 rounded-full border border-[#DBEAFE] bg-[#EFF6FF] px-4 py-2 text-sm font-semibold text-[#2563EB]">
-            <Sparkles size={16} />
-            <span>{brand?.data?.length || 0} Brands</span>
+          <div className="flex w-fit shrink-0 items-center gap-2 rounded-full border border-[#E2D5CC] bg-[#FFFDFC] px-4 py-2 text-xs font-bold text-[#8E181F] shadow-sm">
+            <Sparkles size={15} />
+            <span>
+              {activeBrands.length} {activeBrands.length === 1 ? 'Brand' : 'Brands'}
+            </span>
           </div>
         </div>
       </div>
 
-
       {/* All Brands */}
-      <div className=" ">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-          {brand?.data
-            ?.filter((value) => value.status === 'Active')
-            .map((value) => {
-              return (
-                <Link
-                  to={`/brand/${value._id}/products`}
-                  key={value._id}
-                  className="group overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#BFDBFE] hover:shadow-lg flex flex-col justify-between"
-                >
-                  {/* Brand Image */}
-                  <div className="h-32 w-full overflow-hidden bg-white">
-                    <img src={`http://localhost:3000${value.brandLogo}`} alt={value.brandName} className="h-full w-full object-fill transition-transform duration-300 group-hover:scale-105" />
-                  </div>
+      {activeBrands.length > 0 ? (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          {activeBrands.map((value) => (
+            <Link
+              key={value._id}
+              to={`/brand/${value._id}/products`}
+              className="group relative overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_4px_14px_rgba(73,54,49,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_14px_30px_rgba(73,54,49,0.13)]"
+            >
+              {/* Brand Image */}
+              <div className="relative flex h-32 items-center justify-center overflow-hidden bg-linear-to-br from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] p-5 sm:h-36">
+                <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#A51D26]/5 transition-transform duration-500 group-hover:scale-150" />
 
-                  {/* Brand Details */}
-                  <div className="border-t bg-[#F8FAFC] border-[#E2E8F0] px-4 py-4 h-30">
-                    <div className="flex items-center justify-between gap-2">
-                      <h3 className="truncate text-sm font-bold text-[#172033]">{value.brandName}</h3>
+                <img src={`http://localhost:3000${value.brandLogo}`} alt={value.brandName} className="relative z-10 h-full w-full object-contain transition-transform duration-500 group-hover:scale-110" />
 
-                      <ChevronRight size={16} className="shrink-0 text-[#1D4ED8] transition-transform duration-300 group-hover:translate-x-1" />
-                    </div>
+              </div>
 
-                    <p className="mt-1 line-clamp-2 text-xs leading-4 text-[#64748B]">{value.description}</p>
+              {/* Brand Details */}
+              <div className="min-h-30 border-t border-[#E8DDD4] bg-[#FBF7F2] px-4 py-4 transition-colors duration-300 group-hover:bg-[#F8EEE8]">
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="truncate text-sm font-extrabold text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F]">{value.brandName}</h2>
 
-                    <div className="mt-3 text-xs font-semibold text-[#1D4ED8]">View Products →</div>
-                  </div>
-                </Link>
-              )
-            })}
+                </div>
+
+                <p className="mt-2 line-clamp-2 min-h-8 text-xs leading-4 text-[#806C63]">{value.description || 'Explore products from this brand'}</p>
+
+                <div className="mt-4 flex items-center gap-1.5 text-[11px] font-bold text-[#8E181F]">
+                  <ShoppingBag size={13} />
+                  <span>View Products</span>
+                  <ChevronRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
-      </div>
+      ) : (
+        <div className="flex min-h-105 flex-col items-center justify-center rounded-3xl border border-dashed border-[#D8C9C0] bg-[#FFFDFC] px-5 text-center shadow-sm">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+            <Store size={30} strokeWidth={1.7} />
+          </div>
+
+          <h2 className="mt-5 text-xl font-extrabold text-[#351C18]">No Brands Found</h2>
+
+          <p className="mt-2 max-w-sm text-sm leading-6 text-[#806C63]">There are currently no active brands available. Please check again later.</p>
+        </div>
+      )}
     </div>
   )
 }

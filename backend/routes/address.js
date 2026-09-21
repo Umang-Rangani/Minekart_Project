@@ -197,8 +197,6 @@ router.delete('/:id', authMiddleware, async (req, res) => {
       })
     }
 
-    // જો delete થયેલ address default હતો,
-    // તો બીજા address ને default બનાવો
     if (deletedAddress.isDefault) {
       const nextAddress = await Address.findOne({
         userId,

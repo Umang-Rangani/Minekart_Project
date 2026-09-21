@@ -11,7 +11,7 @@ export default function Home() {
       </section>
 
       {/* Main Shopping Sections */}
-      <div className="space-y-10 pt-8 sm:pt-10 lg:pt-12">
+      <div className="space-y-10 pt-2 sm:pt-15 lg:pt-18">
         {/* Brands */}
         <section className="w-full">
           <BrandList />
