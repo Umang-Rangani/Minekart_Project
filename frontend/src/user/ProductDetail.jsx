@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
-import { ShoppingCart, Star, Minus, Plus, Trash2, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info } from 'lucide-react'
+import { ShoppingCart, Star, Minus, Plus, Trash2, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, ChevronRight } from 'lucide-react'
 import { useUser } from '../context/userProvider'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
@@ -9,13 +9,16 @@ import BreadCrumb from './BreadCrumb'
 export default function ProductDetail() {
   const { id } = useParams()
   const { user, setShowLogin } = useUser()
-  const { cart, addToCart, updateCartItem, removeCartItem } = useCart()
+  const { cart, addToCart, increaseCartItem, decreaseCartItem } = useCart()
 
   const [product, setProduct] = useState(null)
   const [selectedImage, setSelectedImage] = useState('')
   const [selectedSize, setSelectedSize] = useState('')
-  const [quantity, setQuantity] = useState(0)
   const [relatedProducts, setRelatedProducts] = useState([])
+  const [quantity, setQuantity] = useState(0)
+
+  // ! toast
+  const [toast, setToast] = useState('')
 
   // Get Related Products
   const getRelatedProducts = async (subCategoryId) => {
@@ -75,8 +78,6 @@ export default function ProductDetail() {
     }
   }, [cart, product, selectedSize])
 
-
-  
   // ! Add To Cart
   const addProductToCart = async () => {
     if (!user) {
@@ -85,6 +86,12 @@ export default function ProductDetail() {
     }
 
     if (product.sizes?.length > 0 && !selectedSize) {
+      setToast('Please select a size before adding to cart.')
+
+      setTimeout(() => {
+        setToast('')
+      }, 2500)
+
       return
     }
 
@@ -98,70 +105,85 @@ export default function ProductDetail() {
         size: selectedSize || null,
       })
 
-      // API fail thay to rollback
       if (!res.success) {
         setQuantity(0)
+
+        setToast(res.message || 'Unable to add product to cart.')
+
+        setTimeout(() => {
+          setToast('')
+        }, 2500)
 
         console.log('Add to cart error:', res.message)
       }
     } catch (error) {
-      // API error thay to rollback
       setQuantity(0)
+
+      setToast('Something went wrong. Please try again.')
+
+      setTimeout(() => {
+        setToast('')
+      }, 2500)
 
       console.log('Add to cart error:', error)
     }
   }
 
-  // Increase Quantity
+  // ! Increase Quantity
   const increaseQuantity = async () => {
     if (quantity >= product.stock) {
       return
     }
 
-    const newQuantity = quantity + 1
+    // ⚡ UI immediately update
+    setQuantity((prev) => prev + 1)
 
-    const res = await updateCartItem({
-      productId: product._id,
-      size: selectedSize || null,
-      quantity: newQuantity,
-    })
-
-    if (res.success) {
-      setQuantity(newQuantity)
-    } else {
-      console.log('Increase quantity error:', res.message)
-    }
-  }
-
-  // Decrease Quantity
-  const decreaseQuantity = async () => {
-    if (quantity === 1) {
-      const res = await removeCartItem({
+    try {
+      const res = await increaseCartItem({
         productId: product._id,
         size: selectedSize || null,
       })
 
-      if (res.success) {
-        setQuantity(0)
-      } else {
-        console.log('Remove cart error:', res.message)
-      }
+      if (!res.success) {
+        // API fail → rollback
+        setQuantity((prev) => Math.max(prev - 1, 0))
 
+        console.log('Increase quantity error:', res.message)
+      }
+    } catch (error) {
+      // API fail → rollback
+      setQuantity((prev) => Math.max(prev - 1, 0))
+
+      console.log('Increase quantity error:', error)
+    }
+  }
+
+  // ! Decrease Quantity
+  const decreaseQuantity = async () => {
+    if (quantity <= 0) {
       return
     }
 
-    const newQuantity = quantity - 1
+    // ⚡ UI immediately update
+    setQuantity((prev) => prev - 1)
 
-    const res = await updateCartItem({
-      productId: product._id,
-      size: selectedSize || null,
-      quantity: newQuantity,
-    })
+    try {
+      const res = await decreaseCartItem({
+        productId: product._id,
+        size: selectedSize || null,
+      })
 
-    if (res.success) {
-      setQuantity(newQuantity)
-    } else {
-      console.log('Decrease quantity error:', res.message)
+      if (!res.success) {
+        // API fail → rollback
+        setQuantity((prev) => prev + 1)
+
+        console.log('Decrease quantity error:', res.message)
+      }
+    } catch (error) {
+      // API fail → rollback
+      setQuantity((prev) => prev + 1)
+
+      console.log('Decrease quantity error:', error)
     }
   }
 
@@ -191,6 +213,19 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen">
+      {/* Toast */}
+      {toast && (
+        <div className="fixed right-5 top-5 z-9999 animate-[slideIn_0.3s_ease-out]">
+          <div className="flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FFFDFC] px-4 py-3 shadow-[0_10px_30px_rgba(73,54,49,0.18)]">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FFF3E8]">
+              <Info size={16} className="text-[#B87935]" />
+            </div>
+
+            <p className="text-xs font-semibold text-[#493631]">{toast}</p>
+          </div>
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <BreadCrumb items={items} />
 
@@ -406,8 +441,27 @@ export default function ProductDetail() {
             )}
 
             {/* Add To Cart */}
-            <div className="mx-auto mt-6 w-full flex flex-col justify-end items-end">
-              <div className="w-80">
+            <div className="mx-auto grid w-full grid-cols-1 gap-5 sm:grid-cols-2 mt-15">
+              {/* Continue Shopping */}
+              <button
+                type="button"
+                onClick={() => navigate('/cart')}
+                className="group flex h-12 w-full items-center justify-between rounded-xl border border-[#E2D5CC] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#CDAFA4] hover:shadow-md"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm">
+                    <ShoppingCart size={16} strokeWidth={2.2} />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="truncate text-xs font-extrabold text-[#351C18]">Continue Shopping</p>
+                  </div>
+                </div>
+
+              </button>
+
+              {/* Add To Cart / Quantity */}
+              <div className="w-full ">
                 {quantity === 0 ? (
                   <button
                     type="button"
@@ -415,6 +469,7 @@ export default function ProductDetail() {
                     className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] via-[#8E181F] to-[#A51D26] px-5 text-sm font-bold text-white shadow-lg shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#7D171C]/25 active:scale-[0.98]"
                   >
                     <ShoppingCart size={18} strokeWidth={2.2} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
+
                     <span>Add to cart</span>
                   </button>
                 ) : (
@@ -440,11 +495,12 @@ export default function ProductDetail() {
                     </button>
                   </div>
                 )}
-              </div>
 
-              <div className="mt-2 flex items-center justify-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#3E8B62]" />
-                <p className="text-[11px] text-[#806C63]">{product.stock} items available</p>
+                {/* Stock */}
+                <div className="mt-2 flex h-4 items-center justify-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#3E8B62]" />
+                  <p className="text-[11px] text-[#806C63]">{product.stock} items available</p>
+                </div>
               </div>
             </div>
 

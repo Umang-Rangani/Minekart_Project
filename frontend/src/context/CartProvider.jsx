@@ -64,9 +64,8 @@ export function CartProvider({ children }) {
     }
   }
 
-  
-  // ! Update Cart Item Quantity
-  const updateCartItem = async ({ productId, size = null, quantity }) => {
+  // ! Increase Cart Item
+  const increaseCartItem = async ({ productId, size = null }) => {
     if (!user) {
       return {
         success: false,
@@ -74,17 +73,18 @@ export function CartProvider({ children }) {
       }
     }
 
-    // ! Save old cart for rollback
+    // Instant UI Update
     const oldCart = cart
 
-    // ! Optimistic UI Update
     if (cart) {
       const updatedItems = cart.items.map((item) => {
         if (item.productId?._id?.toString() === productId?.toString() && item.size === size) {
+          const newQuantity = item.quantity + 1
+
           return {
             ...item,
-            quantity,
-            totalPrice: (item.discountPrice || item.price) * quantity,
+            quantity: newQuantity,
+            totalPrice: (item.discountPrice || item.price) * newQuantity,
           }
         }
 
@@ -105,26 +105,102 @@ export function CartProvider({ children }) {
     }
 
     try {
-      // ! API call
-      const res = await axiosInstance.patch('/cart/item', {
+      const res = await axiosInstance.patch('/cart/item/increase', {
         productId,
         size,
-        quantity,
       })
 
-      // ! API success
       if (res.data.success) {
         return res.data
       }
 
-      // ! API failed
+      // API fail → rollback
       setCart(oldCart)
 
       return res.data
     } catch (error) {
-      console.log('Update Cart Item Error:', error.response?.data || error.message)
+      console.log('Increase Cart Item Error:', error.response?.data || error.message)
 
-      // ! Rollback UI
+      // API fail → rollback
+      setCart(oldCart)
+
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Something went wrong',
+      }
+    }
+  }
+
+  // ! Decrease Cart Item
+  const decreaseCartItem = async ({ productId, size = null }) => {
+    if (!user) {
+      return {
+        success: false,
+        message: 'Please login first',
+      }
+    }
+
+    // Save old cart for rollback
+    const oldCart = cart
+
+    // Instant UI Update
+    if (cart) {
+      const currentItem = cart.items.find((item) => item.productId?._id?.toString() === productId?.toString() && item.size === size)
+
+      if (currentItem) {
+        let updatedItems
+
+        // Quantity 1 → item immediately remove from UI
+        if (currentItem.quantity === 1) {
+          updatedItems = cart.items.filter((item) => !(item.productId?._id?.toString() === productId?.toString() && item.size === size))
+        } else {
+          updatedItems = cart.items.map((item) => {
+            if (item.productId?._id?.toString() === productId?.toString() && item.size === size) {
+              const newQuantity = item.quantity - 1
+
+              return {
+                ...item,
+                quantity: newQuantity,
+                totalPrice: (item.discountPrice || item.price) * newQuantity,
+              }
+            }
+
+            return item
+          })
+        }
+
+        const updatedSubtotal = updatedItems.reduce((total, item) => total + item.totalPrice, 0)
+
+        const updatedTotalQuantity = updatedItems.reduce((total, item) => total + item.quantity, 0)
+
+        setCart({
+          ...cart,
+          items: updatedItems,
+          totalQuantity: updatedTotalQuantity,
+          subtotal: updatedSubtotal,
+          totalAmount: updatedSubtotal + (cart.tax || 0),
+        })
+      }
+    }
+
+    try {
+      const res = await axiosInstance.patch('/cart/item/decrease', {
+        productId,
+        size,
+      })
+
+      if (res.data.success) {
+        return res.data
+      }
+
+      // API fail → rollback
+      setCart(oldCart)
+
+      return res.data
+    } catch (error) {
+      console.log('Decrease Cart Item Error:', error.response?.data || error.message)
+
+      // API fail → rollback
       setCart(oldCart)
 
       return {
@@ -206,7 +282,8 @@ export function CartProvider({ children }) {
 
         getCart,
         addToCart,
-        updateCartItem,
+        increaseCartItem,
+        decreaseCartItem,
         removeCartItem,
         clearCart,
       }}

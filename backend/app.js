@@ -20,6 +20,7 @@ var addressRouter = require('./routes/address')
 var paymentRouter = require('./routes/payment')
 var orderRouter = require('./routes/order')
 const adminOrderRoutes = require('./routes/adminOrderRoutes')
+const adminDashboard = require('./routes/adminDashboard')
 
 dotenv.config()
 var app = express()
@@ -54,6 +55,7 @@ app.use('/order', orderRouter)
 app.use('/uploads', uploadRouter)
 
 app.use('/admin/orders', adminOrderRoutes)
+app.use('/admin/dashboard', adminDashboard)
 
 mongoose
   .connect(process.env.MONGO_URI)

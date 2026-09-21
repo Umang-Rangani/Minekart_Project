@@ -13,6 +13,8 @@ export default function Header() {
 
   const [accountOpen, setAccountOpen] = useState(false)
 
+  const [search, setSearch] = useState('')
+
   return (
     <header className="fixed left-0 top-0 z-50 w-full bg-[#FFFDFC] text-[#351C18] shadow-[0_4px_25px_rgba(63,37,30,0.10)]">
       {/* Top Offer Bar */}
@@ -56,14 +58,30 @@ export default function Header() {
             <div className="flex h-12 w-full items-center overflow-hidden rounded-2xl border border-[#E3D6CE] bg-[#FCF8F4] transition-all duration-300 focus-within:border-[#A51D26] focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(165,29,38,0.07)]">
               <Search size={21} strokeWidth={2} className="ml-4 shrink-0 text-[#806C63] transition-colors duration-300 group-focus-within:text-[#A51D26]" />
 
-              <input type="text" placeholder="Search for Products, Brands and More..." className="h-full min-w-0 flex-1 bg-transparent px-3 text-[15px] text-[#351C18] outline-none placeholder:text-[#9A8981]" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && search.trim()) {
+                    navigate(`/search?q=${encodeURIComponent(search.trim())}`)
+                  }
+                }}
+                placeholder="Search for Products, Brands and More..."
+                className="h-full min-w-0 flex-1 bg-transparent px-3 text-[15px] text-[#351C18] outline-none placeholder:text-[#9A8981]"
+              />
 
               <button
                 type="button"
+                onClick={() => {
+                  if (search.trim()) {
+                    navigate(`/search?q=${encodeURIComponent(search.trim())}`)
+                  }
+                  
+                }}
                 className="mr-1.5 flex h-9 items-center gap-2 rounded-xl bg-linear-to-r from-[#75171C] to-[#A51D26] px-5 text-sm font-semibold text-white shadow-md shadow-[#75171C]/20 transition-all duration-300 hover:from-[#611217] hover:to-[#8E181F] hover:shadow-lg active:scale-95"
               >
                 <span className="hidden sm:inline">Search</span>
-
                 <Search size={16} className="sm:hidden" />
               </button>
             </div>
@@ -152,9 +170,7 @@ export default function Header() {
               <div className="relative">
                 <ShoppingCart size={26} strokeWidth={1.8} className="transition-transform duration-300 group-hover:-rotate-6" />
 
-                <span className="absolute -right-2 -top-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-linear-to-r from-[#8E181F] to-[#B5262D] px-1 text-[10px] font-bold text-white shadow-sm">
-                  {cart?.totalQuantity || 0}
-                </span>
+                <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-linear-to-r from-[#8E181F] to-[#B5262D] px-1 text-[10px] font-bold text-white shadow-sm">{cart?.totalQuantity || 0}</span>
               </div>
 
               <span className="hidden text-sm font-semibold sm:block">Cart</span>

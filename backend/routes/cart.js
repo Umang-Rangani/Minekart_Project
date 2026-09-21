@@ -206,12 +206,11 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 })
 
-// ! Cart page na Increase / Decrease quantity mate
-router.patch('/item', authMiddleware, async (req, res) => {
+// ! Increase Cart Item Quantity
+router.patch('/item/increase', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.user
-
-    const { productId, size = null, quantity } = req.body
+    const { productId, size = null } = req.body
 
     // Validation
     if (!productId) {
@@ -221,17 +220,8 @@ router.patch('/item', authMiddleware, async (req, res) => {
       })
     }
 
-    if (!quantity || quantity < 1) {
-      return res.status(400).json({
-        success: false,
-        message: 'Quantity must be at least 1',
-      })
-    }
-
     // Find Cart
-    const cart = await Cart.findOne({
-      userId,
-    })
+    const cart = await Cart.findOne({ userId })
 
     if (!cart) {
       return res.status(404).json({
@@ -250,14 +240,6 @@ router.patch('/item', authMiddleware, async (req, res) => {
       })
     }
 
-    // Check Stock
-    if (quantity > product.stock) {
-      return res.status(400).json({
-        success: false,
-        message: 'Requested quantity is not available',
-      })
-    }
-
     // Find Cart Item
     const cartItem = cart.items.find((item) => item.productId.toString() === productId.toString() && item.size === size)
 
@@ -268,10 +250,18 @@ router.patch('/item', authMiddleware, async (req, res) => {
       })
     }
 
-    // Update Quantity
-    cartItem.quantity = quantity
+    // Check Stock
+    if (cartItem.quantity >= product.stock) {
+      return res.status(400).json({
+        success: false,
+        message: 'Product stock limit reached',
+      })
+    }
 
-    // Update Price
+    // Increase Quantity
+    cartItem.quantity += 1
+
+    // Update Latest Price
     cartItem.price = product.price
     cartItem.discountPrice = product.discountPrice || product.price
 
@@ -284,18 +274,90 @@ router.patch('/item', authMiddleware, async (req, res) => {
     cart.subtotal = cart.items.reduce((total, item) => total + item.totalPrice, 0)
 
     cart.tax = 0
-
     cart.totalAmount = cart.subtotal + cart.tax
 
     await cart.save()
 
     res.status(200).json({
       success: true,
-      message: 'Cart item quantity updated',
+      message: 'Cart item quantity increased',
       data: cart,
     })
   } catch (error) {
-    console.log('Update Cart Item Error:', error)
+    console.log('Increase Cart Item Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message,
+    })
+  }
+})
+
+// ! Decrease Cart Item Quantity
+router.patch('/item/decrease', authMiddleware, async (req, res) => {
+  try {
+    const { userId } = req.user
+    const { productId, size = null } = req.body
+
+    // Validation
+    if (!productId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Product ID is required',
+      })
+    }
+
+    // Find Cart
+    const cart = await Cart.findOne({ userId })
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: 'Cart not found',
+      })
+    }
+
+    // Find Cart Item Index
+    const itemIndex = cart.items.findIndex((item) => item.productId.toString() === productId.toString() && item.size === size)
+
+    if (itemIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: 'Cart item not found',
+      })
+    }
+
+    const cartItem = cart.items[itemIndex]
+
+    // Quantity 1 hoy to item remove
+    if (cartItem.quantity === 1) {
+      cart.items.splice(itemIndex, 1)
+    } else {
+      // Decrease Quantity
+      cartItem.quantity -= 1
+
+      // Update Item Total
+      cartItem.totalPrice = cartItem.discountPrice * cartItem.quantity
+    }
+
+    // Calculate Cart Summary
+    cart.totalQuantity = cart.items.reduce((total, item) => total + item.quantity, 0)
+
+    cart.subtotal = cart.items.reduce((total, item) => total + item.totalPrice, 0)
+
+    cart.tax = 0
+    cart.totalAmount = cart.subtotal + cart.tax
+
+    await cart.save()
+
+    res.status(200).json({
+      success: true,
+      message: 'Cart item quantity decreased',
+      data: cart,
+    })
+  } catch (error) {
+    console.log('Decrease Cart Item Error:', error)
 
     res.status(500).json({
       success: false,

@@ -25,6 +25,7 @@ import OrderSuccess from './user/OrderSuccess'
 import MyOrders from './user/MyOrders.jsx'
 import OrderDetails from './user/OrderDetails.jsx'
 import AdminOrderDetails from './admin/AdminOrderDetails.jsx'
+import SearchProducts from './user/SearchProducts.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -60,6 +61,8 @@ export default function App() {
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="orders/:id" element={<OrderDetails />} />
+
+          <Route path="/search" element={<SearchProducts />} />
         </Route>
 
         {/*  AUTH  */}

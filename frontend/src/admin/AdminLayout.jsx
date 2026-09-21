@@ -115,19 +115,8 @@ export default function AdminLayout() {
           {/* Divider */}
           <div className="my-5 border-t border-[#E3DED6]" />
 
-          {/* Settings Title */}
-          <p className={`mb-3 text-[11px] font-semibold uppercase tracking-wider text-[#99938B] ${sidebarOpen ? 'px-3' : 'text-center'}`}>{sidebarOpen ? 'Settings' : '•••'}</p>
 
-          {/* Settings */}
-          <button
-            type="button"
-            title={!sidebarOpen ? 'Settings' : ''}
-            className={`flex h-11 items-center rounded-xl text-sm font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725] ${sidebarOpen ? 'gap-3 px-3.5' : 'justify-center px-0'}`}
-          >
-            <Settings size={19} />
-
-            {sidebarOpen && <span>Settings</span>}
-          </button>
+      
 
           {/* Bottom Info */}
           {sidebarOpen && (
