@@ -49,7 +49,8 @@ export function CartProvider({ children }) {
       })
 
       if (res.data.success) {
-        await getCart()
+        // Backend mathi updated cart mali rahyo che
+        setCart(res.data.data)
       }
 
       return res.data
@@ -62,7 +63,6 @@ export function CartProvider({ children }) {
       }
     }
   }
-
 
   
   // ! Update Cart Item Quantity

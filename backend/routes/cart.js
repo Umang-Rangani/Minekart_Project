@@ -181,6 +181,15 @@ router.post('/', authMiddleware, async (req, res) => {
 
     await cart.save()
 
+    await cart.populate({
+      path: 'items.productId',
+      select: 'productName images price discountPrice brand stock',
+      populate: {
+        path: 'brand',
+        select: 'brandName',
+      },
+    })
+
     res.status(200).json({
       success: true,
       message: 'Product added to cart',

@@ -60,7 +60,7 @@ export default function ProductDetail() {
     })
 
     getProduct()
-  }, [id, cart])
+  }, [id])
 
   // Cart Quantity Sync
   useEffect(() => {
@@ -75,7 +75,9 @@ export default function ProductDetail() {
     }
   }, [cart, product, selectedSize])
 
-  // Add To Cart
+
+  
+  // ! Add To Cart
   const addProductToCart = async () => {
     if (!user) {
       setShowLogin(true)
@@ -86,16 +88,27 @@ export default function ProductDetail() {
       return
     }
 
-    const res = await addToCart({
-      productId: product._id,
-      quantity: 1,
-      size: selectedSize || null,
-    })
+    // ⚡ Instant UI update
+    setQuantity(1)
 
-    if (res.success) {
-      setQuantity(1)
-    } else {
-      console.log('Add to cart error:', res.message)
+    try {
+      const res = await addToCart({
+        productId: product._id,
+        quantity: 1,
+        size: selectedSize || null,
+      })
+
+      // API fail thay to rollback
+      if (!res.success) {
+        setQuantity(0)
+
+        console.log('Add to cart error:', res.message)
+      }
+    } catch (error) {
+      // API error thay to rollback
+      setQuantity(0)
+
+      console.log('Add to cart error:', error)
     }
   }
 
@@ -393,39 +406,41 @@ export default function ProductDetail() {
             )}
 
             {/* Add To Cart */}
-            <div className="mx-auto mt-6 w-full max-w-sm">
-              {quantity === 0 ? (
-                <button
-                  type="button"
-                  onClick={addProductToCart}
-                  className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] via-[#8E181F] to-[#A51D26] px-5 text-sm font-bold text-white shadow-lg shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#7D171C]/25 active:scale-[0.98]"
-                >
-                  <ShoppingCart size={18} strokeWidth={2.2} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
-                  <span>Add to cart</span>
-                </button>
-              ) : (
-                <div className="flex h-12 w-full items-center overflow-hidden rounded-xl border border-[#D7C6BC] bg-[#FBF7F2] shadow-sm">
-                  {/* Minus */}
-                  <button type="button" onClick={decreaseQuantity} className="flex h-full w-14 shrink-0 items-center justify-center border-r border-[#E3D6CE] text-[#493631] transition-all duration-200 hover:bg-[#F3E4DC] hover:text-[#8E181F]">
-                    {quantity === 1 ? <Trash2 size={18} strokeWidth={2.2} /> : <Minus size={19} strokeWidth={2.5} />}
-                  </button>
-
-                  {/* Quantity */}
-                  <div className="flex h-full flex-1 items-center justify-center">
-                    <span className="text-sm font-bold text-[#351C18]">{quantity} in cart</span>
-                  </div>
-
-                  {/* Plus */}
+            <div className="mx-auto mt-6 w-full flex flex-col justify-end items-end">
+              <div className="w-80">
+                {quantity === 0 ? (
                   <button
                     type="button"
-                    onClick={increaseQuantity}
-                    disabled={quantity >= product.stock}
-                    className="flex h-full w-14 shrink-0 items-center justify-center border-l border-[#E3D6CE] text-[#493631] transition-all duration-200 hover:bg-[#F3E4DC] hover:text-[#8E181F] disabled:cursor-not-allowed disabled:opacity-40"
+                    onClick={addProductToCart}
+                    className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] via-[#8E181F] to-[#A51D26] px-5 text-sm font-bold text-white shadow-lg shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#7D171C]/25 active:scale-[0.98]"
                   >
-                    <Plus size={19} strokeWidth={2.5} />
+                    <ShoppingCart size={18} strokeWidth={2.2} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
+                    <span>Add to cart</span>
                   </button>
-                </div>
-              )}
+                ) : (
+                  <div className="flex h-12 w-full items-center overflow-hidden rounded-xl border border-[#D7C6BC] bg-[#FBF7F2] shadow-sm">
+                    {/* Minus */}
+                    <button type="button" onClick={decreaseQuantity} className="flex h-full w-14 shrink-0 items-center justify-center border-r border-[#E3D6CE] text-[#493631] transition-all duration-200 hover:bg-[#F3E4DC] hover:text-[#8E181F]">
+                      {quantity === 1 ? <Trash2 size={18} strokeWidth={2.2} /> : <Minus size={19} strokeWidth={2.5} />}
+                    </button>
+
+                    {/* Quantity */}
+                    <div className="flex h-full flex-1 items-center justify-center">
+                      <span className="text-sm font-bold text-[#351C18]">{quantity} in cart</span>
+                    </div>
+
+                    {/* Plus */}
+                    <button
+                      type="button"
+                      onClick={increaseQuantity}
+                      disabled={quantity >= product.stock}
+                      className="flex h-full w-14 shrink-0 items-center justify-center border-l border-[#E3D6CE] text-[#493631] transition-all duration-200 hover:bg-[#F3E4DC] hover:text-[#8E181F] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <Plus size={19} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <div className="mt-2 flex items-center justify-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#3E8B62]" />
