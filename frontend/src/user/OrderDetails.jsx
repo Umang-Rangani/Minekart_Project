@@ -73,6 +73,11 @@ export default function OrderDetails() {
   }
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+
     getOrderDetails()
   }, [id])
 

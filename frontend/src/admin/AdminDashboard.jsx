@@ -147,7 +147,7 @@ export default function AdminDashboard() {
   const maxSales = Math.max(...(salesOverview?.salesChart || []).map((item) => item.sales || 0), 1)
 
   return (
-    <div className="min-h-screen bg-[#F4F2EE] p-4 sm:p-5 lg:p-7">
+    <div className="min-h-screen bg-[#F4F2EE] space-y-6">
       <div className="mx-auto max-w-[1600px]">
         {/* Header */}
         <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">

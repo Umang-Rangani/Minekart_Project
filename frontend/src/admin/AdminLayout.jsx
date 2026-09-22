@@ -153,7 +153,7 @@ export default function AdminLayout() {
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-medium text-[#99938B]">Designed & Developed by</span>
 
-                <span className="rounded-lg bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#6B6258]">Rangani Umang</span>
+                <span className="rounded-lg bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#6B6258]">Rangani Umang ❤️</span>
               </div>
             </div>
           </footer>

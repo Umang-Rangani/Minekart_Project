@@ -90,29 +90,32 @@ export default function Cart() {
         </div>
 
         {/* MAIN CONTENT */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_390px] xl:grid-cols-[minmax(0,1fr)_420px]">
-          {/* LEFT */}
-          <div className="min-w-0">
-            {cartItems.length === 0 ? (
-              <div className="flex min-h-115 flex-col items-center justify-center rounded-3xl border border-dashed border-[#D8C9C0] bg-[#FFFDFC] px-6 text-center shadow-sm">
-                <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#F7EEE7] text-[#8E181F]">
-                  <ShoppingBag size={36} strokeWidth={1.5} />
-                </div>
 
-                <h2 className="mt-6 text-2xl font-extrabold text-[#351C18]">Your cart is empty</h2>
+        {cartItems.length === 0 && (
+          <div className="flex min-h-115 flex-col items-center justify-center rounded-3xl border border-dashed border-[#D8C9C0] bg-[#FFFDFC] px-6 text-center shadow-sm">
+            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#F7EEE7] text-[#8E181F]">
+              <ShoppingBag size={36} strokeWidth={1.5} />
+            </div>
 
-                <p className="mt-2 max-w-md text-sm leading-6 text-[#806C63]">Looks like you haven't added anything to your cart yet. Explore our products and find something you love.</p>
+            <h2 className="mt-6 text-2xl font-extrabold text-[#351C18]">Your cart is empty</h2>
 
-                <button
-                  type="button"
-                  onClick={() => navigate('/')}
-                  className="mt-7 flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#7D171C]/15 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
-                >
-                  Start Shopping
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-            ) : (
+            <p className="mt-2 max-w-md text-sm leading-6 text-[#806C63]">Looks like you haven't added anything to your cart yet. Explore our products and find something you love.</p>
+
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="mt-7 flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#7D171C]/15 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+            >
+              Start Shopping
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        )}
+
+        {cartItems.length > 0 && (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_390px] xl:grid-cols-[minmax(0,1fr)_420px]">
+            {/* LEFT */}
+            <div className="min-w-0">
               <>
                 {/* CART TITLE */}
                 <div className="mb-4 flex items-end justify-between gap-3">
@@ -250,11 +253,9 @@ export default function Cart() {
                   </div>
                 </div>
               </>
-            )}
-          </div>
+            </div>
 
-          {/* RIGHT - SUMMARY */}
-          {cartItems.length > 0 && (
+            {/* RIGHT - SUMMARY */}
             <div className="min-w-0">
               <div className="h-fit overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_10px_35px_rgba(73,54,49,0.10)] lg:sticky lg:top-24">
                 {/* SUMMARY HEADER */}
@@ -371,8 +372,8 @@ export default function Cart() {
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )

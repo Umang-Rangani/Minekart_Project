@@ -177,9 +177,9 @@ const AdminOrderDetails = () => {
     },
   ]
   return (
-    <div className="min-h-screen bg-[#F4F2EE] ">
+    <div className="min-h-screen bg-[#F4F2EE] space-y-6">
       <AdminBreadCrumb items={items} />
-      <div className="mx-auto max-w-375 p-5">
+      <div className="mx-auto max-w-375 ">
         {/* TOP INFORMATION */}
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           {/* CUSTOMER */}

@@ -27,6 +27,11 @@ export default function MyOrders() {
   }
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+
     getOrders()
   }, [])
 
