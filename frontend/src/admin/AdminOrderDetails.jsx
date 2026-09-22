@@ -11,9 +11,10 @@ const AdminOrderDetails = () => {
   const [loading, setLoading] = useState(true)
   const [confirmingPayment, setConfirmingPayment] = useState(false)
 
-  // =========================
+  console.log(id);
+  
+
   // GET ORDER DETAILS
-  // =========================
   const getOrderDetails = async () => {
     try {
       setLoading(true)
@@ -36,9 +37,7 @@ const AdminOrderDetails = () => {
     getOrderDetails()
   }, [id])
 
-  // =========================
   // CONFIRM PAYMENT
-  // =========================
   const handlePaymentConfirm = async () => {
     if (!order?.payment?._id) return
 
@@ -64,9 +63,7 @@ const AdminOrderDetails = () => {
     }
   }
 
-  // =========================
   // STATUS STYLE
-  // =========================
   const getStatusStyle = (status) => {
     switch (status) {
       case 'Pending':
@@ -98,9 +95,7 @@ const AdminOrderDetails = () => {
     }
   }
 
-  // =========================
   // PAYMENT STATUS STYLE
-  // =========================
   const getPaymentStatusStyle = (status) => {
     switch (status) {
       case 'Paid':
@@ -120,9 +115,7 @@ const AdminOrderDetails = () => {
     }
   }
 
-  // =========================
   // DATE FORMAT
-  // =========================
   const formatDate = (date) => {
     if (!date) return '-'
 
@@ -135,9 +128,7 @@ const AdminOrderDetails = () => {
     })
   }
 
-  // =========================
   // LOADING
-  // =========================
   if (loading) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center bg-[#F4F2EE]">
@@ -150,9 +141,7 @@ const AdminOrderDetails = () => {
     )
   }
 
-  // =========================
   // ORDER NOT FOUND
-  // =========================
   if (!order) {
     return (
       <div className="flex min-h-[70vh] flex-col items-center justify-center bg-[#F4F2EE] px-5">
@@ -202,7 +191,7 @@ const AdminOrderDetails = () => {
                 </div>
 
                 <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5">
-                  <p className="text-xs text-[#6F6A64]">Order ID: #{order._id}</p>
+                  <p className="text-xs text-[#6F6A64]">Order ID: #{order.orderId}</p>
 
                   <span className="hidden text-[#D6D0C8] sm:block">•</span>
 

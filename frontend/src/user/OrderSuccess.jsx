@@ -1,16 +1,60 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Check, ShoppingBag, ArrowRight, Package, ShieldCheck } from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import BreadCrumb from './BreadCrumb'
+import { axiosInstance } from '../config/axiosConfig'
 
 export default function OrderSuccess() {
   const navigate = useNavigate()
-  const location = useLocation()
 
-  const { orderId, order, payment } = location.state || {}
+  const [orders, setOrders] = useState([])
+  const [order, setOrder] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // If user directly opens /order-success
-  if (!orderId || !order) {
+  const [searchParams] = useSearchParams()
+
+  const orderId = searchParams.get('orderId')
+
+  const getOrder = async () => {
+    try {
+      setLoading(true)
+
+      if (!orderId) {
+        setOrder(null)
+        return
+      }
+
+      const res = await axiosInstance.get(`/order/${orderId}`)
+
+      if (res.data.success) {
+        setOrder(res.data.data)
+      } else {
+        setOrder(null)
+      }
+    } catch (error) {
+      console.log('Get Order Error:', error.response?.data || error.message)
+
+      setOrder(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getOrder()
+  }, [orderId])
+
+  // Loading
+  if (loading) {
+    return (
+      <div className="flex min-h-[70vh] items-center justify-center bg-[#FBF7F2]">
+        <div className="text-sm font-semibold text-[#806C63]">Loading order...</div>
+      </div>
+    )
+  }
+
+  // Order not found
+  if (!order) {
     return (
       <div className="min-h-[70vh] bg-[#FBF7F2] py-8">
         <div className="mx-auto max-w-2xl rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] p-8 text-center shadow-[0_8px_30px_rgba(73,54,49,0.08)]">
@@ -35,10 +79,9 @@ export default function OrderSuccess() {
     )
   }
 
-  const isCOD = payment?.paymentMethod === 'COD'
-  const isOnlineOnDelivery = payment?.paymentMethod === 'ONLINE_ON_DELIVERY'
+  const isCOD = order.paymentMethod === 'COD'
+  const isOnlineOnDelivery = order.paymentMethod === 'ONLINE_ON_DELIVERY'
 
-  // ! BreadCrumb
   const items = [
     { title: 'cart', link: '/cart' },
     { title: 'checkout', link: '/checkout' },
@@ -46,19 +89,17 @@ export default function OrderSuccess() {
   ]
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto max-w-5xl mt-10 bg-[#FBF7F2] rounded-2xl overflow-hidden">
-        {/* SUCCESS CARD */}
-        <div className="overflow-hidden  border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_10px_35px_rgba(73,54,49,0.08)]">
-          {/* TOP SUCCESS BANNER */}
+      <div className="mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl bg-[#FBF7F2]">
+        <div className="overflow-hidden border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_10px_35px_rgba(73,54,49,0.08)]">
+          {/* SUCCESS BANNER */}
           <div className="relative overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A2A25] to-[#7D171C] px-6 py-10 text-center sm:px-8">
             <div className="absolute -left-16 -top-16 h-36 w-36 rounded-full bg-white/5" />
             <div className="absolute -bottom-20 -right-10 h-44 w-44 rounded-full bg-[#D4A373]/10" />
 
             <div className="relative">
-              {/* SUCCESS ICON */}
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white shadow-xl backdrop-blur-sm">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
                   <Check size={34} strokeWidth={2.8} className="text-[#7D171C]" />
@@ -78,7 +119,7 @@ export default function OrderSuccess() {
               <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-[#9A857B]">Order ID</p>
 
-                <p className="break-all text-sm font-extrabold text-[#351C18]">#{orderId}</p>
+                <p className="break-all text-sm font-extrabold text-[#351C18]">{orderId}</p>
               </div>
             </div>
 
@@ -96,7 +137,7 @@ export default function OrderSuccess() {
 
                 <p className="mt-3 text-sm font-bold text-[#351C18]">{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
 
-                <p className="mt-1 inline-flex rounded-md bg-[#FFF4DD] px-2 py-1 text-[10px] font-bold text-[#A05A16]">{payment?.paymentStatus || 'Pending'}</p>
+                <p className="mt-1 inline-flex rounded-md bg-[#FFF4DD] px-2 py-1 text-[10px] font-bold text-[#A05A16]">{order.paymentStatus || 'Pending'}</p>
               </div>
 
               {/* ORDER STATUS */}
@@ -133,7 +174,7 @@ export default function OrderSuccess() {
               </div>
             )}
 
-            {/* ONLINE ON DELIVERY MESSAGE */}
+            {/* ONLINE ON DELIVERY */}
             {isOnlineOnDelivery && (
               <div className="mt-4 flex items-start gap-3 rounded-xl border border-[#E8DDD4] bg-[#F7EEE7] px-4 py-3">
                 <div className="mt-0.5 shrink-0 text-[#8E181F]">
@@ -167,9 +208,10 @@ export default function OrderSuccess() {
           </div>
         </div>
 
-        {/* SECURITY / FOOTER MESSAGE */}
+        {/* FOOTER */}
         <div className="flex items-center justify-center gap-2 py-5 text-center">
           <ShieldCheck size={14} className="text-[#9A857B]" />
+
           <p className="text-[11px] font-medium text-[#9A857B]">Thank you for choosing MineKart.</p>
         </div>
       </div>

@@ -138,13 +138,15 @@ export default function Checkout() {
         return
       }
 
-      navigate('/order-success', {
-        state: {
-          orderId: order._id,
-          order,
-          payment,
-        },
+      const params = new URLSearchParams({
+        orderId: order.orderId,
+        paymentMethod: order.paymentMethod,
+        paymentStatus: order.paymentStatus,
+        orderStatus: order.orderStatus,
+        totalAmount: String(order.totalAmount),
       })
+
+      navigate(`/order-success?${params.toString()}`)
     } catch (error) {
       console.log('Place Order Error:', error.response?.data || error.message)
     } finally {

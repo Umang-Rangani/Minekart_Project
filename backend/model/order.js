@@ -57,6 +57,11 @@ const orderItemSchema = new mongoose.Schema(
 // Order
 const orderSchema = new mongoose.Schema(
   {
+    orderId: {
+      type: 'String',
+      unique: true,
+    },
+
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'UserMineKart',
@@ -184,6 +189,32 @@ const orderSchema = new mongoose.Schema(
     timestamps: true,
   },
 )
+
+orderSchema.pre('save', async function () {
+  if (!this.isNew || this.orderId) {
+    return
+  }
+
+  const currentYear = new Date().getFullYear().toString().slice(-2)
+
+  const lastOrder = await this.constructor
+    .findOne({
+      orderId: new RegExp(`^MNK-${currentYear}-`),
+    })
+    .sort({ createdAt: -1 })
+
+  let sequence = 1
+
+  if (lastOrder) {
+    const lastSequence = parseInt(lastOrder.orderId.split('-')[2], 10)
+
+    sequence = lastSequence + 1
+  }
+
+  const sequenceNumber = sequence.toString().padStart(3, '0')
+
+  this.orderId = `MNK-${currentYear}-${sequenceNumber}`
+})
 
 const Order = mongoose.model('OrderMineKart', orderSchema)
 

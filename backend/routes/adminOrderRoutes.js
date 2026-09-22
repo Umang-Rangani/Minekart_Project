@@ -47,13 +47,16 @@ router.get('/', authMiddleware, async (req, res) => {
     })
   }
 })
-
 // GET SINGLE ORDER
 router.get('/:id', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params
 
-    const order = await Order.findById(id)
+    // console.log('Order ID:', id)
+
+    const order = await Order.findOne({
+      orderId: id,
+    })
       .populate({
         path: 'userId',
         select: 'name email phone',

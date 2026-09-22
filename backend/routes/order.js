@@ -136,7 +136,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
     const { id } = req.params
 
     const order = await Order.findOne({
-      _id: id,
+      orderId: id,
       userId,
     }).populate({
       path: 'items.productId',

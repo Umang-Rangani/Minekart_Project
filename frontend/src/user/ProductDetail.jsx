@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { ShoppingCart, Star, Minus, Plus, Trash2, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, ChevronRight } from 'lucide-react'
 import { useUser } from '../context/userProvider'
@@ -16,6 +16,8 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState('')
   const [relatedProducts, setRelatedProducts] = useState([])
   const [quantity, setQuantity] = useState(0)
+
+  const navigate = useNavigate()
 
   // ! toast
   const [toast, setToast] = useState('')
@@ -445,7 +447,7 @@ export default function ProductDetail() {
               {/* Continue Shopping */}
               <button
                 type="button"
-                onClick={() => navigate('/cart')}
+                onClick={() => navigate('/')}
                 className="group flex h-12 w-full items-center justify-between rounded-xl border border-[#E2D5CC] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#CDAFA4] hover:shadow-md"
               >
                 <div className="flex min-w-0 items-center gap-3">
@@ -457,7 +459,6 @@ export default function ProductDetail() {
                     <p className="truncate text-xs font-extrabold text-[#351C18]">Continue Shopping</p>
                   </div>
                 </div>
-
               </button>
 
               {/* Add To Cart / Quantity */}

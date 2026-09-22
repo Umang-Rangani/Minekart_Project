@@ -26,6 +26,8 @@ import MyOrders from './user/MyOrders.jsx'
 import OrderDetails from './user/OrderDetails.jsx'
 import AdminOrderDetails from './admin/AdminOrderDetails.jsx'
 import SearchProducts from './user/SearchProducts.jsx'
+import AdminProductsForm from './admin/AdminProductsForm.jsx'
+import AdminProductsView from './admin/AdminProductsView.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -37,7 +39,22 @@ export default function App() {
   }, [loading, user, setShowLogin])
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#FFFDFC]">
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight text-[#351C18]">
+            Mine
+            <span className="text-[#A51D26]">Kart</span>
+          </h1>
+
+          <p className="mt-2 text-[10px] font-semibold tracking-[0.25em] text-[#907A70]">SHOP MORE • LIVE BETTER</p>
+
+          <div className="mx-auto mt-5 h-1 w-20 overflow-hidden rounded-full bg-[#E9DED6]">
+            <div className="h-full w-1/2 animate-[loading_1s_ease-in-out_infinite] rounded-full bg-[#A51D26]" />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -75,7 +92,12 @@ export default function App() {
           <Route path="category" element={<AdminCategory />} />
           <Route path="subcategory" element={<AdminSubCategory />} />
           <Route path="brand" element={<AdminBrand />} />
+
           <Route path="products" element={<AdminProducts />} />
+          <Route path="products/new" element={<AdminProductsForm />} />
+          <Route path="products/:id/update" element={<AdminProductsForm />} />
+          <Route path="products/:id" element={<AdminProductsView />} />
+
           <Route path="users" element={<AdminUsers />} />
 
           <Route path="orders" element={<AdminOrders />} />

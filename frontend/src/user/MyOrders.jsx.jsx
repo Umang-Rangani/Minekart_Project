@@ -133,7 +133,7 @@ export default function MyOrders() {
                     <div className="min-w-0">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-[#9A857B]">Order ID</p>
 
-                      <p className="mt-1 truncate text-sm font-extrabold text-[#351C18]">#{order._id}</p>
+                      <p className="mt-1 truncate text-sm font-extrabold text-[#351C18]">#{order.orderId}</p>
                     </div>
 
                     <div className="shrink-0 text-right">
@@ -217,7 +217,7 @@ export default function MyOrders() {
                   {/* VIEW DETAILS */}
                   <button
                     type="button"
-                    onClick={() => navigate(`/orders/${order._id}`)}
+                    onClick={() => navigate(`/orders/${order.orderId}`)}
                     className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[#DCCBC1] bg-[#FFFDFC] px-4 py-2.5 text-xs font-bold text-[#67544D] transition-all duration-300 hover:border-[#8E181F] hover:bg-[#F7EEE7] hover:text-[#8E181F]"
                   >
                     View Order Details

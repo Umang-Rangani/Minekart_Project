@@ -190,9 +190,7 @@ export default function AdminOrders() {
 
   return (
     <div>
-      {/* ====
-          HEADER
-      ===== */}
+      {/*    HEADER */}
       <div className="mb-6">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
@@ -209,9 +207,7 @@ export default function AdminOrders() {
         </div>
       </div>
 
-      {/* ====
-          FILTERS
-      ===== */}
+      {/*  FILTERS */}
       <div className="mb-5 rounded-2xl border border-[#E3DED6] bg-white p-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_220px]">
           {/* Search */}
@@ -312,7 +308,7 @@ export default function AdminOrders() {
                     <tr key={order._id} className="border-b border-[#E3DED6] last:border-b-0 hover:bg-[#FBFAF7]">
                       {/*    ORDER  = */}
                       <td className="px-5 py-4">
-                        <p className="max-w-37 truncate text-sm font-bold text-[#292725]">#{order._id}</p>
+                        <p className="max-w-37 truncate text-sm font-bold text-[#292725]">#{order.orderId}</p>
 
                         <p className="mt-1 text-xs text-[#99938B]">
                           {order.items?.length || 0} item
@@ -411,7 +407,7 @@ export default function AdminOrders() {
                       <td className="px-5 py-4">
                         <button
                           type="button"
-                          onClick={() => navigate(`/admin/orders/${order._id}`)}
+                          onClick={() => navigate(`/admin/orders/${order.orderId}`)}
                           className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#F8F6F2] hover:text-[#292725]"
                           title="View Order"
                         >
