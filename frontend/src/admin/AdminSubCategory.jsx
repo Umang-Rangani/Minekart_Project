@@ -1,41 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, X, Layers } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, X, Layers, Eye, CheckCircle2, CircleOff, Tags } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
+import AdminBreadCrumb from './AdminBreadCrumb'
 
 export default function AdminSubCategory() {
-  // ! SubCategories
-  const [subCategories, setSubCategories] = useState([])
+  const navigate = useNavigate()
 
-  // ! Categories
-  const [categories, setCategories] = useState([])
-
-  // ! Form Data
-  const [subCategoryData, setSubCategoryData] = useState({
-    subCategoryName: '',
-    category: '',
-    description: '',
-    status: 'Active',
+  const [search, setSearch] = useState(() => {
+    return localStorage.getItem('adminSubCategoriesSearch') || ''
   })
 
-  // ! Search
-  const [search, setSearch] = useState('')
-
-  // ! Error & Success
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
-
-  // ! Form
-  const [showForm, setShowForm] = useState(false)
-  const [editId, setEditId] = useState(null)
-
-  // ! Loading
+  const [subCategories, setSubCategories] = useState([])
   const [loading, setLoading] = useState(false)
-  const [deleteLoading, setDeleteLoading] = useState(null)
 
-  // =========================================================
-  // ! Get SubCategories
-  // =========================================================
+  // delete popup
+  const [deleteSubCategoryId, setDeleteSubCategoryId] = useState(null)
+  const [deleting, setDeleting] = useState(false)
 
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(5)
+
+  // ! Get all subcategories
   const getSubCategories = async () => {
     try {
       setLoading(true)
@@ -44,476 +31,277 @@ export default function AdminSubCategory() {
 
       setSubCategories(res.data.data || [])
     } catch (error) {
-      console.log('Get subcategories error:', error.response?.data || error.message)
-
-      setError(error.response?.data?.message || 'Failed to load subcategories')
+      console.error('Get subcategories error:', error.response?.data || error.message)
     } finally {
       setLoading(false)
     }
   }
 
-  // =========================================================
-  // ! Get Categories
-  // =========================================================
-
-  const getCategories = async () => {
-    try {
-      const res = await axiosInstance.get('/category')
-
-      setCategories(res.data.data || [])
-    } catch (error) {
-      console.log('Get categories error:', error.response?.data || error.message)
-    }
-  }
-
-  // =========================================================
-  // ! Page Load
-  // =========================================================
-
-  useEffect(() => {
-    getSubCategories()
-    getCategories()
-  }, [])
-
-  // =========================================================
-  // ! Handle Change
-  // =========================================================
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-
-    setSubCategoryData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  // =========================================================
-  // ! Reset Form
-  // =========================================================
-
-  const resetForm = () => {
-    setSubCategoryData({
-      subCategoryName: '',
-      category: '',
-      description: '',
-      status: 'Active',
-    })
-
-    setError('')
-    setSuccess('')
-    setEditId(null)
-  }
-
-  // =========================================================
-  // ! Open Create Form
-  // =========================================================
-
-  const openCreateForm = () => {
-    resetForm()
-    setShowForm(true)
-  }
-
-  // =========================================================
-  // ! Close Form
-  // =========================================================
-
-  const closeForm = () => {
-    setShowForm(false)
-    resetForm()
-  }
-
-  // =========================================================
-  // ! Edit SubCategory
-  // =========================================================
-
-  const editHandle = (subCategory) => {
-    setSubCategoryData({
-      subCategoryName: subCategory.subCategoryName || '',
-
-      category: subCategory.category?._id || subCategory.category || '',
-
-      description: subCategory.description || '',
-
-      status: subCategory.status || 'Active',
-    })
-
-    setError('')
-    setSuccess('')
-
-    setEditId(subCategory._id)
-    setShowForm(true)
-  }
-
-  // =========================================================
-  // ! Submit
-  // =========================================================
-
-  const submitHandle = async (e) => {
-    e.preventDefault()
+  // ! Delete subcategory
+  const deleteHandle = async () => {
+    if (!deleteSubCategoryId) return
 
     try {
-      setLoading(true)
-      setError('')
-      setSuccess('')
+      setDeleting(true)
 
-      // ! Validation
-      if (!subCategoryData.subCategoryName.trim()) {
-        setError('SubCategory name is required')
-        return
-      }
-
-      if (!subCategoryData.category) {
-        setError('Please select a category')
-        return
-      }
-
-      // ! Edit
-      if (editId) {
-        await axiosInstance.put(`/subcategory/${editId}`, subCategoryData)
-
-        setSuccess('SubCategory updated successfully')
-      } else {
-        // ! Create
-        await axiosInstance.post('/subcategory', subCategoryData)
-
-        setSuccess('SubCategory created successfully')
-      }
+      await axiosInstance.delete(`/subcategory/${deleteSubCategoryId}`)
 
       await getSubCategories()
 
-      closeForm()
+      setDeleteSubCategoryId(null)
     } catch (error) {
-      console.log('SubCategory submit error:', error.response?.data || error.message)
-
-      setError(error.response?.data?.message || 'Something went wrong')
+      console.error('Delete subcategory error:', error.response?.data || error.message)
     } finally {
-      setLoading(false)
+      setDeleting(false)
     }
   }
 
-  // =========================================================
-  // ! Delete
-  // =========================================================
-
-  const deleteHandle = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this subcategory?')
-
-    if (!confirmDelete) return
-
-    try {
-      setDeleteLoading(id)
-
-      await axiosInstance.delete(`/subcategory/${id}`)
-
-      setSubCategories((prev) => prev.filter((item) => item._id !== id))
-
-      setSuccess('SubCategory deleted successfully')
-    } catch (error) {
-      console.log('Delete subcategory error:', error.response?.data || error.message)
-
-      setError(error.response?.data?.message || 'Failed to delete subcategory')
-    } finally {
-      setDeleteLoading(null)
-    }
-  }
-
-  // =========================================================
   // ! Search
-  // =========================================================
-
-  const filteredSubCategories = subCategories.filter((item) => {
+  const filteredSubCategories = subCategories.filter((subCategory) => {
     const searchText = search.toLowerCase()
 
-    const subCategoryName = item.subCategoryName?.toLowerCase() || ''
+    const subCategoryName = subCategory.subCategoryName?.toLowerCase() || ''
 
-    const categoryName = item.category?.categoryName?.toLowerCase() || ''
+    const categoryName = subCategory.category?.categoryName?.toLowerCase() || ''
 
     return subCategoryName.includes(searchText) || categoryName.includes(searchText)
   })
 
+  // ! Pagination
+  const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredSubCategories.length / itemsPerPage)
+
+  const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage
+
+  const endIndex = itemsPerPage === 'all' ? filteredSubCategories.length : startIndex + itemsPerPage
+
+  const currentSubCategories = itemsPerPage === 'all' ? filteredSubCategories : filteredSubCategories.slice(startIndex, endIndex)
+
+  // ! Pagination change
+  const handleItemsPerPageChange = (value) => {
+    setItemsPerPage(value)
+    setCurrentPage(1)
+  }
+
+  // ! Initial API
+  useEffect(() => {
+    getSubCategories()
+  }, [])
+
+  // ! Delete scroll lock
+  useEffect(() => {
+    if (deleteSubCategoryId) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [deleteSubCategoryId])
+
+  // ! SubCategory statistics
+  const totalSubCategories = subCategories.length
+
+  const activeSubCategories = subCategories.filter((subCategory) => subCategory.status === 'Active').length
+
+  const inactiveSubCategories = subCategories.filter((subCategory) => subCategory.status === 'Inactive').length
+
+  const categoriesUsed = new Set(subCategories.map((subCategory) => subCategory.category?._id || subCategory.category).filter(Boolean)).size
+
+  const stats = [
+    {
+      title: 'Total SubCategories',
+      value: totalSubCategories,
+      icon: Layers,
+    },
+    {
+      title: 'Active SubCategories',
+      value: activeSubCategories,
+      icon: CheckCircle2,
+    },
+    {
+      title: 'Inactive SubCategories',
+      value: inactiveSubCategories,
+      icon: CircleOff,
+    },
+    {
+      title: 'Categories Used',
+      value: categoriesUsed,
+      icon: Tags,
+    },
+  ]
+
+  const items = [
+    {
+      title: 'SubCategories',
+      link: null,
+    },
+  ]
+
   return (
-    <div className="min-h-[calc(100vh-70px)]">
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
+    <div className="space-y-6 transition-all duration-700">
+      <AdminBreadCrumb items={items} />
 
-      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="flex size-11 items-center justify-center rounded-xl bg-[#EEEAE4] text-[#6B6258]">
-              <Layers size={22} />
+      {/*  STATS  */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map((item) => {
+          const Icon = item.icon
+
+          return (
+            <div key={item.title} className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-[#99938B]">{item.title}</p>
+
+                  <h2 className="mt-2 text-2xl font-bold text-[#292725]">{item.value}</h2>
+                </div>
+
+                <div className="flex size-11 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                  <Icon size={21} />
+                </div>
+              </div>
             </div>
-
-            <div>
-              <h1 className="text-2xl font-bold text-[#292725]">SubCategories</h1>
-
-              <p className="mt-0.5 text-sm text-[#99938B]">Manage your store subcategories</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Add SubCategory */}
-
-        <button type="button" onClick={openCreateForm} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3F3A35]">
-          <Plus size={18} />
-          Add SubCategory
-        </button>
+          )
+        })}
       </div>
 
-      {/* =====================================================
-          ERROR
-      ===================================================== */}
-
-      {error && <div className="mb-4 rounded-xl border border-[#E3DED6] bg-[#F3E8E6] px-4 py-3 text-sm font-medium text-[#8A554E]">{error}</div>}
-
-      {/* =====================================================
-          SUCCESS
-      ===================================================== */}
-
-      {success && !showForm && <div className="mb-4 rounded-xl border border-[#E3DED6] bg-[#E8F0E8] px-4 py-3 text-sm font-medium text-[#4F684F]">{success}</div>}
-
-      {/* =====================================================
-          CREATE / EDIT FORM
-      ===================================================== */}
-
-      {showForm && (
-        <div className="mb-6 overflow-hidden rounded-2xl border border-[#E3DED6] bg-white shadow-sm">
-          {/* Form Header */}
-
-          <div className="flex items-center justify-between border-b border-[#E3DED6] bg-[#F7F7F5] px-5 py-4">
-            <div>
-              <h2 className="text-base font-semibold text-[#292725]">{editId ? 'Edit SubCategory' : 'Create SubCategory'}</h2>
-
-              <p className="mt-0.5 text-xs text-[#99938B]">{editId ? 'Update subcategory information' : 'Add a new store subcategory'}</p>
-            </div>
-
-            <button type="button" onClick={closeForm} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4]">
-              <X size={19} />
-            </button>
-          </div>
-
-          {/* Form */}
-
-          <form onSubmit={submitHandle} className="p-5">
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-              {/* LEFT */}
-
-              <div className="space-y-5">
-                {/* SubCategory Name */}
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-[#292725]">SubCategory Name</label>
-
-                  <input
-                    type="text"
-                    name="subCategoryName"
-                    value={subCategoryData.subCategoryName}
-                    onChange={handleChange}
-                    placeholder="e.g. Shirt"
-                    required
-                    className="h-14 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                  />
-                </div>
-
-                {/* Category */}
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-[#292725]">Category</label>
-
-                  <select
-                    name="category"
-                    value={subCategoryData.category}
-                    onChange={handleChange}
-                    required
-                    className="h-14 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                  >
-                    <option value="">Select Category</option>
-
-                    {categories.map((category) => (
-                      <option key={category._id} value={category._id}>
-                        {category.categoryName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Status */}
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-[#292725]">Status</label>
-
-                  <select
-                    name="status"
-                    value={subCategoryData.status}
-                    onChange={handleChange}
-                    className="h-14 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                  >
-                    <option value="Active">Active</option>
-
-                    <option value="Inactive">Inactive</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* RIGHT */}
-
-              <div>
-                {/* Description */}
-
-                <label className="mb-2 block text-sm font-medium text-[#292725]">Description</label>
-
-                <textarea
-                  name="description"
-                  value={subCategoryData.description}
-                  onChange={handleChange}
-                  rows={9}
-                  placeholder="Enter subcategory description..."
-                  className="w-full resize-none rounded-xl border border-[#E3DED6] bg-white px-4 py-3 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                />
-              </div>
-            </div>
-
-            {/* Buttons */}
-
-            <div className="mt-6 flex justify-end gap-3 border-t border-[#E3DED6] pt-5">
-              <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-[#E3DED6] bg-white px-5 text-sm font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4]">
-                Cancel
-              </button>
-
-              <button type="submit" disabled={loading} className="h-10 rounded-xl bg-[#6B6258] px-6 text-sm font-semibold text-white transition hover:bg-[#3F3A35] disabled:cursor-not-allowed disabled:opacity-60">
-                {loading ? 'Saving...' : editId ? 'Update SubCategory' : 'Create SubCategory'}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* =====================================================
-          TABLE
-      ===================================================== */}
-
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white shadow-sm">
-        {/* Table Top */}
-
+      {/*  SUBCATEGORY TABLE  */}
+      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+        {/* Toolbar */}
         <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-base font-semibold text-[#292725]">All SubCategories</h2>
-
-            <p className="mt-0.5 text-xs text-[#99938B]">{filteredSubCategories.length} subcategories</p>
-          </div>
-
-          {/* Search */}
-
-          <div className="relative w-full sm:w-70">
+          <div className="relative w-full sm:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search subcategory..."
-              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F7F7F5] pl-10 pr-4 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+              onChange={(e) => {
+                const value = e.target.value
+
+                setSearch(value)
+                localStorage.setItem('adminSubCategoriesSearch', value)
+
+                setCurrentPage(1)
+              }}
+              placeholder="Search subcategories..."
+              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
             />
+
+            {search && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch('')
+                  localStorage.removeItem('adminSubCategoriesSearch')
+                  setCurrentPage(1)
+                }}
+                className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                title="Clear Search"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
+
+          {/* Add SubCategory */}
+          <button type="button" onClick={() => navigate('/admin/subcategory/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+            <Plus size={18} />
+            Add SubCategory
+          </button>
         </div>
 
         {/* Table */}
-
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-187">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full min-w-225">
             <thead>
-              <tr className="border-b border-[#E3DED6] bg-[#F7F7F5]">
-                <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-[#99938B]">SubCategory</th>
+              <tr className="border-b border-[#E3DED6] bg-[#F8F6F2]">
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Index</th>
 
-                <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-[#99938B]">Category</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">SubCategory</th>
 
-                <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-[#99938B]">Description</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Category</th>
 
-                <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-[#99938B]">Status</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Description</th>
 
-                <th className="px-5 py-3.5 text-right text-xs font-semibold uppercase tracking-wide text-[#99938B]">Actions</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
+
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
               </tr>
             </thead>
 
             <tbody>
-              {/* Loading */}
-
-              {loading && subCategories.length === 0 ? (
+              {loading ? (
                 <tr>
-                  <td colSpan="5" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-[#99938B]">
                     Loading subcategories...
                   </td>
                 </tr>
-              ) : filteredSubCategories.length === 0 ? (
-                /* Empty */
+              ) : currentSubCategories.length > 0 ? (
+                currentSubCategories.map((subCategory, index) => (
+                  <tr key={subCategory._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
+                    {/* Index */}
+                    <td className="px-5 py-4">
+                      <span className="text-sm text-[#6F6A64]">{startIndex + index + 1}</span>
+                    </td>
 
-                <tr>
-                  <td colSpan="5" className="px-5 py-12 text-center">
-                    <div className="flex flex-col items-center">
-                      <div className="mb-3 flex size-12 items-center justify-center rounded-xl bg-[#EEEAE4] text-[#99938B]">
-                        <Layers size={22} />
-                      </div>
-
-                      <p className="text-sm font-medium text-[#6F6A64]">No subcategories found</p>
-
-                      <p className="mt-1 text-xs text-[#99938B]">Create your first subcategory</p>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                /* List */
-
-                filteredSubCategories.map((subCategory) => (
-                  <tr key={subCategory._id} className="border-b border-[#E3DED6] transition last:border-b-0 hover:bg-[#F7F7F5]">
                     {/* SubCategory */}
-
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex size-10 items-center justify-center rounded-lg bg-[#EEEAE4] text-[#6B6258]">
-                          <Layers size={18} />
+                        <div className="min-w-0">
+                          <p className="max-w-55 truncate text-sm font-semibold text-[#292725]">{subCategory.subCategoryName}</p>
                         </div>
-
-                        <p className="text-sm font-semibold text-[#292725]">{subCategory.subCategoryName}</p>
                       </div>
                     </td>
 
                     {/* Category */}
-
                     <td className="px-5 py-4">
                       <span className="inline-flex rounded-lg bg-[#F1EEE8] px-3 py-1.5 text-xs font-semibold text-[#6B6258]">{subCategory.category?.categoryName || 'No category'}</span>
                     </td>
 
                     {/* Description */}
-
-                    <td className="max-w-75 px-5 py-4">
-                      <p className="truncate text-sm text-[#6F6A64]">{subCategory.description || 'No description'}</p>
+                    <td className="px-5 py-4">
+                      <p className="max-w-75 truncate text-sm text-[#6F6A64]">{subCategory.description || '-'}</p>
                     </td>
 
                     {/* Status */}
-
                     <td className="px-5 py-4">
-                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${subCategory.status === 'Active' ? 'bg-[#E8F0E8] text-[#4F684F]' : 'bg-[#F3E8E6] text-[#8A554E]'}`}>{subCategory.status}</span>
+                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${subCategory.status === 'Active' ? 'bg-[#EAE7E1] text-[#5D554C]' : 'bg-[#F1E7E5] text-[#A44A3F]'}`}>
+                        <span className={`size-1.5 rounded-full ${subCategory.status === 'Active' ? 'bg-[#6B6258]' : 'bg-[#A44A3F]'}`} />
+
+                        {subCategory.status}
+                      </span>
                     </td>
 
                     {/* Actions */}
-
                     <td className="px-5 py-4">
-                      <div className="flex justify-end gap-2">
-                        {/* Edit */}
+                      <div className="flex justify-end gap-1">
+                        {/* View */}
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/admin/subcategory/${subCategory._id}`)}
+                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                          title="View SubCategory"
+                        >
+                          <Eye size={16} />
+                        </button>
 
-                        <button type="button" onClick={() => editHandle(subCategory)} className="flex size-9 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6B6258] transition hover:bg-[#EEEAE4]" title="Edit">
+                        {/* Edit */}
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/admin/subcategory/${subCategory._id}/update`)}
+                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                          title="Edit SubCategory"
+                        >
                           <Pencil size={16} />
                         </button>
 
                         {/* Delete */}
-
                         <button
                           type="button"
-                          onClick={() => deleteHandle(subCategory._id)}
-                          disabled={deleteLoading === subCategory._id}
-                          className="flex size-9 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#9A5A53] transition hover:bg-[#F3E8E6] disabled:cursor-not-allowed disabled:opacity-50"
-                          title="Delete"
+                          onClick={() => setDeleteSubCategoryId(subCategory._id)}
+                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]"
+                          title="Delete SubCategory"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -521,11 +309,118 @@ export default function AdminSubCategory() {
                     </td>
                   </tr>
                 ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                    No subcategories found
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
+
+        {/*  FOOTER  */}
+        <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+          {/* Showing */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#99938B]">Show</span>
+
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                const value = e.target.value
+
+                handleItemsPerPageChange(value === 'all' ? 'all' : Number(value))
+              }}
+              className="h-8 rounded-lg border border-[#E3DED6] bg-white px-2.5 pr-7 text-xs font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258]"
+            >
+              <option value={5}>5 Documents</option>
+              <option value={10}>10 Documents</option>
+              <option value={20}>20 Documents</option>
+              <option value="all">All Documents</option>
+            </select>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex items-center gap-1">
+            {/* Previous */}
+            <button
+              type="button"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white px-2 text-xs font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              ←
+            </button>
+
+            {/* Pages */}
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+              <button
+                key={page}
+                type="button"
+                onClick={() => setCurrentPage(page)}
+                className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-[#6B6258] text-white' : 'border border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#EEEAE4]'}`}
+              >
+                {page}
+              </button>
+            ))}
+
+            {/* Next */}
+            <button
+              type="button"
+              disabled={currentPage === totalPages || totalPages === 0}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white px-2 text-xs font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              →
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/*  DELETE MODAL  */}
+      {deleteSubCategoryId && (
+        <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/30 px-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+          <div className="w-full max-w-130 overflow-hidden rounded-3xl bg-white shadow-2xl">
+            {/* Icon */}
+            <div className="px-6 pb-5 pt-8 text-center sm:px-8">
+              <div className="relative mx-auto flex size-24 items-center justify-center">
+                <div className="flex size-20 items-center justify-center rounded-2xl bg-[#FFF1ED]">
+                  <Trash2 size={50} strokeWidth={1.8} className="text-[#F15A3A]" />
+                </div>
+              </div>
+
+              {/* Title */}
+              <h2 className="mt-5 text-xl font-bold tracking-tight text-[#171717] sm:text-2xl">
+                Are you sure you want to delete
+                <br />
+                this subcategory?
+              </h2>
+
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#77736E]">This action cannot be undone. The subcategory will be permanently deleted.</p>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3 px-6 pb-7 sm:px-8">
+              {/* Cancel */}
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => setDeleteSubCategoryId(null)}
+                className="h-12 flex-1 rounded-xl border-2 border-[#F15A3A] bg-white px-4 text-sm font-semibold text-[#F15A3A] transition hover:bg-[#FFF1ED] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Cancel
+              </button>
+
+              {/* Delete */}
+              <button type="button" disabled={deleting} onClick={deleteHandle} className="h-12 flex-1 rounded-xl bg-[#F15A3A] px-4 text-sm font-semibold text-white transition hover:bg-[#E84F32] disabled:cursor-not-allowed disabled:opacity-60">
+                {deleting ? 'Deleting...' : 'Yes, delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

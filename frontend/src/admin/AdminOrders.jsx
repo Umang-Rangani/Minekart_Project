@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { ChevronDown, Eye, Package, Search, ShoppingBag } from 'lucide-react'
+import { Search, Eye, Package, ShoppingBag, CircleDollarSign, AlertTriangle, Clock3, CheckCircle2, XCircle, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
+import AdminBreadCrumb from './AdminBreadCrumb'
 
 export default function AdminOrders() {
-  const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
-  const [search, setSearch] = useState('')
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  const [search, setSearch] = useState(() => {
+    return localStorage.getItem('adminOrdersSearch') || ''
+  })
+
   const [statusFilter, setStatusFilter] = useState('All')
 
-  const [updatingOrderId, setUpdatingOrderId] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(5)
 
-  // ! Payment
+  const [updatingOrderId, setUpdatingOrderId] = useState(null)
   const [confirmingPaymentId, setConfirmingPaymentId] = useState(null)
 
-  // ! Get all orders
+  // Get all orders
   const getOrders = async () => {
     try {
       setLoading(true)
@@ -37,7 +43,7 @@ export default function AdminOrders() {
     getOrders()
   }, [])
 
-  // ! Update order status
+  // Update order status
   const handleStatusChange = async (orderId, orderStatus) => {
     try {
       setUpdatingOrderId(orderId)
@@ -68,7 +74,7 @@ export default function AdminOrders() {
     }
   }
 
-  // ! Confirm payment
+  // Confirm payment
   const handlePaymentConfirm = async (paymentId) => {
     try {
       setConfirmingPaymentId(paymentId)
@@ -100,7 +106,7 @@ export default function AdminOrders() {
     }
   }
 
-  // ! Format date
+  // Format date
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-IN', {
       day: '2-digit',
@@ -109,188 +115,259 @@ export default function AdminOrders() {
     })
   }
 
-  // ! Status color
+  // Status style
   const getStatusStyle = (status) => {
     switch (status) {
       case 'Pending':
         return {
-          bg: 'bg-orange-50',
-          text: 'text-orange-700',
-          border: 'border-orange-200',
+          bg: 'bg-[#F1EEE8]',
+          text: 'text-[#8A6A3D]',
         }
 
       case 'Confirmed':
         return {
-          bg: 'bg-blue-50',
-          text: 'text-blue-700',
-          border: 'border-blue-200',
+          bg: 'bg-[#EAE7E1]',
+          text: 'text-[#5D554C]',
         }
 
       case 'Processing':
         return {
-          bg: 'bg-purple-50',
-          text: 'text-purple-700',
-          border: 'border-purple-200',
+          bg: 'bg-[#EEEAE4]',
+          text: 'text-[#6B6258]',
         }
 
       case 'Shipped':
         return {
-          bg: 'bg-indigo-50',
-          text: 'text-indigo-700',
-          border: 'border-indigo-200',
+          bg: 'bg-[#ECE9E4]',
+          text: 'text-[#625A51]',
         }
 
       case 'Out for Delivery':
         return {
-          bg: 'bg-yellow-50',
-          text: 'text-yellow-700',
-          border: 'border-yellow-200',
+          bg: 'bg-[#F1EEE8]',
+          text: 'text-[#806B4F]',
         }
 
       case 'Delivered':
         return {
-          bg: 'bg-green-50',
-          text: 'text-green-700',
-          border: 'border-green-200',
+          bg: 'bg-[#EAEDE7]',
+          text: 'text-[#5E6C55]',
         }
 
       case 'Cancelled':
         return {
-          bg: 'bg-red-50',
-          text: 'text-red-700',
-          border: 'border-red-200',
+          bg: 'bg-[#F1E7E5]',
+          text: 'text-[#A44A3F]',
         }
 
       case 'Returned':
         return {
-          bg: 'bg-orange-50',
-          text: 'text-orange-700',
-          border: 'border-orange-200',
+          bg: 'bg-[#F1EEE8]',
+          text: 'text-[#8A6A3D]',
         }
 
       default:
         return {
           bg: 'bg-[#F8F6F2]',
           text: 'text-[#6F6A64]',
-          border: 'border-[#E3DED6]',
         }
     }
   }
 
-  // ! Filter orders
+  // Search
+  const handleSearch = (value) => {
+    setSearch(value)
+
+    localStorage.setItem('adminOrdersSearch', value)
+
+    setCurrentPage(1)
+  }
+
+  // Clear search
+  const clearSearch = () => {
+    setSearch('')
+
+    localStorage.removeItem('adminOrdersSearch')
+
+    setCurrentPage(1)
+  }
+
+  // Status filter
+  const handleStatusFilter = (value) => {
+    setStatusFilter(value)
+
+    setCurrentPage(1)
+  }
+
+  // Filter orders
   const filteredOrders = orders.filter((order) => {
     const searchValue = search.toLowerCase().trim()
 
-    const matchesSearch = order._id?.toLowerCase().includes(searchValue) || order.shippingAddress?.fullName?.toLowerCase().includes(searchValue) || order.shippingAddress?.phone?.toLowerCase().includes(searchValue)
+    const matchesSearch =
+      order._id?.toLowerCase().includes(searchValue) || order.orderId?.toLowerCase().includes(searchValue) || order.shippingAddress?.fullName?.toLowerCase().includes(searchValue) || order.shippingAddress?.phone?.toLowerCase().includes(searchValue)
 
     const matchesStatus = statusFilter === 'All' || order.orderStatus === statusFilter
 
     return matchesSearch && matchesStatus
   })
 
+  // Pagination
+  const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredOrders.length / itemsPerPage)
+
+  const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage
+
+  const endIndex = itemsPerPage === 'all' ? filteredOrders.length : startIndex + itemsPerPage
+
+  const currentOrders = itemsPerPage === 'all' ? filteredOrders : filteredOrders.slice(startIndex, endIndex)
+
+  const handleItemsPerPageChange = (value) => {
+    setItemsPerPage(value)
+
+    setCurrentPage(1)
+  }
+
+  // Statistics
+  const totalOrders = orders.length
+
+  const pendingOrders = orders.filter((order) => order.orderStatus === 'Pending').length
+
+  const deliveredOrders = orders.filter((order) => order.orderStatus === 'Delivered').length
+
+  const cancelledOrders = orders.filter((order) => order.orderStatus === 'Cancelled').length
+
+  const stats = [
+    {
+      title: 'Total Orders',
+      value: totalOrders,
+      icon: ShoppingBag,
+    },
+    {
+      title: 'Pending Orders',
+      value: pendingOrders,
+      icon: Clock3,
+    },
+    {
+      title: 'Delivered Orders',
+      value: deliveredOrders,
+      icon: CheckCircle2,
+    },
+    {
+      title: 'Cancelled Orders',
+      value: cancelledOrders,
+      icon: XCircle,
+    },
+  ]
+
+  const items = [{ title: 'Orders', link: null }]
+
   return (
-    <div>
-      {/*    HEADER */}
-      <div className="mb-6">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h1 className="text-2xl font-extrabold text-[#292725]">Orders</h1>
+    <div className="space-y-6 transition-all duration-700">
+      <AdminBreadCrumb items={items} />
 
-            <p className="mt-1 text-sm text-[#6F6A64]">Manage customer orders and update order status.</p>
-          </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map((item) => {
+          const Icon = item.icon
 
-          <div className="flex h-11 items-center gap-2 rounded-xl border border-[#E3DED6] bg-white px-4">
-            <ShoppingBag size={18} className="text-[#6B6258]" />
+          return (
+            <div key={item.title} className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-[#99938B]">{item.title}</p>
 
-            <span className="text-sm font-bold text-[#292725]">{orders.length} Orders</span>
-          </div>
-        </div>
+                  <h2 className="mt-2 text-2xl font-bold text-[#292725]">{item.value}</h2>
+                </div>
+
+                <div className="flex size-11 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                  <Icon size={21} />
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
-      {/*  FILTERS */}
-      <div className="mb-5 rounded-2xl border border-[#E3DED6] bg-white p-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_220px]">
-          {/* Search */}
-          <div className="flex h-11 items-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3">
-            <Search size={18} className="text-[#99938B]" />
-
-            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search order, customer or phone..." className="h-full w-full bg-transparent text-sm text-[#292725] outline-none placeholder:text-[#99938B]" />
-          </div>
-
-          {/* Status Filter */}
-          <div className="relative">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-11 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3 pr-10 text-sm font-medium text-[#292725] outline-none focus:border-[#6B6258]"
-            >
-              <option value="All">All Status</option>
-              <option value="Pending">Pending</option>
-              <option value="Confirmed">Confirmed</option>
-              <option value="Processing">Processing</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Out for Delivery">Out for Delivery</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Cancelled">Cancelled</option>
-              <option value="Returned">Returned</option>
-            </select>
-
-            <ChevronDown size={17} className="pointer-events-none absolute right-3 top-3 text-[#6F6A64]" />
-          </div>
-        </div>
-      </div>
-
-      {/* ====
-          ORDERS TABLE
-      ===== */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
-        {/* Loading */}
-        {loading ? (
-          <div className="space-y-3 p-5">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="h-20 animate-pulse rounded-xl bg-[#F1EEE8]" />
-            ))}
+        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative w-full sm:max-w-xl">
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
+
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder="Search orders..."
+              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+            />
+
+            {search && (
+              <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]" title="Clear Search">
+                <X size={16} />
+              </button>
+            )}
           </div>
-        ) : filteredOrders.length === 0 ? (
-          /* Empty */
-          <div className="px-5 py-16 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#F1EEE8] text-[#6B6258]">
-              <Package size={27} />
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="relative">
+              <select
+                value={statusFilter}
+                onChange={(e) => handleStatusFilter(e.target.value)}
+                className="h-10 min-w-45 appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 pr-10 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+              >
+                <option value="All">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Out for Delivery">Out for Delivery</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Returned">Returned</option>
+              </select>
+
+              <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#6F6A64]" />
             </div>
 
-            <h2 className="mt-4 text-lg font-bold text-[#292725]">No Orders Found</h2>
+            <div className="flex h-10 items-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4">
+              <Package size={17} className="text-[#6B6258]" />
 
-            <p className="mt-1 text-sm text-[#99938B]">No orders match your current search or filter.</p>
+              <span className="text-sm font-semibold text-[#292725]">{filteredOrders.length} Orders</span>
+            </div>
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-275 text-left">
-              {/* 
-                  TABLE HEADER
-              = */}
-              <thead>
-                <tr className="border-b border-[#E3DED6] bg-[#F8F6F2]">
-                  <th className="px-5 py-4 text-xs font-bold uppercase tracking-wide text-[#99938B]">Order</th>
+        </div>
 
-                  <th className="px-5 py-4 text-xs font-bold uppercase tracking-wide text-[#99938B]">Customer</th>
+        <div className="w-full overflow-x-auto">
+          <table className="w-full min-w-300">
+            <thead>
+              <tr className="border-b border-[#E3DED6] bg-[#F8F6F2]">
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Index</th>
 
-                  <th className="px-5 py-4 text-xs font-bold uppercase tracking-wide text-[#99938B]">Items</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Order</th>
 
-                  <th className="px-5 py-4 text-xs font-bold uppercase tracking-wide text-[#99938B]">Amount</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Customer</th>
 
-                  <th className="px-5 py-4 text-xs font-bold uppercase tracking-wide text-[#99938B]">Payment</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Items</th>
 
-                  <th className="px-5 py-4 text-xs font-bold uppercase tracking-wide text-[#99938B]">Status</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Amount</th>
 
-                  <th className="px-5 py-4 text-xs font-bold uppercase tracking-wide text-[#99938B]">Date</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Payment</th>
 
-                  <th className="px-5 py-4 text-xs font-bold uppercase tracking-wide text-[#99938B]">Action</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
+
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Date</th>
+
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="9" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                    Loading orders...
+                  </td>
                 </tr>
-              </thead>
-
-              {/*     TABLE BODY = */}
-              <tbody>
-                {filteredOrders.map((order) => {
+              ) : currentOrders.length > 0 ? (
+                currentOrders.map((order, index) => {
                   const isReturned = order.orderStatus === 'Returned'
 
                   const isCancelled = order.orderStatus === 'Cancelled'
@@ -301,78 +378,78 @@ export default function AdminOrders() {
 
                   const paymentStatus = order.payment?.paymentStatus || order.paymentStatus || 'Pending'
 
-                  const isOnlineOnDelivery = order.paymentMethod === 'ONLINE_ON_DELIVERY'
-
                   const canConfirmPayment = ['Out for Delivery', 'Delivered'].includes(order.orderStatus) && paymentStatus === 'Pending' && order.payment?._id && !isLocked
+
                   return (
-                    <tr key={order._id} className="border-b border-[#E3DED6] last:border-b-0 hover:bg-[#FBFAF7]">
-                      {/*    ORDER  = */}
+                    <tr key={order._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
                       <td className="px-5 py-4">
-                        <p className="max-w-37 truncate text-sm font-bold text-[#292725]">#{order.orderId}</p>
-
-                        <p className="mt-1 text-xs text-[#99938B]">
-                          {order.items?.length || 0} item
-                          {order.items?.length !== 1 ? 's' : ''}
-                        </p>
+                        <span className="text-sm text-[#6F6A64]">{startIndex + index + 1}</span>
                       </td>
 
-                      {/*   CUSTOMER   = */}
                       <td className="px-5 py-4">
-                        <p className="text-sm font-bold text-[#292725]">{order.shippingAddress?.fullName || 'N/A'}</p>
+                        <div className="min-w-0">
+                          <p className="max-w-45 truncate text-sm font-semibold text-[#292725]">#{order.orderId}</p>
 
-                        <p className="mt-1 text-xs text-[#99938B]">{order.shippingAddress?.phone || 'N/A'}</p>
+                          <p className="mt-1 text-xs text-[#99938B]">
+                            {order.items?.length || 0} item
+                            {order.items?.length !== 1 ? 's' : ''}
+                          </p>
+                        </div>
                       </td>
 
-                      {/*    ITEMS  = */}
+                      <td className="px-5 py-4">
+                        <div className="min-w-35">
+                          <p className="max-w-45 truncate text-sm font-semibold text-[#292725]">{order.shippingAddress?.fullName || 'N/A'}</p>
+
+                          <p className="mt-1 text-xs text-[#99938B]">{order.shippingAddress?.phone || 'N/A'}</p>
+                        </div>
+                      </td>
+
                       <td className="px-5 py-4">
                         <div className="flex -space-x-2">
-                          {order.items?.slice(0, 3).map((item, index) => (
-                            <div key={index} className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg border-2 border-white bg-[#F8F6F2]">
+                          {order.items?.slice(0, 3).map((item, itemIndex) => (
+                            <div key={itemIndex} className="flex size-9 items-center justify-center overflow-hidden rounded-lg border-2 border-white bg-[#F8F6F2]">
                               {item.image ? <img src={`http://localhost:3000${item.image}`} alt={item.productName} className="h-full w-full object-contain" /> : <Package size={15} className="text-[#99938B]" />}
                             </div>
                           ))}
                         </div>
                       </td>
 
-                      {/*    AMOUNT = */}
                       <td className="px-5 py-4">
-                        <p className="text-sm font-extrabold text-[#292725]">₹{Number(order.totalAmount || 0).toLocaleString('en-IN')}</p>
+                        <p className="text-sm font-bold text-[#292725]">₹{Number(order.totalAmount || 0).toLocaleString('en-IN')}</p>
                       </td>
 
-                      {/*   PAYMENT   = */}
-                      {/* PAYMENT */}
                       <td className="px-5 py-4">
-                        <p className="text-xs font-bold text-[#292725]">{order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online on Delivery'}</p>
+                        <p className="text-xs font-semibold text-[#292725]">{order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online on Delivery'}</p>
 
-                        <p className={`mt-1 text-xs font-bold ${paymentStatus === 'Paid' ? 'text-green-600' : paymentStatus === 'Failed' ? 'text-red-600' : 'text-orange-600'}`}>{paymentStatus}</p>
+                        <p className={`mt-1 text-[11px] font-semibold ${paymentStatus === 'Paid' ? 'text-[#5E6C55]' : paymentStatus === 'Failed' ? 'text-[#A44A3F]' : 'text-[#8A6A3D]'}`}>{paymentStatus}</p>
 
                         {canConfirmPayment && (
                           <button
                             type="button"
                             onClick={() => handlePaymentConfirm(order.payment._id)}
                             disabled={confirmingPaymentId === order.payment._id}
-                            className="mt-2 rounded-lg bg-[#6B6258] px-3 py-1.5 text-[11px] font-bold text-white transition hover:bg-[#3F3A35] disabled:cursor-not-allowed disabled:opacity-60"
+                            className="mt-2 rounded-lg bg-[#6B6258] px-3 py-1.5 text-[10px] font-semibold text-white transition hover:bg-[#5D554C] disabled:cursor-not-allowed disabled:opacity-60"
                           >
                             {confirmingPaymentId === order.payment._id ? 'Confirming...' : 'Confirm Payment'}
                           </button>
                         )}
                       </td>
 
-                      {/*    STATUS   = */}
                       <td className="px-5 py-4">
                         {isLocked ? (
-                          <div className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
-                            <span className={`h-1.5 w-1.5 rounded-full ${isReturned ? 'bg-orange-500' : 'bg-red-500'}`} />
+                          <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
+                            <span className={`size-1.5 rounded-full ${isReturned ? 'bg-[#8A6A3D]' : 'bg-[#A44A3F]'}`} />
 
                             {order.orderStatus}
-                          </div>
+                          </span>
                         ) : (
                           <div className="relative inline-block">
                             <select
                               value={order.orderStatus}
                               disabled={updatingOrderId === order._id}
                               onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                              className={`appearance-none rounded-lg border bg-white py-2 pl-3 pr-8 text-xs font-bold outline-none transition disabled:cursor-not-allowed disabled:opacity-60 ${statusStyle.border} ${statusStyle.text}`}
+                              className={`appearance-none rounded-lg border py-2 pl-3 pr-8 text-xs font-semibold outline-none transition disabled:cursor-not-allowed disabled:opacity-60 ${statusStyle.bg} ${statusStyle.text} border-[#E3DED6]`}
                             >
                               <option value="Pending">Pending</option>
 
@@ -398,29 +475,102 @@ export default function AdminOrders() {
                         )}
                       </td>
 
-                      {/*   DATE  = */}
                       <td className="px-5 py-4">
-                        <p className="text-xs font-semibold text-[#6F6A64]">{formatDate(order.createdAt)}</p>
+                        <span className="text-xs font-medium text-[#6F6A64]">{formatDate(order.createdAt)}</span>
                       </td>
 
-                      {/* ACTION */}
                       <td className="px-5 py-4">
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/admin/orders/${order.orderId}`)}
-                          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#F8F6F2] hover:text-[#292725]"
-                          title="View Order"
-                        >
-                          <Eye size={17} />
-                        </button>
+                        <div className="flex justify-end gap-1">
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/admin/orders/${order.orderId}`)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            title="View Order"
+                          >
+                            <Eye size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   )
-                })}
-              </tbody>
-            </table>
+                })
+              ) : (
+                <tr>
+                  <td colSpan="9" className="px-5 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="flex size-14 items-center justify-center rounded-2xl bg-[#F1EEE8] text-[#6B6258]">
+                        <Package size={27} />
+                      </div>
+
+                      <p className="mt-3 text-sm font-semibold text-[#292725]">No orders found</p>
+
+                      <p className="mt-1 text-xs text-[#99938B]">Try changing your search or status filter.</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#99938B]">Show</span>
+
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                const value = e.target.value
+
+                handleItemsPerPageChange(value === 'all' ? 'all' : Number(value))
+              }}
+              className="h-8 rounded-lg border border-[#E3DED6] bg-white px-2.5 pr-7 text-xs font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258]"
+            >
+              <option value={5}>5 Documents</option>
+
+              <option value={10}>10 Documents</option>
+
+              <option value={20}>20 Documents</option>
+
+              <option value="all">All Documents</option>
+            </select>
+
+            <span className="text-xs text-[#99938B]">of {filteredOrders.length}</span>
           </div>
-        )}
+
+          {itemsPerPage !== 'all' && totalPages > 1 && (
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className="flex size-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => setCurrentPage(page)}
+                  className={`flex size-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-[#6B6258] text-white' : 'border border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#EEEAE4]'}`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                disabled={currentPage === totalPages || totalPages === 0}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                className="flex size-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

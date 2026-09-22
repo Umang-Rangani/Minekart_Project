@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, Package, ShoppingBag, CircleDollarSign, AlertTriangle, Eye } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, Package, ShoppingBag, CircleDollarSign, AlertTriangle, Eye, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
+import BreadCrumb from '../user/BreadCrumb'
+import AdminBreadCrumb from './AdminBreadCrumb'
 
 export default function AdminProducts() {
   const navigate = useNavigate()
 
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(() => {
+    return localStorage.getItem('adminProductsSearch') || ''
+  })
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
+
+  // delete popup
+  const [deleteProductId, setDeleteProductId] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+
+  // pagination 1.
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(5)
 
   // ! Get all products
   const getProducts = async () => {
@@ -26,29 +38,59 @@ export default function AdminProducts() {
   }
 
   // ! Delete product
-  const deleteHandle = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this product?')
-
-    if (!confirmDelete) return
+  const deleteHandle = async () => {
+    if (!deleteProductId) return
 
     try {
-      await axiosInstance.delete(`/product/${id}`)
+      setDeleting(true)
+
+      await axiosInstance.delete(`/product/${deleteProductId}`)
 
       await getProducts()
 
-      console.log('Product deleted successfully')
+      setDeleteProductId(null)
     } catch (error) {
       console.error('Delete product error:', error.response?.data || error.message)
+    } finally {
+      setDeleting(false)
     }
   }
 
   // ! Search
   const filteredProducts = products.filter((product) => product.productName?.toLowerCase().includes(search.toLowerCase()))
 
+  // ! pagination 2.
+  const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredProducts.length / itemsPerPage)
+
+  const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage
+
+  const endIndex = itemsPerPage === 'all' ? filteredProducts.length : startIndex + itemsPerPage
+
+  const currentProducts = itemsPerPage === 'all' ? filteredProducts : filteredProducts.slice(startIndex, endIndex)
+
+  // ! pagination 3.
+  const handleItemsPerPageChange = (value) => {
+    setItemsPerPage(value)
+    setCurrentPage(1)
+  }
+
   // ! Initial API
   useEffect(() => {
     getProducts()
   }, [])
+
+  // ! delete lock
+  useEffect(() => {
+    if (deleteProductId) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [deleteProductId])
 
   // ! Product statistics
   const totalProducts = products.length
@@ -82,23 +124,13 @@ export default function AdminProducts() {
     },
   ]
 
+  const items = [{ title: 'Products', link: null }]
+
   return (
     <div className="space-y-6 transition-all duration-700">
-      {/* ================= HEADER ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#292725]">Products</h1>
+      <AdminBreadCrumb items={items} />
 
-          <p className="mt-1 text-sm text-[#6F6A64]">Manage your products, pricing and inventory.</p>
-        </div>
-
-        <button type="button" onClick={() => navigate('/admin/products/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
-          <Plus size={18} />
-          Add Product
-        </button>
-      </div>
-
-      {/* ================= STATS ================= */}
+      {/*  STATS  */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((item) => {
           const Icon = item.icon
@@ -121,23 +153,48 @@ export default function AdminProducts() {
         })}
       </div>
 
-      {/* ================= PRODUCT TABLE ================= */}
+      {/*  PRODUCT TABLE  */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
         {/* Toolbar */}
         <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-sm">
+          <div className="relative w-full sm:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value
+
+                setSearch(value)
+                localStorage.setItem('adminProductsSearch', value)
+
+                setCurrentPage(1)
+              }}
               placeholder="Search products..."
-              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-4 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
             />
+
+            {search && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch('')
+                  localStorage.removeItem('adminProductsSearch')
+                  setCurrentPage(1)
+                }}
+                className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                title="Clear Search"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
 
-          <p className="text-xs text-[#99938B]">Manage your product inventory</p>
+          <button type="button" onClick={() => navigate('/admin/products/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+            <Plus size={18} />
+            Add Product
+          </button>
         </div>
 
         {/* Table */}
@@ -170,8 +227,8 @@ export default function AdminProducts() {
                     Loading products...
                   </td>
                 </tr>
-              ) : filteredProducts.length > 0 ? (
-                filteredProducts.map((product, index) => (
+              ) : currentProducts.length > 0 ? (
+                currentProducts.map((product, index) => (
                   <tr key={product._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
                     {/* Index */}
                     <td className="px-5 py-4">
@@ -248,7 +305,7 @@ export default function AdminProducts() {
                         </button>
 
                         {/* Delete */}
-                        <button type="button" onClick={() => deleteHandle(product._id)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Product">
+                        <button type="button" onClick={() => setDeleteProductId(product._id)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Product">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -267,14 +324,106 @@ export default function AdminProducts() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3">
-          <p className="text-xs text-[#99938B]">
-            Showing <span className="font-semibold text-[#6F6A64]">{filteredProducts.length}</span> products
-          </p>
+        <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+          {/* Showing */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#99938B]">Show</span>
 
-          <p className="text-xs font-medium text-[#6F6A64]">Total {products.length} products</p>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                const value = e.target.value
+
+                handleItemsPerPageChange(value === 'all' ? 'all' : Number(value))
+              }}
+              className="h-8 rounded-lg border border-[#E3DED6] bg-white px-2.5 pr-7 text-xs font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258]"
+            >
+              <option value={5}>5 Documents</option>
+              <option value={10}>10 Documents</option>
+              <option value={20}>20 Documents</option>
+              <option value="all">All Documents</option>
+            </select>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex items-center gap-1">
+            {/* Previous */}
+            <button
+              type="button"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white px-2 text-xs font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              ←
+            </button>
+
+            {/* Pages */}
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+              <button
+                key={page}
+                type="button"
+                onClick={() => setCurrentPage(page)}
+                className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-[#6B6258] text-white' : 'border border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#EEEAE4]'}`}
+              >
+                {page}
+              </button>
+            ))}
+
+            {/* Next */}
+            <button
+              type="button"
+              disabled={currentPage === totalPages || totalPages === 0}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white px-2 text-xs font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              →
+            </button>
+          </div>
         </div>
       </div>
+
+      {/*  DELETE MODAL  */}
+      {deleteProductId && (
+        <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/30 px-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+          <div className="w-full max-w-130 overflow-hidden rounded-3xl bg-white shadow-2xl">
+            {/* Icon */}
+            <div className="px-6 pb-5 pt-8 text-center sm:px-8">
+              <div className="relative mx-auto flex size-24 items-center justify-center">
+                <div className="flex size-20 items-center justify-center rounded-2xl bg-[#FFF1ED]">
+                  <Trash2 size={50} strokeWidth={1.8} className="text-[#F15A3A]" />
+                </div>
+              </div>
+
+              {/* Title */}
+              <h2 className="mt-5 text-xl font-bold tracking-tight text-[#171717] sm:text-2xl">
+                Are you sure you want to delete
+                <br />
+                this product?
+              </h2>
+
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#77736E]">This action cannot be undone. The product will be permanently deleted.</p>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3 px-6 pb-7 sm:px-8">
+              {/* Cancel */}
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => setDeleteProductId(null)}
+                className="h-12 flex-1 rounded-xl border-2 border-[#F15A3A] bg-white px-4 text-sm font-semibold text-[#F15A3A] transition hover:bg-[#FFF1ED] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Cancel
+              </button>
+
+              {/* Delete */}
+              <button type="button" disabled={deleting} onClick={deleteHandle} className="h-12 flex-1 rounded-xl bg-[#F15A3A] px-4 text-sm font-semibold text-white transition hover:bg-[#E84F32] disabled:cursor-not-allowed disabled:opacity-60">
+                {deleting ? 'Deleting...' : 'Yes, delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

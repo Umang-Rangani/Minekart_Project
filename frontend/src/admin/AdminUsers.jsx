@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { Search, Users, UserCheck, UserX, Eye, MoreVertical, MapPin, Mail, Phone, Ellipsis } from 'lucide-react'
+import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
+import AdminBreadCrumb from './AdminBreadCrumb'
 
 export default function AdminUsers() {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(() => {
+    return localStorage.getItem('adminUsersSearch') || ''
+  })
+
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // ! 1. Activate / Deactivate
   const [openMenu, setOpenMenu] = useState(null)
 
-  // ! Get users
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(5)
+
+  // Get all users
   const getUsers = async () => {
     try {
       setLoading(true)
 
       const res = await axiosInstance.get('/users')
 
-      setUsers(res.data.data)
+      setUsers(res.data.data || [])
     } catch (error) {
       console.error('Get users error:', error.response?.data || error.message)
     } finally {
@@ -25,7 +31,7 @@ export default function AdminUsers() {
     }
   }
 
-  // ! Image URL
+  // Image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) return ''
 
@@ -40,29 +46,83 @@ export default function AdminUsers() {
     getUsers()
   }, [])
 
-  // ! 2. Activate / Deactivate
+  // Update user status
   const updateUserStatus = async (userId, status) => {
     try {
       const res = await axiosInstance.put(`/users/${userId}`, {
         status,
       })
 
-      console.log(res.data)
+      if (res.data.success) {
+        setUsers((prev) =>
+          prev.map((user) =>
+            user._id === userId
+              ? {
+                  ...user,
+                  status,
+                }
+              : user,
+          ),
+        )
+      }
 
       setOpenMenu(null)
-
-      getUsers()
     } catch (error) {
       console.error('Update user status error:', error.response?.data || error.message)
     }
   }
 
-  // ! Users dashboard
+  // Search
+  const handleSearch = (value) => {
+    setSearch(value)
+
+    localStorage.setItem('adminUsersSearch', value)
+
+    setCurrentPage(1)
+  }
+
+  // Clear search
+  const clearSearch = () => {
+    setSearch('')
+
+    localStorage.removeItem('adminUsersSearch')
+
+    setCurrentPage(1)
+  }
+
+  // Filter users
+  const filteredUsers = users.filter((user) => {
+    const searchValue = search.toLowerCase().trim()
+
+    return `${user.name || ''} ${user.email || ''} ${user.phone || ''} ${user.address || ''} ${user.city || ''} ${user.pincode || ''}`.toLowerCase().includes(searchValue)
+  })
+
+  // Pagination
+  const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredUsers.length / itemsPerPage)
+
+  const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage
+
+  const endIndex = itemsPerPage === 'all' ? filteredUsers.length : startIndex + itemsPerPage
+
+  const currentUsers = itemsPerPage === 'all' ? filteredUsers : filteredUsers.slice(startIndex, endIndex)
+
+  // Pagination change
+  const handleItemsPerPageChange = (value) => {
+    const newValue = value === 'all' ? 'all' : Number(value)
+
+    setItemsPerPage(newValue)
+
+    setCurrentPage(1)
+  }
+
+  // Statistics
   const totalUsers = users.length
 
   const activeUsers = users.filter((user) => user.status === 'Active').length
 
   const inactiveUsers = users.filter((user) => user.status === 'Inactive').length
+
+  const usersWithPhone = users.filter((user) => user.phone?.trim()).length
 
   const stats = [
     {
@@ -80,24 +140,25 @@ export default function AdminUsers() {
       value: inactiveUsers,
       icon: UserX,
     },
+    {
+      title: 'Users With Phone',
+      value: usersWithPhone,
+      icon: Phone,
+    },
   ]
 
-  // ! Search filter
-  const filteredUsers = users.filter((user) => `${user.name} ${user.email} ${user.phone} ${user.address} ${user.city} ${user.pincode}`.toLowerCase().includes(search.toLowerCase()))
+  const items = [
+    {
+      title: 'Users',
+      link: null,
+    },
+  ]
 
   return (
-    <div className="min-h-screen bg-[#F4F2EE] p-4 sm:p-6 lg:p-8">
-      {/* HEADER */}
-      <div className="mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-[#292725]">Users</h1>
+    <div className="space-y-6 transition-all duration-700">
+      <AdminBreadCrumb items={items} />
 
-          <p className="mt-1 text-sm text-[#6F6A64]">Manage registered customers</p>
-        </div>
-      </div>
-
-      {/* STATS */}
-      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((item) => {
           const Icon = item.icon
 
@@ -119,141 +180,120 @@ export default function AdminUsers() {
         })}
       </div>
 
-      {/* USERS TABLE CARD */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
-        {/* TABLE HEADER */}
         <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-base font-semibold text-[#292725]">All Users</h2>
-
-            <p className="mt-1 text-xs text-[#99938B]">{filteredUsers.length} users found</p>
-          </div>
-
-          {/* SEARCH */}
-          <div className="relative w-full sm:max-w-xs">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#99938B]" />
+          <div className="relative w-full sm:max-w-xl">
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
               type="text"
-              placeholder="Search users..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] py-2.5 pl-10 pr-4 text-sm text-[#292725] outline-none placeholder:text-[#99938B] focus:border-[#6B6258]"
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder="Search users..."
+              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
             />
+
+            {search && (
+              <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]" title="Clear Search">
+                <X size={16} />
+              </button>
+            )}
+          </div>
+
+          <div className="flex h-10 items-center rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4">
+            <span className="text-sm font-semibold text-[#6F6A64]">{filteredUsers.length} Users</span>
           </div>
         </div>
 
-        {/* TABLE */}
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-237">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full min-w-250">
             <thead>
               <tr className="border-b border-[#E3DED6] bg-[#F8F6F2]">
-                <th className="px-5 py-4 text-left text-xs font-semibold text-[#6F6A64]">#</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Index</th>
 
-                <th className="px-5 py-4 text-left text-xs font-semibold text-[#6F6A64]">User</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">User</th>
 
-                <th className="px-5 py-4 text-left text-xs font-semibold text-[#6F6A64]">Contact</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Email</th>
 
-                <th className="px-5 py-4 text-left text-xs font-semibold text-[#6F6A64]">Address</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Phone</th>
 
-                <th className="px-5 py-4 text-left text-xs font-semibold text-[#6F6A64]">Status</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
 
-                <th className="px-5 py-4 text-right text-xs font-semibold text-[#6F6A64]">Action</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
               </tr>
             </thead>
 
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="px-5 py-16 text-center text-sm text-[#99938B]">
+                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-[#99938B]">
                     Loading users...
                   </td>
                 </tr>
-              ) : (
-                filteredUsers.map((user, index) => (
-                  <tr key={user._id} className="border-b border-[#E3DED6] last:border-b-0 hover:bg-[#FBFAF7]">
-                    {/* INDEX */}
-                    <td className="px-5 py-4 text-sm text-[#99938B]">{index + 1}</td>
+              ) : currentUsers.length > 0 ? (
+                currentUsers.map((user, index) => (
+                  <tr key={user._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
+                    <td className="px-5 py-4">
+                      <span className="text-sm text-[#6F6A64]">{startIndex + index + 1}</span>
+                    </td>
 
-                    {/* USER */}
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         {user.avatar ? (
                           <img src={getImageUrl(user.avatar)} alt={user.name} className="size-10 shrink-0 rounded-full object-cover" />
                         ) : (
-                          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#EDE8E0] text-sm font-semibold text-[#6B6258]">{user.name?.charAt(0).toUpperCase()}</div>
+                          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#F1EEE8] text-sm font-semibold text-[#6B6258]">{user.name?.charAt(0).toUpperCase() || 'U'}</div>
                         )}
 
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-[#292725]">{user.name}</p>
+                          <p className="max-w-45 truncate text-sm font-semibold text-[#292725]">{user.name || '-'}</p>
 
                           <p className="mt-0.5 text-xs text-[#99938B]">Customer</p>
                         </div>
                       </div>
                     </td>
 
-                    {/* CONTACT */}
                     <td className="px-5 py-4">
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <Mail size={13} className="text-[#99938B]" />
+                          <Mail size={13} className="shrink-0 text-[#99938B]" />
 
-                          <span className="text-sm text-[#6F6A64]">{user.email}</span>
-                        </div>
-
-                        {user.phone && (
-                          <div className="flex items-center gap-2">
-                            <Phone size={13} className="text-[#99938B]" />
-
-                            <span className="text-xs text-[#99938B]">{user.phone}</span>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-
-                    {/* ADDRESS */}
-                    <td className="px-5 py-4">
-                      <div className="flex max-w-60 items-start gap-2">
-                        <MapPin size={14} className="mt-0.5 shrink-0 text-[#99938B]" />
-
-                        <div>
-                          <p className="text-sm text-[#6F6A64]">{user.address || '-'}</p>
-
-                          {(user.city || user.pincode) && (
-                            <p className="mt-1 text-xs text-[#99938B]">
-                              {user.city}
-                              {user.city && user.pincode ? ', ' : ''}
-                              {user.pincode}
-                            </p>
-                          )}
+                          <span className="max-w-55 truncate text-sm text-[#6F6A64]">{user.email || '-'}</span>
                         </div>
                       </div>
                     </td>
 
-                    {/* STATUS */}
                     <td className="px-5 py-4">
-                      <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${user.status === 'Active' ? 'bg-[#E8F0E8] text-[#536653]' : 'bg-[#F1EEE8] text-[#817970]'}`}>
-                        <span className={`size-1.5 rounded-full ${user.status === 'Active' ? 'bg-[#536653]' : 'bg-[#817970]'}`} />
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <Phone size={13} className="shrink-0 text-[#99938B]" />
+
+                          <span className="text-xs text-[#99938B]">{user.phone}</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="px-5 py-4">
+                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${user.status === 'Active' ? 'bg-[#EAE7E1] text-[#5D554C]' : 'bg-[#F1E7E5] text-[#A44A3F]'}`}>
+                        <span className={`size-1.5 rounded-full ${user.status === 'Active' ? 'bg-[#6B6258]' : 'bg-[#A44A3F]'}`} />
 
                         {user.status}
                       </span>
                     </td>
 
-                    {/* ACTION */}
                     <td className="px-5 py-4">
-                      <div className="relative flex items-center justify-end gap-1">
+                      <div className="relative flex justify-end">
                         <button
                           type="button"
-                          title="More"
                           onClick={() => setOpenMenu(openMenu === user._id ? null : user._id)}
-                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1EEE8] hover:text-[#6B6258]"
+                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                          title="More"
                         >
-                          <Ellipsis  size={17} />
+                          <Ellipsis size={17} />
                         </button>
 
-                        {/* MORE MENU */}
                         {openMenu === user._id && (
-                          <div className="absolute right-5 top-14 z-20 w-44 overflow-hidden rounded-xl border border-[#E3DED6] bg-white py-1 shadow-lg">
+                          <div className="absolute right-0 top-10 z-20 w-44 overflow-hidden rounded-xl border border-[#E3DED6] bg-white py-1 shadow-lg">
                             {user.status === 'Active' ? (
                               <button type="button" onClick={() => updateUserStatus(user._id, 'Inactive')} className="w-full px-4 py-2.5 text-left text-sm text-[#6F6A64] transition hover:bg-[#F8F6F2]">
                                 Deactivate User
@@ -269,23 +309,66 @@ export default function AdminUsers() {
                     </td>
                   </tr>
                 ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                    No users found
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
 
-        {/* EMPTY STATE */}
-        {!loading && filteredUsers.length === 0 && (
-          <div className="flex flex-col items-center justify-center px-5 py-16">
-            <div className="flex size-14 items-center justify-center rounded-full bg-[#F1EEE8] text-[#6B6258]">
-              <Users size={24} />
-            </div>
+        <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#99938B]">Show</span>
 
-            <h3 className="mt-4 text-sm font-semibold text-[#292725]">No users found</h3>
-
-            <p className="mt-1 text-xs text-[#99938B]">Try searching with a different keyword.</p>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => handleItemsPerPageChange(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+              className="h-8 rounded-lg border border-[#E3DED6] bg-white px-2.5 pr-7 text-xs font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258]"
+            >
+              <option value={5}>5 Documents</option>
+              <option value={10}>10 Documents</option>
+              <option value={20}>20 Documents</option>
+              <option value="all">All Documents</option>
+            </select>
           </div>
-        )}
+
+          {itemsPerPage !== 'all' && totalPages > 1 && (
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className="flex size-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => setCurrentPage(page)}
+                  className={`flex size-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-[#6B6258] text-white' : 'border border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#EEEAE4]'}`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                disabled={currentPage === totalPages || totalPages === 0}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                className="flex size-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

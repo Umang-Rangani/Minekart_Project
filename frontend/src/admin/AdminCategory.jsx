@@ -1,383 +1,292 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, X, LayoutGrid } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, LayoutGrid, X, Layers, CheckCircle2, CircleOff, Tags } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { iconList } from '../data/iconMap'
+import AdminBreadCrumb from './AdminBreadCrumb'
 
 export default function AdminCategory() {
-  const [categories, setCategories] = useState([])
+  const navigate = useNavigate()
 
-  const [categoryData, setCategoryData] = useState({
-    categoryName: '',
-    categoryLucideIcons: '',
-    description: '',
-    status: 'Active',
+  const [search, setSearch] = useState(() => {
+    return localStorage.getItem('adminCategoriesSearch') || ''
   })
 
-  const [search, setSearch] = useState('')
-  const [showForm, setShowForm] = useState(false)
-  const [editId, setEditId] = useState(null)
-
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
-  const [deleteLoading, setDeleteLoading] = useState(null)
 
-  // ! GET
+  // delete popup
+  const [deleteCategoryId, setDeleteCategoryId] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(5)
+
+  // ! Get all categories
   const getCategories = async () => {
     try {
       setLoading(true)
 
       const res = await axiosInstance.get('/category')
-      setCategories(res.data.data)
+
+      setCategories(res.data.data || [])
     } catch (error) {
-      console.log('Get Categories Error:', error.response?.data || error.message)
+      console.error('Get categories error:', error.response?.data || error.message)
     } finally {
       setLoading(false)
     }
   }
 
+  // ! Delete category
+  const deleteHandle = async () => {
+    if (!deleteCategoryId) return
+
+    try {
+      setDeleting(true)
+
+      await axiosInstance.delete(`/category/${deleteCategoryId}`)
+
+      await getCategories()
+
+      setDeleteCategoryId(null)
+    } catch (error) {
+      console.error('Delete category error:', error.response?.data || error.message)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  // ! Search
+  const filteredCategories = categories.filter((category) => category.categoryName?.toLowerCase().includes(search.toLowerCase()))
+
+  // ! Pagination
+  const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredCategories.length / itemsPerPage)
+
+  const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage
+
+  const endIndex = itemsPerPage === 'all' ? filteredCategories.length : startIndex + itemsPerPage
+
+  const currentCategories = itemsPerPage === 'all' ? filteredCategories : filteredCategories.slice(startIndex, endIndex)
+
+  // ! Pagination change
+  const handleItemsPerPageChange = (value) => {
+    setItemsPerPage(value)
+    setCurrentPage(1)
+  }
+
+  // ! Initial API
   useEffect(() => {
     getCategories()
   }, [])
 
-  // ! INPUT CHANGE
-  const handleChange = (e) => {
-    const { name, value } = e.target
-
-    setCategoryData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  // ! OPEN CREATE
-  const openCreateForm = () => {
-    setEditId(null)
-
-    setCategoryData({
-      categoryName: '',
-      categoryLucideIcons: '',
-      description: '',
-      status: 'Active',
-    })
-
-    setShowForm(true)
-  }
-
-  // ! OPEN EDIT
-  const editHandle = (category) => {
-    setEditId(category._id)
-
-    setCategoryData({
-      categoryName: category.categoryName || '',
-      categoryLucideIcons: category.categoryLucideIcons || '',
-      description: category.description || '',
-      status: category.status || 'Active',
-    })
-
-    setShowForm(true)
-  }
-
-  // ! CLOSE FORM
-  const closeForm = () => {
-    setShowForm(false)
-    setEditId(null)
-
-    setCategoryData({
-      categoryName: '',
-      categoryLucideIcons: '',
-      description: '',
-      status: 'Active',
-    })
-  }
-
-  // ! POST / PUT
-  const submitHandle = async (e) => {
-    e.preventDefault()
-
-    if (!categoryData.categoryName.trim()) {
-      alert('Category name is required')
-      return
+  // ! Delete scroll lock
+  useEffect(() => {
+    if (deleteCategoryId) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
     }
 
-    try {
-      setLoading(true)
-
-      if (editId) {
-        // ! PUT
-        await axiosInstance.put(`/category/${editId}`, categoryData)
-      } else {
-        // ! POST
-        await axiosInstance.post('/category', categoryData)
-      }
-
-      await getCategories()
-      closeForm()
-    } catch (error) {
-      console.log('Category Save Error:', error.response?.data || error.message)
-
-      alert(error.response?.data?.message || 'Something went wrong')
-    } finally {
-      setLoading(false)
+    return () => {
+      document.body.style.overflow = ''
     }
-  }
+  }, [deleteCategoryId])
 
-  // ! DELETE
-  const deleteHandle = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this category?')
+  // ! Category statistics
+  const totalCategories = categories.length
 
-    if (!confirmDelete) return
+  const activeCategories = categories.filter((category) => category.status === 'Active').length
 
-    try {
-      setDeleteLoading(id)
+  const inactiveCategories = categories.filter((category) => category.status === 'Inactive').length
 
-      await axiosInstance.delete(`/category/${id}`)
+  const categoriesWithIcon = categories.filter((category) => category.categoryLucideIcons).length
 
-      setCategories((prev) => prev.filter((item) => item._id !== id))
-    } catch (error) {
-      console.log('Delete Category Error:', error.response?.data || error.message)
+  const stats = [
+    {
+      title: 'Total Categories',
+      value: totalCategories,
+      icon: LayoutGrid,
+    },
+    {
+      title: 'Active Categories',
+      value: activeCategories,
+      icon: CheckCircle2,
+    },
+    {
+      title: 'Inactive Categories',
+      value: inactiveCategories,
+      icon: CircleOff,
+    },
+    {
+      title: 'Categories With Icon',
+      value: categoriesWithIcon,
+      icon: Tags,
+    },
+  ]
 
-      alert(error.response?.data?.message || 'Category delete failed')
-    } finally {
-      setDeleteLoading(null)
-    }
-  }
-
-  // ! ICON
+  // ! Category icon
   const getCategoryIcon = (iconValue) => {
     const foundIcon = iconList.find((item) => item.value === iconValue)
 
     return foundIcon?.icon || LayoutGrid
   }
 
-  // ! SEARCH
-  const filteredCategories = categories?.filter((item) => item.categoryName?.toLowerCase().includes(search.toLowerCase()))
+  const items = [{ title: 'Categories', link: null }]
 
   return (
-    <div className="min-h-[calc(100vh-70px)]">
-      {/* ================= HEADER ================= */}
-      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="flex size-11 items-center justify-center rounded-xl bg-[#EEEAE4] text-[#6B6258]">
-              <LayoutGrid size={22} />
+    <div className="space-y-6 transition-all duration-700">
+      <AdminBreadCrumb items={items} />
+
+      {/*  STATS  */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map((item) => {
+          const Icon = item.icon
+
+          return (
+            <div key={item.title} className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-[#99938B]">{item.title}</p>
+
+                  <h2 className="mt-2 text-2xl font-bold text-[#292725]">{item.value}</h2>
+                </div>
+
+                <div className="flex size-11 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                  <Icon size={21} />
+                </div>
+              </div>
             </div>
-
-            <div>
-              <h1 className="text-2xl font-bold text-[#292725]">Categories</h1>
-
-              <p className="mt-0.5 text-sm text-[#99938B]">Manage your product categories</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Add Category */}
-        <button type="button" onClick={openCreateForm} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#3F3A35]">
-          <Plus size={18} />
-          Add Category
-        </button>
+          )
+        })}
       </div>
 
-      {/* ================= FORM ================= */}
-      {showForm && (
-        <div className="mb-6 overflow-hidden rounded-2xl border border-[#E3DED6] bg-[#FFFFFF] shadow-sm">
-          {/* Form Header */}
-          <div className="flex items-center justify-between border-b border-[#E3DED6] bg-[#F7F7F5] px-5 py-4">
-            <div>
-              <h2 className="text-base font-semibold text-[#292725]">{editId ? 'Edit Category' : 'Create Category'}</h2>
-
-              <p className="mt-0.5 text-xs text-[#99938B]">{editId ? 'Update category information' : 'Add a new product category'}</p>
-            </div>
-
-            <button type="button" onClick={closeForm} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4]">
-              <X size={19} />
-            </button>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={submitHandle} className="p-5">
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-              {/* Icon */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#292725]">Category Icon</label>
-
-                <select
-                  name="categoryLucideIcons"
-                  value={categoryData.categoryLucideIcons}
-                  onChange={handleChange}
-                  className="h-11 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                >
-                  <option value="">Select Icon</option>
-
-                  {iconList.map((item) => (
-                    <option key={item.value} value={item.value}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Category Name */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#292725]">Category Name</label>
-
-                <input
-                  type="text"
-                  name="categoryName"
-                  value={categoryData.categoryName}
-                  onChange={handleChange}
-                  placeholder="e.g. Mobiles"
-                  className="h-11 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#292725]">Description</label>
-
-                <textarea
-                  name="description"
-                  value={categoryData.description}
-                  onChange={handleChange}
-                  rows={2}
-                  placeholder="Enter category description..."
-                  className="w-full resize-none rounded-xl border border-[#E3DED6] bg-white px-4 py-3 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                />
-              </div>
-
-              {/* Status */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[#292725]">Status</label>
-
-                <select
-                  name="status"
-                  value={categoryData.status}
-                  onChange={handleChange}
-                  className="h-11 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div className="mt-5 flex justify-end gap-3 border-t border-[#E3DED6] pt-5">
-              <button type="button" onClick={closeForm} className="h-10 rounded-xl border border-[#E3DED6] bg-white px-5 text-sm font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4]">
-                Cancel
-              </button>
-
-              <button type="submit" disabled={loading} className="h-10 rounded-xl bg-[#6B6258] px-6 text-sm font-semibold text-white transition hover:bg-[#3F3A35] disabled:cursor-not-allowed disabled:opacity-60">
-                {loading ? 'Saving...' : editId ? 'Update Category' : 'Create Category'}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* ================= TABLE ================= */}
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-[#FFFFFF] shadow-sm">
-        {/* Table Top */}
+      {/*  CATEGORY TABLE  */}
+      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+        {/* Toolbar */}
         <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-base font-semibold text-[#292725]">All Categories</h2>
-
-            <p className="mt-0.5 text-xs text-[#99938B]">{filteredCategories.length} categories</p>
-          </div>
-
-          {/* Search */}
-          <div className="relative w-full sm:w-70">
+          <div className="relative w-full sm:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search category..."
-              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F7F7F5] pl-10 pr-4 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+              onChange={(e) => {
+                const value = e.target.value
+
+                setSearch(value)
+                localStorage.setItem('adminCategoriesSearch', value)
+
+                setCurrentPage(1)
+              }}
+              placeholder="Search categories..."
+              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
             />
+
+            {search && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch('')
+                  localStorage.removeItem('adminCategoriesSearch')
+                  setCurrentPage(1)
+                }}
+                className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                title="Clear Search"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
+
+          {/* Add Category */}
+          <button type="button" onClick={() => navigate('/admin/category/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+            <Plus size={18} />
+            Add Category
+          </button>
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-187">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full min-w-200">
             <thead>
-              <tr className="border-b border-[#E3DED6] bg-[#F7F7F5]">
-                <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-[#99938B]">Icon</th>
+              <tr className="border-b border-[#E3DED6] bg-[#F8F6F2]">
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Index</th>
 
-                <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-[#99938B]">Category</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Category</th>
 
-                <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-[#99938B]">Description</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Description</th>
 
-                <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-[#99938B]">Status</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
 
-                <th className="px-5 py-3.5 text-right text-xs font-semibold uppercase tracking-wide text-[#99938B]">Actions</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
               </tr>
             </thead>
 
             <tbody>
-              {loading && categories.length === 0 ? (
+              {loading ? (
                 <tr>
                   <td colSpan="5" className="px-5 py-12 text-center text-sm text-[#99938B]">
                     Loading categories...
                   </td>
                 </tr>
-              ) : filteredCategories.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="px-5 py-12 text-center">
-                    <div className="flex flex-col items-center">
-                      <div className="mb-3 flex size-12 items-center justify-center rounded-xl bg-[#EEEAE4] text-[#99938B]">
-                        <LayoutGrid size={22} />
-                      </div>
-
-                      <p className="text-sm font-medium text-[#6F6A64]">No categories found</p>
-
-                      <p className="mt-1 text-xs text-[#99938B]">Create your first category</p>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                filteredCategories.map((category) => {
+              ) : currentCategories.length > 0 ? (
+                currentCategories.map((category, index) => {
                   const Icon = getCategoryIcon(category.categoryLucideIcons)
 
                   return (
-                    <tr key={category._id} className="border-b border-[#E3DED6] transition last:border-b-0 hover:bg-[#F7F7F5]">
-                      {/* Icon */}
+                    <tr key={category._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
+                      {/* Index */}
                       <td className="px-5 py-4">
-                        <div className="flex size-10 items-center justify-center rounded-xl bg-[#EEEAE4] text-[#6B6258]">
-                          <Icon size={20} />
+                        <span className="text-sm text-[#6F6A64]">{startIndex + index + 1}</span>
+                      </td>
+
+                      {/* Category */}
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                            <Icon size={19} />
+                          </div>
+
+                          <div className="min-w-0">
+                            <p className="max-w-55 truncate text-sm font-semibold text-[#292725]">{category.categoryName}</p>
+                          </div>
                         </div>
                       </td>
 
-                      {/* Name */}
-                      <td className="px-5 py-4">
-                        <p className="text-sm font-semibold text-[#292725]">{category.categoryName}</p>
-                      </td>
-
                       {/* Description */}
-                      <td className="max-w-75 px-5 py-4">
-                        <p className="truncate text-sm text-[#6F6A64]">{category.description || 'No description'}</p>
+                      <td className="px-5 py-4">
+                        <p className="max-w-75 truncate text-sm text-[#6F6A64]">{category.description || '-'}</p>
                       </td>
 
                       {/* Status */}
                       <td className="px-5 py-4">
-                        <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${category.status === 'Active' ? 'bg-[#E8F0E8] text-[#4F684F]' : 'bg-[#F3E8E6] text-[#8A554E]'}`}>{category.status}</span>
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${category.status === 'Active' ? 'bg-[#EAE7E1] text-[#5D554C]' : 'bg-[#F1E7E5] text-[#A44A3F]'}`}>
+                          <span className={`size-1.5 rounded-full ${category.status === 'Active' ? 'bg-[#6B6258]' : 'bg-[#A44A3F]'}`} />
+
+                          {category.status}
+                        </span>
                       </td>
 
                       {/* Actions */}
                       <td className="px-5 py-4">
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-1">
                           {/* Edit */}
-                          <button type="button" onClick={() => editHandle(category)} className="flex size-9 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6B6258] transition hover:bg-[#EEEAE4]" title="Edit">
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/admin/category/${category._id}/update`)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            title="Edit Category"
+                          >
                             <Pencil size={16} />
                           </button>
 
                           {/* Delete */}
                           <button
                             type="button"
-                            onClick={() => deleteHandle(category._id)}
-                            disabled={deleteLoading === category._id}
-                            className="flex size-9 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#9A5A53] transition hover:bg-[#F3E8E6] disabled:opacity-50"
-                            title="Delete"
+                            onClick={() => setDeleteCategoryId(category._id)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]"
+                            title="Delete Category"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -386,11 +295,118 @@ export default function AdminCategory() {
                     </tr>
                   )
                 })
+              ) : (
+                <tr>
+                  <td colSpan="5" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                    No categories found
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
+
+        {/*  FOOTER  */}
+        <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+          {/* Showing */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#99938B]">Show</span>
+
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                const value = e.target.value
+
+                handleItemsPerPageChange(value === 'all' ? 'all' : Number(value))
+              }}
+              className="h-8 rounded-lg border border-[#E3DED6] bg-white px-2.5 pr-7 text-xs font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258]"
+            >
+              <option value={5}>5 Documents</option>
+              <option value={10}>10 Documents</option>
+              <option value={20}>20 Documents</option>
+              <option value="all">All Documents</option>
+            </select>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex items-center gap-1">
+            {/* Previous */}
+            <button
+              type="button"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white px-2 text-xs font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              ←
+            </button>
+
+            {/* Pages */}
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+              <button
+                key={page}
+                type="button"
+                onClick={() => setCurrentPage(page)}
+                className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-[#6B6258] text-white' : 'border border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#EEEAE4]'}`}
+              >
+                {page}
+              </button>
+            ))}
+
+            {/* Next */}
+            <button
+              type="button"
+              disabled={currentPage === totalPages || totalPages === 0}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white px-2 text-xs font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              →
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/*  DELETE MODAL  */}
+      {deleteCategoryId && (
+        <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/30 px-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+          <div className="w-full max-w-130 overflow-hidden rounded-3xl bg-white shadow-2xl">
+            {/* Icon */}
+            <div className="px-6 pb-5 pt-8 text-center sm:px-8">
+              <div className="relative mx-auto flex size-24 items-center justify-center">
+                <div className="flex size-20 items-center justify-center rounded-2xl bg-[#FFF1ED]">
+                  <Trash2 size={50} strokeWidth={1.8} className="text-[#F15A3A]" />
+                </div>
+              </div>
+
+              {/* Title */}
+              <h2 className="mt-5 text-xl font-bold tracking-tight text-[#171717] sm:text-2xl">
+                Are you sure you want to delete
+                <br />
+                this category?
+              </h2>
+
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#77736E]">This action cannot be undone. The category will be permanently deleted.</p>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3 px-6 pb-7 sm:px-8">
+              {/* Cancel */}
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => setDeleteCategoryId(null)}
+                className="h-12 flex-1 rounded-xl border-2 border-[#F15A3A] bg-white px-4 text-sm font-semibold text-[#F15A3A] transition hover:bg-[#FFF1ED] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Cancel
+              </button>
+
+              {/* Delete */}
+              <button type="button" disabled={deleting} onClick={deleteHandle} className="h-12 flex-1 rounded-xl bg-[#F15A3A] px-4 text-sm font-semibold text-white transition hover:bg-[#E84F32] disabled:cursor-not-allowed disabled:opacity-60">
+                {deleting ? 'Deleting...' : 'Yes, delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

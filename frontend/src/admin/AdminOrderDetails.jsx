@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, CheckCircle2, Clock3, CreditCard, MapPin, Package, Phone, ReceiptText, Truck, User } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
+import AdminBreadCrumb from './AdminBreadCrumb'
 
 const AdminOrderDetails = () => {
   const { id } = useParams()
@@ -11,8 +12,7 @@ const AdminOrderDetails = () => {
   const [loading, setLoading] = useState(true)
   const [confirmingPayment, setConfirmingPayment] = useState(false)
 
-  console.log(id);
-  
+  console.log(id)
 
   // GET ORDER DETAILS
   const getOrderDetails = async () => {
@@ -166,48 +166,20 @@ const AdminOrderDetails = () => {
 
   const isPaymentMethodValid = ['COD', 'ONLINE_ON_DELIVERY'].includes(paymentMethod)
 
+  const items = [
+    {
+      title: "Orders",
+      link: "/admin/orders",
+    },
+    {
+      title: `${order.orderId}`,
+      link: null,
+    },
+  ]
   return (
     <div className="min-h-screen bg-[#F4F2EE] ">
-      <div className="mx-auto max-w-375">
-        {/*    HEADER */}
-        <div className="mb-5 rounded-xl border border-[#E3DED6] bg-[#FBFAF7] px-4 py-2.5 shadow-sm sm:px-5">
-          <div className="flex items-center justify-between gap-4">
-            {/* Left */}
-            <div className="flex min-w-0 items-center gap-3">
-              <button
-                type="button"
-                onClick={() => navigate('/admin/orders')}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-                title="Back to Orders"
-              >
-                <ArrowLeft size={17} />
-              </button>
-
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-lg font-bold text-[#292725] sm:text-xl">Order Details</h1>
-
-                  <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${getStatusStyle(order.orderStatus)}`}>{order.orderStatus}</span>
-                </div>
-
-                <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5">
-                  <p className="text-xs text-[#6F6A64]">Order ID: #{order.orderId}</p>
-
-                  <span className="hidden text-[#D6D0C8] sm:block">•</span>
-
-                  <p className="text-xs text-[#99938B]">{formatDate(order.createdAt)}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Status */}
-            <div className={`hidden shrink-0 items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold sm:inline-flex ${getStatusStyle(order.orderStatus)}`}>
-              <Package size={15} />
-              {order.orderStatus}
-            </div>
-          </div>
-        </div>
-
+      <AdminBreadCrumb items={items} />
+      <div className="mx-auto max-w-375 p-5">
         {/* TOP INFORMATION */}
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           {/* CUSTOMER */}
@@ -434,7 +406,7 @@ const AdminOrderDetails = () => {
                         <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#E3DED6] bg-[#F7F7F5]">
                           {/* src={item.image || item.productId?.images?.[0]} */}
                           {item.image || item.productId?.images?.[0] ? (
-                            <img src={`http://localhost:3000${item.image || item.productId?.images?.[0]}`} alt={item.productName} className="h-full w-full object-cover" />
+                            <img src={`http://localhost:3000${item.image || item.productId?.images?.[0]}`} alt={item.productName} className="h-full w-full object-contain" />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center text-[#99938B]">
                               <Package size={22} />
@@ -445,7 +417,7 @@ const AdminOrderDetails = () => {
                         <div className="min-w-0">
                           <p className="line-clamp-2 text-sm font-semibold text-[#292725]">{item.productName}</p>
 
-                          <p className="mt-1 text-xs text-[#99938B]">Product ID: {item.productId?._id || item.productId || '-'}</p>
+                        
                         </div>
                       </div>
                     </td>

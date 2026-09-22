@@ -3,6 +3,7 @@ import { Plus, X, ArrowLeft } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile, deleteFile } from '../utils/uploadFile'
+import AdminBreadCrumb from './AdminBreadCrumb'
 
 const resetProductData = {
   productName: '',
@@ -322,21 +323,25 @@ export default function AdminProductsForm() {
     )
   }
 
+  let items
+  if (isEdit) {
+     items = [
+      { title: 'Products', link: '/admin/products' },
+      { title: `${productData.productName}`, link: `/admin/products/${id}` },
+      { title: 'update', link: null },
+    ]
+  } else {
+    items = [
+      { title: 'Products', link: '/admin/products' },
+      { title: 'new', link: null },
+    ]
+  }
+
   return (
     <div className="space-y-6">
       {/* HEADER */}
+      <AdminBreadCrumb items={items} />
 
-      <div className="flex items-center gap-3">
-        <button type="button" onClick={closeForm} className="flex size-10 items-center justify-center rounded-xl border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4]">
-          <ArrowLeft size={18} />
-        </button>
-
-        <div>
-          <h1 className="text-2xl font-bold text-[#292725]">{isEdit ? 'Edit Product' : 'Create Product'}</h1>
-
-          <p className="mt-1 text-sm text-[#6F6A64]">{isEdit ? 'Update product information.' : 'Add a new store product.'}</p>
-        </div>
-      </div>
 
       {/* FORM */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white shadow-sm">
@@ -438,7 +443,7 @@ export default function AdminProductsForm() {
                   <label className="mb-2 block text-sm font-medium text-[#292725]">Available Sizes</label>
 
                   <div className="flex flex-wrap gap-3">
-                    {['S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL','28', '30', '32', '34', '36', '38', '40'].map((size) => {
+                    {['S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL', '28', '30', '32', '34', '36', '38', '40'].map((size) => {
                       const selected = productData.sizes.includes(size)
 
                       return (

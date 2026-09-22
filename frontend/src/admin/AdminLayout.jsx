@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { LayoutDashboard, Package, ShoppingBag, Users, Settings, Store, LayoutGrid, Tag, Grid2X2, ChevronLeft, ChevronRight } from 'lucide-react'
-import { MdDashboard, MdCategory  } from 'react-icons/md'
+import { MdDashboard, MdCategory } from 'react-icons/md'
 import { TbCategory2 } from 'react-icons/tb'
 
 export default function AdminLayout() {
@@ -115,9 +115,6 @@ export default function AdminLayout() {
           {/* Divider */}
           <div className="my-5 border-t border-[#E3DED6]" />
 
-
-      
-
           {/* Bottom Info */}
           {sidebarOpen && (
             <div className="mt-auto rounded-2xl border border-[#E3DED6] bg-[#F1EEE8] p-4">
@@ -130,9 +127,36 @@ export default function AdminLayout() {
       </aside>
 
       {/*  MAIN CONTENT  */}
-      <main className={`min-h-screen pt-17 transition-all duration-300 ${sidebarOpen ? 'lg:pl-60' : 'lg:pl-18'}`}>
-        <div className="min-h-[calc(100vh-70px)] p-5 sm:p-6 lg:p-7">
+      {/* <main className={`min-h-screen pt-17 transition-all duration-300 ${sidebarOpen ? 'lg:pl-60' : 'lg:pl-18'}`}>
+        <div className="min-h-[calc(100vh-70px)] p-4">
           <Outlet />
+        </div>
+      </main> */}
+      {/* MAIN CONTENT */}
+      <main className={`min-h-screen pt-17 transition-all duration-300 ${sidebarOpen ? 'lg:pl-60' : 'lg:pl-18'}`}>
+        <div className="flex min-h-[calc(100vh-68px)] flex-col">
+          <div className="flex-1 p-4">
+            <Outlet />
+          </div>
+
+          {/* ADMIN FOOTER */}
+          <footer className="border-t border-[#E3DED6] bg-[#FBFAF7] px-5 py-4 lg:px-7 mt-20">
+            <div className="flex flex-col items-center justify-between gap-2 text-center sm:flex-row sm:text-left">
+              <div>
+                <p className="text-xs font-bold text-[#3F3A35]">
+                  Mine<span className="text-[#6B6258]">Kart</span> Admin Panel
+                </p>
+
+                <p className="mt-0.5 text-[10px] font-medium text-[#99938B]">Manage your store with ease.</p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-medium text-[#99938B]">Designed & Developed by</span>
+
+                <span className="rounded-lg bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#6B6258]">Rangani Umang</span>
+              </div>
+            </div>
+          </footer>
         </div>
       </main>
     </div>

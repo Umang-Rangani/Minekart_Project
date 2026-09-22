@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Pencil, X, Image as ImageIcon } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
+import AdminBreadCrumb from './AdminBreadCrumb'
 
 export default function AdminProductsView() {
   const navigate = useNavigate()
@@ -69,38 +70,14 @@ export default function AdminProductsView() {
     )
   }
 
+  const items = [
+    { title: 'Products', link: '/admin/products' },
+    { title: `${product.productName}`, link: null },
+  ]
+
   return (
     <div className="space-y-6">
-      {/* HEADER */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => navigate('/admin/products')}
-            className="flex size-10 items-center justify-center rounded-xl border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-            title="Back to Products"
-          >
-            <ArrowLeft size={18} />
-          </button>
-
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-[#292725]">Product Details</h1>
-
-            <p className="mt-1 text-sm text-[#6F6A64]">View complete product information.</p>
-          </div>
-        </div>
-
-        {/* EDIT */}
-
-        <button
-          type="button"
-          onClick={() => navigate(`/admin/products/${product._id}/update`)}
-          className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]"
-        >
-          <Pencil size={17} />
-          Edit Product
-        </button>
-      </div>
+      <AdminBreadCrumb items={items} />
 
       {/* PRODUCT MAIN CARD */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
