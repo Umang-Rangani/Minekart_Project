@@ -8,7 +8,7 @@ const Order = require('../model/order')
 const router = express.Router()
 
 
-router.get('/', async (req, res) => {
+router.get('/',  async (req, res) => {
   try {
     // BASIC COUNTS
     const totalUsers = await User.countDocuments()

@@ -3,12 +3,12 @@ const roleMiddleware = (...roles) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: "Access denied",
-      });
+        message: 'Access denied',
+      })
     }
 
-    next();
-  };
-};
+    next()
+  }
+}
 
-module.exports = roleMiddleware;
+module.exports = roleMiddleware

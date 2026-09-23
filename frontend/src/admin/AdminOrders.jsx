@@ -3,6 +3,7 @@ import { Search, Eye, Package, ShoppingBag, CircleDollarSign, AlertTriangle, Clo
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import toast from 'react-hot-toast'
 
 export default function AdminOrders() {
   const navigate = useNavigate()
@@ -34,6 +35,8 @@ export default function AdminOrders() {
       }
     } catch (error) {
       console.log('Get Admin Orders Error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to load orders')
     } finally {
       setLoading(false)
     }
@@ -66,9 +69,13 @@ export default function AdminOrders() {
             return order
           }),
         )
+
+        toast.success(`Order status updated to ${orderStatus}`)
       }
     } catch (error) {
       console.log('Update Order Status Error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to update order status')
     } finally {
       setUpdatingOrderId(null)
     }
@@ -96,11 +103,12 @@ export default function AdminOrders() {
             return order
           }),
         )
+
+        toast.success('Payment confirmed successfully')
       }
     } catch (error) {
       console.log('Confirm Payment Error:', error.response?.data || error.message)
-
-      alert(error.response?.data?.message || 'Payment confirmation failed')
+      toast.error(error.response?.data?.message || 'Payment confirmation failed')
     } finally {
       setConfirmingPaymentId(null)
     }

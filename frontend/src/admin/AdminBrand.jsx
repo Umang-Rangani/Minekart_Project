@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { deleteFile } from '../utils/uploadFile'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import AdminTrashBox from './AdminTrashBox'
+import toast from 'react-hot-toast'
 
 export default function AdminBrand() {
   const navigate = useNavigate()
@@ -16,8 +18,8 @@ export default function AdminBrand() {
   const [loading, setLoading] = useState(false)
 
   // delete popup
-  const [deleteBrandId, setDeleteBrandId] = useState(null)
-  const [deleting, setDeleting] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteItem, setDeleteItem] = useState(null)
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1)
@@ -38,15 +40,19 @@ export default function AdminBrand() {
     }
   }
 
+  // ! open pop up
+  const handleModalOpen = (data) => {
+    setDeleteItem(data)
+    setDeleteModalOpen(true)
+  }
+
   // ! Delete brand
   const deleteHandle = async () => {
-    if (!deleteBrandId) return
+    if (!deleteItem) return
 
     try {
-      setDeleting(true)
-
       // Find brand
-      const brand = brands.find((item) => item._id === deleteBrandId)
+      const brand = brands.find((item) => item._id === deleteItem._id)
 
       // Delete logo file
       if (brand?.brandLogo) {
@@ -54,15 +60,14 @@ export default function AdminBrand() {
       }
 
       // Delete brand
-      await axiosInstance.delete(`/brand/${deleteBrandId}`)
+      await axiosInstance.delete(`/brand/${deleteItem._id}`)
 
-      await getBrands()
-
-      setDeleteBrandId(null)
+      toast.success('Brand deleted successfully')
     } catch (error) {
-      console.error('Delete brand error:', error.response?.data || error.message)
+      console.error('Delete Brand error:', error.response?.data || error.message)
     } finally {
-      setDeleting(false)
+      setDeleteModalOpen(false)
+      await getBrands()
     }
   }
 
@@ -88,19 +93,6 @@ export default function AdminBrand() {
   useEffect(() => {
     getBrands()
   }, [])
-
-  // ! Delete lock
-  useEffect(() => {
-    if (deleteBrandId) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [deleteBrandId])
 
   // ! Brand statistics
   const totalBrands = brands.length
@@ -311,7 +303,7 @@ export default function AdminBrand() {
                         </button>
 
                         {/* DELETE */}
-                        <button type="button" onClick={() => setDeleteBrandId(brand._id)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Brand">
+                        <button type="button" onClick={() => handleModalOpen(brand)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Brand">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -388,47 +380,18 @@ export default function AdminBrand() {
         </div>
       </div>
 
-      {/* DELETE MODAL */}
-      {deleteBrandId && (
-        <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/30 px-4 backdrop-blur-sm" role="dialog" aria-modal="true">
-          <div className="w-full max-w-130 overflow-hidden rounded-3xl bg-white shadow-2xl">
-            {/* ICON */}
-            <div className="px-6 pb-5 pt-8 text-center sm:px-8">
-              <div className="relative mx-auto flex size-24 items-center justify-center">
-                <div className="flex size-20 items-center justify-center rounded-2xl bg-[#FFF1ED]">
-                  <Trash2 size={50} strokeWidth={1.8} className="text-[#F15A3A]" />
-                </div>
-              </div>
-
-              {/* TITLE */}
-              <h2 className="mt-5 text-xl font-bold tracking-tight text-[#171717] sm:text-2xl">
-                Are you sure you want to delete
-                <br />
-                this brand?
-              </h2>
-
-              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#77736E]">This action cannot be undone. The brand will be permanently deleted.</p>
-            </div>
-
-            {/* BUTTONS */}
-            <div className="flex gap-3 px-6 pb-7 sm:px-8">
-              {/* CANCEL */}
-              <button
-                type="button"
-                disabled={deleting}
-                onClick={() => setDeleteBrandId(null)}
-                className="h-12 flex-1 rounded-xl border-2 border-[#F15A3A] bg-white px-4 text-sm font-semibold text-[#F15A3A] transition hover:bg-[#FFF1ED] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Cancel
-              </button>
-
-              {/* DELETE */}
-              <button type="button" disabled={deleting} onClick={deleteHandle} className="h-12 flex-1 rounded-xl bg-[#F15A3A] px-4 text-sm font-semibold text-white transition hover:bg-[#E84F32] disabled:cursor-not-allowed disabled:opacity-60">
-                {deleting ? 'Deleting...' : 'Yes, delete'}
-              </button>
-            </div>
-          </div>
-        </div>
+      {/*  DELETE MODAL  */}
+      {deleteModalOpen && (
+        <AdminTrashBox
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          type="danger"
+          title="Delete User?"
+          message={`Are you sure you want to delete this ${deleteItem.brandName}`}
+          actionButtonText="Delete"
+          cancelButtonText="Cancel"
+          onAction={deleteHandle}
+        />
       )}
     </div>
   )

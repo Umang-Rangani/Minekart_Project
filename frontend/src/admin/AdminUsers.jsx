@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import toast from 'react-hot-toast'
 
 export default function AdminUsers() {
   const [search, setSearch] = useState(() => {
@@ -64,11 +65,15 @@ export default function AdminUsers() {
               : user,
           ),
         )
+
+        toast.success(status === 'Active' ? 'User activated successfully' : 'User deactivated successfully')
       }
 
       setOpenMenu(null)
     } catch (error) {
       console.error('Update user status error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to update user status')
     }
   }
 

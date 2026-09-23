@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import toast from 'react-hot-toast'
 
 const resetSubCategoryData = {
   subCategoryName: '',
@@ -93,10 +94,15 @@ export default function AdminSubCategoryForm() {
         return
       }
 
+
       if (isEdit) {
         await axiosInstance.put(`/subcategory/${id}`, payload)
+
+        toast.success('SubCategory updated successfully')
       } else {
         await axiosInstance.post('/subcategory', payload)
+
+        toast.success('SubCategory created successfully')
       }
 
       navigate('/admin/subcategory')

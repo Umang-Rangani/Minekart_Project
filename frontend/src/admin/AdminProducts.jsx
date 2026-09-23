@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import BreadCrumb from '../user/BreadCrumb'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import toast from 'react-hot-toast'
+import AdminTrashBox from './AdminTrashBox'
 
 export default function AdminProducts() {
   const navigate = useNavigate()
@@ -15,8 +17,8 @@ export default function AdminProducts() {
   const [loading, setLoading] = useState(false)
 
   // delete popup
-  const [deleteProductId, setDeleteProductId] = useState(null)
-  const [deleting, setDeleting] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteItem, setDeleteItem] = useState(null)
 
   // pagination 1.
   const [currentPage, setCurrentPage] = useState(1)
@@ -37,22 +39,25 @@ export default function AdminProducts() {
     }
   }
 
-  // ! Delete product
+  // ! open pop up
+  const handleModalOpen = (data) => {
+    setDeleteItem(data)
+    setDeleteModalOpen(true)
+  }
+
+  // ! Delete category
   const deleteHandle = async () => {
-    if (!deleteProductId) return
+    if (!deleteItem) return
 
     try {
-      setDeleting(true)
+      await axiosInstance.delete(`/product/${deleteItem._id}`)
 
-      await axiosInstance.delete(`/product/${deleteProductId}`)
-
-      await getProducts()
-
-      setDeleteProductId(null)
+      toast.success('Product deleted successfully')
     } catch (error) {
-      console.error('Delete product error:', error.response?.data || error.message)
+      console.error('Delete category error:', error.response?.data || error.message)
     } finally {
-      setDeleting(false)
+      setDeleteModalOpen(false)
+      await getProducts()
     }
   }
 
@@ -79,18 +84,7 @@ export default function AdminProducts() {
     getProducts()
   }, [])
 
-  // ! delete lock
-  useEffect(() => {
-    if (deleteProductId) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
 
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [deleteProductId])
 
   // ! Product statistics
   const totalProducts = products.length
@@ -305,7 +299,7 @@ export default function AdminProducts() {
                         </button>
 
                         {/* Delete */}
-                        <button type="button" onClick={() => setDeleteProductId(product._id)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Product">
+                        <button type="button" onClick={() => handleModalOpen(product)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Product">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -383,46 +377,17 @@ export default function AdminProducts() {
       </div>
 
       {/*  DELETE MODAL  */}
-      {deleteProductId && (
-        <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/30 px-4 backdrop-blur-sm" role="dialog" aria-modal="true">
-          <div className="w-full max-w-130 overflow-hidden rounded-3xl bg-white shadow-2xl">
-            {/* Icon */}
-            <div className="px-6 pb-5 pt-8 text-center sm:px-8">
-              <div className="relative mx-auto flex size-24 items-center justify-center">
-                <div className="flex size-20 items-center justify-center rounded-2xl bg-[#FFF1ED]">
-                  <Trash2 size={50} strokeWidth={1.8} className="text-[#F15A3A]" />
-                </div>
-              </div>
-
-              {/* Title */}
-              <h2 className="mt-5 text-xl font-bold tracking-tight text-[#171717] sm:text-2xl">
-                Are you sure you want to delete
-                <br />
-                this product?
-              </h2>
-
-              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-[#77736E]">This action cannot be undone. The product will be permanently deleted.</p>
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-3 px-6 pb-7 sm:px-8">
-              {/* Cancel */}
-              <button
-                type="button"
-                disabled={deleting}
-                onClick={() => setDeleteProductId(null)}
-                className="h-12 flex-1 rounded-xl border-2 border-[#F15A3A] bg-white px-4 text-sm font-semibold text-[#F15A3A] transition hover:bg-[#FFF1ED] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Cancel
-              </button>
-
-              {/* Delete */}
-              <button type="button" disabled={deleting} onClick={deleteHandle} className="h-12 flex-1 rounded-xl bg-[#F15A3A] px-4 text-sm font-semibold text-white transition hover:bg-[#E84F32] disabled:cursor-not-allowed disabled:opacity-60">
-                {deleting ? 'Deleting...' : 'Yes, delete'}
-              </button>
-            </div>
-          </div>
-        </div>
+      {deleteModalOpen && (
+        <AdminTrashBox
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          type="danger"
+          title="Delete User?"
+          message={`Are you sure you want to delete this ${deleteItem.productName}`}
+          actionButtonText="Delete"
+          cancelButtonText="Cancel"
+          onAction={deleteHandle}
+        />
       )}
     </div>
   )

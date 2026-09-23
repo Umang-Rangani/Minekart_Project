@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile, deleteFile } from '../utils/uploadFile'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import toast from 'react-hot-toast'
 
 const resetProductData = {
   productName: '',
@@ -225,6 +226,8 @@ export default function AdminProductsForm() {
       setPreviewImages((prev) => prev.filter((_, i) => i !== index))
     } catch (error) {
       console.error('Remove image error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to remove image')
     }
   }
 
@@ -252,58 +255,46 @@ export default function AdminProductsForm() {
       const payload = {
         productName: productData.productName,
         description: productData.description,
-
         category: productData.category,
-
         subCategory: productData.subCategory || null,
-
         brand: productData.brand || null,
-
         images: finalImages,
-
         sizes: productData.sizes,
-
         price: Number(productData.price),
-
         discount: Number(productData.discount || 0),
-
         discountPrice: Number(productData.discountPrice || 0),
-
         status: productData.status,
-
         homeSection: productData.homeSection,
-
         rating: Number(productData.rating || 0),
-
         stock: Number(productData.stock || 0),
-
         soldCount: Number(productData.soldCount || 0),
-
         warranty: productData.warranty,
-
         warrantyDuration: productData.warrantyDuration,
-
         warrantyType: productData.warrantyType,
-
         returnPolicy: productData.returnPolicy,
-
         deliveryInfo: productData.deliveryInfo,
       }
 
       // UPDATE
       if (isEdit) {
         await axiosInstance.put(`/product/${id}`, payload)
+
+        toast.success('Product updated successfully')
       }
 
       // CREATE
       else {
         await axiosInstance.post('/product', payload)
+
+        toast.success('Product created successfully')
       }
 
       // Back to product list
       navigate('/admin/products')
     } catch (error) {
       console.error('Submit product error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to save product')
     } finally {
       setLoading(false)
     }
@@ -325,7 +316,7 @@ export default function AdminProductsForm() {
 
   let items
   if (isEdit) {
-     items = [
+    items = [
       { title: 'Products', link: '/admin/products' },
       { title: `${productData.productName}`, link: `/admin/products/${id}` },
       { title: 'update', link: null },
@@ -341,7 +332,6 @@ export default function AdminProductsForm() {
     <div className="space-y-6">
       {/* HEADER */}
       <AdminBreadCrumb items={items} />
-
 
       {/* FORM */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white shadow-sm">

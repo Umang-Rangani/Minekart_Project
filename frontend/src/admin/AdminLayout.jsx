@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Package, ShoppingBag, Users, Settings, Store, LayoutGrid, Tag, Grid2X2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { LayoutDashboard, Package, ShoppingBag, Users, Settings, Store, LayoutGrid, Tag, Grid2X2, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react'
 import { MdDashboard, MdCategory } from 'react-icons/md'
 import { TbCategory2 } from 'react-icons/tb'
+import { useUser } from '../context/userProvider'
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+
+  const { user } = useUser()
 
   const menuItems = [
     {
@@ -50,10 +53,9 @@ export default function AdminLayout() {
       {/*  HEADER  */}
       <header className="fixed left-0 right-0 top-0 z-50 h-17 border-b border-[#E3DED6] bg-[#FBFAF7]/95 backdrop-blur-md">
         <div className="flex h-full items-center justify-between px-5 lg:px-7">
-          {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-xl bg-[#6B6258] text-white shadow-sm">
-              <Store size={21} />
+              <ShieldCheck size={21} />
             </div>
 
             <div>
@@ -64,7 +66,6 @@ export default function AdminLayout() {
               <p className="text-[11px] font-medium text-[#99938B]">Admin Panel</p>
             </div>
 
-            {/* Sidebar Toggle */}
             <button
               type="button"
               onClick={() => setSidebarOpen((prev) => !prev)}
@@ -73,6 +74,14 @@ export default function AdminLayout() {
             >
               {sidebarOpen ? <ChevronLeft size={21} /> : <ChevronRight size={21} />}
             </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={17} className="text-[#6B6258]" />
+
+            <p className="text-sm font-semibold text-[#292725]">{user.name}</p>
+
+            <span className="rounded-full bg-[#EAE7E1] px-2.5 py-1 text-[10px] font-bold text-[#5D554C]">Admin</span>
           </div>
         </div>
       </header>
@@ -126,12 +135,6 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/*  MAIN CONTENT  */}
-      {/* <main className={`min-h-screen pt-17 transition-all duration-300 ${sidebarOpen ? 'lg:pl-60' : 'lg:pl-18'}`}>
-        <div className="min-h-[calc(100vh-70px)] p-4">
-          <Outlet />
-        </div>
-      </main> */}
       {/* MAIN CONTENT */}
       <main className={`min-h-screen pt-17 transition-all duration-300 ${sidebarOpen ? 'lg:pl-60' : 'lg:pl-18'}`}>
         <div className="flex min-h-[calc(100vh-68px)] flex-col">
@@ -153,7 +156,7 @@ export default function AdminLayout() {
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-medium text-[#99938B]">Designed & Developed by</span>
 
-                <span className="rounded-lg bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#6B6258]">Rangani Umang ❤️</span>
+                <span className="rounded-lg bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#6B6258]">Rangani Umang 🤍</span>
               </div>
             </div>
           </footer>

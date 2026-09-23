@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Activity, ArrowDownRight, ArrowUpRight, BarChart3, Box, CheckCircle2, ChevronRight, Clock3, CreditCard, DollarSign, Package, RefreshCw, ShoppingBag, ShoppingCart, Store, Truck, Users, Wallet, AlertTriangle } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
+import { useNavigate } from 'react-router-dom'
 
 export default function AdminDashboard() {
   const [dashboard, setDashboard] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const getDashboard = async () => {
     try {
@@ -27,6 +29,11 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+
     getDashboard()
   }, [])
 
@@ -109,6 +116,7 @@ export default function AdminDashboard() {
       icon: Wallet,
       iconBg: 'bg-[#F0EBE5]',
       iconColor: 'text-[#6B6258]',
+      navi: null,
     },
     {
       title: 'Total Orders',
@@ -116,6 +124,7 @@ export default function AdminDashboard() {
       icon: ShoppingBag,
       iconBg: 'bg-[#F3ECE8]',
       iconColor: 'text-[#8E5145]',
+      navi: '/admin/orders',
     },
     {
       title: 'Total Products',
@@ -123,6 +132,7 @@ export default function AdminDashboard() {
       icon: Package,
       iconBg: 'bg-[#EEECE7]',
       iconColor: 'text-[#756D64]',
+      navi: '/admin/products',
     },
     {
       title: 'Total Customers',
@@ -130,6 +140,7 @@ export default function AdminDashboard() {
       icon: Users,
       iconBg: 'bg-[#F4EEE7]',
       iconColor: 'text-[#9A6A32]',
+      navi: '/admin/users',
     },
   ]
 
@@ -180,7 +191,11 @@ export default function AdminDashboard() {
             const Icon = stat.icon
 
             return (
-              <div key={stat.title} className="group rounded-2xl border border-[#E3DED6] bg-white p-5 shadow-[0_4px_18px_rgba(63,58,53,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(63,58,53,0.08)]">
+              <div
+                key={stat.title}
+                onClick={() => navigate(`${stat.navi}`)}
+                className="group cursor-pointer rounded-2xl border border-[#E3DED6] bg-white p-5 shadow-[0_4px_18px_rgba(63,58,53,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(63,58,53,0.08)]"
+              >
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-wider text-[#958C84]">{stat.title}</p>
@@ -536,7 +551,11 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {lowStockProducts?.length ? (
               lowStockProducts.map((product) => (
-                <div key={product._id} className="rounded-xl border border-[#E8E1D8] bg-[#FBFAF7] p-3 transition-all duration-200 hover:border-[#D7CFC5] hover:bg-white hover:shadow-sm">
+                <div
+                  key={product._id}
+                  onClick={() => navigate(`/admin/products/${product._id}/update`)}
+                  className="rounded-xl border border-[#E8E1D8] bg-[#FBFAF7] p-3 transition-all duration-200 hover:border-[#D7CFC5] hover:bg-white hover:shadow-sm"
+                >
                   <div className="flex h-28 items-center justify-center overflow-hidden rounded-lg border border-[#E7E0D8] bg-white">
                     {product.images?.[0] ? <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="h-full w-full object-contain p-2" /> : <Package size={25} className="text-[#B4AAA1]" />}
                   </div>

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile, deleteFile } from '../utils/uploadFile'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import toast from 'react-hot-toast'
 
 const resetBrandData = {
   brandName: '',
@@ -131,10 +132,12 @@ export default function AdminBrandForm() {
       }
     } catch (error) {
       console.error('Remove brand logo error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to remove logo')
     }
   }
 
-  //  SUBMIT
+  // SUBMIT
   const submitHandle = async (e) => {
     e.preventDefault()
 
@@ -169,16 +172,22 @@ export default function AdminBrandForm() {
             console.error('Delete old logo error:', error.response?.data || error.message)
           }
         }
+
+        toast.success('Brand updated successfully')
       }
 
       // CREATE
       else {
         await axiosInstance.post('/brand', payload)
+
+        toast.success('Brand created successfully')
       }
 
       navigate('/admin/brand')
     } catch (error) {
       console.error('Submit brand error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to save brand')
     } finally {
       setLoading(false)
     }

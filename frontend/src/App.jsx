@@ -34,6 +34,8 @@ import AdminSubCategoryForm from './admin/AdminSubCategoryForm.jsx'
 import AdminSubCategoryView from './admin/AdminSubCategoryView.jsx'
 import AdminBrandView from './admin/AdminBrandView.jsx'
 import AdminBrandForm from './admin/AdminBrandForm.jsx'
+import AdminProtected from './admin/AdminProtected.jsx'
+import { Toaster } from 'react-hot-toast'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -93,34 +95,35 @@ export default function App() {
         {/* <Route path="/login" element={<Login />} /> */}
 
         {/*  ADMIN  */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
+        <Route element={<AdminProtected />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
 
-          <Route path="category" element={<AdminCategory />} />
-          <Route path="category/new" element={<AdminCategoryForm />} />
-          <Route path="category/:id/update" element={<AdminCategoryForm />} />
-          <Route path="category/:id" element={<AdminCategoryView />} />
+            <Route path="category" element={<AdminCategory />} />
+            <Route path="category/new" element={<AdminCategoryForm />} />
+            <Route path="category/:id/update" element={<AdminCategoryForm />} />
+            <Route path="category/:id" element={<AdminCategoryView />} />
 
-          <Route path="subcategory" element={<AdminSubCategory />} />
-          <Route path="subcategory/new" element={<AdminSubCategoryForm />} />
-          <Route path="subcategory/:id/update" element={<AdminSubCategoryForm />} />
-          <Route path="subcategory/:id" element={<AdminSubCategoryView />} />
+            <Route path="subcategory" element={<AdminSubCategory />} />
+            <Route path="subcategory/new" element={<AdminSubCategoryForm />} />
+            <Route path="subcategory/:id/update" element={<AdminSubCategoryForm />} />
+            <Route path="subcategory/:id" element={<AdminSubCategoryView />} />
 
-          <Route path="brand" element={<AdminBrand />} />
-          <Route path="brand/new" element={<AdminBrandForm />} />
-          <Route path="brand/:id/update" element={<AdminBrandForm />} />
-          <Route path="brand/:id" element={<AdminBrandView />} />
+            <Route path="brand" element={<AdminBrand />} />
+            <Route path="brand/new" element={<AdminBrandForm />} />
+            <Route path="brand/:id/update" element={<AdminBrandForm />} />
+            <Route path="brand/:id" element={<AdminBrandView />} />
 
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="products/new" element={<AdminProductsForm />} />
-          <Route path="products/:id/update" element={<AdminProductsForm />} />
-          <Route path="products/:id" element={<AdminProductsView />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="products/new" element={<AdminProductsForm />} />
+            <Route path="products/:id/update" element={<AdminProductsForm />} />
+            <Route path="products/:id" element={<AdminProductsView />} />
 
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="orders/:id" element={<AdminOrderDetails />} />
 
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="orders/:id" element={<AdminOrderDetails />} />
-          
-          <Route path="users" element={<AdminUsers />} />
+            <Route path="users" element={<AdminUsers />} />
+          </Route>
         </Route>
       </Routes>
 

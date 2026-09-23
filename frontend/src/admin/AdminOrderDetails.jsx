@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, CheckCircle2, Clock3, CreditCard, MapPin, Package, Phone, ReceiptText, Truck, User } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import toast from 'react-hot-toast'
 
 const AdminOrderDetails = () => {
   const { id } = useParams()
@@ -14,7 +15,6 @@ const AdminOrderDetails = () => {
 
   console.log(id)
 
-  // GET ORDER DETAILS
   const getOrderDetails = async () => {
     try {
       setLoading(true)
@@ -25,9 +25,9 @@ const AdminOrderDetails = () => {
         setOrder(res.data.data)
       }
     } catch (error) {
-      console.log('Get Admin Order Details Error:', error)
+      console.log('Get Admin Order Details Error:', error.response?.data || error.message)
 
-      alert(error.response?.data?.message || 'Unable to fetch order details')
+      toast.error(error.response?.data?.message || 'Unable to fetch order details')
     } finally {
       setLoading(false)
     }
@@ -53,11 +53,13 @@ const AdminOrderDetails = () => {
           payment: res.data.data.payment,
           orderStatus: res.data.data.order.orderStatus,
         }))
+
+        toast.success('Payment confirmed successfully')
       }
     } catch (error) {
       console.log('Confirm Payment Error:', error)
 
-      alert(error.response?.data?.message || 'Unable to confirm payment')
+      toast.error(error.response?.data?.message || 'Unable to confirm payment')
     } finally {
       setConfirmingPayment(false)
     }
@@ -168,8 +170,8 @@ const AdminOrderDetails = () => {
 
   const items = [
     {
-      title: "Orders",
-      link: "/admin/orders",
+      title: 'Orders',
+      link: '/admin/orders',
     },
     {
       title: `${order.orderId}`,
@@ -416,8 +418,6 @@ const AdminOrderDetails = () => {
 
                         <div className="min-w-0">
                           <p className="line-clamp-2 text-sm font-semibold text-[#292725]">{item.productName}</p>
-
-                        
                         </div>
                       </div>
                     </td>

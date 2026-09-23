@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { iconList } from '../data/iconMap'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import toast from 'react-hot-toast'
 
 const resetCategoryData = {
   categoryName: '',
@@ -85,17 +86,21 @@ export default function AdminCategoryForm() {
       // UPDATE
       if (isEdit) {
         await axiosInstance.put(`/category/${id}`, payload)
+        toast.success('Category updated successfully')
       }
 
       // CREATE
       else {
         await axiosInstance.post('/category', payload)
+        toast.success('Category created successfully')
       }
 
       // Back to category list
       navigate('/admin/category')
     } catch (error) {
       console.error('Submit category error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Something went wrong')
     } finally {
       setLoading(false)
     }

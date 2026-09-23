@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { useUser } from '../context/userProvider'
 import { X, ArrowRight, UserPlus, Mail, Lock, ShieldCheck } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 export default function Login({ onClose }) {
   const [logIn, setLogIn] = useState({
@@ -55,10 +56,24 @@ export default function Login({ onClose }) {
       if (res.data.success) {
         setUser(res.data.user)
         setShowLogin(false)
+
+        toast.success('Login successful')
       }
     } catch (error) {
-      console.log('Login Error:', error)
-      setError(error.response?.data?.message || 'Login failed. Please try again.')
+      console.log('Login ErrorXXXXXXXXXXXX:', error)
+      console.log('see i am her ')
+
+      const status = error.response?.status
+      const message = error.response?.data?.message || ''
+
+      console.log(status)
+
+      if (status === 401) {
+        toast.error('Email or password is incorrect')
+      } else {
+        toast.error(message || 'Login failed. Please try again.')
+
+      }
     } finally {
       setLoading(false)
     }
@@ -122,9 +137,6 @@ export default function Login({ onClose }) {
 
             <p className="mt-1.5 text-sm text-[#806C63]">Enter your details to continue shopping</p>
           </div>
-
-          {/* Error */}
-          {error && <div className="mb-5 rounded-xl border border-[#E7C8C5] bg-[#FFF2F1] px-4 py-3 text-sm font-medium text-[#A51D26]">{error}</div>}
 
           {/* Email */}
           <div className="mb-5">

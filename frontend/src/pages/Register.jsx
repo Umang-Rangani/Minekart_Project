@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile } from '../utils/uploadFile'
 import { useUser } from '../context/userProvider'
+import toast from 'react-hot-toast'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -42,7 +43,11 @@ export default function Register() {
     if (!file) return
 
     if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image')
+      const message = 'Please select a valid image'
+
+      setError(message)
+      toast.error(message)
+
       return
     }
 
@@ -76,7 +81,11 @@ export default function Register() {
     setSuccess('')
 
     if (!signUp.name || !signUp.email || !signUp.password) {
-      setError('Name, email and password are required')
+      const message = 'Name, email and password are required'
+
+      setError(message)
+      toast.error(message)
+
       return
     }
 
@@ -90,7 +99,12 @@ export default function Register() {
           avatarPath = await uploadFile(imageFile.name, imageFile, 'Avatar')
         } catch (uploadError) {
           console.log('Upload Error:', uploadError.response?.data || uploadError.message)
-          setError('Profile photo upload failed')
+
+          const message = 'Profile photo upload failed'
+
+          setError(message)
+          toast.error(message)
+
           return
         }
       }
@@ -103,7 +117,10 @@ export default function Register() {
       const res = await axiosInstance.post('/users/register', registerData)
 
       if (res.data.success) {
-        setSuccess('Account created successfully')
+        const message = 'Account created successfully'
+
+        setSuccess(message)
+        toast.success(message)
 
         setTimeout(() => {
           setShowLogin(true)
@@ -111,7 +128,11 @@ export default function Register() {
       }
     } catch (error) {
       console.log('Register Error:', error.response?.data || error.message)
-      setError(error.response?.data?.message || 'Registration failed. Please try again.')
+
+      const message = error.response?.data?.message || 'Registration failed. Please try again.'
+
+      setError(message)
+      toast.error(message)
     } finally {
       setLoading(false)
     }
@@ -156,14 +177,14 @@ export default function Register() {
 
             <div className="relative">
               <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-4 border-[#FFFDFC] bg-[#F3E5DE] shadow-[0_10px_30px_rgba(73,54,49,0.15)] ring-1 ring-[#E2D5CC] sm:h-48 sm:w-48">
-                {preview ? (
-                  <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" />
-                ) : (
-                  <User size={82} strokeWidth={1.2} className="text-[#8E181F]" />
-                )}
+                {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={82} strokeWidth={1.2} className="text-[#8E181F]" />}
               </div>
 
-              <button type="button" onClick={() => fileInputRef.current?.click()} className="absolute bottom-1 right-1 flex h-11 w-11 items-center justify-center rounded-full border-4 border-[#FFFDFC] bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-105">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute bottom-1 right-1 flex h-11 w-11 items-center justify-center rounded-full border-4 border-[#FFFDFC] bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-105"
+              >
                 <Camera size={19} />
               </button>
 
@@ -190,18 +211,10 @@ export default function Register() {
             </div>
 
             {/* Error */}
-            {error && (
-              <div className="mb-5 flex items-center rounded-xl border border-[#E7C8C5] bg-[#FFF2F1] px-4 py-3 text-sm font-medium text-[#A51D26]">
-                {error}
-              </div>
-            )}
+            {error && <div className="mb-5 flex items-center rounded-xl border border-[#E7C8C5] bg-[#FFF2F1] px-4 py-3 text-sm font-medium text-[#A51D26]">{error}</div>}
 
             {/* Success */}
-            {success && (
-              <div className="mb-5 flex items-center rounded-xl border border-[#CFE4D7] bg-[#F0F8F3] px-4 py-3 text-sm font-medium text-[#3E8B62]">
-                {success}
-              </div>
-            )}
+            {success && <div className="mb-5 flex items-center rounded-xl border border-[#CFE4D7] bg-[#F0F8F3] px-4 py-3 text-sm font-medium text-[#3E8B62]">{success}</div>}
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {/* Name */}
@@ -209,7 +222,14 @@ export default function Register() {
                 <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Full Name</label>
                 <div className="group relative">
                   <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F]" />
-                  <input type="text" name="name" value={signUp.name} onChange={handleChange} placeholder="Enter your name" className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5" />
+                  <input
+                    type="text"
+                    name="name"
+                    value={signUp.name}
+                    onChange={handleChange}
+                    placeholder="Enter your name"
+                    className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
+                  />
                 </div>
               </div>
 
@@ -218,7 +238,14 @@ export default function Register() {
                 <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Email Address</label>
                 <div className="group relative">
                   <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F]" />
-                  <input type="email" name="email" value={signUp.email} onChange={handleChange} placeholder="Enter your email" className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={signUp.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
+                  />
                 </div>
               </div>
 
@@ -227,7 +254,14 @@ export default function Register() {
                 <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Password</label>
                 <div className="group relative">
                   <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F]" />
-                  <input type="password" name="password" value={signUp.password} onChange={handleChange} placeholder="Create password" className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5" />
+                  <input
+                    type="password"
+                    name="password"
+                    value={signUp.password}
+                    onChange={handleChange}
+                    placeholder="Create password"
+                    className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
+                  />
                 </div>
               </div>
 
@@ -236,25 +270,44 @@ export default function Register() {
                 <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Phone Number</label>
                 <div className="group relative">
                   <Phone size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F]" />
-                  <input type="tel" name="phone" value={signUp.phone} onChange={handleChange} placeholder="Enter phone number" className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={signUp.phone}
+                    onChange={handleChange}
+                    placeholder="Enter phone number"
+                    className="h-11 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Buttons */}
             <div className="mt-7 flex flex-col-reverse gap-3 border-t border-[#E8DDD4] pt-5 sm:flex-row sm:items-center sm:justify-between">
-              <button type="button" onClick={clearHandle} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-5 text-sm font-semibold text-[#806C63] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] hover:text-[#493631]">
+              <button
+                type="button"
+                onClick={clearHandle}
+                className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-5 text-sm font-semibold text-[#806C63] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] hover:text-[#493631]"
+              >
                 <X size={17} />
                 Clear
               </button>
 
               <div className="flex flex-col gap-3 sm:flex-row">
-                <button type="button" onClick={() => navigate('/')} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-5 text-sm font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8]">
+                <button
+                  type="button"
+                  onClick={() => navigate('/')}
+                  className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-5 text-sm font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8]"
+                >
                   <ArrowLeft size={17} />
                   Back
                 </button>
 
-                <button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-7 text-sm font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex h-11 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-7 text-sm font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+                >
                   <UserPlus size={17} />
                   {loading ? 'Creating...' : 'Create Account'}
                 </button>
