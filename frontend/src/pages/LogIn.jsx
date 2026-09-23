@@ -23,7 +23,6 @@ export default function Login({ onClose }) {
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
 
   const changeHandle = (e) => {
     const { name, value } = e.target
@@ -33,12 +32,12 @@ export default function Login({ onClose }) {
       [name]: value,
     }))
 
-    setError('')
   }
 
+  
   const closeHandle = () => {
     setShowLogin(false)
-
+    
     if (onClose) {
       onClose()
     }
@@ -49,7 +48,6 @@ export default function Login({ onClose }) {
 
     try {
       setLoading(true)
-      setError('')
 
       const res = await axiosInstance.post('/users/login', logIn)
 
@@ -60,9 +58,6 @@ export default function Login({ onClose }) {
         toast.success('Login successful')
       }
     } catch (error) {
-      console.log('Login ErrorXXXXXXXXXXXX:', error)
-      console.log('see i am her ')
-
       const status = error.response?.status
       const message = error.response?.data?.message || ''
 
@@ -131,7 +126,7 @@ export default function Login({ onClose }) {
           <div className="mb-7">
             <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md shadow-[#7D171C]/15">
               <Lock size={19} />
-            </div>
+            </div>  
 
             <h2 className="text-2xl font-extrabold tracking-tight text-[#351C18]">Welcome Back</h2>
 

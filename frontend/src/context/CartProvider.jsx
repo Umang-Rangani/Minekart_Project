@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useUser } from './userProvider'
 import { axiosInstance } from '../config/axiosConfig'
+import toast from 'react-hot-toast'
 
 const CartContext = createContext()
 
@@ -26,7 +27,7 @@ export function CartProvider({ children }) {
         setCart(res.data.data)
       }
     } catch (error) {
-      console.log('Get Cart Error:', error.response?.data || error.message)
+      toast.error(error.response?.data?.message || 'Unable to load cart')
     } finally {
       setCartLoading(false)
     }
@@ -35,6 +36,8 @@ export function CartProvider({ children }) {
   // ! Add Product To Cart
   const addToCart = async ({ productId, quantity = 1, size = null }) => {
     if (!user) {
+      toast.error('Please login first')
+
       return {
         success: false,
         message: 'Please login first',
@@ -49,17 +52,22 @@ export function CartProvider({ children }) {
       })
 
       if (res.data.success) {
-        // Backend mathi updated cart mali rahyo che
         setCart(res.data.data)
+
+        toast.success('Product added to cart')
       }
 
       return res.data
     } catch (error) {
       console.log('Add To Cart Error:', error.response?.data || error.message)
 
+      const message = error.response?.data?.message || 'Something went wrong'
+
+      toast.error(message)
+
       return {
         success: false,
-        message: error.response?.data?.message || 'Something went wrong',
+        message,
       }
     }
   }
@@ -119,14 +127,15 @@ export function CartProvider({ children }) {
 
       return res.data
     } catch (error) {
-      console.log('Increase Cart Item Error:', error.response?.data || error.message)
-
-      // API fail → rollback
       setCart(oldCart)
+
+      const message = error.response?.data?.message || 'Unable to increase quantity'
+
+      toast.error(message)
 
       return {
         success: false,
-        message: error.response?.data?.message || 'Something went wrong',
+        message,
       }
     }
   }
@@ -198,14 +207,15 @@ export function CartProvider({ children }) {
 
       return res.data
     } catch (error) {
-      console.log('Decrease Cart Item Error:', error.response?.data || error.message)
-
-      // API fail → rollback
       setCart(oldCart)
+
+      const message = error.response?.data?.message || 'Unable to decrease quantity'
+
+      toast.error(message)
 
       return {
         success: false,
-        message: error.response?.data?.message || 'Something went wrong',
+        message,
       }
     }
   }
@@ -229,12 +239,15 @@ export function CartProvider({ children }) {
 
       if (res.data.success) {
         await getCart()
+
+        toast.success('Product removed from cart')
       }
 
       return res.data
     } catch (error) {
-      console.log('Remove Cart Item Error:', error.response?.data || error.message)
+      const message = error.response?.data?.message || 'Unable to remove product'
 
+      toast.error(message)
       return {
         success: false,
         message: error.response?.data?.message || 'Something went wrong',
@@ -256,12 +269,15 @@ export function CartProvider({ children }) {
 
       if (res.data.success) {
         await getCart()
+
+        toast.success('Cart cleared successfully')
       }
 
       return res.data
     } catch (error) {
-      console.log('Clear Cart Error:', error.response?.data || error.message)
+      const message = error.response?.data?.message || 'Unable to clear cart'
 
+      toast.error(message)
       return {
         success: false,
         message: error.response?.data?.message || 'Something went wrong',

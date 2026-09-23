@@ -3,6 +3,7 @@ import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, Shi
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
+import toast from 'react-hot-toast'
 
 export default function Cart() {
   const navigate = useNavigate()
@@ -20,13 +21,18 @@ export default function Cart() {
     const productStock = item.productId?.stock || 0
 
     if (item.quantity >= productStock) {
+      toast.error('Maximum available stock reached')
       return
     }
 
-    await increaseCartItem({
+    const res = await increaseCartItem({
       productId: item.productId._id,
       size: item.size || null,
     })
+
+    if (!res?.success) {
+      toast.error(res?.message || 'Unable to increase quantity')
+    }
   }
 
   const decreaseQuantity = async (item) => {
@@ -34,17 +40,25 @@ export default function Cart() {
       return
     }
 
-    await decreaseCartItem({
+    const res = await decreaseCartItem({
       productId: item.productId._id,
       size: item.size || null,
     })
+
+    if (!res?.success) {
+      toast.error(res?.message || 'Unable to decrease quantity')
+    }
   }
 
   const removeItem = async (item) => {
-    await removeCartItem({
+    const res = await removeCartItem({
       productId: item.productId._id,
       size: item.size || null,
     })
+
+    if (!res?.success) {
+      toast.error(res?.message || 'Unable to remove product')
+    }
   }
 
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0)

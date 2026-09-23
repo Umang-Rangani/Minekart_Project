@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
 import { axiosInstance } from '../config/axiosConfig'
+import toast from 'react-hot-toast'
 
 export default function Checkout() {
   const navigate = useNavigate()
@@ -47,7 +48,7 @@ export default function Checkout() {
         }
       }
     } catch (error) {
-      console.log('Get Addresses Error:', error.response?.data || error.message)
+      toast.error(error.response?.data?.message || 'Failed to load delivery addresses')
     } finally {
       setAddressLoading(false)
     }
@@ -72,7 +73,7 @@ export default function Checkout() {
         await getAddresses()
       }
     } catch (error) {
-      console.log('Select Address Error:', error.response?.data || error.message)
+      toast.error(error.response?.data?.message || 'Failed to select delivery address')
     }
   }
 
@@ -91,12 +92,12 @@ export default function Checkout() {
       const selectedAddressData = addresses.find((address) => address._id === selectedAddress)
 
       if (!selectedAddressData) {
-        console.log('Please select a delivery address')
+        toast.error('Please select a delivery address')
         return
       }
 
       if (!selectedPayment) {
-        console.log('Please select a payment method')
+        toast.error('Please select a payment method')
         return
       }
 
@@ -122,19 +123,21 @@ export default function Checkout() {
       const res = await axiosInstance.post('/order', orderData)
 
       if (!res.data.success) {
+        toast.error(res.data.message || 'Failed to place order')
         return
       }
 
       const order = res.data.data.order
       const payment = res.data.data.payment
 
-      console.log('Order Created:', order)
-      console.log('Payment Created:', payment)
+      toast.success('Order placed successfully!')
 
       const clearCartResponse = await clearCart()
 
       if (!clearCartResponse.success) {
         console.log('Cart Clear Error:', clearCartResponse.message)
+
+        toast.error(clearCartResponse.message || 'Failed to clear cart')
         return
       }
 

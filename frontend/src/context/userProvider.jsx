@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
+import toast from 'react-hot-toast'
 
 const UserContext = createContext()
 
@@ -21,7 +22,7 @@ export const UserProvider = ({ children }) => {
         return
       }
 
-      console.error('PROFILE ERROR:', error.response?.data || error.message)
+      toast.error(error.response?.data?.message || 'Unable to fetch user profile')
 
       setUser(null)
     } finally {
@@ -31,8 +32,6 @@ export const UserProvider = ({ children }) => {
 
   // CHECK LOGIN ON REFRESH
   useEffect(() => {
-    console.log('AUTH CONTEXT LOADED')
-
     getCurrentUser()
   }, [])
 
@@ -42,10 +41,16 @@ export const UserProvider = ({ children }) => {
       await axiosInstance.post('/users/logout')
       setUser(null)
       setShowLogin(true)
-
+      toast.success('Logout successful')
       window.location.reload()
     } catch (error) {
-      console.error('Logout Error:', error.response?.data || error.message)
+      toast.error(error.response?.data?.message || 'Logout failed. Please try again.')
+
+
+         toast.error(
+        error.response?.data?.message ||
+          'Logout failed. Please try again.',
+      )
     }
   }
 
