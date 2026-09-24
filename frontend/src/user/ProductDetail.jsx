@@ -235,11 +235,11 @@ export default function ProductDetail() {
       <section className="mx-auto pt-5">
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[53%_47%]">
           {/* Left - Product Images */}
-          <div className="self-start overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_5px_20px_rgba(73,54,49,0.06)] lg:sticky lg:top-28">
+          <div className="self-start overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_5px_20px_rgba(73,54,49,0.06)] lg:sticky lg:top-28">
             <div className="p-3 sm:p-4">
               <div className="flex flex-col gap-4 sm:flex-row">
                 {/* Thumbnails */}
-                <div className="order-2 flex gap-3 overflow-x-auto sm:order-1 sm:w-19 sm:flex-col sm:overflow-visible">
+                <div className="order-2 flex gap-3 overflow-x-auto px-1 pb-1 sm:order-1 sm:w-19 sm:flex-col sm:overflow-visible sm:px-0 sm:pb-0">
                   {product.images?.map((image, index) => {
                     const selected = selectedImage === image
 
@@ -249,24 +249,26 @@ export default function ProductDetail() {
                         type="button"
                         onMouseEnter={() => setSelectedImage(image)}
                         onClick={() => setSelectedImage(image)}
-                        className={`group relative flex h-18 w-18 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white p-2 transition-all duration-300 ${selected ? 'border-[#A51D26] bg-[#F9EEE8] shadow-md ring-2 ring-[#A51D26]/10' : 'border-[#E8DDD4] hover:-translate-y-0.5 hover:border-[#CDAFA4] hover:shadow-sm'}`}
+                        className={`group relative flex h-17 w-17 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white p-2.5 transition-all duration-200 ${
+                          selected ? 'border-[#A51D26] bg-[#FFF8F5] shadow-sm ring-1 ring-[#A51D26]/20' : 'border-[#E8DDD4] hover:border-[#CDAFA4] hover:shadow-sm'
+                        }`}
                       >
                         <img src={`http://localhost:3000${image}`} alt={`${product.productName} ${index + 1}`} className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105" />
 
-                        {selected && <span className="absolute bottom-0 left-1/2 h-0.5 w-7 -translate-x-1/2 rounded-full bg-[#A51D26]" />}
+                        {selected && <span className="absolute bottom-0.5 left-1/2 h-0.5 w-7 -translate-x-1/2 rounded-full bg-[#A51D26]" />}
                       </button>
                     )
                   })}
                 </div>
 
                 {/* Main Image */}
-                <div className="relative order-1 flex min-h-95 flex-1 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] p-6 sm:min-h-125">
-                  {/* Decorative Circle */}
-                  <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#A51D26]/5 transition-transform duration-700 hover:scale-125" />
-                  <div className="absolute -bottom-20 -left-16 h-48 w-48 rounded-full bg-[#D4A373]/5" />
+                <div className="relative order-1 flex min-h-95 flex-1 items-center justify-center overflow-hidden rounded-xl bg-white p-5 sm:min-h-127 sm:p-8">
+                  {/* Subtle decorative elements */}
+                  <div className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-[#A51D26]/3" />
+                  <div className="pointer-events-none absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-[#D4A373]/[0.035]" />
 
                   {selectedImage ? (
-                    <img src={`http://localhost:3000${selectedImage}`} alt={product.productName} className="relative z-10 max-h-117 w-full object-contain transition-transform duration-500 hover:scale-[1.04]" />
+                    <img src={`http://localhost:3000${selectedImage}`} alt={product.productName} className="relative z-10 max-h-118 w-full object-contain transition-transform duration-500 hover:scale-[1.035]" />
                   ) : (
                     <div className="flex flex-col items-center justify-center text-[#806C63]">
                       <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F3E8E1]">
@@ -279,7 +281,7 @@ export default function ProductDetail() {
 
                   {/* Image Counter */}
                   {product.images?.length > 0 && (
-                    <div className="absolute bottom-4 right-4 z-20 rounded-full border border-[#E8DDD4] bg-white/90 px-3 py-1.5 text-[11px] font-bold text-[#67544D] shadow-sm backdrop-blur">
+                    <div className="absolute bottom-4 right-4 z-20 rounded-lg border border-[#E8DDD4] bg-white px-2.5 py-1.5 text-[10px] font-bold text-[#67544D] shadow-sm">
                       {product.images.findIndex((image) => image === selectedImage) + 1} / {product.images.length}
                     </div>
                   )}
@@ -558,40 +560,49 @@ export default function ProductDetail() {
                 <Link
                   key={item._id}
                   to={`/product/${item._id}`}
-                  className="group overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_4px_14px_rgba(73,54,49,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_14px_30px_rgba(73,54,49,0.13)]"
+                  className="group overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.055)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D7C3B9] hover:shadow-[0_14px_32px_rgba(73,54,49,0.12)]"
                 >
-                  {/* Image */}
-                  <div className="relative flex h-48 items-center justify-center overflow-hidden bg-linear-to-br from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] p-4 sm:h-52">
-                    <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#A51D26]/5 transition-transform duration-500 group-hover:scale-150" />
+                  {/* Product Image */}
+                  <div className="relative flex h-48 items-center justify-center overflow-hidden bg-white p-4 sm:h-52">
+                    {/* Soft decorative circle */}
+                    <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#A51D26]/3 transition-transform duration-500 group-hover:scale-150" />
 
                     {item.images?.length > 0 ? (
                       <img src={`http://localhost:3000${item.images[0]}`} alt={item.productName} className="relative z-10 h-full w-full object-contain transition-transform duration-500 group-hover:scale-110" />
                     ) : (
-                      <span className="text-sm text-[#9A857B]">No Image</span>
+                      <div className="flex flex-col items-center justify-center text-[#9A857B]">
+                        <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7EEE7]">
+                          <Info size={18} />
+                        </div>
+
+                        <span className="text-xs font-medium">No Image</span>
+                      </div>
                     )}
 
-                    {item.price > item.discountPrice && <span className="absolute left-3 top-3 z-20 rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] px-2 py-1 text-[10px] font-bold text-white shadow-sm">{item.discount}% OFF</span>}
+                    {/* Discount */}
+                    {item.price > item.discountPrice && <span className="absolute left-3 top-3 z-20 rounded-md bg-[#A51D26] px-2 py-1 text-[10px] font-bold text-white shadow-sm">{item.discount}% OFF</span>}
                   </div>
 
-                  {/* Info */}
-                  <div className="border-t border-[#E8DDD4] bg-[#FFFDFC] p-3.5 transition-colors duration-300 group-hover:bg-[#FFFCFA]">
-                    <h3 className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F]">{item.productName}</h3>
+                  {/* Product Info */}
+                  <div className="border-t border-[#E8DDD4] bg-white p-3.5 transition-colors duration-300 group-hover:bg-[#FFFCFA]">
+                    {/* Product Name */}
+                    <h3 className="line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F]">{item.productName}</h3>
 
                     {/* Price */}
-                    <div className="mt-3 flex flex-wrap items-center gap-2">
-                      <span className="text-lg font-extrabold text-[#351C18]">₹{item.discountPrice?.toLocaleString('en-IN')}</span>
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-lg font-extrabold tracking-tight text-[#351C18]">₹{item.discountPrice?.toLocaleString('en-IN')}</span>
 
                       {item.price > item.discountPrice && <span className="text-xs font-medium text-[#9A857B] line-through">₹{item.price?.toLocaleString('en-IN')}</span>}
                     </div>
 
                     {/* Rating */}
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="flex items-center gap-1 rounded-lg bg-[#8E181F] px-2 py-1 text-[11px] font-bold text-white">
+                    <div className="mt-2.5 flex items-center justify-between">
+                      <span className="flex items-center gap-1 rounded-md bg-[#388E3C] px-2 py-1 text-[10px] font-bold text-white">
                         {item.rating}
-                        <Star size={11} fill="currentColor" strokeWidth={2} />
+                        <Star size={10} fill="currentColor" strokeWidth={2} />
                       </span>
 
-                      <span className="text-[11px] font-medium text-[#806C63]">Rating</span>
+                      <span className="text-[10px] font-medium text-[#9A857B]">{item.soldCount ? `${item.soldCount}+ sold` : 'Product rating'}</span>
                     </div>
                   </div>
                 </Link>

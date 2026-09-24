@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import toast from 'react-hot-toast'
+import AdminTrashBox from './AdminTrashBox'
 
 export default function AdminUsers() {
   const [search, setSearch] = useState(() => {
@@ -12,7 +13,13 @@ export default function AdminUsers() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(false)
 
+  // Activate / Deactivate
   const [openMenu, setOpenMenu] = useState(null)
+  const menuRef = useRef(null) //dropdown ni out click krta off thay
+
+  // delete popup
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteItem, setDeleteItem] = useState(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(5)
@@ -102,6 +109,31 @@ export default function AdminUsers() {
     return `${user.name || ''} ${user.email || ''} ${user.phone || ''} ${user.address || ''} ${user.city || ''} ${user.pincode || ''}`.toLowerCase().includes(searchValue)
   })
 
+  // ! Open delete popup
+  const handleModalOpen = (data) => {
+    setDeleteItem(data)
+    setDeleteModalOpen(true)
+  }
+
+  // ! Delete user
+  const deleteHandle = async () => {
+    if (!deleteItem) return
+
+    try {
+      await axiosInstance.delete(`/users/${deleteItem._id}`)
+
+      toast.success('User deleted successfully')
+    } catch (error) {
+      console.error('Delete User error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to delete user')
+    } finally {
+      setDeleteModalOpen(false)
+      setDeleteItem(null)
+      await getUsers()
+    }
+  }
+
   // Pagination
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredUsers.length / itemsPerPage)
 
@@ -151,6 +183,21 @@ export default function AdminUsers() {
       icon: Phone,
     },
   ]
+
+  // dropdown ni bar click krta off thay
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenMenu(null)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   const items = [
     {
@@ -253,7 +300,7 @@ export default function AdminUsers() {
                         <div className="min-w-0">
                           <p className="max-w-45 truncate text-sm font-semibold text-[#292725]">{user.name || '-'}</p>
 
-                          <p className="mt-0.5 text-xs text-[#99938B]">Customer</p>
+                          <p className="mt-0.5 text-xs text-[#99938B]">{user.role || 'User'}</p>
                         </div>
                       </div>
                     </td>
@@ -286,31 +333,40 @@ export default function AdminUsers() {
                       </span>
                     </td>
 
+                    {/* action delete */}
                     <td className="px-5 py-4">
-                      <div className="relative flex justify-end">
-                        <button
-                          type="button"
-                          onClick={() => setOpenMenu(openMenu === user._id ? null : user._id)}
-                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-                          title="More"
-                        >
-                          <Ellipsis size={17} />
-                        </button>
+                      {user.role !== 'Admin' && (
+                        <div ref={menuRef} className="relative flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => setOpenMenu(openMenu === user._id ? null : user._id)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            title="More"
+                          >
+                            <Ellipsis size={17} />
+                          </button>
 
-                        {openMenu === user._id && (
-                          <div className="absolute right-0 top-10 z-20 w-44 overflow-hidden rounded-xl border border-[#E3DED6] bg-white py-1 shadow-lg">
-                            {user.status === 'Active' ? (
-                              <button type="button" onClick={() => updateUserStatus(user._id, 'Inactive')} className="w-full px-4 py-2.5 text-left text-sm text-[#6F6A64] transition hover:bg-[#F8F6F2]">
-                                Deactivate User
+                          {openMenu === user._id && (
+                            <div className="absolute bottom-10 right-0 z-50 w-44 overflow-hidden rounded-xl border border-[#E3DED6] bg-white py-1 shadow-lg">
+                              <button type="button" onClick={() => updateUserStatus(user._id, user.status === 'Active' ? 'Inactive' : 'Active')} className="w-full px-4 py-2.5 text-left text-sm text-[#6F6A64] transition hover:bg-[#F8F6F2]">
+                                {user.status === 'Active' ? 'Deactivate User' : 'Activate User'}
                               </button>
-                            ) : (
-                              <button type="button" onClick={() => updateUserStatus(user._id, 'Active')} className="w-full px-4 py-2.5 text-left text-sm text-[#6F6A64] transition hover:bg-[#F8F6F2]">
-                                Activate User
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleModalOpen(user)
+                                  setOpenMenu(null)
+                                  console.log("hiii", user);
+                                }}
+                                className="w-full px-4 py-2.5 text-left text-sm font-medium text-[#A44A3F] transition hover:bg-[#F8F6F2]"
+                              >
+                                Delete User
                               </button>
-                            )}
-                          </div>
-                        )}
-                      </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -375,6 +431,18 @@ export default function AdminUsers() {
           )}
         </div>
       </div>
+
+      {/*  DELETE MODAL  */}
+      <AdminTrashBox
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        type="danger"
+        title="Delete User?"
+        message={deleteItem ? `Are you sure you want to delete this ${deleteItem.name}?` : 'Are you sure you want to delete this user?'}
+        actionButtonText="Delete"
+        cancelButtonText="Cancel"
+        onAction={deleteHandle}
+      />
     </div>
   )
 }

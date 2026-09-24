@@ -31,13 +31,11 @@ export default function Login({ onClose }) {
       ...prev,
       [name]: value,
     }))
-
   }
 
-  
   const closeHandle = () => {
     setShowLogin(false)
-    
+
     if (onClose) {
       onClose()
     }
@@ -67,7 +65,6 @@ export default function Login({ onClose }) {
         toast.error('Email or password is incorrect')
       } else {
         toast.error(message || 'Login failed. Please try again.')
-
       }
     } finally {
       setLoading(false)
@@ -75,58 +72,87 @@ export default function Login({ onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-[#351C18]/70 px-4 py-5 backdrop-blur-sm" onClick={closeHandle}>
-      <div onClick={(e) => e.stopPropagation()} className="relative flex max-h-[calc(100vh-40px)] w-full max-w-4xl overflow-hidden rounded-3xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_25px_70px_rgba(53,28,24,0.25)]">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-[#351C18]/50 px-4 py-5 backdrop-blur-sm" onClick={closeHandle}>
+      <div onClick={(e) => e.stopPropagation()} className="relative flex max-h-[calc(100vh-40px)] w-full max-w-4xl overflow-hidden rounded-[28px] border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_30px_90px_rgba(53,28,24,0.32)]">
         {/* Close */}
         <button
           type="button"
           onClick={closeHandle}
-          className="absolute right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-xl border border-[#E8DDD4] bg-[#FFFDFC]/90 text-[#806C63] shadow-sm backdrop-blur-sm transition-all duration-300 hover:rotate-90 hover:bg-[#F8EEE8] hover:text-[#8E181F]"
+          className="absolute right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-xl border border-[#E8DDD4] bg-[#FFFDFC]/95 text-[#806C63] shadow-md backdrop-blur-sm transition-all duration-300 hover:rotate-90 hover:bg-[#F8EEE8] hover:text-[#8E181F]"
         >
           <X size={19} />
         </button>
 
-        {/* Left Section */}
-        <div className="relative hidden w-[42%] overflow-hidden bg-linear-to-br from-[#351C18] via-[#681419] to-[#A51D26] p-8 text-white sm:flex sm:flex-col sm:justify-between lg:p-10">
-          <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-white/5" />
-          <div className="absolute -bottom-24 -left-16 h-48 w-48 rounded-full bg-[#D4A373]/10" />
-          <div className="absolute bottom-20 right-10 h-20 w-20 rounded-full bg-[#B5262D]/20" />
+        {/* LEFT BRAND SECTION */}
+        <div className="relative hidden w-[43%] overflow-hidden bg-linear-to-br from-[#2B1210] via-[#571519] to-[#A51D26] p-8 text-white sm:flex sm:flex-col sm:justify-between lg:p-10">
+          {/* Background glow */}
+          <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-white/6 blur-2xl" />
+          <div className="absolute -bottom-28 -left-20 h-60 w-60 rounded-full bg-[#D4A373]/12 blur-2xl" />
+          <div className="absolute right-12 top-[42%] h-24 w-24 rounded-full bg-[#B5262D]/20 blur-xl" />
 
+          {/* Subtle grid */}
+          <div
+            className="absolute inset-0 opacity-[0.05]"
+            style={{
+              backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
+          `,
+              backgroundSize: '34px 34px',
+            }}
+          />
+
+          {/* Decorative shopping cards */}
+          <div className="absolute -right-7 top-[28%] h-24 w-32 rotate-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm" />
+          <div className="absolute bottom-[27%] -left-7 h-20 w-28 -rotate-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm" />
+
+          {/* Brand */}
           <div className="relative z-10">
-            <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10 shadow-lg backdrop-blur-sm">
+            <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10 shadow-lg backdrop-blur-md">
               <UserPlus size={25} strokeWidth={1.8} />
             </div>
 
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#E8B7B3]">Welcome Back</p>
 
-            <h2 className="mt-3 text-3xl font-extrabold leading-tight lg:text-4xl">Login to MineKart</h2>
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight lg:text-4xl">
+              Login to
+              <br />
+              <span className="text-[#F1C7A5]">MineKart</span>
+            </h2>
 
-            <p className="mt-4 max-w-xs text-sm leading-6 text-[#F0D8D4]">Access your orders, profile and shopping experience from one place.</p>
+            <p className="mt-4 max-w-xs text-sm leading-6 text-[#F0D8D4]">Continue your shopping journey and manage everything from one place.</p>
           </div>
 
-          <div className="relative z-10">
-            <div className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-md">
+          {/* Benefits */}
+          <div className="relative z-10 space-y-3">
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-xl backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-                  <ShieldCheck size={20} className="text-[#E8B7B3]" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                  <ShieldCheck size={20} className="text-[#F1C7A5]" />
                 </div>
 
                 <div>
                   <p className="text-sm font-bold">Secure Shopping</p>
+
                   <p className="mt-0.5 text-xs text-[#E0C8C3]">Your account stays protected</p>
                 </div>
               </div>
             </div>
+
+            <div className="flex items-center gap-2 px-1 text-[9px] font-semibold uppercase tracking-[0.25em] text-white/35">
+              <span className="h-px w-8 bg-white/20" />
+              Shop • Discover • Enjoy
+            </div>
           </div>
         </div>
 
-        {/* Right Section */}
-        <form onSubmit={submitHandle} className="w-full overflow-y-auto px-6 py-8 sm:w-[58%] sm:px-9 sm:py-10 lg:px-11">
+        {/* RIGHT LOGIN SECTION */}
+        <form onSubmit={submitHandle} className="w-full overflow-y-auto bg-[#FFFDFC] px-6 py-8 sm:w-[57%] sm:px-9 sm:py-10 lg:px-11">
           {/* Title */}
           <div className="mb-7">
-            <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md shadow-[#7D171C]/15">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/15">
               <Lock size={19} />
-            </div>  
+            </div>
 
             <h2 className="text-2xl font-extrabold tracking-tight text-[#351C18]">Welcome Back</h2>
 
@@ -148,7 +174,7 @@ export default function Login({ onClose }) {
                 placeholder="Enter your email"
                 required
                 autoComplete="email"
-                className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
+                className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
               />
             </div>
           </div>
@@ -168,7 +194,7 @@ export default function Login({ onClose }) {
                 placeholder="Enter your password"
                 required
                 autoComplete="current-password"
-                className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
+                className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
               />
             </div>
           </div>

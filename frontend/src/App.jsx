@@ -69,7 +69,6 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/*  USER  */}
-
         <Route path="/" element={<UserLayout />}>
           <Route path="/" element={<Home />} />
 

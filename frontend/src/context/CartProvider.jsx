@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { useUser } from './userProvider'
 import { axiosInstance } from '../config/axiosConfig'
 import toast from 'react-hot-toast'
@@ -11,25 +11,62 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState(null)
   const [cartLoading, setCartLoading] = useState(false)
 
+  // ! new user mate first time add to cart krta
+  const cartRequestId = useRef(0)
+
   // ! Get Cart
+  // const getCart = async () => {
+  //   if (!user) {
+  //     setCart(null)
+  //     return
+  //   }
+
+  //   try {
+  //     setCartLoading(true)
+
+  //     const res = await axiosInstance.get('/cart')
+
+  //     if (res.data.success) {
+  //       setCart(res.data.data)
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response?.data?.message || 'Unable to load cart')
+  //   } finally {
+  //     setCartLoading(false)
+  //   }
+  // }
+
   const getCart = async () => {
     if (!user) {
       setCart(null)
       return
     }
 
+    const requestId = ++cartRequestId.current
+
     try {
       setCartLoading(true)
 
       const res = await axiosInstance.get('/cart')
 
+      // Ignore old/stale request response
+      if (requestId !== cartRequestId.current) {
+        return
+      }
+
       if (res.data.success) {
         setCart(res.data.data)
       }
     } catch (error) {
+      if (requestId !== cartRequestId.current) {
+        return
+      }
+
       toast.error(error.response?.data?.message || 'Unable to load cart')
     } finally {
-      setCartLoading(false)
+      if (requestId === cartRequestId.current) {
+        setCartLoading(false)
+      }
     }
   }
 
@@ -45,6 +82,9 @@ export function CartProvider({ children }) {
     }
 
     try {
+      // Invalidate any previous cart GET request
+      ++cartRequestId.current
+
       const res = await axiosInstance.post('/cart', {
         productId,
         quantity,
@@ -71,7 +111,6 @@ export function CartProvider({ children }) {
       }
     }
   }
-
   // ! Increase Cart Item
   const increaseCartItem = async ({ productId, size = null }) => {
     if (!user) {

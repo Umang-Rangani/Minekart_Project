@@ -10,8 +10,6 @@ const { sendEmail } = require('../utils/sendEmail')
 /* GET users listing. */
 
 // ! check API
-
-// ! check API
 router.get('/', async (req, res) => {
   try {
     const data = await User.find().select('-password')
@@ -407,6 +405,7 @@ router.post('/login', async (req, res) => {
         avatar: user.avatar,
         name: user.name,
         email: user.email,
+        role: user.role,
         phone: user.phone,
         status: user.status,
       },
@@ -471,13 +470,12 @@ router.get('/profile', authMiddleware, async (req, res) => {
   }
 })
 
-// admin users mte inActive krva mate
+// ! Admin Activate / Deactivate
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params
     const { status } = req.body
 
-    // Status validation
     if (!['Active', 'Inactive'].includes(status)) {
       return res.status(400).json({
         success: false,
@@ -516,13 +514,43 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/', async (req, res) => {
+// ! Delete User - Admin
+router.delete('/:id', async (req, res) => {
   try {
-    const data = await User.deleteMany()
-    res.status(200).json(data)
+    const { id } = req.params
+
+    const user = await User.findById(id)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+
+    await User.findByIdAndDelete(id)
+
+    return res.status(200).json({
+      success: true,
+      message: 'User deleted successfully',
+    })
   } catch (error) {
-    res.status(500).json(error)
+    console.error('Delete User Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to delete user',
+    })
   }
 })
+
+// router.delete('/', async (req, res) => {
+//   try {
+//     const data = await User.deleteMany()
+//     res.status(200).json(data)
+//   } catch (error) {
+//     res.status(500).json(error)
+//   }
+// })
 
 module.exports = router

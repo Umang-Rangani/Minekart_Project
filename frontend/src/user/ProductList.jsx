@@ -10,7 +10,10 @@ export default function ProductList() {
   const getProducts = async () => {
     try {
       const res = await axiosInstance.get('/product')
-      setProducts(res.data.data || [])
+
+      const normalProducts = (res.data.data || []).filter((product) => product.isOffer === false)
+
+      setProducts(normalProducts)
     } catch (error) {
       console.error('Get products error:', error.response?.data || error.message)
     } finally {
@@ -69,7 +72,7 @@ export default function ProductList() {
             <p className="mt-1 text-xs text-[#806C63]">Products will appear here once available.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:gap-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6 xl:gap-5">
             {products.map((product) => (
               <Link
                 key={product._id}
@@ -77,13 +80,13 @@ export default function ProductList() {
                 className="group relative overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_4px_15px_rgba(73,54,49,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_16px_35px_rgba(73,54,49,0.15)]"
               >
                 {/* Image Area */}
-                <div className="relative flex h-52 items-center justify-center overflow-hidden bg-linear-to-br from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] p-4 sm:h-56 lg:h-60">
+                <div className="relative flex h-44 sm:h-48 lg:h-52 items-center justify-center bg-white overflow-hidden  p-4 ">
                   {/* Decorative Circle */}
                   <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#A51D26]/5 transition-transform duration-500 group-hover:scale-150" />
 
                   {/* Discount */}
                   {product.discount > 0 && (
-                    <div className="absolute left-3 top-3 z-20 flex items-center gap-1 rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] px-2.5 py-1 text-[10px] font-extrabold text-white shadow-md">  
+                    <div className="absolute left-3 top-3 z-20 flex items-center gap-1 rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] px-2.5 py-1 text-[10px] font-extrabold text-white shadow-md">
                       <Zap size={11} fill="currentColor" />
                       {product.discount}% OFF
                     </div>
@@ -98,7 +101,7 @@ export default function ProductList() {
 
                   {/* Product Image */}
                   {product.images?.length > 0 ? (
-                    <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="relative z-10 h-full w-full object-contain transition-transform duration-500 group-hover:scale-110" />
+                    <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="relative  h-full w-full object-contain transition-transform duration-500 group-hover:scale-110 " />
                   ) : (
                     <div className="relative z-10 flex flex-col items-center gap-2 text-[#9A857B]">
                       <ShoppingCart size={30} strokeWidth={1.5} />
@@ -111,53 +114,55 @@ export default function ProductList() {
                 </div>
 
                 {/* Product Info */}
-                <div className="border-t border-[#E8DDD4] bg-[#FFFDFC] p-3.5 transition-colors duration-300 group-hover:bg-[#FFFCFA] sm:p-4">
+                <div className="border-t border-[#E8DDD4] bg-[#FFFDFC] p-3 transition-colors duration-300 group-hover:bg-[#FFFCFA]">
                   {/* Category */}
-                  <p className="truncate text-[10px] font-bold uppercase tracking-widest text-[#9A857B]">{product.category?.categoryName || 'Product'}</p>
+                  <p className="truncate text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">{product.category?.categoryName || 'Product'}</p>
 
                   {/* Product Name */}
-                  <h2 className="mt-1.5 line-clamp-2 min-h-10 text-sm font-extrabold leading-5 text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F]">{product.productName}</h2>
+                  <h2 className="mt-1 line-clamp-2 min-h-9 text-[13px] font-bold leading-4.5 text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F]">{product.productName}</h2>
 
-                  {/* Rating */}
-                  <div className="mt-3 flex items-center gap-2">
-                    <span className="flex items-center gap-1 rounded-lg bg-[#F3E7D7] px-2 py-1 text-[11px] font-extrabold text-[#715329]">
+                  {/* Rating + Sold */}
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <span className="flex items-center gap-0.5 rounded-md bg-[#F3E7D7] px-1.5 py-0.5 text-[10px] font-bold text-[#715329]">
                       {product.rating || '0.0'}
-                      <Star size={11} fill="currentColor" strokeWidth={2} />
+                      <Star size={9} fill="currentColor" strokeWidth={2} />
                     </span>
 
                     {product.soldCount > 0 && (
                       <>
-                        <span className="h-1 w-1 rounded-full bg-[#C9B8AF]" />
-                        <span className="text-[11px] font-medium text-[#806C63]">{product.soldCount}+ sold</span>
+                        <span className="h-0.5 w-0.5 rounded-full bg-[#C9B8AF]" />
+
+                        <span className="truncate text-[9px] font-medium text-[#806C63]">{product.soldCount}+ sold</span>
                       </>
                     )}
                   </div>
 
                   {/* Price */}
-                  <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <span className="text-lg font-extrabold tracking-tight text-[#351C18]">₹{product.discountPrice}</span>
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <span className="text-base font-extrabold tracking-tight text-[#351C18]">₹{product.discountPrice?.toLocaleString('en-IN')}</span>
 
                     {product.price > product.discountPrice && (
                       <>
-                        <span className="text-xs font-medium text-[#9A857B] line-through">₹{product.price}</span>
-                        <span className="text-[10px] font-bold text-[#3E8B62]">{product.discount}% off</span>
+                        <span className="text-[10px] font-medium text-[#9A857B] line-through">₹{product.price?.toLocaleString('en-IN')}</span>
+
+                        <span className="text-[9px] font-bold text-[#3E8B62]">{product.discount}%</span>
                       </>
                     )}
                   </div>
 
                   {/* Bottom */}
-                  <div className="mt-4 flex items-center justify-between border-t border-[#EFE5DF] pt-3">
-                    <div className="flex items-center gap-1.5">
-                      <span className={`flex h-5 w-5 items-center justify-center rounded-full ${product.stock > 0 ? 'bg-[#EAF5EE]' : 'bg-[#FBEAEA]'}`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${product.stock > 0 ? 'bg-[#3E8B62]' : 'bg-[#A51D26]'}`} />
-                      </span>
+                  <div className="mt-2 flex items-center justify-between border-t border-[#EFE5DF] pt-2">
+                    {/* Stock */}
+                    <div className="flex items-center gap-1">
+                      <span className={`h-1.5 w-1.5 rounded-full ${product.stock > 0 ? 'bg-[#3E8B62]' : 'bg-[#A51D26]'}`} />
 
-                      <span className={`text-[10px] font-bold ${product.stock > 0 ? 'text-[#3E8B62]' : 'text-[#A51D26]'}`}>{product.stock > 0 ? 'In Stock' : 'Unavailable'}</span>
+                      <span className={`text-[9px] font-bold ${product.stock > 0 ? 'text-[#3E8B62]' : 'text-[#A51D26]'}`}>{product.stock > 0 ? 'In Stock' : 'Unavailable'}</span>
                     </div>
 
-                    <span className="flex items-center gap-1 text-[11px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1.5">
+                    {/* View */}
+                    <span className="flex items-center gap-0.5 text-[10px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1">
                       View
-                      <ChevronRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                      <ChevronRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                     </span>
                   </div>
                 </div>
