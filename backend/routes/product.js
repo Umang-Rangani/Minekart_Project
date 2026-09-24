@@ -45,7 +45,8 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { productName, description, category, subCategory, brand, images, sizes, price, discount, discountPrice, status, homeSection, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } = req.body
+    const { productName, description, category, subCategory, brand, images, offerImage, sizes, price, discount, discountPrice, status, isOffer, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } =
+      req.body
 
     // Product Name
     if (!productName?.trim()) {
@@ -103,6 +104,8 @@ router.post('/', async (req, res) => {
 
       images: Array.isArray(images) ? images : [],
 
+      offerImage: offerImage || '',
+
       sizes: Array.isArray(sizes) ? sizes : [],
 
       price: Number(price),
@@ -113,7 +116,7 @@ router.post('/', async (req, res) => {
 
       status: status || 'Active',
 
-      homeSection: homeSection || 'Normal',
+      isOffer: Boolean(isOffer),
 
       rating: Number(rating || 0),
 
@@ -163,7 +166,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const { productName, description, category, subCategory, brand, images,  sizes, price, discount, discountPrice, status, homeSection, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } = req.body
+    const { productName, description, category, subCategory, brand, images,offerImage, sizes, price, discount, discountPrice, status, isOffer, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } = req.body
 
     // Check product
     const existingProduct = await Product.findById(req.params.id)
@@ -221,6 +224,9 @@ router.put('/:id', async (req, res) => {
         brand: brand || null,
 
         images: Array.isArray(images) ? images : [],
+
+        offerImage: offerImage || '',
+        
         sizes: Array.isArray(sizes) ? sizes : [],
 
         price: Number(price),
@@ -231,7 +237,7 @@ router.put('/:id', async (req, res) => {
 
         status: status || 'Active',
 
-        homeSection: homeSection || 'Normal',
+        isOffer: Boolean(isOffer),
 
         rating: Number(rating || 0),
 

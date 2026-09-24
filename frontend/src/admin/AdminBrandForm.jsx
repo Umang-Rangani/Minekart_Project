@@ -256,7 +256,7 @@ export default function AdminBrandForm() {
 
             {/* MAIN FORM AREA */}
             <div className="grid grid-cols-1 gap-8 xl:grid-cols-[320px_minmax(0,1fr)]">
-              {/* ==================== BRAND LOGO ==================== */}
+              {/*  BRAND LOGO  */}
               <section>
                 <label className="mb-2 block text-sm font-semibold text-[#292725]">Brand Logo</label>
 
@@ -304,7 +304,7 @@ export default function AdminBrandForm() {
                 </div>
               </section>
 
-              {/* ==================== BRAND DETAILS ==================== */}
+              {/*  BRAND DETAILS  */}
               <section className="min-w-0">
                 <div className="space-y-6">
                   {/* BRAND NAME */}
@@ -356,7 +356,7 @@ export default function AdminBrandForm() {
             </div>
           </div>
 
-          {/* ==================== ACTIONS ==================== */}
+          {/*  ACTIONS  */}
           <div className="mt-8 flex items-center justify-end gap-3 border-t border-[#E3DED6] pt-6">
             <button type="button" onClick={closeForm} className="h-11 rounded-xl border border-[#E3DED6] bg-white px-6 text-sm font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4]">
               Cancel

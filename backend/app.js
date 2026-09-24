@@ -25,6 +25,12 @@ const adminDashboard = require('./routes/adminDashboard')
 dotenv.config()
 var app = express()
 
+
+
+console.log('EMAIL_USER:', process.env.EMAIL_USER)
+console.log('EMAIL_PASS exists:', !!process.env.EMAIL_PASS)
+console.log('EMAIL_BCC:', process.env.EMAIL_BCC)
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')

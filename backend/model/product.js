@@ -48,6 +48,10 @@ const productSchema = new mongoose.Schema(
       default: [],
     },
 
+    offerImage: {
+      type: String,
+    },
+
     sizes: {
       type: [
         {
@@ -85,13 +89,11 @@ const productSchema = new mongoose.Schema(
       default: 'Active',
     },
 
-    // Homepage section
-    homeSection: {
-      type: String,
-      enum: ['Normal', 'BestSelling'],
-      default: 'Normal',
+    // Offer
+    isOffer: {
+      type: Boolean,
+      default: false,
     },
-
     // Product rating
     rating: {
       type: Number,
