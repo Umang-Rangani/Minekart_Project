@@ -9,6 +9,7 @@ export default function Cart() {
   const navigate = useNavigate()
   const { cart, increaseCartItem, decreaseCartItem, removeCartItem } = useCart()
   const cartItems = cart?.items || []
+  // not here 
 
   useEffect(() => {
     window.scrollTo({
