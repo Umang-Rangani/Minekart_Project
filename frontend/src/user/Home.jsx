@@ -7,32 +7,39 @@ import ProductOfferList from './ProductOfferList'
 export default function Home() {
   useEffect(() => {
     document.title = 'Home | MineKart'
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
   return (
-    <div className="w-full">
-      {/* Category Section */}
+    <div className="min-h-screen w-full bg-[#FFFCFA]">
+      {/* Category Navigation */}
       <section className="w-full">
         <CategoryList />
       </section>
 
-      {/* Main Shopping Sections */}
-      <div className="space-y-15 pt-2 sm:pt-15 lg:pt-18">
-        {/* Brands */}
-        <section className="w-full">
-          <BrandList />
+      {/* Home Content */}
+      <main className="w-full pt-2 sm:pt-15 lg:pt-18">
+        {/* Top Brands */}
+        <section className="w-full border-b border-[#F0E7E1]">
+          <div className="py-7 sm:py-9  lg:py-10">
+            <BrandList />
+          </div>
         </section>
 
-        {/* Products */}
-        <section className="w-full">
-          <ProductOfferList />
+        {/* Best Offers */}
+        <section className="w-full border-b border-[#F0E7E1] bg-[#FBF7F2]">
+          <div className="py-7 sm:py-9  lg:py-10">
+            <ProductOfferList />
+          </div>
         </section>
 
-        {/* Products */}
+        {/* All Products */}
         <section className="w-full">
-          <ProductList />
+          <div className="py-7 sm:py-9  lg:py-10">
+            <ProductList />
+          </div>
         </section>
-      </div>
+      </main>
     </div>
   )
 }

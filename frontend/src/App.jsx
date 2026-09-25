@@ -37,6 +37,10 @@ import AdminBrandForm from './admin/AdminBrandForm.jsx'
 import AdminProtected from './admin/AdminProtected.jsx'
 import { Toaster } from 'react-hot-toast'
 import ProfileUpdate from './user/ProfileUpdate.jsx'
+import HelpCenter from './components/CustomerService/HelpCenter.jsx'
+import TrackOrder from './components/CustomerService/TrackOrder.jsx'
+import ReturnsRefunds from './components/CustomerService/ReturnsRefunds.jsx'
+import ContactUs from './components/CustomerService/ContactUs.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -75,27 +79,33 @@ export default function App() {
 
           <Route path="/category" element={<Categories />} />
           <Route path="/brand" element={<Brands />} />
-          <Route path="product/:id" element={<ProductDetail />} />
 
           <Route path="/category/:id/products" element={<CategoryProducts />} />
           <Route path="/brand/:id/products" element={<BrandProducts />} />
+          <Route path="product/:id" element={<ProductDetail />} />
 
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="orders/:id" element={<OrderDetails />} />
-    
+
           <Route path="/search" element={<SearchProducts />} />
 
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/update" element={<ProfileUpdate />} />
+
+          {/* footer */}
+          <Route path="/customer-help" element={<HelpCenter />} />
+          <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/returns" element={<ReturnsRefunds />} />
+          <Route path="/contact" element={<ContactUs />} />
         </Route>
 
         {/*  AUTH  */}
         <Route path="/register" element={<Register />} />
         {/* <Route path="/login" element={<Login />} /> */}
-    
+
         {/*  ADMIN  */}
         <Route element={<AdminProtected />}>
           <Route path="/admin" element={<AdminLayout />}>

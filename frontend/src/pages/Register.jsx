@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 
 export default function Register() {
   const navigate = useNavigate()
-  const { setShowLogin } = useUser()
+  const { setShowLogin, setUser } = useUser()
 
   const fileInputRef = useRef(null)
 
@@ -116,14 +116,22 @@ export default function Register() {
 
       const res = await axiosInstance.post('/users/register', registerData)
 
+      // if (res.data.success) {
+      //   const message = 'Account created successfully'
+
+      //   setSuccess(message)
+      //   toast.success(message)
+      //   setUser(res.data.user)
+
+      //   navigate('/')
+      //   setShowLogin(true)
+      // }
       if (res.data.success) {
-        const message = 'Account created successfully'
+        setUser(res.data.user)
+        setShowLogin(false)
 
-        setSuccess(message)
-        toast.success(message)
-
+        toast.success('Account created successfully')
         navigate('/')
-        setShowLogin(true)
       }
     } catch (error) {
       console.log('Register Error:', error.response?.data || error.message)

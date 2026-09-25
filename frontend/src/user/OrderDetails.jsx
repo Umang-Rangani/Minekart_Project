@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, CheckCircle2, Clock3, MapPin, Package, ShoppingBag, Truck, Check, CircleCheck, CalendarDays, CreditCard, ShieldCheck, Receipt } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Check, CheckCircle2, ChevronRight, CircleCheck, Clock3, CreditCard, MapPin, Package, Receipt, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import BreadCrumb from './BreadCrumb'
 
-// ! Order Tracking logic
+// ! Order Tracking
 const orderStatuses = [
   {
     status: 'Pending',
@@ -51,7 +51,7 @@ export default function OrderDetails() {
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // ! Order return
+  // ! Return Order
   const [showReturnBox, setShowReturnBox] = useState(false)
   const [returnReason, setReturnReason] = useState('')
   const [returning, setReturning] = useState(false)
@@ -64,12 +64,15 @@ export default function OrderDetails() {
 
       if (res.data.success) {
         setOrder(res.data.data)
+      } else {
+        setOrder(null)
       }
 
-
-       document.title = `Order-Details | MineKart`
+      document.title = `Order-Details | MineKart`
     } catch (error) {
       console.log('Get Order Details Error:', error.response?.data || error.message)
+
+      setOrder(null)
     } finally {
       setLoading(false)
     }
@@ -92,11 +95,18 @@ export default function OrderDetails() {
     })
   }
 
+  const formatPrice = (price) => {
+    return Number(price || 0).toLocaleString('en-IN')
+  }
+
   const currentStatusIndex = orderStatuses.findIndex((item) => item.status === order?.orderStatus)
 
   const isCancelled = order?.orderStatus === 'Cancelled'
   const isReturned = order?.orderStatus === 'Returned'
   const isCOD = order?.paymentMethod === 'COD'
+  const isDelivered = order?.orderStatus === 'Delivered'
+
+  const paymentStatusClass = order?.paymentStatus === 'Paid' ? 'bg-[#EAF6EF] text-[#3E8B62]' : order?.paymentStatus === 'Failed' ? 'bg-[#FCEBEC] text-[#A51D26]' : 'bg-[#FFF4DD] text-[#A05A16]'
 
   // ! Return Order
   const handleReturnOrder = async () => {
@@ -123,40 +133,44 @@ export default function OrderDetails() {
     }
   }
 
+  // ! Loading
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FBF7F2]">
-        <div className="mx-auto animate-pulse">
-          <div className="h-7 w-48 rounded-lg bg-[#E8DDD4]" />
+        <div className="mx-auto w-full animate-pulse">
+          <div className="h-16 rounded-xl border border-[#E8DDD4] bg-white sm:h-17" />
 
-          <div className="mt-6 h-28 rounded-2xl bg-[#FFFDFC]" />
+          <div className="mt-4 h-24 rounded-xl border border-[#E8DDD4] bg-white sm:mt-5" />
 
-          <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[280px_minmax(0,1fr)_280px]">
-            <div className="h-125 rounded-2xl bg-[#FFFDFC]" />
-            <div className="h-125 rounded-2xl bg-[#FFFDFC]" />
-            <div className="h-100 rounded-2xl bg-[#FFFDFC]" />
+          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[270px_minmax(0,1fr)_310px] sm:mt-5">
+            <div className="h-125 rounded-2xl bg-white" />
+            <div className="h-125 rounded-2xl bg-white" />
+            <div className="h-100 rounded-2xl bg-white" />
           </div>
         </div>
       </div>
     )
   }
 
+  // ! Order Not Found
   if (!order) {
     return (
-      <div className="min-h-screen bg-[#FBF7F2] py-10">
-        <div className="mx-auto max-w-xl rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] p-8 text-center shadow-[0_8px_30px_rgba(73,54,49,0.07)]">
+      <div className="min-h-screen bg-[#FBF7F2] py-8 sm:py-10">
+        <div className="mx-auto max-w-xl rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] p-6 text-center shadow-[0_8px_30px_rgba(73,54,49,0.07)] sm:p-8">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
-            <Package size={30} />
+            <Package size={30} strokeWidth={1.6} />
           </div>
 
-          <h1 className="mt-5 text-xl font-extrabold text-[#351C18]">Order Not Found</h1>
+          <span className="mt-5 inline-flex rounded-full bg-[#F7EEE7] px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider text-[#8E181F]">Order</span>
 
-          <p className="mt-2 text-sm text-[#806C63]">We could not find this order.</p>
+          <h1 className="mt-3 text-xl font-extrabold text-[#351C18]">Order Not Found</h1>
+
+          <p className="mx-auto mt-2 max-w-sm text-xs leading-5 text-[#806C63] sm:text-sm">We could not find this order. Please check your order history and try again.</p>
 
           <button
             type="button"
             onClick={() => navigate('/orders')}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-3 text-sm font-bold text-white shadow-md shadow-[#7D171C]/15 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-3 text-sm font-bold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.24)]"
           >
             <ArrowLeft size={17} />
             Back to Orders
@@ -168,7 +182,7 @@ export default function OrderDetails() {
 
   const items = [
     { title: 'Orders', link: '/orders' },
-    { title: 'Detail', link: null },
+    { title: 'Order Details', link: null },
   ]
 
   return (
@@ -176,91 +190,91 @@ export default function OrderDetails() {
       <BreadCrumb items={items} />
 
       <div className="mx-auto w-full pt-4 sm:pt-5">
-        {/* COMMON PAGE HEADER */}
-        <div className="mb-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.06)]">
-          <div className="relative h-23 overflow-hidden bg-linear-to-r from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] px-4 sm:h-24 sm:px-6">
-            {/* Decorative Background */}
-            <div className="absolute -right-12 -top-14 h-32 w-32 rounded-full bg-[#A51D26]/[0.035]" />
-            <div className="absolute -bottom-16 left-1/3 h-28 w-28 rounded-full bg-[#D4A373]/5" />
+        {/* HEADER */}
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
+              <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
 
-            <div className="relative flex h-full items-center justify-between gap-4">
-              {/* LEFT */}
-              <div className="flex min-w-0 items-center gap-3">
-                {/* PAGE ICON */}
-                <div className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_5px_15px_rgba(125,23,28,0.16)] sm:flex">
-                  <Package size={21} strokeWidth={1.8} />
-                </div>
-
-                {/* TITLE + DETAILS */}
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="h-5 w-1 rounded-full bg-linear-to-b from-[#7D171C] to-[#B5262D]" />
-
-                    <h1 className="truncate text-lg font-extrabold tracking-tight text-[#351C18] sm:text-xl">Order Details</h1>
-                  </div>
-
-                  <div className="ml-3 mt-1 flex items-center gap-2">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Order ID</span>
-
-                    <span className="max-w-45 truncate rounded-md bg-white px-2 py-1 text-[9px] font-extrabold text-[#67544D] shadow-sm sm:max-w-none sm:text-[10px]">#{order.orderId || order._id}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* RIGHT SIDE */}
-              <div className="hidden items-center gap-3 sm:flex">
-                {/* STATUS */}
-                <div className="flex h-10 items-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-3.5 shadow-sm">
-                  <span className={`h-2.5 w-2.5 rounded-full ${isCancelled ? 'bg-[#A51D26]' : isReturned ? 'bg-[#B87935]' : order.orderStatus === 'Delivered' ? 'bg-[#3E8B62]' : 'bg-[#D4A373]'}`} />
-
-                  <div>
-                    <p className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Status</p>
-
-                    <p className="text-[10px] font-extrabold text-[#67544D]">{order.orderStatus}</p>
-                  </div>
-                </div>
-
-                {/* DATE */}
-                <div className="flex h-10 items-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-3.5 shadow-sm">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F7EEE7] text-[#8E181F]">
-                    <CalendarDays size={13} />
-                  </div>
-
-                  <div>
-                    <p className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Ordered On</p>
-
-                    <p className="text-[10px] font-extrabold text-[#67544D]">{formatDate(order.createdAt)}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* MOBILE STATUS */}
-              <div className="flex shrink-0 items-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-2.5 py-2 shadow-sm sm:hidden">
-                <span className={`h-2 w-2 rounded-full ${isCancelled ? 'bg-[#A51D26]' : isReturned ? 'bg-[#B87935]' : order.orderStatus === 'Delivered' ? 'bg-[#3E8B62]' : 'bg-[#D4A373]'}`} />
-
-                <span className="text-[9px] font-extrabold text-[#67544D]">{order.orderStatus}</span>
-              </div>
+              <Package size={18} strokeWidth={1.8} className="relative z-10" />
             </div>
+
+            <div className="min-w-0">
+              <h1 className="truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-sm">Order Details</h1>
+
+              <p className="mt-0.5 truncate text-[9px] text-[#806C63] sm:text-[10px]">Order #{order.orderId || order._id}</p>
+            </div>
+          </div>
+
+          <div
+            className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg border px-2 text-[8px] font-bold sm:px-2.5 sm:text-[9px] ${
+              isCancelled ? 'border-[#F0C8CB] bg-[#FCEBEC] text-[#A51D26]' : isReturned ? 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]' : isDelivered ? 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]' : 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'
+            }`}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${isCancelled ? 'bg-[#A51D26]' : isReturned ? 'bg-[#B87935]' : isDelivered ? 'bg-[#3E8B62]' : 'bg-[#D4A373]'}`} />
+
+            <span>{order.orderStatus}</span>
+          </div>
+        </div>
+
+        {/* ORDER META */}
+        <div className="mb-4 grid grid-cols-2 gap-3 sm:mb-5 sm:grid-cols-3">
+          <div className="rounded-xl border border-[#E8DDD4] bg-white p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)]">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                <Receipt size={13} />
+              </div>
+
+              <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Order ID</span>
+            </div>
+
+            <p className="mt-2 truncate text-[10px] font-extrabold text-[#351C18] sm:text-xs">#{order.orderId || order._id}</p>
+          </div>
+
+          <div className="rounded-xl border border-[#E8DDD4] bg-white p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)]">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                <CalendarDays size={13} />
+              </div>
+
+              <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Ordered On</span>
+            </div>
+
+            <p className="mt-2 text-[10px] font-extrabold text-[#351C18] sm:text-xs">{formatDate(order.createdAt)}</p>
+          </div>
+
+          <div className="col-span-2 rounded-xl border border-[#E8DDD4] bg-white p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] sm:col-span-1">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                <CreditCard size={13} />
+              </div>
+
+              <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Payment</span>
+            </div>
+
+            <p className="mt-2 truncate text-[10px] font-extrabold text-[#351C18] sm:text-xs">{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
           </div>
         </div>
 
         {/* MAIN GRID */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[270px_minmax(0,1fr)_310px]">
-          {/* ORDER TRACKING */}
-          <div className="order-2 rounded-2xl border border-[#E8DDD4] bg-white p-4 shadow-[0_4px_18px_rgba(73,54,49,0.05)] lg:order-1 lg:p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Order Tracking</h2>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[270px_minmax(0,1fr)_310px] sm:gap-5">
+          {/* TRACKING */}
+          <div className="order-2 rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)] lg:order-1">
+            <div className="border-b border-[#EEE5DF] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] p-4 sm:p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-sm font-extrabold text-[#351C18]">Order Tracking</h2>
 
-                <p className="mt-1 text-[10px] leading-5 text-[#806C63]">Track your order delivery progress.</p>
-              </div>
+                  <p className="mt-1 text-[10px] leading-4 text-[#806C63]">Track your order progress.</p>
+                </div>
 
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
-                <Truck size={17} />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                  <Truck size={17} />
+                </div>
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="p-4 sm:p-5">
               {orderStatuses.map((item, index) => {
                 const Icon = item.icon
 
@@ -270,7 +284,7 @@ export default function OrderDetails() {
 
                 return (
                   <div key={item.status} className="relative flex gap-3">
-                    {!isLast && <div className={`absolute left-5 top-9 h-[calc(100%-8px)] w-0.5 ${index < currentStatusIndex ? 'bg-[#8E181F]' : 'bg-[#E8DDD4]'}`} />}
+                    {!isLast && <div className={`absolute left-4.5 top-9 h-[calc(100%-8px)] w-0.5 ${index < currentStatusIndex ? 'bg-[#A51D26]' : 'bg-[#E8DDD4]'}`} />}
 
                     <div
                       className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 ${
@@ -295,13 +309,13 @@ export default function OrderDetails() {
 
               {/* CANCELLED */}
               {isCancelled && (
-                <div className="mt-4 rounded-xl border border-[#F0C8CB] bg-[#FCEBEC] p-3.5">
+                <div className="mt-5 rounded-xl border border-[#F0C8CB] bg-[#FCEBEC] p-3.5">
                   <div className="flex items-start gap-2.5">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#A51D26]">
                       <Package size={15} />
                     </div>
 
-                    <div>
+                    <div className="min-w-0">
                       <h3 className="text-xs font-extrabold text-[#A51D26]">Order Cancelled</h3>
 
                       <p className="mt-1 text-[10px] leading-4 text-[#A51D26]">This order has been cancelled.</p>
@@ -314,13 +328,13 @@ export default function OrderDetails() {
 
               {/* RETURNED */}
               {isReturned && (
-                <div className="mt-4 rounded-xl border border-[#EBD7B7] bg-[#FFF9ED] p-3.5">
+                <div className="mt-5 rounded-xl border border-[#EBD7B7] bg-[#FFF9ED] p-3.5">
                   <div className="flex items-start gap-2.5">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#B87935]">
                       <Package size={15} />
                     </div>
 
-                    <div>
+                    <div className="min-w-0">
                       <h3 className="text-xs font-extrabold text-[#A05A16]">Order Returned</h3>
 
                       <p className="mt-1 text-[10px] leading-4 text-[#A05A16]">Your return request has been submitted successfully.</p>
@@ -333,9 +347,9 @@ export default function OrderDetails() {
             </div>
           </div>
 
-          {/* CENTER */}
-          <div className="order-1 min-w-0 space-y-5 lg:order-2">
-            {/* ORDERED ITEMS */}
+          {/* CENTER CONTENT */}
+          <div className="order-1 min-w-0 space-y-4 lg:order-2 sm:space-y-5">
+            {/* ORDER ITEMS */}
             <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
               <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
                 <div className="flex items-center gap-2">
@@ -352,7 +366,7 @@ export default function OrderDetails() {
               <div className="max-h-97 overflow-y-auto scrollbar-thin [scrollbar-color:#CDBDB4_transparent]">
                 <div className="divide-y divide-[#EEE5DF]">
                   {order.items?.map((item, index) => (
-                    <div key={`${order._id}-${index}`} className="flex gap-3 p-3.5 transition-colors hover:bg-[#FFFCFA] sm:gap-4 sm:p-4">
+                    <div key={`${order._id}-${index}`} className="flex gap-3 p-3.5 transition-colors duration-200 hover:bg-[#FFFCFA] sm:gap-4 sm:p-4">
                       {/* IMAGE */}
                       <div className="flex h-19 w-19 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] sm:h-20 sm:w-20">
                         {item.image ? (
@@ -378,7 +392,7 @@ export default function OrderDetails() {
                           )}
                         </div>
 
-                        <p className="mt-2 text-sm font-extrabold text-[#8E181F]">₹{Number(item.totalPrice || 0).toLocaleString('en-IN')}</p>
+                        <p className="mt-2 text-sm font-extrabold text-[#8E181F]">₹{formatPrice(item.totalPrice)}</p>
                       </div>
                     </div>
                   ))}
@@ -388,17 +402,23 @@ export default function OrderDetails() {
 
             {/* DELIVERY ADDRESS */}
             <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-              <div className="flex items-center gap-2 border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
-                <MapPin size={17} className="text-[#8E181F]" />
+              <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
+                <div className="flex items-center gap-2">
+                  <MapPin size={17} className="text-[#8E181F]" />
 
-                <h2 className="text-sm font-extrabold text-[#351C18]">Delivery Address</h2>
+                  <h2 className="text-sm font-extrabold text-[#351C18]">Delivery Address</h2>
+                </div>
+
+                <span className="rounded-md bg-[#F7EEE7] px-2 py-1 text-[8px] font-extrabold uppercase tracking-wider text-[#8E181F]">Delivery</span>
               </div>
 
               <div className="p-4 sm:p-5">
-                <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#8E181F]">
-                      <MapPin size={16} />
+                <div className="relative overflow-hidden rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-4">
+                  <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#A51D26]/[0.035]" />
+
+                  <div className="relative flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#8E181F] shadow-sm">
+                      <MapPin size={17} />
                     </div>
 
                     <div className="min-w-0">
@@ -412,7 +432,7 @@ export default function OrderDetails() {
 
                       {order.shippingAddress?.landmark && <p className="mt-1.5 text-[10px] font-medium text-[#806C63]">Landmark: {order.shippingAddress.landmark}</p>}
 
-                      <div className="mt-2 flex items-center gap-1.5">
+                      <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                         <span className="text-[10px] font-bold text-[#9A857B]">Phone</span>
 
                         <span className="text-xs font-bold text-[#351C18]">{order.shippingAddress?.phone}</span>
@@ -425,10 +445,14 @@ export default function OrderDetails() {
 
             {/* PAYMENT */}
             <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-              <div className="flex items-center gap-2 border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
-                <CreditCard size={17} className="text-[#8E181F]" />
+              <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
+                <div className="flex items-center gap-2">
+                  <CreditCard size={17} className="text-[#8E181F]" />
 
-                <h2 className="text-sm font-extrabold text-[#351C18]">Payment Information</h2>
+                  <h2 className="text-sm font-extrabold text-[#351C18]">Payment Information</h2>
+                </div>
+
+                <ShieldCheck size={16} className="text-[#3E8B62]" />
               </div>
 
               <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 sm:p-5">
@@ -441,7 +465,7 @@ export default function OrderDetails() {
                 <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5">
                   <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Payment Status</p>
 
-                  <p className={`mt-1.5 text-xs font-extrabold ${order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#B87935]'}`}>{order.paymentStatus || 'Pending'}</p>
+                  <span className={`mt-1.5 inline-flex rounded-md px-2 py-1 text-[9px] font-extrabold ${paymentStatusClass}`}>{order.paymentStatus || 'Pending'}</span>
                 </div>
               </div>
 
@@ -455,17 +479,21 @@ export default function OrderDetails() {
             </div>
 
             {/* RETURN ORDER */}
-            {order.orderStatus === 'Delivered' && (
+            {isDelivered && (
               <div className="overflow-hidden rounded-2xl border border-[#EBD7B7] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.04)]">
-                <div className="flex flex-col gap-3 border-b border-[#F1E3CB] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+                <div className="flex flex-col gap-3 border-b border-[#F1E3CB] bg-[#FFFDF8] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                   <div>
-                    <h2 className="text-sm font-extrabold text-[#351C18]">Return Order</h2>
+                    <div className="flex items-center gap-2">
+                      <Receipt size={16} className="text-[#B87935]" />
+
+                      <h2 className="text-sm font-extrabold text-[#351C18]">Return Order</h2>
+                    </div>
 
                     <p className="mt-1 text-[10px] leading-5 text-[#806C63]">Need to return this order? Submit a return request.</p>
                   </div>
 
                   {!showReturnBox && (
-                    <button type="button" onClick={() => setShowReturnBox(true)} className="w-full rounded-xl bg-[#FFF4DD] px-4 py-2.5 text-xs font-extrabold text-[#A05A16] transition-all hover:bg-[#FFECC4] sm:w-auto">
+                    <button type="button" onClick={() => setShowReturnBox(true)} className="w-full rounded-xl bg-[#FFF4DD] px-4 py-2.5 text-xs font-extrabold text-[#A05A16] transition-all duration-300 hover:bg-[#FFECC4] sm:w-auto">
                       Return Order
                     </button>
                   )}
@@ -480,7 +508,7 @@ export default function OrderDetails() {
                       onChange={(e) => setReturnReason(e.target.value)}
                       placeholder="Why do you want to return this order?"
                       rows={4}
-                      className="mt-2 w-full resize-none rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-3 text-xs text-[#351C18] outline-none placeholder:text-[#A89890] transition focus:border-[#B87935] focus:bg-white"
+                      className="mt-2 w-full resize-none rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#B87935] focus:bg-white"
                     />
 
                     <div className="mt-3 flex flex-col gap-2.5 sm:flex-row">
@@ -491,7 +519,7 @@ export default function OrderDetails() {
                           setReturnReason('')
                         }}
                         disabled={returning}
-                        className="rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:opacity-50"
+                        className="rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Cancel
                       </button>
@@ -515,56 +543,79 @@ export default function OrderDetails() {
           <div className="order-3">
             <div className="sticky top-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_6px_24px_rgba(73,54,49,0.07)]">
               {/* SUMMARY HEADER */}
-              <div className="bg-linear-to-r from-[#351C18] to-[#5A2A25] px-4 py-4 sm:px-5">
-                <div className="flex items-center gap-2">
+              <div className="relative overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A2A25] to-[#7D171C] px-4 py-4 sm:px-5">
+                <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white/5" />
+
+                <div className="relative flex items-center gap-2">
                   <Receipt size={17} className="text-white/80" />
 
                   <h2 className="text-sm font-extrabold text-white">Order Summary</h2>
                 </div>
 
-                <p className="mt-1 text-[9px] text-white/55">Payment & order total</p>
+                <p className="relative mt-1 text-[9px] text-white/55">Payment & order total</p>
               </div>
 
               <div className="p-4 sm:p-5">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs text-[#806C63]">Subtotal</span>
+                {/* ORDER TOTAL */}
+                <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5">
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Total Amount</p>
 
-                    <span className="text-xs font-bold text-[#351C18]">₹{Number(order.subtotal || 0).toLocaleString('en-IN')}</span>
-                  </div>
+                  <p className="mt-1 text-2xl font-extrabold tracking-tight text-[#8E181F]">₹{formatPrice(order.totalAmount)}</p>
+                </div>
 
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs text-[#806C63]">Delivery</span>
+                {/* PRICE DETAILS */}
+                <div className="mt-4">
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#67544D]">Price Details</p>
 
-                    <span className="text-xs font-bold text-[#3E8B62]">{order.deliveryCharge === 0 ? 'FREE' : `₹${Number(order.deliveryCharge || 0).toLocaleString('en-IN')}`}</span>
-                  </div>
+                  <div className="mt-3 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-xs text-[#806C63]">Subtotal</span>
 
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs text-[#806C63]">Tax</span>
+                      <span className="text-xs font-bold text-[#351C18]">₹{formatPrice(order.subtotal)}</span>
+                    </div>
 
-                    <span className="text-xs font-bold text-[#351C18]">₹{Number(order.tax || 0).toLocaleString('en-IN')}</span>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-xs text-[#806C63]">Delivery</span>
+
+                      <span className="text-xs font-bold text-[#3E8B62]">{order.deliveryCharge === 0 ? 'FREE' : `₹${formatPrice(order.deliveryCharge)}`}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-xs text-[#806C63]">Tax</span>
+
+                      <span className="text-xs font-bold text-[#351C18]">₹{formatPrice(order.tax)}</span>
+                    </div>
                   </div>
                 </div>
 
                 <div className="my-4 border-t border-dashed border-[#DCCBC1]" />
 
-                <div className="rounded-xl bg-[#FBF7F2] p-3.5">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs font-extrabold text-[#67544D]">Total Amount</span>
+                {/* FINAL TOTAL */}
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs font-extrabold text-[#67544D]">Total Paid</span>
 
-                    <span className="text-xl font-extrabold text-[#8E181F]">₹{Number(order.totalAmount || 0).toLocaleString('en-IN')}</span>
+                  <span className="text-lg font-extrabold text-[#8E181F]">₹{formatPrice(order.totalAmount)}</span>
+                </div>
+
+                {/* PAYMENT STATUS */}
+                <div className={`mt-4 rounded-xl px-3 py-3 ${order.paymentStatus === 'Paid' ? 'bg-[#EAF6EF]' : order.paymentStatus === 'Failed' ? 'bg-[#FCEBEC]' : 'bg-[#FFF9ED]'}`}>
+                  <div className="flex items-center gap-2">
+                    <CreditCard size={14} className={order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#B87935]'} />
+
+                    <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#67544D]">Payment</span>
+
+                    <span className={`ml-auto text-[9px] font-extrabold ${order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#A05A16]'}`}>{order.paymentStatus || 'Pending'}</span>
                   </div>
                 </div>
 
-         
-
+                {/* SECURITY */}
                 <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#EAF6EF] px-3 py-2.5">
                   <CheckCircle2 size={14} className="shrink-0 text-[#3E8B62]" />
 
                   <p className="text-[9px] font-bold text-[#3E8B62]">Your order information is secure</p>
                 </div>
 
-                {/* BACK */}
+                {/* BACK BUTTON */}
                 <button
                   type="button"
                   onClick={() => navigate('/orders')}

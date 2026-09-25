@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check, ChevronRight, MapPin, Plus, ShieldCheck, ShoppingBag, Smartphone, Truck, Wallet, CreditCard } from 'lucide-react'
+import { ArrowLeft, Check, ChevronRight, CreditCard, MapPin, Plus, ShieldCheck, ShoppingBag, Smartphone, Truck, Wallet } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
@@ -13,19 +13,20 @@ export default function Checkout() {
 
   const cartItems = cart?.items || []
 
-  // ! payment 1.
+  // ! Payment
   const [selectedPayment, setSelectedPayment] = useState(() => {
     return localStorage.getItem('minekart_payment_method') || 'COD'
   })
+
   const [paymentOption, setPaymentOption] = useState(false)
   const [placingOrder, setPlacingOrder] = useState(false)
 
-  // ! address 1.
+  // ! Address
   const [addresses, setAddresses] = useState([])
   const [selectedAddress, setSelectedAddress] = useState(null)
   const [addressLoading, setAddressLoading] = useState(false)
 
-  // ! address 2.
+  // ! Get Addresses
   const getAddresses = async () => {
     try {
       setAddressLoading(true)
@@ -64,19 +65,12 @@ export default function Checkout() {
       behavior: 'smooth',
     })
 
-    document.title = `Checkout | MineKart`
+    document.title = 'Checkout | MineKart'
   }, [cart])
 
-  const handleSelectAddress = async (addressId) => {
-    try {
-      const res = await axiosInstance.put(`/address/${addressId}/default`)
-
-      if (res.data.success) {
-        await getAddresses()
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to select delivery address')
-    }
+  // ! Select address only for this order
+  const handleSelectAddress = (addressId) => {
+    setSelectedAddress(addressId)
   }
 
   const subtotal = cart?.subtotal || 0
@@ -130,7 +124,6 @@ export default function Checkout() {
       }
 
       const order = res.data.data.order
-      const payment = res.data.data.payment
 
       toast.success('Order placed successfully!')
 
@@ -140,6 +133,7 @@ export default function Checkout() {
         console.log('Cart Clear Error:', clearCartResponse.message)
 
         toast.error(clearCartResponse.message || 'Failed to clear cart')
+
         return
       }
 
@@ -154,26 +148,31 @@ export default function Checkout() {
       navigate(`/order-success?${params.toString()}`)
     } catch (error) {
       console.log('Place Order Error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Something went wrong while placing order')
     } finally {
       setPlacingOrder(false)
     }
   }
 
+  // ! Cart Loading
   if (cartLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex min-h-[60vh] items-center justify-center bg-[#FBF7F2]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#E8DDD4] border-t-[#8E181F]" />
-          <p className="text-sm font-medium text-[#806C63]">Loading checkout...</p>
+
+          <p className="text-sm font-semibold text-[#806C63]">Loading checkout...</p>
         </div>
       </div>
     )
   }
 
+  // ! Empty Cart
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-[60vh] py-10">
-        <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl border border-[#E8DDD4] bg-[#FFFDFC] px-6 py-16 text-center shadow-[0_10px_35px_rgba(73,54,49,0.08)]">
+      <div className="min-h-[60vh] bg-[#FBF7F2] px-4 py-10 sm:py-16">
+        <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] px-6 py-14 text-center shadow-[0_10px_35px_rgba(73,54,49,0.08)]">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-linear-to-br from-[#F7EEE7] to-[#F2E3DA] text-[#8E181F]">
             <ShoppingBag size={34} strokeWidth={1.6} />
           </div>
@@ -196,51 +195,68 @@ export default function Checkout() {
   }
 
   const items = [
-    { title: 'cart', link: '/cart' },
-    { title: 'checkout', link: null },
+    {
+      title: 'cart',
+      link: '/cart',
+    },
+    {
+      title: 'checkout',
+      link: null,
+    },
   ]
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen bg-[#FBF7F2]">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto w-full pb-10 pt-4  sm:pt-6 ">
+      <div className="mx-auto w-full pb-10 pt-4 sm:pt-6">
         {/* CHECKOUT HEADER */}
-        <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#E8DDD4] bg-white px-1 pb-4 sm:mb-6">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm sm:h-11 sm:w-11">
-              <ShoppingBag size={21} strokeWidth={1.8} />
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
+              <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
+
+              <ShoppingBag size={18} strokeWidth={1.9} className="relative z-10" />
             </div>
 
             <div className="min-w-0">
-              <h1 className="truncate text-lg font-extrabold text-[#351C18] sm:text-xl">Checkout</h1>
+              <h1 className="truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-sm">Checkout</h1>
 
-              <p className="mt-0.5 text-[10px] text-[#806C63] sm:text-xs">Complete your order securely</p>
+              <p className="mt-0.5 truncate text-[9px] text-[#806C63] sm:text-[10px]">Complete your order securely</p>
             </div>
           </div>
 
-          <div className="hidden items-center gap-1.5 rounded-md border border-[#D5E8DA] bg-[#F0F8F3] px-3 py-1.5 sm:flex">
-            <ShieldCheck size={14} className="text-[#3E8B62]" />
-            <span className="text-[10px] font-bold text-[#34704F]">Secure Checkout</span>
+          <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#D5E8DA] bg-[#F0F8F3] px-2.5 sm:px-3">
+            <ShieldCheck size={13} className="text-[#3E8B62]" />
+
+            <span className="hidden text-[9px] font-bold text-[#34704F] sm:inline">Secure Checkout</span>
           </div>
         </div>
 
-        {/* CHECKOUT CONTENT */}
+    
+
+        {/* MAIN CONTENT */}
         <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_390px]">
           {/* LEFT */}
           <div className="min-w-0 space-y-4">
             {/* ORDER ITEMS */}
             <div className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.04)]">
               <div className="flex items-center justify-between border-b border-[#E8DDD4] px-4 py-3.5 sm:px-5">
-                <div>
-                  <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Order Items</h2>
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                    <ShoppingBag size={15} />
+                  </div>
 
-                  <p className="mt-0.5 text-[9px] text-[#806C63] sm:text-[10px]">
-                    {totalItems} {totalItems === 1 ? 'item' : 'items'} in your order
-                  </p>
+                  <div>
+                    <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Order Items</h2>
+
+                    <p className="mt-0.5 text-[9px] text-[#806C63] sm:text-[10px]">
+                      {totalItems} {totalItems === 1 ? 'item' : 'items'} in your order
+                    </p>
+                  </div>
                 </div>
 
-                <button type="button" onClick={() => navigate('/cart')} className="rounded-md px-2.5 py-1.5 text-[10px] font-bold text-[#8E181F] transition-colors hover:bg-[#F7EEE7]">
+                <button type="button" onClick={() => navigate('/cart')} className="rounded-lg px-2.5 py-1.5 text-[9px] font-bold text-[#8E181F] transition-colors hover:bg-[#F7EEE7] sm:text-[10px]">
                   Edit Cart
                 </button>
               </div>
@@ -251,10 +267,17 @@ export default function Checkout() {
                     const product = item.productId
 
                     return (
-                      <div key={`${product._id}-${item.size || 'no-size'}`} className="flex gap-3 rounded-lg border border-[#E8DDD4] bg-[#FFFCFA] p-2.5 transition-colors hover:border-[#D4BDB2]">
+                      <div
+                        key={`${product._id}-${item.size || 'no-size'}`}
+                        className="group flex gap-3 rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] p-2.5 transition-all duration-200 hover:border-[#D4BDB2] hover:shadow-[0_3px_12px_rgba(73,54,49,0.05)]"
+                      >
                         {/* IMAGE */}
-                        <div className="flex h-22 w-18 shrink-0 items-center justify-center overflow-hidden rounded-md border border-[#E8DDD4] bg-white sm:h-24 sm:w-20">
-                          <img src={product.images?.[0] ? `http://localhost:3000${product.images[0]}` : '/placeholder.png'} alt={product.productName} className="h-full w-full object-contain p-2" />
+                        <div className="flex h-22 w-18 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E8DDD4] bg-white sm:h-24 sm:w-20">
+                          <img
+                            src={product.images?.[0] ? `http://localhost:3000${product.images[0]}` : '/placeholder.png'}
+                            alt={product.productName}
+                            className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                          />
                         </div>
 
                         {/* DETAILS */}
@@ -264,9 +287,9 @@ export default function Checkout() {
                           <h3 className="mt-1 line-clamp-2 text-[12px] font-bold leading-4.5 text-[#351C18] sm:text-[13px]">{product.productName}</h3>
 
                           <div className="mt-2 flex flex-wrap gap-1.5">
-                            {item.size && <span className="rounded bg-[#F7EEE7] px-2 py-1 text-[8px] font-bold text-[#67544D]">Size: {item.size}</span>}
+                            {item.size && <span className="rounded-md bg-[#F7EEE7] px-2 py-1 text-[8px] font-bold text-[#67544D]">Size: {item.size}</span>}
 
-                            <span className="rounded border border-[#E8DDD4] bg-white px-2 py-1 text-[8px] font-bold text-[#806C63]">Qty: {item.quantity}</span>
+                            <span className="rounded-md border border-[#E8DDD4] bg-white px-2 py-1 text-[8px] font-bold text-[#806C63]">Qty: {item.quantity}</span>
                           </div>
                         </div>
 
@@ -289,7 +312,7 @@ export default function Checkout() {
             <div className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.04)]">
               <div className="flex items-center justify-between border-b border-[#E8DDD4] px-4 py-3.5 sm:px-5">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#F7EEE7] text-[#8E181F]">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
                     <MapPin size={16} />
                   </div>
 
@@ -300,7 +323,7 @@ export default function Checkout() {
                   </div>
                 </div>
 
-                <button type="button" onClick={() => navigate('/profile')} className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-[10px] font-bold text-[#8E181F] transition-colors hover:bg-[#F7EEE7]">
+                <button type="button" onClick={() => navigate('/profile')} className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[9px] font-bold text-[#8E181F] transition-colors hover:bg-[#F7EEE7] sm:text-[10px]">
                   <Plus size={13} />
                   New
                 </button>
@@ -308,19 +331,20 @@ export default function Checkout() {
 
               <div className="p-3 sm:p-4">
                 {addressLoading ? (
-                  <div className="flex min-h-24 items-center justify-center rounded-lg border border-dashed border-[#D8C9C0] bg-[#FBF7F2]">
+                  <div className="flex min-h-24 items-center justify-center rounded-xl border border-dashed border-[#D8C9C0] bg-[#FBF7F2]">
                     <div className="flex flex-col items-center gap-2">
                       <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#E8DDD4] border-t-[#8E181F]" />
+
                       <p className="text-[10px] font-semibold text-[#806C63]">Loading addresses...</p>
                     </div>
                   </div>
                 ) : addresses.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-[#D8C9C0] bg-[#FBF7F2] p-6 text-center">
+                  <div className="rounded-xl border border-dashed border-[#D8C9C0] bg-[#FBF7F2] p-6 text-center">
                     <MapPin className="mx-auto text-[#9A857B]" size={24} />
 
                     <p className="mt-2 text-[11px] font-semibold text-[#67544D]">No delivery address found</p>
 
-                    <Link to="/profile" className="mt-3 inline-flex items-center gap-1 rounded-md bg-[#F7EEE7] px-3 py-2 text-[10px] font-bold text-[#8E181F]">
+                    <Link to="/profile" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-[#F7EEE7] px-3 py-2 text-[10px] font-bold text-[#8E181F]">
                       <Plus size={13} />
                       Add Address
                     </Link>
@@ -328,20 +352,20 @@ export default function Checkout() {
                 ) : (
                   <div className="space-y-2.5">
                     {addresses.map((address) => {
-                      const isSelected = address.isDefault
+                      const isSelected = selectedAddress === address._id
 
                       return (
                         <button
                           key={address._id}
                           type="button"
                           onClick={() => handleSelectAddress(address._id)}
-                          className={`w-full rounded-lg border p-3 text-left transition-all duration-200 ${
-                            isSelected ? 'border-[#A51D26] bg-[#FFF7F5] shadow-[0_3px_12px_rgba(142,24,31,0.06)]' : 'border-[#E8DDD4] bg-white hover:border-[#CDAFA4] hover:bg-[#FFFCFA]'
+                          className={`group w-full rounded-xl border p-3 text-left transition-all duration-200 ${
+                            isSelected ? 'border-[#A51D26] bg-[#FFF7F5] shadow-[0_4px_15px_rgba(142,24,31,0.07)]' : 'border-[#E8DDD4] bg-white hover:border-[#CDAFA4] hover:bg-[#FFFCFA]'
                           }`}
                         >
                           <div className="flex items-start gap-3">
                             {/* RADIO */}
-                            <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${isSelected ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#CDBDB4] bg-white'}`}>
+                            <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all ${isSelected ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#CDBDB4] bg-white'}`}>
                               {isSelected && <Check size={11} strokeWidth={3} />}
                             </div>
 
@@ -350,9 +374,9 @@ export default function Checkout() {
                               <div className="flex flex-wrap items-center gap-1.5">
                                 <p className="text-xs font-extrabold text-[#351C18]">{address.fullName}</p>
 
-                                <span className="rounded bg-[#F7EEE7] px-1.5 py-0.5 text-[8px] font-bold text-[#67544D]">{address.addressType}</span>
+                                <span className="rounded-md bg-[#F7EEE7] px-1.5 py-0.5 text-[8px] font-bold text-[#67544D]">{address.addressType}</span>
 
-                                {address.isDefault && <span className="rounded bg-[#F0F8F3] px-1.5 py-0.5 text-[8px] font-bold text-[#3E8B62]">Default</span>}
+                                {address.isDefault && <span className="rounded-md bg-[#F0F8F3] px-1.5 py-0.5 text-[8px] font-bold text-[#3E8B62]">Default</span>}
                               </div>
 
                               <p className="mt-1.5 text-[10px] leading-4.5 text-[#67544D]">
@@ -375,8 +399,8 @@ export default function Checkout() {
             </div>
 
             {/* SECURITY */}
-            <div className="flex items-center gap-3 rounded-lg border border-[#D5E8DA] bg-[#F0F8F3] p-3.5">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#3E8B62]">
+            <div className="flex items-center gap-3 rounded-xl border border-[#D5E8DA] bg-[#F0F8F3] p-3.5">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#3E8B62] shadow-sm">
                 <ShieldCheck size={17} />
               </div>
 
@@ -388,7 +412,7 @@ export default function Checkout() {
             </div>
           </div>
 
-          {/* RIGHT - ORDER SUMMARY */}
+          {/* RIGHT SUMMARY */}
           <div className="min-w-0">
             <div className="h-fit overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_5px_22px_rgba(73,54,49,0.08)] lg:sticky lg:top-24">
               {/* SUMMARY HEADER */}
@@ -397,7 +421,7 @@ export default function Checkout() {
                   <div>
                     <h2 className="text-base font-extrabold text-[#351C18]">Order Summary</h2>
 
-                    <p className="mt-0.5 text-[9px] text-[#806C63]">Review your order</p>
+                    <p className="mt-0.5 text-[9px] text-[#806C63]">Review your order before placing it</p>
                   </div>
 
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
@@ -497,7 +521,7 @@ export default function Checkout() {
                           <p className="mt-0.5 text-[8px] text-[#806C63]">Pay when order is delivered</p>
                         </div>
 
-                        <div className={`flex h-4.5 w-4.5 items-center justify-center rounded-full border ${selectedPayment === 'COD' ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#CDBDB4]'}`}>
+                        <div className={`flex h-5 w-5 items-center justify-center rounded-full border ${selectedPayment === 'COD' ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#CDBDB4]'}`}>
                           {selectedPayment === 'COD' && <Check size={9} strokeWidth={3} />}
                         </div>
                       </button>
@@ -522,7 +546,7 @@ export default function Checkout() {
                           <p className="mt-0.5 text-[8px] text-[#806C63]">Pay online on delivery</p>
                         </div>
 
-                        <div className={`flex h-4.5 w-4.5 items-center justify-center rounded-full border ${selectedPayment === 'ONLINE_ON_DELIVERY' ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#CDBDB4]'}`}>
+                        <div className={`flex h-5 w-5 items-center justify-center rounded-full border ${selectedPayment === 'ONLINE_ON_DELIVERY' ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#CDBDB4]'}`}>
                           {selectedPayment === 'ONLINE_ON_DELIVERY' && <Check size={9} strokeWidth={3} />}
                         </div>
                       </button>
@@ -538,11 +562,26 @@ export default function Checkout() {
                   </div>
                 </div>
 
+                {/* SELECTED ADDRESS INFO */}
+                {selectedAddress && (
+                  <div className="mt-4 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-3 py-2.5">
+                    <div className="flex items-center gap-2">
+                      <MapPin size={13} className="shrink-0 text-[#8E181F]" />
+
+                      <div className="min-w-0">
+                        <p className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Delivering to</p>
+
+                        <p className="truncate text-[10px] font-extrabold text-[#351C18]">{addresses.find((address) => address._id === selectedAddress)?.fullName || 'Selected Address'}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* PLACE ORDER */}
                 <button
                   type="button"
                   onClick={handlePlaceOrder}
-                  disabled={placingOrder || !selectedAddress}
+                  disabled={placingOrder || !selectedAddress || addresses.length === 0}
                   className="group mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] text-xs font-bold text-white shadow-md shadow-[#7D171C]/15 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 active:scale-[0.98]"
                 >
                   {placingOrder ? (

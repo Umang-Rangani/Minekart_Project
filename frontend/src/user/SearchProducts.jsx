@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { PackageSearch, Search, SlidersHorizontal, ChevronDown, ChevronRight } from 'lucide-react'
+import { PackageSearch, Search, ChevronRight, ShoppingBag, ArrowLeft } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import axios from 'axios'
 import BreadCrumb from './BreadCrumb'
 import { axiosInstance } from '../config/axiosConfig'
 
 export default function SearchProducts() {
   const [searchParams] = useSearchParams()
-
   const navigate = useNavigate()
 
   const searchQuery = searchParams.get('q') || ''
@@ -22,144 +20,215 @@ export default function SearchProducts() {
       try {
         setLoading(true)
 
-        const res = await axiosInstance.get('/product')
-
-        const allProducts = res.data?.data || []
-
-        const query = searchQuery.trim().toLowerCase()
+        const query = searchQuery.trim()
 
         if (!query) {
           setProducts([])
           return
         }
 
-        const filteredProducts = allProducts.filter((product) => {
-          const searchableText = [product.productName, product.description, product.brand?.brandName, product.category?.categoryName, product.subCategory?.subCategoryName].filter(Boolean).join(' ').toLowerCase()
-
-          return searchableText.includes(query)
+        const res = await axiosInstance.get('/product/search', {
+          params: {
+            q: query,
+          },
         })
 
-        setProducts(filteredProducts)
+        setProducts(res.data?.data || [])
       } catch (error) {
-        console.log('Search Products Error:', error)
+        console.log('Search Products Error:', error.response?.data || error.message)
+
         setProducts([])
       } finally {
         setLoading(false)
       }
     }
 
-
-     document.title = `Search | MineKart`
+    document.title = `Search ${searchQuery ? `"${searchQuery}"` : ''} | MineKart`
 
     getProducts()
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
   }, [searchQuery])
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#FBF7F2]">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto w-full pt-5">
-     
+      <main className="mx-auto w-full  pb-10 pt-4  sm:pt-5 ">
+        {/* PAGE HEADER */}
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+          <div className="flex min-w-0 items-center gap-2.5">
+            {/* ICON */}
+            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
+              <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
 
-        {/* TOOLBAR */}
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Products for you</h2>
+              <Search size={18} strokeWidth={2} className="relative z-10" />
+            </div>
 
-            <p className="mt-0.5 text-[10px] text-[#806C63] sm:text-xs">Explore products matching your search</p>
+            {/* TITLE */}
+            <div className="min-w-0">
+              <h1 className="truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-sm">Search Results</h1>
+
+              <p className="mt-0.5 truncate text-[9px] text-[#806C63] sm:text-[10px]">{searchQuery ? `Products matching "${searchQuery}"` : 'Search products, brands and categories'}</p>
+            </div>
           </div>
 
-          <span className="rounded-lg bg-[#F7EEE7] px-2.5 py-1.5 text-[9px] font-bold text-[#8E181F] sm:hidden">{products.length} found</span>
+          {/* COUNT */}
+          {!loading && (
+            <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-2 sm:h-8 sm:px-2.5">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-md bg-[#A51D26] px-1 text-[8px] font-extrabold text-white">{products.length}</span>
+
+              <span className="hidden text-[9px] font-bold text-[#67544D] sm:inline">{products.length === 1 ? 'Product' : 'Products'}</span>
+
+              <span className="text-[8px] font-bold text-[#67544D] sm:hidden">Items</span>
+            </div>
+          )}
         </div>
 
         {/* LOADING */}
         {loading ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5 xl:gap-5">
-            {[...Array(10)].map((_, index) => (
-              <div key={index} className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white">
-                <div className="m-2.5 h-44 animate-pulse rounded-lg bg-[#F7EEE7] sm:h-48" />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
+            {[...Array(12)].map((_, index) => (
+              <div key={index} className="flex min-h-88 flex-col overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.04)]">
+                {/* IMAGE SHIMMER */}
+                <div className="relative h-44 shrink-0 overflow-hidden bg-[#F7EEE7] sm:h-48 lg:h-52">
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-linear-to-r from-transparent via-white/60 to-transparent" />
+                </div>
 
-                <div className="space-y-2 px-3 pb-4">
+                {/* DETAILS SHIMMER */}
+                <div className="flex flex-1 flex-col border-t border-[#EEE5DF] bg-[#FFFCFA] p-3">
+                  {/* CATEGORY */}
                   <div className="h-2.5 w-16 animate-pulse rounded bg-[#EEE5DF]" />
-                  <div className="h-3.5 w-full animate-pulse rounded bg-[#EEE5DF]" />
-                  <div className="h-3.5 w-2/3 animate-pulse rounded bg-[#EEE5DF]" />
-                  <div className="mt-3 h-4 w-20 animate-pulse rounded bg-[#F2DDD5]" />
+
+                  {/* NAME */}
+                  <div className="mt-2.5 space-y-1.5">
+                    <div className="h-3.5 w-full animate-pulse rounded bg-[#EEE5DF]" />
+                    <div className="h-3.5 w-4/5 animate-pulse rounded bg-[#EEE5DF]" />
+                  </div>
+
+                  {/* RATING */}
+                  <div className="mt-3 flex min-h-5 items-center gap-2">
+                    <div className="h-4 w-9 animate-pulse rounded bg-[#E5EEE8]" />
+                    <div className="h-2.5 w-14 animate-pulse rounded bg-[#EEE5DF]" />
+                  </div>
+
+                  {/* PRICE */}
+                  <div className="mt-3 h-5 w-20 animate-pulse rounded bg-[#F2DDD5]" />
+
+                  {/* BOTTOM */}
+                  <div className="mt-auto flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
+                    <div className="h-2.5 w-14 animate-pulse rounded bg-[#EEE5DF]" />
+                    <div className="h-2.5 w-9 animate-pulse rounded bg-[#F2DDD5]" />
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         ) : products.length === 0 ? (
-          /* EMPTY */
-          <div className="flex min-h-80 flex-col items-center justify-center rounded-2xl border border-dashed border-[#D8C9C0] bg-white px-5 text-center">
-            <div className="flex h-18 w-18 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
-              <PackageSearch size={32} strokeWidth={1.5} />
+          /* EMPTY STATE */
+          <section className="relative flex min-h-90 flex-col items-center justify-center overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white px-5 text-center shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
+            <div className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-[#F7EEE7]" />
+
+            <div className="pointer-events-none absolute -bottom-20 -right-10 h-44 w-44 rounded-full bg-[#F7EEE7]" />
+
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-linear-to-br from-[#F7EEE7] to-[#F2DDD5] text-[#8E181F] shadow-sm">
+              <PackageSearch size={36} strokeWidth={1.4} />
             </div>
 
-            <h2 className="mt-4 text-lg font-extrabold text-[#351C18]">No products found</h2>
+            <h2 className="relative mt-5 text-xl font-extrabold tracking-tight text-[#351C18]">No products found</h2>
 
-            <p className="mt-1.5 max-w-sm text-xs leading-5 text-[#806C63]">We couldn't find products matching "{searchQuery}". Try another product, category, or brand.</p>
+            <p className="relative mt-2 max-w-md text-xs leading-5 text-[#806C63]">
+              {searchQuery ? (
+                <>
+                  We couldn't find anything matching <span className="font-bold text-[#67544D]">"{searchQuery}"</span>. Try searching for another product, brand or category.
+                </>
+              ) : (
+                'Search for products, brands, categories or subcategories.'
+              )}
+            </p>
 
-            <button type="button" onClick={() => navigate('/')} className="mt-4 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
-              Continue Shopping
-            </button>
-          </div>
+            <div className="relative mt-6 flex flex-col gap-2.5 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-2.5 text-xs font-bold text-white shadow-[0_6px_18px_rgba(125,23,28,0.17)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(125,23,28,0.22)]"
+              >
+                <ShoppingBag size={14} />
+                Continue Shopping
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="flex items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFCFA] px-5 py-2.5 text-xs font-bold text-[#67544D] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F7EEE7]"
+              >
+                <ArrowLeft size={14} />
+                Go Back
+              </button>
+            </div>
+          </section>
         ) : (
           /* PRODUCTS */
-          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6 xl:gap-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
             {products.map((product) => {
               const sellingPrice = Number(product.discountPrice || product.price || 0)
 
-              const hasDiscount = product.discount > 0 && product.price > product.discountPrice
+              const hasDiscount = product.discount > 0 && Number(product.price) > Number(product.discountPrice)
 
               return (
                 <div
                   key={product._id}
                   onClick={() => navigate(`/product/${product._id}`)}
-                  className="group cursor-pointer overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D5BFB5] hover:shadow-[0_10px_25px_rgba(73,54,49,0.11)]"
+                  className="group flex min-h-88 cursor-pointer flex-col overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D5BFB5] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)]"
                 >
                   {/* IMAGE */}
-                  <div className="relative flex h-44 items-center justify-center overflow-hidden bg-white p-3 sm:h-48 lg:h-52">
+                  <div className="relative flex h-44 shrink-0 items-center justify-center overflow-hidden bg-white p-3 sm:h-48 lg:h-52">
                     {/* DISCOUNT */}
-                    {hasDiscount && <span className="absolute left-2.5 top-2.5 z-20 rounded-md bg-[#A51D26] px-2 py-1 text-[9px] font-extrabold text-white shadow-sm">{product.discount}% OFF</span>}
+                    {hasDiscount && <span className="absolute left-2.5 top-2.5 z-20 rounded-md bg-[#A51D26] px-2 py-1 text-[8px] font-extrabold text-white shadow-sm sm:text-[9px]">{product.discount}% OFF</span>}
 
                     {/* STOCK */}
                     {product.stock <= 0 ? (
-                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF1F1] px-2 py-1 text-[9px] font-bold text-[#A51D26]">Out of Stock</span>
+                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF1F1] px-2 py-1 text-[8px] font-bold text-[#A51D26] sm:text-[9px]">Out of Stock</span>
                     ) : product.stock <= 5 ? (
-                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[9px] font-bold text-[#B87935]">Only {product.stock} left</span>
+                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[8px] font-bold text-[#B87935] sm:text-[9px]">Only {product.stock} left</span>
                     ) : null}
 
-                    {/* SOFT DECORATION */}
+                    {/* DECORATION */}
                     <div className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#F7EEE7] opacity-70 transition-transform duration-500 group-hover:scale-150" />
 
-                    {/* IMAGE */}
+                    {/* PRODUCT IMAGE */}
                     {product.images?.[0] ? (
                       <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="relative z-10 h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" />
                     ) : (
                       <div className="relative z-10 flex flex-col items-center gap-1.5 text-[#B7A49B]">
-                        <PackageSearch size={25} strokeWidth={1.5} />
+                        <PackageSearch size={27} strokeWidth={1.4} />
+
                         <span className="text-[9px] font-semibold">No Image</span>
                       </div>
                     )}
 
-                    {/* HOVER ACTION */}
-                    <div className="absolute bottom-2.5 right-2.5 z-20 flex h-7 w-7 items-center justify-center rounded-lg bg-white text-[#8E181F] opacity-0 shadow-md transition-all duration-300 group-hover:opacity-100">
-                      <ChevronRight size={14} />
+                    {/* VIEW ICON */}
+                    <div className="absolute bottom-2.5 right-2.5 z-20 flex h-7 w-7 items-center justify-center rounded-lg bg-white text-[#8E181F] opacity-0 shadow-[0_4px_12px_rgba(73,54,49,0.15)] transition-all duration-300 group-hover:opacity-100">
+                      <ChevronRight size={14} strokeWidth={2.5} />
                     </div>
                   </div>
 
-                  {/* INFO */}
-                  <div className="border-t border-[#EEE5DF] bg-[#FFFCFA] px-3 py-3">
-                    {/* BRAND */}
-                    <p className="truncate text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
+                  {/* PRODUCT INFO */}
+                  <div className="flex flex-1 flex-col border-t border-[#EEE5DF] bg-[#FFFCFA] px-3 py-3">
+                    {/* CATEGORY */}
+                    <p className="truncate text-[9px] font-bold uppercase tracking-[0.12em] text-[#9A857B]">{product.category?.categoryName || 'Product'}</p>
 
-                    {/* NAME */}
+                    {/* PRODUCT NAME */}
                     <h3 className="mt-1 line-clamp-2 min-h-9 text-[12px] font-bold leading-4.5 text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F] sm:text-[13px]">{product.productName}</h3>
 
                     {/* RATING */}
-                    <div className="mt-2 flex items-center gap-1.5">
+                    <div className="mt-2 flex min-h-5 items-center gap-1.5">
                       <span className="flex items-center gap-0.5 rounded bg-[#3E8B62] px-1.5 py-0.5 text-[8px] font-bold text-white">
                         {product.rating || '0.0'}
+
                         <span className="text-[8px]">★</span>
                       </span>
 
@@ -167,14 +236,20 @@ export default function SearchProducts() {
                     </div>
 
                     {/* PRICE */}
-                    <div className="mt-2.5 flex items-baseline gap-1.5">
+                    <div className="mt-2.5 flex min-h-6 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
                       <span className="text-base font-extrabold text-[#351C18]">₹{sellingPrice.toLocaleString('en-IN')}</span>
 
-                      {hasDiscount && <span className="text-[9px] font-medium text-[#9A857B] line-through">₹{Number(product.price).toLocaleString('en-IN')}</span>}
+                      {hasDiscount && (
+                        <>
+                          <span className="text-[9px] text-[#9A857B] line-through">₹{Number(product.price).toLocaleString('en-IN')}</span>
+
+                          <span className="text-[9px] font-bold text-[#3E8B62]">{product.discount}% off</span>
+                        </>
+                      )}
                     </div>
 
                     {/* BOTTOM */}
-                    <div className="mt-2.5 flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
+                    <div className="mt-auto flex min-h-8 items-center justify-between border-t border-[#EEE5DF] pt-2.5">
                       <div className="flex items-center gap-1">
                         <span className={`h-1.5 w-1.5 rounded-full ${product.stock > 0 ? 'bg-[#3E8B62]' : 'bg-[#A51D26]'}`} />
 
@@ -183,7 +258,7 @@ export default function SearchProducts() {
 
                       <span className="flex items-center gap-0.5 text-[9px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1">
                         View
-                        <ChevronRight size={11} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                        <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                       </span>
                     </div>
                   </div>
@@ -192,7 +267,7 @@ export default function SearchProducts() {
             })}
           </div>
         )}
-      </div>
+      </main>
     </div>
   )
 }

@@ -1,5 +1,6 @@
 const express = require('express')
 const Product = require('../model/product')
+const SubCategory = require('../model/subcategory')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -18,6 +19,330 @@ router.get('/', async (req, res) => {
     })
   }
 })
+
+// ! Search Products => SearchProducts.jsx
+router.get('/search', async (req, res) => {
+  try {
+    const { q } = req.query
+
+    const query = q?.trim()
+
+    if (!query) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+      })
+    }
+
+    const products = await Product.aggregate([
+      // Brand
+      {
+        $lookup: {
+          from: 'brandminekarts',
+          localField: 'brand',
+          foreignField: '_id',
+          as: 'brand',
+        },
+      },
+
+      // Category
+      {
+        $lookup: {
+          from: 'categoryminekarts',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category',
+        },
+      },
+
+      // Sub Category
+      {
+        $lookup: {
+          from: 'subcategoryminekarts',
+          localField: 'subCategory',
+          foreignField: '_id',
+          as: 'subCategory',
+        },
+      },
+
+      // Convert lookup arrays to objects
+      {
+        $unwind: {
+          path: '$brand',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      {
+        $unwind: {
+          path: '$category',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      {
+        $unwind: {
+          path: '$subCategory',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      // Search
+      {
+        $match: {
+          status: 'Active',
+          $or: [
+            {
+              productName: {
+                $regex: query,
+                $options: 'i',
+              },
+            },
+            {
+              description: {
+                $regex: query,
+                $options: 'i',
+              },
+            },
+            {
+              'brand.brandName': {
+                $regex: query,
+                $options: 'i',
+              },
+            },
+            {
+              'category.categoryName': {
+                $regex: query,
+                $options: 'i',
+              },
+            },
+            {
+              'subCategory.subCategoryName': {
+                $regex: query,
+                $options: 'i',
+              },
+            },
+          ],
+        },
+      },
+
+      // Latest products first
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ])
+
+    return res.status(200).json({
+      success: true,
+      data: products,
+      count: products.length,
+    })
+  } catch (error) {
+    console.error('Search Products Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to search products',
+    })
+  }
+})
+
+// ! Get Products By Category => CategoryProducts.jsx
+router.get('/category/:categoryId', async (req, res) => {
+  try {
+    const { categoryId } = req.params
+
+    const products = await Product.find({
+      category: categoryId,
+      status: 'Active',
+    })
+      .populate('category', 'categoryName')
+      .populate('subCategory', 'subCategoryName')
+      .populate('brand', 'brandName brandLogo')
+      .sort({
+        createdAt: -1,
+      })
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products,
+    })
+  } catch (error) {
+    console.log('GET Category Products Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get category products',
+      error: error.message,
+    })
+  }
+})
+
+// ! Get Products By Category + SubCategory => CategoryProducts.jsx
+router.get('/category/:categoryId/subcategory/:subCategoryName', async (req, res) => {
+  try {
+    const { categoryId, subCategoryName } = req.params
+
+    const decodedName = decodeURIComponent(subCategoryName)
+
+    const subCategory = await SubCategory.findOne({
+      subCategoryName: {
+        $regex: `^${decodedName}$`,
+        $options: 'i',
+      },
+    })
+
+    if (!subCategory) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        data: [],
+      })
+    }
+
+    const products = await Product.find({
+      category: categoryId,
+      subCategory: subCategory._id,
+      status: 'Active',
+    })
+      .populate('category', 'categoryName')
+      .populate('subCategory', 'subCategoryName')
+      .populate('brand', 'brandName brandLogo')
+      .sort({ createdAt: -1 })
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products,
+    })
+  } catch (error) {
+    console.log('GET SubCategory Products Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get subcategory products',
+      error: error.message,
+    })
+  }
+})
+
+// ! => BrandProducts.jsx
+router.get('/brand/:brandId', async (req, res) => {
+  try {
+    const { brandId } = req.params
+
+    const products = await Product.find({
+      brand: brandId,
+      status: 'Active',
+    })
+      .populate('category', 'categoryName')
+      .populate('subCategory', 'subCategoryName')
+      .populate('brand', 'brandName brandLogo description')
+      .sort({ createdAt: -1 })
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products,
+    })
+  } catch (error) {
+    console.log('GET Brand Products Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get brand products',
+      error: error.message,
+    })
+  }
+})
+
+// ! Get Offer Products => ProductOfferList.jsx
+router.get('/offers', async (req, res) => {
+  try {
+    const products = await Product.find({
+      isOffer: true,
+    })
+      .populate('category', 'categoryName')
+      .populate('subCategory', 'subCategoryName')
+      .populate('brand', 'brandName brandLogo')
+      .sort({ createdAt: -1 })
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products,
+    })
+  } catch (error) {
+    console.log('GET Offer Products Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get offer products',
+      error: error.message,
+    })
+  }
+})
+
+// ! Get Normal Products => ProductList.jsx
+router.get('/normal', async (req, res) => {
+  try {
+    const products = await Product.find({
+      isOffer: false,
+    })
+      .populate('category', 'categoryName')
+      .populate('subCategory', 'subCategoryName')
+      .populate('brand', 'brandName brandLogo')
+      .sort({ createdAt: -1 })
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products,
+    })
+  } catch (error) {
+    console.log('GET Normal Products Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get normal products',
+      error: error.message,
+    })
+  }
+})
+
+// !Get related products => ProductDetail.jsx
+router.get('/related/:subCategoryId/:productId', async (req, res) => {
+  try {
+    const { subCategoryId, productId } = req.params
+
+    const products = await Product.find({
+      subCategory: subCategoryId,
+      _id: { $ne: productId },
+    })
+      .populate('category', 'categoryName')
+      .populate('subCategory', 'subCategoryName')
+      .populate('brand', 'brandName brandLogo')
+      .sort({ createdAt: -1 })
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products,
+    })
+  } catch (error) {
+    console.log('GET Related Products Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get related products',
+      error: error.message,
+    })
+  }
+})
+
 
 router.get('/:id', async (req, res) => {
   try {
@@ -166,7 +491,8 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const { productName, description, category, subCategory, brand, images,offerImage, sizes, price, discount, discountPrice, status, isOffer, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } = req.body
+    const { productName, description, category, subCategory, brand, images, offerImage, sizes, price, discount, discountPrice, status, isOffer, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } =
+      req.body
 
     // Check product
     const existingProduct = await Product.findById(req.params.id)
@@ -226,7 +552,7 @@ router.put('/:id', async (req, res) => {
         images: Array.isArray(images) ? images : [],
 
         offerImage: offerImage || '',
-        
+
         sizes: Array.isArray(sizes) ? sizes : [],
 
         price: Number(price),

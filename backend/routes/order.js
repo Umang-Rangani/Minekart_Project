@@ -5,11 +5,23 @@ const authMiddleware = require('../middleware/authMiddleware')
 const Order = require('../model/order')
 const Address = require('../model/address')
 const Payment = require('../model/payment')
+const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirmationEmail')
+const User = require('../model/users')
+const { sendEmail } = require('../utils/sendEmail')
 
 // Create Order
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.user
+
+    const user = await User.findById(userId)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      })
+    }
 
     const { items, addressId, subtotal, deliveryCharge, tax, totalAmount, paymentMethod } = req.body
 
@@ -81,6 +93,30 @@ router.post('/', authMiddleware, async (req, res) => {
       amount: Number(totalAmount),
       paidAt: null,
     })
+
+    try {
+      const html = orderConfirmationEmail({
+        name: user.name,
+        orderId: order.orderId,
+        items: order.items,
+        subtotal: order.subtotal,
+        deliveryCharge: order.deliveryCharge,
+        tax: order.tax,
+        totalAmount: order.totalAmount,
+        paymentMethod: order.paymentMethod,
+        shippingAddress: order.shippingAddress,
+      })
+
+      await sendEmail({
+        to: user.email,
+        subject: `Order Confirmed - ${order.orderId} 🛍️`,
+        html,
+      })
+
+      console.log('✅ Order confirmation email sent')
+    } catch (emailError) {
+      console.error('⚠️ Order email failed:', emailError.message)
+    }
 
     res.status(201).json({
       success: true,
