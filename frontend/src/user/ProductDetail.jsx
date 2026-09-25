@@ -32,6 +32,8 @@ export default function ProductDetail() {
       const filteredProducts = products.filter((item) => item.subCategory?._id === subCategoryId && item._id !== id)
 
       setRelatedProducts(filteredProducts)
+
+      
     } catch (error) {
       console.error('Get related products error:', error.response?.data || error.message)
     }
@@ -53,6 +55,9 @@ export default function ProductDetail() {
       if (data.subCategory?._id) {
         getRelatedProducts(data.subCategory._id)
       }
+
+
+       document.title = `${data.productName} | MineKart`
     } catch (error) {
       console.error('Get product error:', error.response?.data || error.message)
     }
@@ -541,72 +546,104 @@ export default function ProductDetail() {
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <section className="mt-10">
+          <section className="mt-10 border-t border-[#E8DDD4] pt-8 sm:mt-12 sm:pt-10">
+            {/* SECTION HEADER */}
             <div className="mb-5 flex items-end justify-between gap-4">
               <div>
                 <div className="mb-2 flex items-center gap-2">
                   <span className="h-1.5 w-8 rounded-full bg-linear-to-r from-[#7D171C] to-[#B5262D]" />
                   <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#9A857B]">You may also like</span>
                 </div>
+                <h2 className="text-lg font-extrabold tracking-tight text-[#351C18] sm:text-xl">More from {product.subCategory?.subCategoryName}</h2>
 
-                <h2 className="text-xl font-extrabold tracking-tight text-[#351C18] sm:text-2xl">More from {product.subCategory?.subCategoryName}</h2>
-
-                <p className="mt-1 text-sm text-[#806C63]">Explore more products from this category</p>
+                <p className="mt-1 text-[10px] text-[#806C63] sm:text-xs">Explore similar products you may like</p>
               </div>
+
+              <span className="shrink-0 rounded-md border border-[#E8DDD4] bg-[#FFFDFC] px-2.5 py-1.5 text-[9px] font-bold text-[#67544D] sm:text-[10px]">{relatedProducts.length} Products</span>
             </div>
 
+            {/* PRODUCTS */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-              {relatedProducts.map((item) => (
-                <Link
-                  key={item._id}
-                  to={`/product/${item._id}`}
-                  className="group overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.055)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D7C3B9] hover:shadow-[0_14px_32px_rgba(73,54,49,0.12)]"
-                >
-                  {/* Product Image */}
-                  <div className="relative flex h-48 items-center justify-center overflow-hidden bg-white p-4 sm:h-52">
-                    {/* Soft decorative circle */}
-                    <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#A51D26]/3 transition-transform duration-500 group-hover:scale-150" />
+              {relatedProducts.map((item) => {
+                const hasDiscount = item.discount > 0 && item.price > item.discountPrice
 
-                    {item.images?.length > 0 ? (
-                      <img src={`http://localhost:3000${item.images[0]}`} alt={item.productName} className="relative z-10 h-full w-full object-contain transition-transform duration-500 group-hover:scale-110" />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center text-[#9A857B]">
-                        <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7EEE7]">
-                          <Info size={18} />
+                return (
+                  <Link
+                    key={item._id}
+                    to={`/product/${item._id}`}
+                    className="group overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D4BDB2] hover:shadow-[0_10px_24px_rgba(73,54,49,0.11)]"
+                  >
+                    {/* IMAGE */}
+                    <div className="relative flex h-44 items-center justify-center overflow-hidden bg-white p-3 sm:h-48 lg:h-50">
+                      {/* Discount */}
+                      {hasDiscount && <span className="absolute left-2.5 top-2.5 z-20 rounded-md bg-[#A51D26] px-2 py-1 text-[9px] font-extrabold text-white shadow-sm">{item.discount}% OFF</span>}
+
+                      {/* Stock */}
+                      {item.stock <= 0 ? (
+                        <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF2F1] px-2 py-1 text-[9px] font-bold text-[#A51D26]">Out of Stock</span>
+                      ) : item.stock <= 5 ? (
+                        <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[9px] font-bold text-[#B87935]">Only {item.stock} left</span>
+                      ) : null}
+
+                      {/* Product Image */}
+                      {item.images?.length > 0 ? (
+                        <img src={`http://localhost:3000${item.images[0]}`} alt={item.productName} className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105" />
+                      ) : (
+                        <div className="flex flex-col items-center gap-1.5 text-[#A28E85]">
+                          <Info size={25} strokeWidth={1.5} />
+                          <span className="text-[9px] font-medium">No Image</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* PRODUCT INFO */}
+                    <div className="border-t border-[#EEE5DF] bg-[#FFFCFA] px-3 py-3">
+                      {/* Category */}
+                      <p className="truncate text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">{item.category?.categoryName || 'Product'}</p>
+
+                      {/* Name */}
+                      <h3 className="mt-1 line-clamp-2 min-h-9 text-[12px] font-bold leading-4.5 text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F] sm:text-[13px]">{item.productName}</h3>
+
+                      {/* Rating + Sold */}
+                      <div className="mt-2 flex items-center gap-1.5">
+                        <span className="flex items-center gap-0.5 rounded bg-[#3E8B62] px-1.5 py-0.5 text-[8px] font-bold text-white">
+                          {item.rating || '0.0'}
+                          <Star size={8} fill="currentColor" strokeWidth={2.5} />
+                        </span>
+
+                        {item.soldCount > 0 && <span className="truncate text-[9px] text-[#806C63]">{item.soldCount}+ sold</span>}
+                      </div>
+
+                      {/* Price */}
+                      <div className="mt-2.5 flex flex-wrap items-baseline gap-1.5">
+                        <span className="text-base font-extrabold text-[#351C18]">₹{item.discountPrice?.toLocaleString('en-IN')}</span>
+
+                        {hasDiscount && (
+                          <>
+                            <span className="text-[9px] text-[#9A857B] line-through">₹{item.price?.toLocaleString('en-IN')}</span>
+
+                            <span className="text-[9px] font-bold text-[#3E8B62]">{item.discount}% off</span>
+                          </>
+                        )}
+                      </div>
+
+                      {/* Bottom */}
+                      <div className="mt-2.5 flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
+                        <div className="flex items-center gap-1">
+                          <span className={`h-1.5 w-1.5 rounded-full ${item.stock > 0 ? 'bg-[#3E8B62]' : 'bg-[#A51D26]'}`} />
+
+                          <span className={`text-[9px] font-semibold ${item.stock > 0 ? 'text-[#3E8B62]' : 'text-[#A51D26]'}`}>{item.stock > 0 ? 'In Stock' : 'Unavailable'}</span>
                         </div>
 
-                        <span className="text-xs font-medium">No Image</span>
+                        <span className="flex items-center gap-0.5 text-[9px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1">
+                          View
+                          <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                        </span>
                       </div>
-                    )}
-
-                    {/* Discount */}
-                    {item.price > item.discountPrice && <span className="absolute left-3 top-3 z-20 rounded-md bg-[#A51D26] px-2 py-1 text-[10px] font-bold text-white shadow-sm">{item.discount}% OFF</span>}
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="border-t border-[#E8DDD4] bg-white p-3.5 transition-colors duration-300 group-hover:bg-[#FFFCFA]">
-                    {/* Product Name */}
-                    <h3 className="line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F]">{item.productName}</h3>
-
-                    {/* Price */}
-                    <div className="mt-3 flex items-baseline gap-2">
-                      <span className="text-lg font-extrabold tracking-tight text-[#351C18]">₹{item.discountPrice?.toLocaleString('en-IN')}</span>
-
-                      {item.price > item.discountPrice && <span className="text-xs font-medium text-[#9A857B] line-through">₹{item.price?.toLocaleString('en-IN')}</span>}
                     </div>
-
-                    {/* Rating */}
-                    <div className="mt-2.5 flex items-center justify-between">
-                      <span className="flex items-center gap-1 rounded-md bg-[#388E3C] px-2 py-1 text-[10px] font-bold text-white">
-                        {item.rating}
-                        <Star size={10} fill="currentColor" strokeWidth={2} />
-                      </span>
-
-                      <span className="text-[10px] font-medium text-[#9A857B]">{item.soldCount ? `${item.soldCount}+ sold` : 'Product rating'}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                )
+              })}
             </div>
           </section>
         )}

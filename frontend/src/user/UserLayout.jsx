@@ -10,7 +10,7 @@ export default function UserLayout() {
       <Header />
 
       {/* Main Content */}
-      <main className=" w-full bg-linear-to-b from-[#FFFDFC] via-[#FBF5EF] to-[#F7EEE7]  py-35 ">
+      <main className=" w-full bg-linear-to-b from-[#FFFDFC] via-[#FBF5EF] to-[#F7EEE7]  py-28 ">
         <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-7">
           <Outlet />
         </div>

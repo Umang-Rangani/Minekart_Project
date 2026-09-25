@@ -85,7 +85,7 @@ export default function App() {
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="orders/:id" element={<OrderDetails />} />
-
+    
           <Route path="/search" element={<SearchProducts />} />
 
           <Route path="/profile" element={<Profile />} />
@@ -95,7 +95,7 @@ export default function App() {
         {/*  AUTH  */}
         <Route path="/register" element={<Register />} />
         {/* <Route path="/login" element={<Login />} /> */}
-
+    
         {/*  ADMIN  */}
         <Route element={<AdminProtected />}>
           <Route path="/admin" element={<AdminLayout />}>

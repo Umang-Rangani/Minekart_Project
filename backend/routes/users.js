@@ -470,6 +470,90 @@ router.get('/profile', authMiddleware, async (req, res) => {
   }
 })
 
+// ! update profile
+// ! Update Profile
+router.put('/profile', authMiddleware, async (req, res) => {
+  try {
+    const { name, email, phone, avatar, password } = req.body
+
+    const userId = req.user.userId
+
+    // Required fields
+    if (!name || !email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name and email are required',
+      })
+    }
+
+    // Find current user
+    const user = await User.findById(userId)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+
+    const normalizedEmail = email.toLowerCase().trim()
+
+    // Check email already used by another user
+    const existingUser = await User.findOne({
+      email: normalizedEmail,
+      _id: { $ne: userId },
+    })
+
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: 'This email is already registered with another account',
+      })
+    }
+
+    // Update basic profile
+    user.name = name.trim()
+    user.email = normalizedEmail
+    user.phone = phone?.trim() || ''
+    user.avatar = avatar || ''
+
+    // Password only if user entered a new password
+    if (password && password.trim()) {
+      user.password = await bcrypt.hash(password.trim(), 10)
+    }
+
+    await user.save()
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        avatar: user.avatar,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        status: user.status,
+      },
+    })
+  } catch (error) {
+    console.error('Update Profile Error:', error)
+
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: 'This email is already registered',
+      })
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to update profile',
+    })
+  }
+})
+
 // ! Admin Activate / Deactivate
 router.put('/:id', async (req, res) => {
   try {

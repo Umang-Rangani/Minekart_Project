@@ -4,6 +4,7 @@ import { useUser } from '../context/userProvider'
 import { axiosInstance } from '../config/axiosConfig'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
+import BreadCrumb from './BreadCrumb'
 
 export default function Profile() {
   const { user } = useUser()
@@ -60,6 +61,7 @@ export default function Profile() {
   useEffect(() => {
     if (user) {
       getAddresses()
+      document.title = `My-Profile | MineKart`
     }
   }, [user])
 
@@ -187,10 +189,13 @@ export default function Profile() {
 
   const cartCount = cart?.totalQuantity || cart?.items?.length || 0
 
+  const items = [{ title: 'Profile', link: null }]
+
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-[#FBF7F2]  ">
+    <div className="min-h-[calc(100vh-80px)]  ">
+      <BreadCrumb items={items} />
       {/* PAGE HEADER */}
-      <div className="mx-auto mb-5  ">
+      <div className="mx-auto mb-5 pt-5 ">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
@@ -405,7 +410,7 @@ export default function Profile() {
                 >
                   <Plus size={14} />
                   <span className="hidden sm:inline">Add New Address</span>
-                  <span className="sm:inline sm:hidden">Add</span>
+                  <span className=" sm:hidden">Add</span>
                 </button>
               )}
             </div>

@@ -111,7 +111,7 @@ export default function Header() {
               )}
 
               <div className="hidden text-left lg:block">
-                <p className="text-[9px] font-medium text-[#9A857B]">{user ? 'Welcome' : 'Hello, Sign in'}</p>
+                <p className="text-[9px] font-medium text-[#9A857B]">{user && 'Welcome'}</p>
 
                 {user ? (
                   <button className="max-w-24 truncate text-xs font-bold text-[#351C18]">{user.name}</button>

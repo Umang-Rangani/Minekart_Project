@@ -31,6 +31,9 @@ export default function OrderSuccess() {
       } else {
         setOrder(null)
       }
+
+
+       document.title = `Order-Successfully | MineKart`
     } catch (error) {
       console.log('Get Order Error:', error.response?.data || error.message)
 

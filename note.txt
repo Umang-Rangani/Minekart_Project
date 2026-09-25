@@ -1,0 +1,110 @@
+ {/* PRODUCTS */}
+                <div className="space-y-3">
+                  {cartItems.map((item) => {
+                    const product = item.productId
+                    const unitPrice = item.discountPrice || item.price
+                    const itemTotal = unitPrice * item.quantity
+
+                    return (
+                      <div
+                        key={`${product._id}-${item.size || 'no-size'}`}
+                        className="group overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.05)] transition-all duration-300 hover:border-[#D5BFB5] hover:shadow-[0_8px_22px_rgba(73,54,49,0.09)]"
+                      >
+                        <div className="flex gap-3 p-3 sm:gap-4 sm:p-4">
+                          {/* IMAGE + QUANTITY */}
+                          <div className="w-23 shrink-0 sm:w-30">
+                            {/* IMAGE */}
+                            <button type="button" onClick={() => navigate(`/product/${product._id}`)} className="group/image relative block h-26 w-23 overflow-hidden rounded-lg border border-[#E8DDD4] bg-white sm:h-30 sm:w-30">
+                              <div className="absolute -right-6 -top-6 h-16 w-16 rounded-full bg-[#F7EEE7]" />
+
+                              {product?.images?.[0] ? (
+                                <img
+                                  src={`http://localhost:3000${product.images[0]}`}
+                                  alt={product.productName}
+                                  className="relative z-10 h-full w-full bg-white object-contain p-2.5 transition-transform duration-300 group-hover/image:scale-105 sm:p-3"
+                                />
+                              ) : (
+                                <div className="flex h-full items-center justify-center text-[10px] text-[#9A857B]">No Image</div>
+                              )}
+
+                              {product.stock <= 0 && <span className="absolute bottom-1.5 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-[#351C18]/90 px-2 py-1 text-[8px] font-bold text-white">Out of Stock</span>}
+                            </button>
+                          </div>
+
+                          {/* DETAILS */}
+                          <div className="min-w-0 flex-1">
+                            {/* BRAND + REMOVE */}
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                  <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
+                                  <span className={`h-1.5 w-1.5 rounded-full ${product.stock > 0 ? 'bg-[#3E8B62]' : 'bg-[#A51D26]'}`} />
+
+                                  <span className={`text-[8px] font-semibold sm:text-[9px] ${product.stock > 0 ? 'text-[#3E8B62]' : 'text-[#A51D26]'}`}>{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span>
+                                </div>
+
+                                <h3 className="mt-1 line-clamp-2 text-sm font-bold leading-5 text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F] sm:text-base truncate">{product.productName}</h3>
+                              </div>
+
+                              <button type="button" onClick={() => removeItem(item)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#B3A39B] transition-all hover:bg-[#FFF0F0] hover:text-[#A51D26]" title="Remove">
+                                <Trash2 size={15} strokeWidth={1.9} />
+                              </button>
+
+                              <button type="button" onClick={() => navigate(`/product/${product._id}`)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#B3A39B] transition-all hover:bg-[#FFF0F0] hover:text-[#A51D26]">
+                                <ExternalLink size={15} strokeWidth={1.9} />
+                              </button>
+                            </div>
+
+                            {/* SIZE */}
+                            {item.size && (
+                              <div className="mt-2 inline-flex items-center rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-2.5 py-1 text-[10px] font-semibold text-[#67544D]">
+                                Size
+                                <span className="ml-1.5 font-extrabold text-[#351C18]">{item.size}</span>
+                              </div>
+                            )}
+
+                            {/* PRICE */}
+                            <div className="mt-3 flex items-end justify-between gap-3 border-t border-[#F0E7E1] pt-3">
+                              <div>
+                                <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Price</p>
+
+                                <div className="mt-0.5 flex items-center gap-2">
+                                  <span className="text-base font-extrabold text-[#351C18]">₹{unitPrice.toLocaleString('en-IN')}</span>
+
+                                  {item.price > unitPrice && <span className="text-[10px] text-[#9A857B] line-through">₹{item.price.toLocaleString('en-IN')}</span>}
+                                </div>
+                              </div>
+
+                              <div className=" flex gap-5">
+                                {/* QUANTITY */}
+                                <div className="mt-2 flex h-8 items-center justify-center overflow-hidden rounded-lg border border-[#E2D5CC] bg-white sm:h-9">
+                                  <button type="button" onClick={() => decreaseQuantity(item)} className="flex h-full w-8 items-center justify-center text-[#806C63] transition-colors hover:bg-[#F7EEE7] hover:text-[#8E181F]">
+                                    <Minus size={13} />
+                                  </button>
+
+                                  <span className="flex h-full min-w-8 items-center justify-center border-x border-[#E2D5CC] text-xs font-extrabold text-[#351C18]">{item.quantity}</span>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => increaseQuantity(item)}
+                                    disabled={item.quantity >= (item.productId?.stock || 0)}
+                                    className="flex h-full w-8 items-center justify-center text-[#8E181F] transition-colors hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-40"
+                                  >
+                                    <Plus size={13} />
+                                  </button>
+                                </div>
+
+                                {/* TOTAL */}
+                                <div className="rounded-lg bg-[#FFF6F2] px-3 py-1.5 text-right">
+                                  <p className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Total</p>
+
+                                  <p className="text-sm font-extrabold text-[#8E181F]">₹{itemTotal.toLocaleString('en-IN')}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>

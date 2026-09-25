@@ -41,9 +41,13 @@ export default function BrandProducts() {
     getBrandProducts()
   }, [id])
 
+  useEffect(() => {
+    document.title = `${brand?.brandName || ""} | MineKart`
+  }, [brand])
+
   const items = [
     { title: 'Brand', link: '/brand' },
-    { title: `${brand?.brandName || 'Brand'}`, link: null },
+    { title: `${brand?.brandName || ''}`, link: null },
   ]
 
   return (

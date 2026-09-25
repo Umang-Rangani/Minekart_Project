@@ -16,6 +16,7 @@ export default function SearchProducts() {
   const [loading, setLoading] = useState(true)
 
   const items = [{ title: 'Search', link: null }]
+
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -47,6 +48,9 @@ export default function SearchProducts() {
       }
     }
 
+
+     document.title = `Search | MineKart`
+
     getProducts()
   }, [searchQuery])
 
@@ -54,114 +58,138 @@ export default function SearchProducts() {
     <div className="min-h-screen">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto pt-6">
-        {/* SEARCH RESULT HEADER */}
-        <div className="mb-6 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] shadow-[0_6px_24px_rgba(73,54,49,0.07)]">
-          <div className="flex min-h-24 items-center justify-between gap-5 px-5 py-4 sm:px-6">
-            <div className="flex min-w-0 items-center gap-4">
-              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/15">
-                <Search size={26} strokeWidth={1.9} />
-
-                <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-[#FFFDFC] bg-[#D4A373]" />
-              </div>
-
-              <div className="min-w-0">
-                <div className="flex items-center gap-2.5">
-                  <div className="h-6 w-1 shrink-0 rounded-full bg-linear-to-b from-[#7D171C] to-[#B5262D]" />
-
-                  <h1 className="truncate text-xl font-extrabold tracking-tight text-[#351C18] sm:text-2xl">Search Results</h1>
-                </div>
-
-                <p className="ml-3.5 mt-1 text-xs font-medium text-[#806C63] sm:text-sm">Results for "{searchQuery}"</p>
-              </div>
-            </div>
-
-            <div className="hidden shrink-0 items-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-4 py-2.5 text-xs font-bold text-[#8E181F] shadow-sm sm:flex">
-              <PackageSearch size={16} />
-              <span>
-                {products.length} {products.length === 1 ? 'Product' : 'Products'}
-              </span>
-            </div>
-          </div>
-        </div>
+      <div className="mx-auto w-full pt-5">
+     
 
         {/* TOOLBAR */}
-        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-base font-extrabold text-[#351C18]">
-              {products.length} {products.length === 1 ? 'Product' : 'Products'} Found
-            </h2>
+            <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Products for you</h2>
 
-            <p className="mt-1 text-xs font-medium text-[#806C63]">Matching products for your search</p>
+            <p className="mt-0.5 text-[10px] text-[#806C63] sm:text-xs">Explore products matching your search</p>
           </div>
+
+          <span className="rounded-lg bg-[#F7EEE7] px-2.5 py-1.5 text-[9px] font-bold text-[#8E181F] sm:hidden">{products.length} found</span>
         </div>
 
-        {/* PRODUCTS */}
+        {/* LOADING */}
         {loading ? (
-          <div className="flex min-h-95 items-center justify-center rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC]">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#E8DDD4] border-t-[#8E181F]" />
-          </div>
-        ) : products.length === 0 ? (
-          <div className="flex min-h-95 flex-col items-center justify-center rounded-2xl border border-dashed border-[#D8C9C0] bg-[#FFFDFC] px-6 text-center shadow-sm">
-            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#F7EEE7] text-[#8E181F]">
-              <PackageSearch size={38} strokeWidth={1.5} />
-            </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5 xl:gap-5">
+            {[...Array(10)].map((_, index) => (
+              <div key={index} className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white">
+                <div className="m-2.5 h-44 animate-pulse rounded-lg bg-[#F7EEE7] sm:h-48" />
 
-            <h2 className="mt-5 text-xl font-extrabold text-[#351C18]">No products found</h2>
-
-            <p className="mt-2 max-w-md text-sm leading-6 text-[#806C63]">We couldn't find any products matching "{searchQuery}". Try searching with another product or brand name.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-5 xl:gap-5">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                onClick={() => navigate(`/product/${product._id}`)}
-                className="group cursor-pointer overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_4px_16px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D5C0B5] hover:shadow-[0_12px_28px_rgba(73,54,49,0.11)]"
-              >
-                {/* PRODUCT IMAGE */}
-                <div className="relative m-2.5 flex h-48 items-center justify-center overflow-hidden rounded-xl bg-linear-to-br from-[#FBF7F2] via-[#F7EEE7] to-[#F1E4DC] sm:h-52">
-                  {/* Decorative Circle */}
-                  <div className="absolute -bottom-10 -right-10 h-24 w-24 rounded-full bg-[#7D171C]/5 transition-transform duration-500 group-hover:scale-150" />
-
-                  {/* Brand Badge */}
-                  <span className="absolute left-2.5 top-2.5 z-10 rounded-lg border border-white/70 bg-white/85 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wider text-[#806C63] shadow-sm backdrop-blur-sm">
-                    {product.brand?.brandName || 'Brand'}
-                  </span>
-
-                  {product.images?.[0] ? (
-                    <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="relative z-1 h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-105" />
-                  ) : (
-                    <div className="text-sm font-semibold text-[#B7A49B]">No Image</div>
-                  )}
-
-                  {/* Hover Arrow */}
-                  <div className="absolute bottom-2.5 right-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/90 text-[#8E181F] opacity-0 shadow-md backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
-                    <ChevronRight size={16} />
-                  </div>
-                </div>
-
-                {/* PRODUCT INFO */}
-                <div className="px-3.5 pb-4 pt-1">
-                  <p className="truncate text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
-
-                  <h3 className="mt-1.5 line-clamp-2 min-h-10 text-sm font-extrabold leading-5 text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F]">{product.productName}</h3>
-
-                  {/* PRICE */}
-                  <div className="mt-3 flex items-end justify-between gap-2">
-                    <div>
-                      <p className="text-base font-extrabold text-[#8E181F]">₹{Number(product.discountPrice || product.price).toLocaleString('en-IN')}</p>
-
-                      {product.discountPrice && product.price > product.discountPrice && <p className="mt-0.5 text-[10px] font-medium text-[#A9988F] line-through">₹{Number(product.price).toLocaleString('en-IN')}</p>}
-                    </div>
-
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F] transition-all duration-300 group-hover:bg-[#8E181F] group-hover:text-white">
-                      <ChevronRight size={15} />
-                    </span>
-                  </div>
+                <div className="space-y-2 px-3 pb-4">
+                  <div className="h-2.5 w-16 animate-pulse rounded bg-[#EEE5DF]" />
+                  <div className="h-3.5 w-full animate-pulse rounded bg-[#EEE5DF]" />
+                  <div className="h-3.5 w-2/3 animate-pulse rounded bg-[#EEE5DF]" />
+                  <div className="mt-3 h-4 w-20 animate-pulse rounded bg-[#F2DDD5]" />
                 </div>
               </div>
             ))}
+          </div>
+        ) : products.length === 0 ? (
+          /* EMPTY */
+          <div className="flex min-h-80 flex-col items-center justify-center rounded-2xl border border-dashed border-[#D8C9C0] bg-white px-5 text-center">
+            <div className="flex h-18 w-18 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+              <PackageSearch size={32} strokeWidth={1.5} />
+            </div>
+
+            <h2 className="mt-4 text-lg font-extrabold text-[#351C18]">No products found</h2>
+
+            <p className="mt-1.5 max-w-sm text-xs leading-5 text-[#806C63]">We couldn't find products matching "{searchQuery}". Try another product, category, or brand.</p>
+
+            <button type="button" onClick={() => navigate('/')} className="mt-4 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+              Continue Shopping
+            </button>
+          </div>
+        ) : (
+          /* PRODUCTS */
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6 xl:gap-5">
+            {products.map((product) => {
+              const sellingPrice = Number(product.discountPrice || product.price || 0)
+
+              const hasDiscount = product.discount > 0 && product.price > product.discountPrice
+
+              return (
+                <div
+                  key={product._id}
+                  onClick={() => navigate(`/product/${product._id}`)}
+                  className="group cursor-pointer overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D5BFB5] hover:shadow-[0_10px_25px_rgba(73,54,49,0.11)]"
+                >
+                  {/* IMAGE */}
+                  <div className="relative flex h-44 items-center justify-center overflow-hidden bg-white p-3 sm:h-48 lg:h-52">
+                    {/* DISCOUNT */}
+                    {hasDiscount && <span className="absolute left-2.5 top-2.5 z-20 rounded-md bg-[#A51D26] px-2 py-1 text-[9px] font-extrabold text-white shadow-sm">{product.discount}% OFF</span>}
+
+                    {/* STOCK */}
+                    {product.stock <= 0 ? (
+                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF1F1] px-2 py-1 text-[9px] font-bold text-[#A51D26]">Out of Stock</span>
+                    ) : product.stock <= 5 ? (
+                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[9px] font-bold text-[#B87935]">Only {product.stock} left</span>
+                    ) : null}
+
+                    {/* SOFT DECORATION */}
+                    <div className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#F7EEE7] opacity-70 transition-transform duration-500 group-hover:scale-150" />
+
+                    {/* IMAGE */}
+                    {product.images?.[0] ? (
+                      <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="relative z-10 h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" />
+                    ) : (
+                      <div className="relative z-10 flex flex-col items-center gap-1.5 text-[#B7A49B]">
+                        <PackageSearch size={25} strokeWidth={1.5} />
+                        <span className="text-[9px] font-semibold">No Image</span>
+                      </div>
+                    )}
+
+                    {/* HOVER ACTION */}
+                    <div className="absolute bottom-2.5 right-2.5 z-20 flex h-7 w-7 items-center justify-center rounded-lg bg-white text-[#8E181F] opacity-0 shadow-md transition-all duration-300 group-hover:opacity-100">
+                      <ChevronRight size={14} />
+                    </div>
+                  </div>
+
+                  {/* INFO */}
+                  <div className="border-t border-[#EEE5DF] bg-[#FFFCFA] px-3 py-3">
+                    {/* BRAND */}
+                    <p className="truncate text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
+
+                    {/* NAME */}
+                    <h3 className="mt-1 line-clamp-2 min-h-9 text-[12px] font-bold leading-4.5 text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F] sm:text-[13px]">{product.productName}</h3>
+
+                    {/* RATING */}
+                    <div className="mt-2 flex items-center gap-1.5">
+                      <span className="flex items-center gap-0.5 rounded bg-[#3E8B62] px-1.5 py-0.5 text-[8px] font-bold text-white">
+                        {product.rating || '0.0'}
+                        <span className="text-[8px]">★</span>
+                      </span>
+
+                      {product.soldCount > 0 && <span className="truncate text-[9px] text-[#806C63]">{product.soldCount}+ sold</span>}
+                    </div>
+
+                    {/* PRICE */}
+                    <div className="mt-2.5 flex items-baseline gap-1.5">
+                      <span className="text-base font-extrabold text-[#351C18]">₹{sellingPrice.toLocaleString('en-IN')}</span>
+
+                      {hasDiscount && <span className="text-[9px] font-medium text-[#9A857B] line-through">₹{Number(product.price).toLocaleString('en-IN')}</span>}
+                    </div>
+
+                    {/* BOTTOM */}
+                    <div className="mt-2.5 flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
+                      <div className="flex items-center gap-1">
+                        <span className={`h-1.5 w-1.5 rounded-full ${product.stock > 0 ? 'bg-[#3E8B62]' : 'bg-[#A51D26]'}`} />
+
+                        <span className={`text-[9px] font-semibold ${product.stock > 0 ? 'text-[#3E8B62]' : 'text-[#A51D26]'}`}>{product.stock > 0 ? 'In Stock' : 'Unavailable'}</span>
+                      </div>
+
+                      <span className="flex items-center gap-0.5 text-[9px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1">
+                        View
+                        <ChevronRight size={11} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
