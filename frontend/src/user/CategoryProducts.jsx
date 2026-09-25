@@ -30,6 +30,7 @@ export default function CategoryProducts() {
       const currentCategory = categories.find((item) => item._id === id)
 
       setCategory(currentCategory)
+      document.title = `${currentCategory.categoryName } | MineKart`
     } catch (error) {
       console.error('Get category products error:', error.response?.data || error.message)
     } finally {

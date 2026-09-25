@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { MapPin, Mail, Plus, CheckCircle2, User, Phone, Building2, ShieldCheck, Navigation, Home, Pencil, BriefcaseBusiness, MapPinned, X, Save, ShoppingCart, ChevronRight } from 'lucide-react'
+import { MapPin, Mail, Plus, CheckCircle2, User, Phone, Building2, ShieldCheck, Navigation, Home, Pencil, BriefcaseBusiness, MapPinned, X, Save, ShoppingCart, ChevronRight, Package, ChevronDown } from 'lucide-react'
 import { useUser } from '../context/userProvider'
 import { axiosInstance } from '../config/axiosConfig'
 import { useNavigate } from 'react-router-dom'
@@ -66,11 +66,13 @@ export default function Profile() {
   if (!user) {
     return (
       <div className="min-h-[70vh] bg-[#FBF7F2] px-4 py-10 sm:px-6">
-        <div className="mx-auto max-w-xl rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] p-10 text-center shadow-[0_8px_30px_rgba(73,54,49,0.07)]">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+        <div className="mx-auto max-w-xl rounded-2xl border border-[#E8DDD4] bg-white p-10 text-center shadow-[0_8px_30px_rgba(73,54,49,0.07)]">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#F7EEE7] text-[#8E181F]">
             <User size={30} />
           </div>
+
           <h2 className="mt-5 text-xl font-extrabold text-[#351C18]">Profile not available</h2>
+
           <p className="mt-2 text-sm text-[#806C63]">Please login to view your profile.</p>
         </div>
       </div>
@@ -183,177 +185,211 @@ export default function Profile() {
     { name: 'Other', icon: MapPinned },
   ]
 
+  const cartCount = cart?.totalQuantity || cart?.items?.length || 0
+
   return (
-    <div className="min-h-[calc(100vh-80px)] px-4  sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-80px)] bg-[#FBF7F2]  ">
       {/* PAGE HEADER */}
-      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="h-5 w-1 rounded-full bg-linear-to-b from-[#7D171C] to-[#B5262D]" />
-            <p className="text-xs font-bold uppercase tracking-widest text-[#8E181F]">Account</p>
+      <div className="mx-auto mb-5  ">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="h-5 w-1 rounded-full bg-linear-to-b from-[#7D171C] to-[#B5262D]" />
+
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#8E181F]">My Account</p>
+            </div>
+
+            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[#351C18] sm:text-3xl">My Profile</h1>
+
+            <p className="mt-1 text-xs text-[#806C63] sm:text-sm">Manage your account, addresses and personal details</p>
           </div>
 
-          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[#351C18] sm:text-3xl">My Profile</h1>
+          <div className="flex items-center gap-2">
+            {cartCount > 0 && (
+              <button
+                type="button"
+                onClick={() => navigate('/cart')}
+                className="inline-flex items-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-3.5 py-2.5 text-xs font-bold text-[#67544D] shadow-sm transition-all hover:border-[#CDAFA4] hover:bg-[#FFF8F5] hover:text-[#8E181F]"
+              >
+                <ShoppingCart size={15} />
+                Cart
+                <span className="rounded-full bg-[#F7EEE7] px-1.5 py-0.5 text-[9px] text-[#8E181F]">{cartCount}</span>
+              </button>
+            )}
 
-          <p className="mt-1 text-sm text-[#806C63]">Manage your personal information and delivery addresses</p>
+            <button
+              type="button"
+              onClick={() => navigate('/profile/update')}
+              className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-xs font-bold text-white shadow-[0_5px_15px_rgba(125,23,28,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <Pencil size={14} />
+              <span className="hidden sm:inline">Edit Profile</span>
+              <span className="sm:hidden">Edit</span>
+            </button>
+          </div>
         </div>
-
-        <button
-          type="button"
-          onClick={() => navigate("/profile/update")}
-          className="hidden items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-[#7D171C]/15 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:flex"
-        >
-          <Pencil size={16} />
-          Edit Profile
-        </button>
       </div>
 
-      {/* MAIN LAYOUT */}
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
-        {/* PROFILE CARD */}
-        <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_6px_24px_rgba(73,54,49,0.07)]">
-          {/* COVER */}
-          <div className="relative h-28 shrink-0 overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A2A25] to-[#8E181F]">
-            <div className="absolute -right-8 -top-12 h-32 w-32 rounded-full border-18 border-white/5" />
-            <div className="absolute -bottom-16 left-10 h-28 w-28 rounded-full bg-[#D4A373]/10" />
+      {/* MAIN */}
+      <div className="mx-auto grid  grid-cols-1 items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)]">
+        {/* LEFT PROFILE */}
+        <aside className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.06)]">
+          {/* PROFILE TOP */}
+          <div className="relative h-24 overflow-hidden bg-linear-to-br from-[#351C18] via-[#67231F] to-[#A51D26]">
+            <div className="absolute -right-10 -top-14 h-32 w-32 rounded-full border-20 border-white/5" />
+            <div className="absolute -bottom-16 left-8 h-32 w-32 rounded-full bg-[#D4A373]/10" />
 
-            <div className="absolute  right-0  bottom-0 flex items-center gap-2 rounded-lg border border-white/10 bg-black/10 px-2.5 py-1.5 backdrop-blur-sm">
-              <ShieldCheck size={13} className="text-[#E7C9A7]" />
-              <span className="text-[10px] font-bold text-white/80">Verified {user.role}</span>
+            <div className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/15 px-2.5 py-1 backdrop-blur-md">
+              <ShieldCheck size={12} className="text-[#E7C9A7]" />
+
+              <span className="text-[9px] font-bold text-white/90">{user.role || 'User'}</span>
             </div>
           </div>
 
-          <div className="flex flex-1 flex-col px-5 pb-5">
-            {/* AVATAR + STATUS */}
-            <div className="-mt-12 flex items-end justify-between">
+          <div className="px-5 pb-5">
+            {/* AVATAR */}
+            <div className="-mt-11 flex items-end justify-between">
               <div className="relative">
-                <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-[#FFFDFC] bg-[#F7EEE7] text-2xl font-extrabold text-[#8E181F] shadow-lg">
+                <div className="flex h-22 w-22 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#F7EEE7] text-xl font-extrabold text-[#8E181F] shadow-lg">
                   {user.avatar ? <img src={`http://localhost:3000${user.avatar}`} alt={user.name} className="h-full w-full object-cover" /> : initials}
                 </div>
 
-                <span className="absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-white bg-[#3E8B62]" />
+                <span className="absolute bottom-0.5 right-0.5 h-4 w-4 rounded-full border-2 border-white bg-[#3E8B62]" />
               </div>
 
-              <span className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-[#D5E9DC] bg-[#EAF6EF] px-2.5 py-1 text-[10px] font-bold text-[#3E8B62]">
+              <span className="mb-1 inline-flex items-center gap-1.5 rounded-full bg-[#EAF6EF] px-2.5 py-1 text-[9px] font-bold text-[#3E8B62]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#3E8B62]" />
                 {user.status || 'Active'}
               </span>
             </div>
 
             {/* NAME */}
-            <div className="mt-4">
-              <h2 className="text-xl font-extrabold text-[#351C18]">{user.name || 'User'}</h2>
-              <p className="mt-1 text-xs font-medium text-[#9A857B]">MineKart Customer</p>
+            <div className="mt-3.5">
+              <h2 className="text-lg font-extrabold text-[#351C18]">{user.name || 'User'}</h2>
+
+              <p className="mt-0.5 text-[11px] font-medium text-[#9A857B]">{user.role || 'Customer'}</p>
             </div>
 
             {/* CONTACT */}
-            <div className="mt-6 space-y-3 border-t border-[#E8DDD4] pt-5">
-              <div className="flex items-center gap-3 rounded-xl bg-[#FBF7F2] p-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
-                  <Mail size={16} />
+            <div className="mt-5 space-y-2 border-t border-[#EEE5DF] pt-4">
+              <div className="flex items-center gap-3 rounded-xl bg-[#FBF7F2] px-3 py-2.5">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                  <Mail size={14} />
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#9A857B]">Email</p>
-                  <p className="mt-0.5 truncate text-sm font-semibold text-[#351C18]">{user.email || 'Not added'}</p>
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Email</p>
+
+                  <p className="mt-0.5 truncate text-xs font-bold text-[#351C18]">{user.email || 'Not added'}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-xl bg-[#FBF7F2] p-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
-                  <Phone size={16} />
+              <div className="flex items-center gap-3 rounded-xl bg-[#FBF7F2] px-3 py-2.5">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                  <Phone size={14} />
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#9A857B]">Phone</p>
-                  <p className="mt-0.5 truncate text-sm font-semibold text-[#351C18]">{user.phone || 'Not added'}</p>
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Phone</p>
+
+                  <p className="mt-0.5 truncate text-xs font-bold text-[#351C18]">{user.phone || 'Not added'}</p>
                 </div>
               </div>
             </div>
 
-            {/* MOBILE EDIT */}
-            <button
-              type="button"
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[#D8C8BF] bg-[#FFFDFC] px-4 py-2.5 text-sm font-bold text-[#67544D] transition-all duration-300 hover:border-[#8E181F] hover:bg-[#F7EEE7] hover:text-[#8E181F] sm:hidden"
-            >
-              <Pencil size={15} />
-              Edit Profile
-            </button>
+            {/* QUICK LINKS */}
+            <div className="mt-4 border-t border-[#EEE5DF] pt-4">
+              <button type="button" onClick={() => navigate('/orders')} className="group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition hover:bg-[#FBF7F2]">
+                <div className="flex items-center gap-2.5">
+                  <Package size={15} className="text-[#8E181F]" />
 
-            {/* CONTINUE SHOPPING - ALWAYS BOTTOM */}
-            {cart && (
-              <button
-                type="button"
-                onClick={() => navigate('/cart')}
-                className="mt-auto flex w-full items-center justify-between rounded-xl border border-[#E2D5CC] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-[#CDAFA4] hover:shadow-md"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm">
-                    <ShoppingCart size={16} />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-extrabold text-[#351C18]">Continue Shopping</p>
-                    <p className="mt-0.5 text-[10px] text-[#806C63]">{cart.length || 0} items in your cart</p>
-                  </div>
+                  <span className="text-xs font-bold text-[#67544D] group-hover:text-[#8E181F]">My Orders</span>
                 </div>
 
-                <ChevronRight size={17} className="shrink-0 text-[#8E181F]" />
+                <ChevronRight size={14} className="text-[#A89890] transition-transform group-hover:translate-x-0.5 group-hover:text-[#8E181F]" />
               </button>
-            )}
+
+              <button type="button" onClick={() => navigate('/cart')} className="group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition hover:bg-[#FBF7F2]">
+                <div className="flex items-center gap-2.5">
+                  <ShoppingCart size={15} className="text-[#8E181F]" />
+
+                  <span className="text-xs font-bold text-[#67544D] group-hover:text-[#8E181F]">My Cart</span>
+                </div>
+
+                <ChevronRight size={14} className="text-[#A89890] transition-transform group-hover:translate-x-0.5 group-hover:text-[#8E181F]" />
+              </button>
+            </div>
           </div>
-        </div>
-
-
+        </aside>
 
         {/* RIGHT CONTENT */}
-        <div className="grid gap-6">
+        <main className="space-y-5">
           {/* PERSONAL INFORMATION */}
-          <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_6px_24px_rgba(73,54,49,0.06)]">
-            <div className="flex items-center justify-between gap-4 border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-5 py-4">
+          <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
+            <div className="flex items-center justify-between border-b border-[#EEE5DF] px-5 py-4">
               <div>
-                <h3 className="text-base font-extrabold text-[#351C18]">Personal Information</h3>
-                <p className="mt-0.5 text-xs text-[#806C63]">Your basic account information</p>
+                <h3 className="text-sm font-extrabold text-[#351C18] sm:text-base">Personal Information</h3>
+
+                <p className="mt-0.5 text-[10px] text-[#806C63] sm:text-xs">Your basic account information</p>
               </div>
 
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
-                <User size={18} />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
+                <User size={17} />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2.5 p-4 sm:grid-cols-2 sm:p-5">
               {[
-                { label: 'Full Name', value: user.name, icon: User },
-                { label: 'Email Address', value: user.email, icon: Mail },
-                { label: 'Phone Number', value: user.phone, icon: Phone },
-                { label: 'Account Status', value: user.status || 'Active', icon: ShieldCheck, status: true },
+                {
+                  label: 'Full Name',
+                  value: user.name,
+                  icon: User,
+                },
+                {
+                  label: 'Email Address',
+                  value: user.email,
+                  icon: Mail,
+                },
+                {
+                  label: 'Phone Number',
+                  value: user.phone,
+                  icon: Phone,
+                },
+                {
+                  label: 'Account Status',
+                  value: user.status || 'Active',
+                  icon: ShieldCheck,
+                  status: true,
+                },
               ].map(({ label, value, icon: Icon, status }) => (
-                <div key={label} className="flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5 transition-all duration-200 hover:border-[#D8C8BF] hover:bg-[#F7EEE7]">
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${status ? 'bg-[#EAF6EF] text-[#3E8B62]' : 'bg-[#FFFDFC] text-[#8E181F]'}`}>
-                    <Icon size={17} />
+                <div key={label} className="flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 transition-all duration-200 hover:border-[#D8C8BF] hover:bg-[#F7EEE7]">
+                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${status ? 'bg-[#EAF6EF] text-[#3E8B62]' : 'bg-white text-[#8E181F]'}`}>
+                    <Icon size={15} />
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#9A857B]">{label}</p>
-                    <p className={`mt-1 truncate text-sm font-bold ${status ? 'text-[#3E8B62]' : 'text-[#351C18]'}`}>{value || 'Not added'}</p>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">{label}</p>
+
+                    <p className={`mt-0.5 truncate text-xs font-bold ${status ? 'text-[#3E8B62]' : 'text-[#351C18]'}`}>{value || 'Not added'}</p>
                   </div>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* ADDRESS */}
-          <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_6px_24px_rgba(73,54,49,0.06)]">
+          {/* DELIVERY ADDRESS */}
+          <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
             {/* HEADER */}
-            <div className="flex items-center justify-between gap-4 border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] via-[#FBF7F2] to-[#F7EEE7] px-5 py-4">
+            <div className="flex items-center justify-between gap-3 border-b border-[#EEE5DF] px-5 py-4">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md shadow-[#7D171C]/15">
-                  <MapPin size={18} />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm">
+                  <MapPin size={16} />
                 </div>
 
                 <div className="min-w-0">
-                  <h3 className="text-base font-extrabold text-[#351C18]">Delivery Address</h3>
-                  <p className="mt-0.5 truncate text-xs text-[#806C63]">Where should we deliver your order?</p>
+                  <h3 className="text-sm font-extrabold text-[#351C18] sm:text-base">Delivery Addresses</h3>
+
+                  <p className="mt-0.5 truncate text-[10px] text-[#806C63] sm:text-xs">Manage your saved delivery addresses</p>
                 </div>
               </div>
 
@@ -365,31 +401,33 @@ export default function Profile() {
                     setEditingAddressId(null)
                     setShowAddressForm(true)
                   }}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-3.5 py-2.5 text-[11px] font-bold text-white shadow-sm shadow-[#7D171C]/15 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-3 py-2.5 text-[10px] font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md sm:px-3.5 sm:text-[11px]"
                 >
-                  <Plus size={14} strokeWidth={2.5} />
-                  <span className="hidden sm:inline">Add New</span>
-                  <span className="sm:hidden">Add</span>
+                  <Plus size={14} />
+                  <span className="hidden sm:inline">Add New Address</span>
+                  <span className="sm:inline sm:hidden">Add</span>
                 </button>
               )}
             </div>
 
             {/* SAVED ADDRESSES */}
             {!showAddressForm && (
-              <div className="space-y-3 p-5">
+              <div className="space-y-3 p-4 sm:p-5">
                 {addressLoading ? (
-                  <div className="animate-pulse rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-6 text-center">
-                    <div className="mx-auto h-4 w-32 rounded bg-[#E2D5CC]" />
-                    <div className="mx-auto mt-2 h-3 w-48 rounded bg-[#E8DDD4]" />
+                  <div className="animate-pulse rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-7">
+                    <div className="h-4 w-32 rounded bg-[#E2D5CC]" />
+                    <div className="mt-2 h-3 w-48 rounded bg-[#E8DDD4]" />
+                    <div className="mt-5 h-12 rounded bg-[#E8DDD4]" />
                   </div>
                 ) : addresses.length === 0 ? (
                   <div className="rounded-xl border border-dashed border-[#D8C8BF] bg-[#FBF7F2] p-8 text-center">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
-                      <MapPin size={23} />
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#F7EEE7] text-[#8E181F]">
+                      <MapPin size={22} />
                     </div>
 
-                    <p className="mt-3 text-sm font-extrabold text-[#351C18]">No saved address</p>
-                    <p className="mt-1 text-xs text-[#806C63]">Add an address to use it during checkout.</p>
+                    <p className="mt-3 text-sm font-extrabold text-[#351C18]">No saved addresses</p>
+
+                    <p className="mt-1 text-xs text-[#806C63]">Add an address for faster checkout.</p>
 
                     <button
                       type="button"
@@ -409,17 +447,22 @@ export default function Profile() {
                     const isDefault = address.isDefault
 
                     return (
-                      <div key={address._id} className={`rounded-xl border p-4 transition-all duration-300 ${isDefault ? 'border-[#D9B7AF] bg-[#FFF7F5] shadow-sm' : 'border-[#E8DDD4] bg-[#FFFDFC] hover:border-[#D8C8BF] hover:bg-[#FBF7F2]'}`}>
+                      <div
+                        key={address._id}
+                        className={`rounded-xl border p-4 transition-all duration-300 ${isDefault ? 'border-[#D9B7AF] bg-[#FFF8F6] shadow-[0_3px_12px_rgba(125,23,28,0.05)]' : 'border-[#E8DDD4] bg-white hover:border-[#D8C8BF] hover:bg-[#FBF7F2]'}`}
+                      >
                         <div className="flex items-start gap-3">
-                          <div className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${isDefault ? 'bg-[#7D171C] text-white' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
+                          {/* ADDRESS ICON */}
+                          <div className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${isDefault ? 'bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
                             <MapPin size={16} />
                           </div>
 
                           <div className="min-w-0 flex-1">
+                            {/* NAME + TYPE */}
                             <div className="flex flex-wrap items-center gap-2">
                               <p className="text-sm font-extrabold text-[#351C18]">{address.fullName}</p>
 
-                              <span className={`rounded-md px-2 py-0.5 text-[9px] font-bold ${isDefault ? 'bg-[#F7EEE7] text-[#8E181F]' : 'bg-[#F7F2EE] text-[#806C63]'}`}>{address.addressType}</span>
+                              <span className="rounded-md bg-[#F7EEE7] px-2 py-0.5 text-[9px] font-bold text-[#8E181F]">{address.addressType}</span>
 
                               {isDefault && (
                                 <span className="inline-flex items-center gap-1 rounded-md bg-[#EAF6EF] px-2 py-0.5 text-[9px] font-bold text-[#3E8B62]">
@@ -429,17 +472,18 @@ export default function Profile() {
                               )}
                             </div>
 
-                            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
-                              <span className="flex items-center gap-1 text-[10px] font-semibold text-[#806C63]">
-                                <Phone size={11} />
-                                {address.phone}
-                              </span>
+                            {/* PHONE */}
+                            <div className="mt-2 flex items-center gap-1.5 text-[10px] font-semibold text-[#806C63]">
+                              <Phone size={11} />
+                              {address.phone}
                             </div>
 
+                            {/* ADDRESS */}
                             <p className="mt-2 text-xs leading-5 text-[#67544D]">
                               {address.addressLine}, {address.city}, {address.state} - {address.pincode}
                             </p>
 
+                            {/* LANDMARK */}
                             {address.landmark && (
                               <div className="mt-1.5 flex items-center gap-1 text-[10px] text-[#9A857B]">
                                 <Navigation size={10} />
@@ -447,11 +491,12 @@ export default function Profile() {
                               </div>
                             )}
 
-                            <div className="mt-3 flex items-center gap-2 border-t border-[#E8DDD4] pt-3">
+                            {/* ACTIONS */}
+                            <div className="mt-3 flex items-center gap-2 border-t border-[#EEE5DF] pt-3">
                               <button
                                 type="button"
                                 onClick={() => startEditAddress(address)}
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-[#E2D5CC] bg-[#FFFDFC] px-3 py-1.5 text-[10px] font-bold text-[#67544D] transition-all hover:border-[#BFA49A] hover:bg-[#F7EEE7] hover:text-[#8E181F]"
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-[#E2D5CC] bg-white px-3 py-1.5 text-[10px] font-bold text-[#67544D] transition-all hover:border-[#BFA49A] hover:bg-[#F7EEE7] hover:text-[#8E181F]"
                               >
                                 <Pencil size={12} />
                                 Edit
@@ -461,7 +506,7 @@ export default function Profile() {
                                 type="button"
                                 onClick={() => handleDeleteAddress(address._id)}
                                 disabled={addressDeleting}
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-[#E7C8C8] bg-[#FFFDFC] px-3 py-1.5 text-[10px] font-bold text-[#A51D26] transition hover:bg-[#FCEBEC] disabled:cursor-not-allowed disabled:opacity-50"
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-[#E7C8C8] bg-white px-3 py-1.5 text-[10px] font-bold text-[#A51D26] transition hover:bg-[#FCEBEC] disabled:cursor-not-allowed disabled:opacity-50"
                               >
                                 <X size={12} />
                                 Delete
@@ -478,14 +523,17 @@ export default function Profile() {
 
             {/* ADDRESS FORM */}
             {showAddressForm && (
-              <form onSubmit={editingAddressId ? handleEditAddress : handleAddAddress} className="space-y-4 p-5">
-                <div className="flex items-center justify-between border-b border-[#E8DDD4] pb-4">
+              <form onSubmit={editingAddressId ? handleEditAddress : handleAddAddress} className="space-y-4 p-4 sm:p-5">
+                {/* FORM HEADER */}
+                <div className="flex items-center justify-between border-b border-[#EEE5DF] pb-4">
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="h-4 w-1 rounded-full bg-[#8E181F]" />
+
                       <h3 className="text-sm font-extrabold text-[#351C18]">{editingAddressId ? 'Edit Address' : 'Add New Address'}</h3>
                     </div>
-                    <p className="mt-1 ml-3 text-[11px] text-[#806C63]">{editingAddressId ? 'Update your delivery address details' : 'Add a new delivery address'}</p>
+
+                    <p className="mt-1 ml-3 text-[10px] text-[#806C63]">{editingAddressId ? 'Update your delivery details' : 'Add a new delivery address'}</p>
                   </div>
 
                   <button
@@ -505,8 +553,10 @@ export default function Profile() {
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">Full Name</label>
+
                     <div className="relative">
                       <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+
                       <input
                         type="text"
                         name="fullName"
@@ -521,8 +571,10 @@ export default function Profile() {
 
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">Phone Number</label>
+
                     <div className="relative">
                       <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+
                       <input
                         type="tel"
                         name="phone"
@@ -539,8 +591,10 @@ export default function Profile() {
                 {/* ADDRESS */}
                 <div>
                   <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">Address</label>
+
                   <div className="relative">
                     <MapPin size={15} className="absolute left-3 top-3 text-[#A89890]" />
+
                     <textarea
                       name="addressLine"
                       value={addressForm.addressLine}
@@ -553,12 +607,14 @@ export default function Profile() {
                   </div>
                 </div>
 
-                {/* CITY / STATE / PINCODE */}
+                {/* CITY / STATE / PIN */}
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">City</label>
+
                     <div className="relative">
                       <Building2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+
                       <input
                         type="text"
                         name="city"
@@ -573,8 +629,10 @@ export default function Profile() {
 
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">State</label>
+
                     <div className="relative">
                       <MapPinned size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+
                       <input
                         type="text"
                         name="state"
@@ -589,8 +647,10 @@ export default function Profile() {
 
                   <div>
                     <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">Pincode</label>
+
                     <div className="relative">
                       <Navigation size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+
                       <input
                         type="text"
                         name="pincode"
@@ -613,6 +673,7 @@ export default function Profile() {
 
                   <div className="relative">
                     <Navigation size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+
                     <input
                       type="text"
                       name="landmark"
@@ -636,8 +697,15 @@ export default function Profile() {
                         <button
                           key={name}
                           type="button"
-                          onClick={() => setAddressForm((prev) => ({ ...prev, addressType: name }))}
-                          className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-[11px] font-bold transition-all duration-200 ${isActive ? 'border-[#8E181F] bg-[#F7EEE7] text-[#8E181F] shadow-sm' : 'border-[#E2D5CC] bg-[#FFFDFC] text-[#806C63] hover:border-[#CDAFA4] hover:bg-[#FBF7F2]'}`}
+                          onClick={() =>
+                            setAddressForm((prev) => ({
+                              ...prev,
+                              addressType: name,
+                            }))
+                          }
+                          className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-[11px] font-bold transition-all duration-200 ${
+                            isActive ? 'border-[#8E181F] bg-[#F7EEE7] text-[#8E181F] shadow-sm' : 'border-[#E2D5CC] bg-white text-[#806C63] hover:border-[#CDAFA4] hover:bg-[#FBF7F2]'
+                          }`}
                         >
                           <Icon size={14} />
                           {name}
@@ -647,8 +715,8 @@ export default function Profile() {
                   </div>
                 </div>
 
-                {/* FORM BUTTONS */}
-                <div className="flex flex-wrap justify-end gap-2 border-t border-[#E8DDD4] pt-4">
+                {/* BUTTONS */}
+                <div className="flex flex-wrap justify-end gap-2 border-t border-[#EEE5DF] pt-4">
                   <button
                     type="button"
                     onClick={() => {
@@ -656,7 +724,7 @@ export default function Profile() {
                       setEditingAddressId(null)
                       setShowAddressForm(false)
                     }}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-4 py-2.5 text-[11px] font-bold text-[#67544D] transition hover:bg-[#F7EEE7]"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-[11px] font-bold text-[#67544D] transition hover:bg-[#F7EEE7]"
                   >
                     <X size={14} />
                     Cancel
@@ -665,9 +733,10 @@ export default function Profile() {
                   <button
                     type="submit"
                     disabled={addressSaving}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-[11px] font-bold text-white shadow-sm shadow-[#7D171C]/15 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-[11px] font-bold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <Save size={14} />
+
                     {addressSaving ? 'Saving...' : editingAddressId ? 'Update Address' : 'Save Address'}
                   </button>
                 </div>
@@ -675,22 +744,23 @@ export default function Profile() {
             )}
           </section>
 
-          {/* SECURITY */}
-          <section className="relative overflow-hidden rounded-2xl border border-[#E6D5C5] bg-linear-to-r from-[#FFF9F2] to-[#F7EEE7] p-5 shadow-[0_5px_20px_rgba(73,54,49,0.04)]">
+          {/* SECURITY / TRUST */}
+          <section className="relative overflow-hidden rounded-2xl border border-[#E6D5C5] bg-linear-to-r from-[#FFF9F2] to-[#F7EEE7] p-4 sm:p-5">
             <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#D4A373]/10" />
 
-            <div className="relative flex items-start gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FFFDFC] text-[#8E181F] shadow-sm">
-                <ShieldCheck size={20} />
+            <div className="relative flex items-start gap-3.5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#8E181F] shadow-sm">
+                <ShieldCheck size={18} />
               </div>
 
               <div>
-                <h3 className="font-extrabold text-[#351C18]">Your account is secure</h3>
-                <p className="mt-1 text-xs leading-5 text-[#806C63]">Keep your email and phone number updated to protect your MineKart account and receive important order updates.</p>
+                <h3 className="text-sm font-extrabold text-[#351C18]">Your account is secure</h3>
+
+                <p className="mt-1 text-[10px] leading-5 text-[#806C63] sm:text-xs">Keep your contact details updated to receive important order and delivery updates.</p>
               </div>
             </div>
           </section>
-        </div>
+        </main>
       </div>
     </div>
   )
