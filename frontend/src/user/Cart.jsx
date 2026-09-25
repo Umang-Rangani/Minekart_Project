@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag, Sparkles } from 'lucide-react'
+import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag, Sparkles, Share, ExternalLink } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
@@ -15,38 +15,52 @@ export default function Cart() {
       top: 0,
       behavior: 'smooth',
     })
+
+    document.title = 'Cart | MineKart'
+    
   }, [])
 
+  // ! increase Quantity
   const increaseQuantity = async (item) => {
-    const productStock = item.productId?.stock || 0
+    const product = item.productId
+    const productStock = product?.stock || 0
 
     if (item.quantity >= productStock) {
       toast.error('Maximum available stock reached')
       return
     }
 
-    const res = await increaseCartItem({
-      productId: item.productId._id,
-      size: item.size || null,
-    })
+    try {
+      const res = await increaseCartItem({
+        productId: product._id,
+        size: item.size || null,
+      })
 
-    if (!res?.success) {
-      toast.error(res?.message || 'Unable to increase quantity')
+      if (!res?.success) {
+        toast.error(res?.message || 'Unable to increase quantity')
+        return
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Unable to increase quantity')
     }
   }
 
+  // ! Decrease Quantity
   const decreaseQuantity = async (item) => {
-    if (item.quantity <= 0) {
-      return
-    }
+    const product = item.productId
 
-    const res = await decreaseCartItem({
-      productId: item.productId._id,
-      size: item.size || null,
-    })
+    try {
+      const res = await decreaseCartItem({
+        productId: product._id,
+        size: item.size || null,
+      })
 
-    if (!res?.success) {
-      toast.error(res?.message || 'Unable to decrease quantity')
+      if (!res?.success) {
+        toast.error(res?.message || 'Unable to decrease quantity')
+        return
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Unable to decrease quantity')
     }
   }
 
@@ -144,7 +158,7 @@ export default function Cart() {
                 </div>
 
                 {/* PRODUCTS */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {cartItems.map((item) => {
                     const product = item.productId
                     const unitPrice = item.discountPrice || item.price
@@ -153,78 +167,98 @@ export default function Cart() {
                     return (
                       <div
                         key={`${product._id}-${item.size || 'no-size'}`}
-                        className="group rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] p-4 shadow-[0_4px_16px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#CDAFA4] hover:shadow-[0_12px_30px_rgba(73,54,49,0.10)] sm:p-5"
+                        className="group overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.05)] transition-all duration-300 hover:border-[#D5BFB5] hover:shadow-[0_8px_22px_rgba(73,54,49,0.09)]"
                       >
-                        <div className="flex gap-4 sm:gap-5">
+                        <div className="flex gap-3 p-3 sm:gap-4 sm:p-4">
                           {/* IMAGE + QUANTITY */}
-                          <div className="w-27 shrink-0 sm:w-34">
-                            <button
-                              type="button"
-                              onClick={() => navigate(`/product/${product._id}`)}
-                              className="group/image relative block h-32 w-27 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-linear-to-br from-[#FFFDFC] to-[#F7EEE7] sm:h-36 sm:w-34"
-                            >
-                              <div className="absolute -right-7 -top-7 h-20 w-20 rounded-full bg-[#A51D26]/5" />
+                          <div className="w-23 shrink-0 sm:w-30">
+                            {/* IMAGE */}
+                            <button type="button" onClick={() => navigate(`/product/${product._id}`)} className="group/image relative block h-26 w-23 overflow-hidden rounded-lg border border-[#E8DDD4] bg-white sm:h-30 sm:w-30">
+                              <div className="absolute -right-6 -top-6 h-16 w-16 rounded-full bg-[#F7EEE7]" />
 
-                              <img src={`http://localhost:3000${product?.images?.[0]}`} alt={product?.productName} className="relative z-10 h-full w-full object-contain p-3 transition-transform duration-500 group-hover/image:scale-110" />
+                              {product?.images?.[0] ? (
+                                <img
+                                  src={`http://localhost:3000${product.images[0]}`}
+                                  alt={product.productName}
+                                  className="relative z-10 h-full w-full bg-white object-contain p-2.5 transition-transform duration-300 group-hover/image:scale-105 sm:p-3"
+                                />
+                              ) : (
+                                <div className="flex h-full items-center justify-center text-[10px] text-[#9A857B]">No Image</div>
+                              )}
 
-                              {product.stock <= 0 && <span className="absolute bottom-2 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#351C18]/90 px-2.5 py-1.5 text-[9px] font-bold text-white">Out of Stock</span>}
+                              {product.stock <= 0 && <span className="absolute bottom-1.5 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-[#351C18]/90 px-2 py-1 text-[8px] font-bold text-white">Out of Stock</span>}
                             </button>
-
-                            {/* QUANTITY */}
-                            <div className="mt-3 flex h-10 items-center justify-center overflow-hidden rounded-xl border border-[#E2D5CC] bg-[#FFFDFC]">
-                              <button type="button" onClick={() => decreaseQuantity(item)} className="flex h-full w-10 items-center justify-center text-[#806C63] transition-colors duration-200 hover:bg-[#F7EEE7] hover:text-[#8E181F]">
-                                <Minus size={15} />
-                              </button>
-
-                              <span className="flex h-full min-w-10 items-center justify-center border-x border-[#E2D5CC] text-sm font-extrabold text-[#351C18]">{item.quantity}</span>
-
-                              <button type="button" onClick={() => increaseQuantity(item)} className="flex h-full w-10 items-center justify-center text-[#8E181F] transition-colors duration-200 hover:bg-[#F7EEE7]">
-                                <Plus size={15} />
-                              </button>
-                            </div>
                           </div>
 
                           {/* DETAILS */}
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-start justify-between gap-3">
+                            {/* BRAND + REMOVE */}
+                            <div className="flex items-start justify-between gap-2">
                               <div className="min-w-0">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
+                                <div className="flex items-center gap-1.5">
+                                  <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
+                                  <span className={`h-1.5 w-1.5 rounded-full ${product.stock > 0 ? 'bg-[#3E8B62]' : 'bg-[#A51D26]'}`} />
 
-                                <h3 className="mt-1.5 line-clamp-2 text-base font-extrabold leading-6 text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F] sm:text-lg">{product.productName}</h3>
+                                  <span className={`text-[8px] font-semibold sm:text-[9px] ${product.stock > 0 ? 'text-[#3E8B62]' : 'text-[#A51D26]'}`}>{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span>
+                                </div>
+
+                                <h3 className="mt-1 line-clamp-2 text-sm font-bold leading-5 text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F] sm:text-base truncate">{product.productName}</h3>
                               </div>
 
-                              <button
-                                type="button"
-                                onClick={() => removeItem(item)}
-                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[#B3A39B] transition-all duration-200 hover:bg-[#FFF0F0] hover:text-[#A51D26]"
-                                title="Remove"
-                              >
-                                <Trash2 size={17} strokeWidth={1.8} />
+                              <button type="button" onClick={() => removeItem(item)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#B3A39B] transition-all hover:bg-[#FFF0F0] hover:text-[#A51D26]" title="Remove">
+                                <Trash2 size={15} strokeWidth={1.9} />
+                              </button>
+
+                              <button type="button" onClick={() => navigate(`/product/${product._id}`)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#B3A39B] transition-all hover:bg-[#FFF0F0] hover:text-[#A51D26]">
+                                <ExternalLink size={15} strokeWidth={1.9} />
                               </button>
                             </div>
 
+                            {/* SIZE */}
                             {item.size && (
-                              <div className="mt-3 inline-flex items-center rounded-lg border border-[#E8DDD4] bg-[#F7EEE7] px-3 py-1.5 text-[11px] font-semibold text-[#67544D]">
-                                Size <span className="ml-1.5 font-extrabold text-[#351C18]">{item.size}</span>
+                              <div className="mt-2 inline-flex items-center rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-2.5 py-1 text-[10px] font-semibold text-[#67544D]">
+                                Size
+                                <span className="ml-1.5 font-extrabold text-[#351C18]">{item.size}</span>
                               </div>
                             )}
 
-                            {/* PRICE AREA */}
-                            <div className="mt-6 flex flex-wrap items-end justify-between gap-5 border-t border-[#F0E7E1] pt-4">
+                            {/* PRICE */}
+                            <div className="mt-3 flex items-end justify-between gap-3 border-t border-[#F0E7E1] pt-3">
                               <div>
-                                <p className="text-[10px] font-bold uppercase tracking-wider text-[#9A857B]">Unit Price</p>
+                                <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Price</p>
 
-                                <div className="mt-1 flex flex-wrap items-center gap-2.5">
-                                  <span className="text-lg font-extrabold text-[#351C18]">₹{unitPrice.toLocaleString('en-IN')}</span>
+                                <div className="mt-0.5 flex items-center gap-2">
+                                  <span className="text-base font-extrabold text-[#351C18]">₹{unitPrice.toLocaleString('en-IN')}</span>
 
-                                  {item.price > unitPrice && <span className="text-xs font-medium text-[#9A857B] line-through">₹{item.price.toLocaleString('en-IN')}</span>}
+                                  {item.price > unitPrice && <span className="text-[10px] text-[#9A857B] line-through">₹{item.price.toLocaleString('en-IN')}</span>}
                                 </div>
                               </div>
 
-                              <div className="rounded-xl bg-[#F7EEE7] px-4 py-2.5 text-right">
-                                <p className="text-[10px] font-bold uppercase tracking-wider text-[#9A857B]">Item Total</p>
+                              <div className=" flex gap-5">
+                                {/* QUANTITY */}
+                                <div className="mt-2 flex h-8 items-center justify-center overflow-hidden rounded-lg border border-[#E2D5CC] bg-white sm:h-9">
+                                  <button type="button" onClick={() => decreaseQuantity(item)} className="flex h-full w-8 items-center justify-center text-[#806C63] transition-colors hover:bg-[#F7EEE7] hover:text-[#8E181F]">
+                                    <Minus size={13} />
+                                  </button>
 
-                                <p className="mt-0.5 text-lg font-extrabold text-[#8E181F]">₹{itemTotal.toLocaleString('en-IN')}</p>
+                                  <span className="flex h-full min-w-8 items-center justify-center border-x border-[#E2D5CC] text-xs font-extrabold text-[#351C18]">{item.quantity}</span>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => increaseQuantity(item)}
+                                    disabled={item.quantity >= (item.productId?.stock || 0)}
+                                    className="flex h-full w-8 items-center justify-center text-[#8E181F] transition-colors hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-40"
+                                  >
+                                    <Plus size={13} />
+                                  </button>
+                                </div>
+
+                                {/* TOTAL */}
+                                <div className="rounded-lg bg-[#FFF6F2] px-3 py-1.5 text-right">
+                                  <p className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Total</p>
+
+                                  <p className="text-sm font-extrabold text-[#8E181F]">₹{itemTotal.toLocaleString('en-IN')}</p>
+                                </div>
                               </div>
                             </div>
                           </div>

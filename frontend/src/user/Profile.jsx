@@ -200,6 +200,7 @@ export default function Profile() {
 
         <button
           type="button"
+          onClick={() => navigate("/profile/update")}
           className="hidden items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-[#7D171C]/15 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:flex"
         >
           <Pencil size={16} />
@@ -216,9 +217,9 @@ export default function Profile() {
             <div className="absolute -right-8 -top-12 h-32 w-32 rounded-full border-18 border-white/5" />
             <div className="absolute -bottom-16 left-10 h-28 w-28 rounded-full bg-[#D4A373]/10" />
 
-            <div className="absolute bottom-3 left-5 flex items-center gap-2 rounded-lg border border-white/10 bg-black/10 px-2.5 py-1.5 backdrop-blur-sm">
+            <div className="absolute  right-0  bottom-0 flex items-center gap-2 rounded-lg border border-white/10 bg-black/10 px-2.5 py-1.5 backdrop-blur-sm">
               <ShieldCheck size={13} className="text-[#E7C9A7]" />
-              <span className="text-[10px] font-bold text-white/80">Verified Customer</span>
+              <span className="text-[10px] font-bold text-white/80">Verified {user.role}</span>
             </div>
           </div>
 

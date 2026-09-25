@@ -1,9 +1,14 @@
+import { useEffect } from 'react'
 import BrandList from './BrandList'
 import CategoryList from './CategoryList'
 import ProductList from './ProductList'
 import ProductOfferList from './ProductOfferList'
 
 export default function Home() {
+  useEffect(() => {
+    document.title = 'Home | MineKart'
+  }, [])
+
   return (
     <div className="w-full">
       {/* Category Section */}

@@ -15,27 +15,6 @@ export function CartProvider({ children }) {
   const cartRequestId = useRef(0)
 
   // ! Get Cart
-  // const getCart = async () => {
-  //   if (!user) {
-  //     setCart(null)
-  //     return
-  //   }
-
-  //   try {
-  //     setCartLoading(true)
-
-  //     const res = await axiosInstance.get('/cart')
-
-  //     if (res.data.success) {
-  //       setCart(res.data.data)
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.response?.data?.message || 'Unable to load cart')
-  //   } finally {
-  //     setCartLoading(false)
-  //   }
-  // }
-
   const getCart = async () => {
     if (!user) {
       setCart(null)

@@ -36,6 +36,7 @@ import AdminBrandView from './admin/AdminBrandView.jsx'
 import AdminBrandForm from './admin/AdminBrandForm.jsx'
 import AdminProtected from './admin/AdminProtected.jsx'
 import { Toaster } from 'react-hot-toast'
+import ProfileUpdate from './user/ProfileUpdate.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -81,12 +82,14 @@ export default function App() {
 
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="orders/:id" element={<OrderDetails />} />
 
           <Route path="/search" element={<SearchProducts />} />
+
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/update" element={<ProfileUpdate />} />
         </Route>
 
         {/*  AUTH  */}
