@@ -181,6 +181,7 @@ export default function Header() {
                     onClick={() => {
                       logout()
                       setAccountOpen(false)
+                      navigate("/")
                     }}
                     className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-[#A51D26] transition-all duration-200 hover:bg-[#FFF0F0]"
                   >

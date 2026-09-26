@@ -14,6 +14,8 @@ var categoryRouter = require('./routes/category')
 var subcategoryRouter = require('./routes/subcategory')
 var brandRouter = require('./routes/brand')
 
+var contactRouter = require('./routes/contact')
+
 var productRouter = require('./routes/product')
 var cartRouter = require('./routes/cart')
 var addressRouter = require('./routes/address')
@@ -59,6 +61,8 @@ app.use('/address', addressRouter)
 app.use('/payment', paymentRouter)
 app.use('/order', orderRouter)
 app.use('/uploads', uploadRouter)
+
+app.use('/contact', contactRouter)
 
 app.use('/admin/orders', adminOrderRoutes)
 app.use('/admin/dashboard', adminDashboard)

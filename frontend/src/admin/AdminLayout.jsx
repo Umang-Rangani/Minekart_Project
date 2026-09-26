@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Package, ShoppingBag, Users, Settings, Store, LayoutGrid, Tag, Grid2X2, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { LayoutDashboard, Package, ShoppingBag, Users, Settings, Store, LayoutGrid, Tag, Grid2X2, ChevronLeft, ChevronRight, ShieldCheck, MessageSquare, LogOut } from 'lucide-react'
 import { MdDashboard, MdCategory } from 'react-icons/md'
 import { TbCategory2 } from 'react-icons/tb'
 import { useUser } from '../context/userProvider'
@@ -8,7 +8,8 @@ import { useUser } from '../context/userProvider'
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
-  const { user } = useUser()
+  const { user, logout } = useUser()
+  const navigate = useNavigate()
 
   const menuItems = [
     {
@@ -46,6 +47,11 @@ export default function AdminLayout() {
       path: '/admin/users',
       icon: Users,
     },
+    {
+      name: 'Contact Messages',
+      path: '/admin/contact-messages',
+      icon: MessageSquare,
+    },
   ]
 
   return (
@@ -76,12 +82,27 @@ export default function AdminLayout() {
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={17} className="text-[#6B6258]" />
+          <div className="flex gap-5 ">
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={17} className="text-[#6B6258]" />
 
-            <p className="text-sm font-semibold text-[#292725]">{user.name}</p>
+              <p className="text-sm font-semibold text-[#292725]">{user.name}</p>
 
-            <span className="rounded-full bg-[#EAE7E1] px-2.5 py-1 text-[10px] font-bold text-[#5D554C]">Admin</span>
+              <span className="rounded-full bg-[#EAE7E1] px-2.5 py-1 text-[10px] font-bold text-[#5D554C]">Admin</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                navigate('/')
+                logout()
+              }}
+              title="Logout"
+              className="flex h-9 items-center gap-2 rounded-lg border border-[#E3DED6] bg-[#F8F6F2] px-3 text-xs font-bold text-[#6F6A64] transition hover:border-[#D8D1C8] hover:bg-[#EEEAE4] hover:text-[#3F3A35]"
+            >
+              <LogOut size={16} strokeWidth={2} />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
           </div>
         </div>
       </header>

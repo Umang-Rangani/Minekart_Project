@@ -24,7 +24,6 @@ import Profile from './user/Profile'
 import OrderSuccess from './user/OrderSuccess'
 import MyOrders from './user/MyOrders.jsx'
 import OrderDetails from './user/OrderDetails.jsx'
-import AdminOrderDetails from './admin/AdminOrderDetails.jsx'
 import SearchProducts from './user/SearchProducts.jsx'
 import AdminProductsForm from './admin/AdminProductsForm.jsx'
 import AdminProductsView from './admin/AdminProductsView.jsx'
@@ -41,6 +40,11 @@ import HelpCenter from './components/CustomerService/HelpCenter.jsx'
 import TrackOrder from './components/CustomerService/TrackOrder.jsx'
 import ReturnsRefunds from './components/CustomerService/ReturnsRefunds.jsx'
 import ContactUs from './components/CustomerService/ContactUs.jsx'
+import AdminContactMessages from './admin/AdminContactMessages .jsx'
+import AdminContactMessageView from './admin/AdminContactMessageView.jsx'
+import AdminOrderView from './admin/AdminOrderView.jsx'
+import MySupport from './components/CustomerService/MySupport.jsx'
+import SupportDetails from './components/CustomerService/SupportDetails.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -100,6 +104,9 @@ export default function App() {
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/returns" element={<ReturnsRefunds />} />
           <Route path="/contact" element={<ContactUs />} />
+
+          <Route path="/my-support" element={<MySupport />} />
+          <Route path="/my-support/:id" element={<SupportDetails />} />
         </Route>
 
         {/*  AUTH  */}
@@ -132,9 +139,12 @@ export default function App() {
             <Route path="products/:id" element={<AdminProductsView />} />
 
             <Route path="orders" element={<AdminOrders />} />
-            <Route path="orders/:id" element={<AdminOrderDetails />} />
+            <Route path="orders/:id" element={<AdminOrderView />} />
 
             <Route path="users" element={<AdminUsers />} />
+
+            <Route path="contact-messages" element={<AdminContactMessages />} />
+            <Route path="contact-messages/:id" element={<AdminContactMessageView />} />
           </Route>
         </Route>
       </Routes>

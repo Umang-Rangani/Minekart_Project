@@ -7,6 +7,7 @@ const UserContext = createContext()
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  
 
   const [showLogin, setShowLogin] = useState(false)
 
@@ -43,6 +44,8 @@ export const UserProvider = ({ children }) => {
       setShowLogin(true)
       toast.success('Logout successful')
       window.location.reload()
+
+      
     } catch (error) {
       toast.error(error.response?.data?.message || 'Logout failed. Please try again.')
 

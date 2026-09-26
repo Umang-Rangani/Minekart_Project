@@ -5,7 +5,7 @@ import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import toast from 'react-hot-toast'
 
-const AdminOrderDetails = () => {
+const AdminOrderView = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -178,6 +178,7 @@ const AdminOrderDetails = () => {
       link: null,
     },
   ]
+  
   return (
     <div className="min-h-screen bg-[#F4F2EE] space-y-6">
       <AdminBreadCrumb items={items} />
@@ -544,4 +545,4 @@ const ShoppingBagIcon = () => (
   </svg>
 )
 
-export default AdminOrderDetails
+export default AdminOrderView

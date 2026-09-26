@@ -127,10 +127,10 @@ export default function TrackOrder() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2]">
+    <div className="min-h-screen bg-[#FBF7F2] mx-auto max-w-350">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto max-w-350 px-4 py-5 sm:px-6 lg:px-8">
+      <div className="  py-5 ">
         {/* Header */}
         <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
           <div className="bg-linear-to-br from-[#351C18] via-[#4A2520] to-[#7D171C] px-5 py-6 sm:px-8 sm:py-8">
