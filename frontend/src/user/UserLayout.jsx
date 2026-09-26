@@ -4,8 +4,9 @@ import { Outlet } from 'react-router-dom'
 import Footer from '../components/Footer'
 
 export default function UserLayout() {
+  // bg-[#FBF7F2]
   return (
-    <div className="min-h-screen bg-[#FBF7F2] text-[#351C18]">
+    <div className="min-h-screen bg-[#F7EEE7] text-[#351C18]">
       {/* Header */}
       <Header />
 
