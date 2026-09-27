@@ -9,6 +9,8 @@ const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirm
 const User = require('../model/users')
 const { sendEmail } = require('../utils/sendEmail')
 
+// ! <order className="js"></order>
+
 // Create Order
 router.post('/', authMiddleware, async (req, res) => {
   try {
@@ -193,6 +195,59 @@ router.get('/:id', authMiddleware, async (req, res) => {
     })
   } catch (error) {
     console.log('Get Order Details Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message,
+    })
+  }
+})
+
+// ! users ne order delete mate
+// ! CANCEL ORDER => User mate
+router.put('/:id/cancel', authMiddleware, async (req, res) => {
+  try {
+    const { userId } = req.user
+    const { id } = req.params
+    const { cancellationReason = '' } = req.body
+
+    const order = await Order.findOne({
+      _id: id,
+      userId,
+    })
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      })
+    }
+
+    // User can cancel only before shipping
+    const cancellableStatuses = ['Pending', 'Confirmed', 'Processing']
+
+    if (!cancellableStatuses.includes(order.orderStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: 'This order can no longer be cancelled',
+      })
+    }
+
+    order.orderStatus = 'Cancelled'
+    order.cancellationReason = cancellationReason.trim()
+    order.cancelledAt = new Date()
+    order.cancelledBy = 'User'
+
+    await order.save()
+
+    res.status(200).json({
+      success: true,
+      message: 'Order cancelled successfully',
+      data: order,
+    })
+  } catch (error) {
+    console.log('Cancel Order Error:', error)
 
     res.status(500).json({
       success: false,

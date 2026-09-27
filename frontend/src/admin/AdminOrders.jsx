@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Search, Eye, Package, ShoppingBag, CircleDollarSign, AlertTriangle, Clock3, CheckCircle2, XCircle, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { Search, Eye, Package, ShoppingBag, Clock3, CheckCircle2, XCircle, UserRound, ShieldCheck, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
@@ -10,6 +10,12 @@ export default function AdminOrders() {
 
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(false)
+
+  const [cancellationStats, setCancellationStats] = useState({
+    userCancelled: 0,
+    adminCancelled: 0,
+    totalCancelled: 0,
+  })
 
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminOrdersSearch') || ''
@@ -42,8 +48,28 @@ export default function AdminOrders() {
     }
   }
 
+  // Get cancellation statistics
+  const getCancellationStats = async () => {
+    try {
+      const res = await axiosInstance.get('/admin/orders/cancellation-stats')
+
+      if (res.data.success) {
+        setCancellationStats({
+          userCancelled: res.data.data?.userCancelled || 0,
+          adminCancelled: res.data.data?.adminCancelled || 0,
+          totalCancelled: res.data.data?.totalCancelled || 0,
+        })
+      }
+    } catch (error) {
+      console.log('Get Cancellation Stats Error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to load cancellation statistics')
+    }
+  }
+
   useEffect(() => {
     getOrders()
+    getCancellationStats()
   }, [])
 
   // Update order status
@@ -69,6 +95,10 @@ export default function AdminOrders() {
             return order
           }),
         )
+
+        if (orderStatus === 'Cancelled') {
+          await getCancellationStats()
+        }
 
         toast.success(`Order status updated to ${orderStatus}`)
       }
@@ -108,6 +138,7 @@ export default function AdminOrders() {
       }
     } catch (error) {
       console.log('Confirm Payment Error:', error.response?.data || error.message)
+
       toast.error(error.response?.data?.message || 'Payment confirmation failed')
     } finally {
       setConfirmingPaymentId(null)
@@ -241,8 +272,6 @@ export default function AdminOrders() {
 
   const deliveredOrders = orders.filter((order) => order.orderStatus === 'Delivered').length
 
-  const cancelledOrders = orders.filter((order) => order.orderStatus === 'Cancelled').length
-
   const stats = [
     {
       title: 'Total Orders',
@@ -260,9 +289,19 @@ export default function AdminOrders() {
       icon: CheckCircle2,
     },
     {
-      title: 'Cancelled Orders',
-      value: cancelledOrders,
+      title: 'Total Cancelled',
+      value: cancellationStats.totalCancelled,
       icon: XCircle,
+    },
+    {
+      title: 'User Cancelled',
+      value: cancellationStats.userCancelled,
+      icon: UserRound,
+    },
+    {
+      title: 'Admin Cancelled',
+      value: cancellationStats.adminCancelled,
+      icon: ShieldCheck,
     },
   ]
 
@@ -272,7 +311,8 @@ export default function AdminOrders() {
     <div className="space-y-6 transition-all duration-700">
       <AdminBreadCrumb items={items} />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Statistics */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {stats.map((item) => {
           const Icon = item.icon
 
@@ -294,7 +334,9 @@ export default function AdminOrders() {
         })}
       </div>
 
+      {/* Orders */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+        {/* Search / Filter */}
         <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative w-full sm:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
@@ -343,6 +385,7 @@ export default function AdminOrders() {
           </div>
         </div>
 
+        {/* Table */}
         <div className="w-full overflow-x-auto">
           <table className="w-full min-w-300">
             <thead>
@@ -361,6 +404,8 @@ export default function AdminOrders() {
 
                 <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
 
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Cancelled By</th>
+
                 <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Date</th>
 
                 <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
@@ -370,7 +415,7 @@ export default function AdminOrders() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="9" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                  <td colSpan="10" className="px-5 py-12 text-center text-sm text-[#99938B]">
                     Loading orders...
                   </td>
                 </tr>
@@ -483,6 +528,27 @@ export default function AdminOrders() {
                         )}
                       </td>
 
+                      {/* Cancelled By */}
+                      <td className="px-5 py-4">
+                        {isCancelled ? (
+                          order.cancelledBy === 'User' ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-semibold text-[#6B6258]">
+                              <UserRound size={12} />
+                              User
+                            </span>
+                          ) : order.cancelledBy === 'Admin' ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EEEAE4] px-2.5 py-1 text-[11px] font-semibold text-[#5D554C]">
+                              <ShieldCheck size={12} />
+                              Admin
+                            </span>
+                          ) : (
+                            <span className="text-xs text-[#99938B]">Unknown</span>
+                          )
+                        ) : (
+                          <span className="text-xs text-[#B0AAA3]">—</span>
+                        )}
+                      </td>
+
                       <td className="px-5 py-4">
                         <span className="text-xs font-medium text-[#6F6A64]">{formatDate(order.createdAt)}</span>
                       </td>
@@ -504,7 +570,7 @@ export default function AdminOrders() {
                 })
               ) : (
                 <tr>
-                  <td colSpan="9" className="px-5 py-12 text-center">
+                  <td colSpan="10" className="px-5 py-12 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <div className="flex size-14 items-center justify-center rounded-2xl bg-[#F1EEE8] text-[#6B6258]">
                         <Package size={27} />
@@ -521,6 +587,7 @@ export default function AdminOrders() {
           </table>
         </div>
 
+        {/* Pagination */}
         <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xs text-[#99938B]">Show</span>

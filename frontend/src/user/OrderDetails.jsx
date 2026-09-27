@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, CalendarDays, Check, CheckCircle2, ChevronRight, CircleCheck, Clock3, CreditCard, MapPin, Package, Receipt, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Check, CheckCircle2, ChevronRight, CircleCheck, Clock3, CreditCard, MapPin, Package, Receipt, ShieldCheck, ShoppingBag, Truck, X, XCircle } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import BreadCrumb from './BreadCrumb'
@@ -50,6 +50,11 @@ export default function OrderDetails() {
 
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  // ! Cancel Order
+  const [showCancelBox, setShowCancelBox] = useState(false)
+  const [cancelReason, setCancelReason] = useState('')
+  const [cancelling, setCancelling] = useState(false)
 
   // ! Return Order
   const [showReturnBox, setShowReturnBox] = useState(false)
@@ -106,7 +111,31 @@ export default function OrderDetails() {
   const isCOD = order?.paymentMethod === 'COD'
   const isDelivered = order?.orderStatus === 'Delivered'
 
+  // ! User can cancel only these statuses
+  const canCancelOrder = ['Pending', 'Confirmed', 'Processing'].includes(order?.orderStatus)
+
   const paymentStatusClass = order?.paymentStatus === 'Paid' ? 'bg-[#EAF6EF] text-[#3E8B62]' : order?.paymentStatus === 'Failed' ? 'bg-[#FCEBEC] text-[#A51D26]' : 'bg-[#FFF4DD] text-[#A05A16]'
+
+  // ! Cancel Order
+  const handleCancelOrder = async () => {
+    try {
+      setCancelling(true)
+
+      const res = await axiosInstance.put(`/order/${order._id}/cancel`, {
+        cancellationReason: cancelReason,
+      })
+
+      if (res.data.success) {
+        setOrder(res.data.data)
+        setShowCancelBox(false)
+        setCancelReason('')
+      }
+    } catch (error) {
+      console.log('Cancel Order Error:', error.response?.data || error.message)
+    } finally {
+      setCancelling(false)
+    }
+  }
 
   // ! Return Order
   const handleReturnOrder = async () => {
@@ -142,7 +171,7 @@ export default function OrderDetails() {
 
           <div className="mt-4 h-24 rounded-xl border border-[#E8DDD4] bg-white sm:mt-5" />
 
-          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[270px_minmax(0,1fr)_310px] sm:mt-5">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:mt-5 lg:grid-cols-[270px_minmax(0,1fr)_310px]">
             <div className="h-125 rounded-2xl bg-white" />
             <div className="h-125 rounded-2xl bg-white" />
             <div className="h-100 rounded-2xl bg-white" />
@@ -257,7 +286,7 @@ export default function OrderDetails() {
         </div>
 
         {/* MAIN GRID */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[270px_minmax(0,1fr)_310px] sm:gap-5">
+        <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[270px_minmax(0,1fr)_310px]">
           {/* TRACKING */}
           <div className="order-2 rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)] lg:order-1">
             <div className="border-b border-[#EEE5DF] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] p-4 sm:p-5">
@@ -312,7 +341,7 @@ export default function OrderDetails() {
                 <div className="mt-5 rounded-xl border border-[#F0C8CB] bg-[#FCEBEC] p-3.5">
                   <div className="flex items-start gap-2.5">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#A51D26]">
-                      <Package size={15} />
+                      <XCircle size={15} />
                     </div>
 
                     <div className="min-w-0">
@@ -321,6 +350,8 @@ export default function OrderDetails() {
                       <p className="mt-1 text-[10px] leading-4 text-[#A51D26]">This order has been cancelled.</p>
 
                       {order.cancellationReason && <p className="mt-1.5 text-[10px] font-semibold text-[#8E181F]">Reason: {order.cancellationReason}</p>}
+
+                      {order.cancelledAt && <p className="mt-1 text-[9px] font-medium text-[#A44A3F]">Cancelled on: {formatDate(order.cancelledAt)}</p>}
                     </div>
                   </div>
                 </div>
@@ -348,7 +379,7 @@ export default function OrderDetails() {
           </div>
 
           {/* CENTER CONTENT */}
-          <div className="order-1 min-w-0 space-y-4 lg:order-2 sm:space-y-5">
+          <div className="order-1 min-w-0 space-y-4 sm:space-y-5 lg:order-2">
             {/* ORDER ITEMS */}
             <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
               <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
@@ -367,7 +398,6 @@ export default function OrderDetails() {
                 <div className="divide-y divide-[#EEE5DF]">
                   {order.items?.map((item, index) => (
                     <div key={`${order._id}-${index}`} className="flex gap-3 p-3.5 transition-colors duration-200 hover:bg-[#FFFCFA] sm:gap-4 sm:p-4">
-                      {/* IMAGE */}
                       <div className="flex h-19 w-19 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] sm:h-20 sm:w-20">
                         {item.image ? (
                           <img src={`http://localhost:3000${item.image}`} alt={item.productName} className="h-full w-full object-contain p-1.5 transition-transform duration-300 hover:scale-105" />
@@ -376,7 +406,6 @@ export default function OrderDetails() {
                         )}
                       </div>
 
-                      {/* INFO */}
                       <div className="min-w-0 flex-1">
                         <h3 className="line-clamp-2 text-xs font-bold leading-5 text-[#351C18] sm:text-sm">{item.productName}</h3>
 
@@ -477,6 +506,89 @@ export default function OrderDetails() {
                 </div>
               </div>
             </div>
+
+            {/* CANCEL ORDER */}
+            {canCancelOrder && (
+              <div className="overflow-hidden rounded-2xl border border-[#E8B7BB] bg-white shadow-[0_4px_18px_rgba(125,23,28,0.06)]">
+                <div className="flex flex-col gap-3 border-b border-[#DFA1A6] bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">
+                        <XCircle size={16} />
+                      </div>
+
+                      <h2 className="text-sm font-extrabold text-white">Cancel Order</h2>
+                    </div>
+
+                    <p className="mt-1 text-[10px] leading-5 text-white/75">You can cancel this order before it is shipped.</p>
+                  </div>
+
+                  {!showCancelBox && (
+                    <button
+                      type="button"
+                      onClick={() => setShowCancelBox(true)}
+                      className="w-full rounded-xl bg-white px-4 py-2.5 text-xs font-extrabold text-[#8E181F] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#FFF7F7] hover:shadow-md sm:w-auto"
+                    >
+                      Cancel Order
+                    </button>
+                  )}
+                </div>
+
+                {showCancelBox && (
+                  <div className="bg-[#FFF9F9] p-4 sm:p-5">
+                    <div className="rounded-xl border border-[#E8B7BB] bg-[#FCEBEC] p-3.5">
+                      <div className="flex items-start gap-2.5">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#A51D26] text-white">
+                          <XCircle size={15} />
+                        </div>
+
+                        <div>
+                          <p className="text-xs font-extrabold text-[#7D171C]">Are you sure you want to cancel this order?</p>
+
+                          <p className="mt-1 text-[10px] leading-4 text-[#8E181F]">This action cannot be undone once the order is cancelled.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <label className="mt-4 block text-xs font-bold text-[#67544D]">
+                      Cancellation Reason
+                      <span className="ml-1 font-medium text-[#9A857B]">(Optional)</span>
+                    </label>
+
+                    <textarea
+                      value={cancelReason}
+                      onChange={(e) => setCancelReason(e.target.value)}
+                      placeholder="Why do you want to cancel this order?"
+                      rows={4}
+                      className="mt-2 w-full resize-none rounded-xl border border-[#E2D5CC] bg-white px-3 py-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#A51D26] focus:ring-2 focus:ring-[#A51D26]/10"
+                    />
+
+                    <div className="mt-3 flex flex-col gap-2.5 sm:flex-row">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowCancelBox(false)
+                          setCancelReason('')
+                        }}
+                        disabled={cancelling}
+                        className="rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Keep Order
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleCancelOrder}
+                        disabled={cancelling}
+                        className="rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-xs font-bold text-white shadow-[0_5px_14px_rgba(125,23,28,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(125,23,28,0.22)] disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {cancelling ? 'Cancelling...' : 'Confirm Cancellation'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* RETURN ORDER */}
             {isDelivered && (

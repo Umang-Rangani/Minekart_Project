@@ -91,6 +91,7 @@ export default function App() {
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-success" element={<OrderSuccess />} />
+          
           <Route path="/orders" element={<MyOrders />} />
           <Route path="orders/:id" element={<OrderDetails />} />
 

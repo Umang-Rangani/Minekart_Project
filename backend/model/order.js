@@ -184,6 +184,12 @@ const orderSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+
+    cancelledBy: {
+      type: String,
+      enum: ['User', 'Admin'],
+      default: null,
+    },
   },
   {
     timestamps: true,

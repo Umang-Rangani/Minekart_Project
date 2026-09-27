@@ -2,20 +2,30 @@ export const orderConfirmationEmail = ({ name, orderId, items, subtotal, deliver
   const itemRows = items
     .map(
       (item) => `
-        <tr>
-          <td style="padding:12px;border-bottom:1px solid #e3ded6;">
-            ${item.productName}
-          </td>
+      <tr>
+        <td style="padding:12px;border-bottom:1px solid #e3ded6;">
+          <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+             
 
-          <td style="padding:12px;border-bottom:1px solid #e3ded6;text-align:center;">
-            ${item.quantity}
-          </td>
+              <td style="vertical-align:middle;">
+                <div style="font-weight:700;color:#3f3a35;">
+                  ${item.productName}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
 
-          <td style="padding:12px;border-bottom:1px solid #e3ded6;text-align:right;">
-            ₹${Number(item.totalPrice).toLocaleString('en-IN')}
-          </td>
-        </tr>
-      `,
+        <td style="padding:12px;border-bottom:1px solid #e3ded6;text-align:center;">
+          ${item.quantity}
+        </td>
+
+        <td style="padding:12px;border-bottom:1px solid #e3ded6;text-align:right;">
+          ₹${Number(item.totalPrice).toLocaleString('en-IN')}
+        </td>
+      </tr>
+    `,
     )
     .join('')
 

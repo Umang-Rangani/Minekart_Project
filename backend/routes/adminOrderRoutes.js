@@ -5,6 +5,8 @@ const authMiddleware = require('../middleware/authMiddleware')
 const Order = require('../model/order')
 const Payment = require('../model/payment')
 
+// ! adminOrderRoutes.js
+
 // GET ALL ORDERS
 router.get('/', authMiddleware, async (req, res) => {
   try {
@@ -47,12 +49,50 @@ router.get('/', authMiddleware, async (req, res) => {
     })
   }
 })
+
+// GET CANCELLATION STATISTICS
+router.get('/cancellation-stats', authMiddleware, async (req, res) => {
+  try {
+    const [userCancelled, adminCancelled, totalCancelled] = await Promise.all([
+      Order.countDocuments({
+        orderStatus: 'Cancelled',
+        cancelledBy: 'User',
+      }),
+
+      Order.countDocuments({
+        orderStatus: 'Cancelled',
+        cancelledBy: 'Admin',
+      }),
+
+      Order.countDocuments({
+        orderStatus: 'Cancelled',
+      }),
+    ])
+
+    res.status(200).json({
+      success: true,
+      message: 'Cancellation statistics fetched successfully',
+      data: {
+        userCancelled,
+        adminCancelled,
+        totalCancelled,
+      },
+    })
+  } catch (error) {
+    console.log('Get Cancellation Statistics Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message,
+    })
+  }
+})
+
 // GET SINGLE ORDER
 router.get('/:id', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params
-
-    // console.log('Order ID:', id)
 
     const order = await Order.findOne({
       orderId: id,
@@ -141,6 +181,7 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
 
     // Cancellation details
     if (orderStatus === 'Cancelled') {
+      order.cancelledBy = 'Admin'
       order.cancelledAt = new Date()
     }
 
