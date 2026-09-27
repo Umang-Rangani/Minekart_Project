@@ -98,10 +98,10 @@ export default function ProductOfferList() {
             <Link
               key={product._id}
               to={`/product/${product._id}`}
-              className="group relative overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_14px_rgba(73,54,49,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D8C1B6] hover:shadow-[0_14px_30px_rgba(73,54,49,0.13)]"
+              className="group relative overflow-hidden rounded-b-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_14px_rgba(73,54,49,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D8C1B6] hover:shadow-[0_14px_30px_rgba(73,54,49,0.13)]"
             >
               {/* Image */}
-              <div className="relative aspect-4/5 w-full overflow-hidden bg-white">
+              <div className="relative aspect-4/5 w-full overflow-hidden bg-white pt-1">
                 {/* Offer Badge */}
                 {product.discount > 0 && (
                   <div className="absolute left-3 top-3 z-20 flex items-center gap-1 rounded-lg bg-[#A51D26] px-2.5 py-1.5 text-[9px] font-extrabold text-white shadow-md sm:text-[10px]">
@@ -110,8 +110,6 @@ export default function ProductOfferList() {
                   </div>
                 )}
 
-                {/* Decorative Circle */}
-                <div className="absolute -right-10 -top-10 z-10 h-24 w-24 rounded-full bg-[#F7EEE7] opacity-60 transition-transform duration-500 group-hover:scale-150" />
 
                 {/* Product Image */}
                 {product.offerImage ? (

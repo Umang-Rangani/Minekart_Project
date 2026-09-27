@@ -50,7 +50,7 @@ export default function BrandProducts() {
   }, [brand])
 
   const items = [
-    { title: 'Brands', link: '/brand' },
+    { title: 'Brands', link: '/brands' },
     { title: `${brand?.brandName || ''}`, link: null },
   ]
 
@@ -92,19 +92,74 @@ export default function BrandProducts() {
 
         {/* Loading */}
         {loading ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div key={item} className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-sm">
-                <div className="h-52 animate-pulse bg-linear-to-br from-[#F7EEE7] to-[#FBF7F2] sm:h-56 lg:h-60" />
+          <div className="space-y-5">
+            {/* Brand Header Shimmer */}
+            <div className="flex h-16 animate-pulse items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:h-17 sm:px-4">
+              <div className="flex min-w-0 items-center gap-2.5">
+                {/* Logo */}
+                <div className="h-9 w-9 shrink-0 rounded-lg bg-[#F0E8E2] sm:h-10 sm:w-10" />
 
-                <div className="space-y-3 p-4">
-                  <div className="h-2.5 w-20 animate-pulse rounded bg-[#E8DDD4]" />
-                  <div className="h-4 w-full animate-pulse rounded bg-[#E8DDD4]" />
-                  <div className="h-4 w-2/3 animate-pulse rounded bg-[#E8DDD4]" />
-                  <div className="h-6 w-24 animate-pulse rounded bg-[#E8DDD4]" />
+                {/* Brand Name + Description */}
+                <div className="min-w-0">
+                  <div className="h-3.5 w-28 rounded bg-[#E5DCD6] sm:w-32" />
+
+                  <div className="mt-2 h-2.5 w-48 rounded bg-[#EEE7E2] sm:w-56" />
                 </div>
               </div>
-            ))}
+
+              {/* Items */}
+              <div className="h-8 w-16 shrink-0 rounded-lg bg-[#F1EBE7] sm:w-20" />
+            </div>
+
+            {/* Product Shimmer Grid */}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6 xl:gap-5">
+              {Array.from({ length: 12 }).map((_, index) => (
+                <div key={index} className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_2px_10px_rgba(73,54,49,0.05)]">
+                  {/* Image Shimmer */}
+                  <div className="relative h-44 animate-pulse overflow-hidden bg-[#FBF7F2] sm:h-48 lg:h-52">
+                    {/* Image Background */}
+                    <div className="absolute inset-0 bg-linear-to-br from-[#F7EEE7] via-[#EEE5DF] to-[#F7EEE7]" />
+
+                    <div className="absolute inset-x-5 bottom-5 top-8 flex items-center justify-center rounded-xl  sm:inset-x-6 sm:bottom-6 sm:top-9">
+                      <ShoppingBag size={30} strokeWidth={1.5} className="text-[#D1C2B9]" />
+                    </div>
+
+                  </div>
+
+                  {/* Details Shimmer */}
+                  <div className="space-y-3 border-t border-[#EEE5DF] bg-[#FFFCFA] px-3 py-3">
+                    {/* Category */}
+                    <div className="h-2 w-20 animate-pulse rounded bg-[#E8DDD4]" />
+
+                    {/* Product Name */}
+                    <div className="space-y-1.5">
+                      <div className="h-3.5 w-full animate-pulse rounded bg-[#E5DDD6]" />
+
+                      <div className="h-3.5 w-4/5 animate-pulse rounded bg-[#E5DDD6]" />
+                    </div>
+
+                    {/* Rating */}
+                    <div className="h-5 w-10 animate-pulse rounded bg-[#DDE9E1]" />
+
+                    {/* Price */}
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-16 animate-pulse rounded bg-[#E1D7D1]" />
+
+                      <div className="h-3 w-12 animate-pulse rounded bg-[#EEE5DF]" />
+
+                      <div className="h-3 w-10 animate-pulse rounded bg-[#DDE9E1]" />
+                    </div>
+
+                    {/* Bottom */}
+                    <div className="flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
+                      <div className="h-3 w-14 animate-pulse rounded bg-[#E5DDD7]" />
+
+                      <div className="h-3 w-8 animate-pulse rounded bg-[#F0DDD8]" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : products.length === 0 ? (
           /* Empty */

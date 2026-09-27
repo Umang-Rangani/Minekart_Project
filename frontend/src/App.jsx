@@ -82,7 +82,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
 
           <Route path="/category" element={<Categories />} />
-          <Route path="/brand" element={<Brands />} />
+          <Route path="/brands" element={<Brands />} />
 
           <Route path="/category/:id/products" element={<CategoryProducts />} />
           <Route path="/brand/:id/products" element={<BrandProducts />} />

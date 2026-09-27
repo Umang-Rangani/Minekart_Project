@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronRight, Clock3, LoaderCircle, MessageSquare, Plus, UserRound } from 'lucide-react'
+import { Check, ChevronRight, Clock3, LoaderCircle, MessageSquare, Plus, UserRound } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { axiosInstance } from '../../config/axiosConfig'
 import BreadCrumb from '../../user/BreadCrumb'
@@ -8,6 +8,9 @@ import BreadCrumb from '../../user/BreadCrumb'
 export default function MySupport() {
   const [contacts, setContacts] = useState([])
   const [loading, setLoading] = useState(true)
+
+  // 1. filter
+  const [selectedStatus, setSelectedStatus] = useState('')
 
   const getSupportRequests = async () => {
     try {
@@ -58,6 +61,11 @@ export default function MySupport() {
     return 'border-[#D8E3D5] bg-[#EEF3EC] text-[#5E6C55]'
   }
 
+  // 2. filter
+  const uniqueStatuses = [...new Set(contacts.map((contact) => contact.status).filter(Boolean))]
+
+  const filteredContacts = selectedStatus ? contacts.filter((contact) => contact.status === selectedStatus) : contacts
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FBF7F2] px-3 py-5 sm:px-5">
@@ -84,7 +92,7 @@ export default function MySupport() {
   ]
 
   return (
-    <div className="min-h-screen  max-w-350 mx-auto ">
+    <div className="min-h-screen  mx-auto ">
       <BreadCrumb items={items} />
 
       <div className=" py-5 ">
@@ -110,6 +118,60 @@ export default function MySupport() {
           </Link>
         </div>
 
+        {/*3. STATUS FILTER */}
+        {filteredContacts.length > 0 && uniqueStatuses.length > 0 && (
+          <div className="mb-5">
+            <div className="mb-2 flex items-center gap-1.5">
+              <MessageSquare size={13} className="text-[#8E181F]" />
+
+              <span className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Filter By Status</span>
+            </div>
+
+            <div className="no-scrollbar overflow-x-auto pb-1">
+              <div className="flex min-w-max items-center gap-2">
+                {/* ALL */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedStatus('')}
+                  className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[10px] font-bold transition-all duration-200 active:scale-95 sm:text-[11px] ${
+                    selectedStatus === '' ? 'bg-[#8E181F] text-white shadow-[0_4px_12px_rgba(142,24,31,0.16)]' : 'border border-[#E2D5CC] bg-white text-[#67544D] hover:border-[#CDAFA4] hover:bg-[#FBF5F1] hover:text-[#8E181F]'
+                  }`}
+                >
+                  {selectedStatus === '' && <Check size={12} strokeWidth={2.5} />}
+
+                  <span>All</span>
+
+                  <span className={`rounded-md px-1.5 py-0.5 text-[8px] ${selectedStatus === '' ? 'bg-white/15 text-white' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>{contacts.length}</span>
+                </button>
+
+                {/* STATUS */}
+                {uniqueStatuses.map((status) => {
+                  const active = selectedStatus === status
+
+                  const count = contacts.filter((contact) => contact.status === status).length
+
+                  return (
+                    <button
+                      key={status}
+                      type="button"
+                      onClick={() => setSelectedStatus(status)}
+                      className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[10px] font-semibold transition-all duration-200 active:scale-95 sm:text-[11px] ${
+                        active ? 'bg-[#8E181F] text-white shadow-[0_4px_12px_rgba(142,24,31,0.16)]' : 'border border-[#E2D5CC] bg-white text-[#67544D] hover:border-[#CDAFA4] hover:bg-[#FBF5F1] hover:text-[#8E181F]'
+                      }`}
+                    >
+                      {active && <Check size={12} strokeWidth={2.5} />}
+
+                      <span>{status}</span>
+
+                      <span className={`rounded-md px-1.5 py-0.5 text-[8px] ${active ? 'bg-white/15 text-white' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>{count}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Support Requests */}
         {contacts.length === 0 ? (
           <div className="rounded-2xl border border-[#E8DDD4] bg-white px-5 py-16 text-center shadow-[0_3px_15px_rgba(73,54,49,0.04)]">
@@ -128,7 +190,7 @@ export default function MySupport() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {contacts.map((contact) => {
+            {filteredContacts.map((contact) => {
               const lastMessage = contact.messages?.[contact.messages.length - 1]
 
               const messageCount = contact.messages?.length || 0

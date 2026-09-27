@@ -64,7 +64,7 @@ export default function HelpCenter() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2] max-w-350 mx-auto ">
+    <div className="min-h-screen bg-[#FBF7F2]  mx-auto ">
       <BreadCrumb items={items} />
 
       <div className="py-5">

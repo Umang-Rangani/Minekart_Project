@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Star, ShoppingBag, ChevronRight, Package, SlidersHorizontal, Check } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
@@ -53,26 +53,22 @@ export default function CategoryProducts() {
 
   const Icon = category ? iconMap[category.categoryLucideIcons] : null
 
-  const uniqueNames = useMemo(() => {
-    return [...new Set(allProducts.map((item) => item.subCategory?.subCategoryName).filter(Boolean))]
-  }, [allProducts])
+  /* SUBCATEGORY NAMES */
+  const uniqueNames = [...new Set(allProducts.map((product) => product.subCategory?.subCategoryName).filter(Boolean))]
 
+  /* FILTER BY SUBCATEGORY API */
   const filterBySubCategory = async (subCategoryName) => {
     try {
       setSelectedSubCategory(subCategoryName)
       setLoading(true)
 
-      if (subCategoryName === '') {
-        setProducts(allProducts)
-        setLoading(false)
-        return
-      }
+      const url = subCategoryName ? `/product/category/${id}/subcategory/${encodeURIComponent(subCategoryName)}` : `/product/category/${id}`
 
-      const res = await axiosInstance.get(`/product/category/${id}/subcategory/${encodeURIComponent(subCategoryName)}`)
+      const res = await axiosInstance.get(url)
 
       setProducts(res.data?.data || [])
     } catch (error) {
-      console.error('Filter subcategory error:', error.response?.data || error.message)
+      console.error('Filter error:', error.response?.data || error.message)
 
       setProducts([])
     } finally {
@@ -98,10 +94,10 @@ export default function CategoryProducts() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2]">
+    <div className="pb-10">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto w-full pb-10 pt-4">
+      <div className="mx-auto w-full pt-5">
         {/* CATEGORY HEADER */}
         {!loading && category && (
           <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
@@ -161,7 +157,9 @@ export default function CategoryProducts() {
                 {uniqueNames.map((name) => {
                   const active = selectedSubCategory === name
 
-                  const count = allProducts.filter((product) => product.subCategory?.subCategoryName === name).length
+                  const count = allProducts.reduce((total, product) => {
+                    return product.subCategory?.subCategoryName === name ? total + 1 : total
+                  }, 0)
 
                   return (
                     <button
@@ -187,32 +185,117 @@ export default function CategoryProducts() {
 
         {/* LOADING */}
         {loading ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
-            {Array.from({ length: 12 }).map((_, index) => (
-              <div key={index} className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.04)]">
-                <div className="aspect-square animate-pulse bg-linear-to-br from-[#F7EEE7] to-[#FBF7F2]" />
+          <div className="space-y-5 animate-pulse">
+            {/* CATEGORY HEADER SHIMMER */}
+            <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+              <div className="flex min-w-0 items-center gap-2.5">
+                {/* Icon */}
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F3EAE4] sm:h-10 sm:w-10">
+                  <Package size={18} strokeWidth={1.7} className="text-[#CDBFB7]" />
+                </div>
 
-                <div className="space-y-3 border-t border-[#EEE5DF] bg-[#FFFCFA] p-3">
-                  <div className="h-2.5 w-16 animate-pulse rounded bg-[#E8DDD4]" />
+                {/* Text */}
+                <div className="min-w-0">
+                  <div className="h-3.5 w-32 rounded-md bg-[#E3D8D1] sm:h-4 sm:w-36" />
 
-                  <div className="h-3.5 w-full animate-pulse rounded bg-[#EEE5DF]" />
+                  <div className="mt-2 h-2.5 w-48 rounded-md bg-[#EEE5DF] sm:w-52" />
+                </div>
+              </div>
 
-                  <div className="h-3.5 w-4/5 animate-pulse rounded bg-[#EEE5DF]" />
+              {/* Count */}
+              <div className="flex h-8 w-20 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] sm:w-22">
+                <ShoppingBag size={12} strokeWidth={2} className="text-[#CDBFB7]" />
 
-                  <div className="flex gap-2">
-                    <div className="h-4 w-10 animate-pulse rounded bg-[#E5EEE8]" />
-                    <div className="h-3 w-14 animate-pulse rounded bg-[#EEE5DF]" />
+                <div className="h-2.5 w-8 rounded bg-[#E3D8D1]" />
+              </div>
+            </div>
+
+            {/* SHOP BY FILTER SHIMMER */}
+            <div className="mb-5">
+              {/* Label */}
+              <div className="mb-2 flex items-center gap-1.5">
+                <SlidersHorizontal size={13} strokeWidth={2} className="text-[#CDBFB7]" />
+
+                <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
+              </div>
+
+              {/* Filter Pills */}
+              <div className="no-scrollbar overflow-hidden pb-1">
+                <div className="flex min-w-max items-center gap-2">
+                  {/* All */}
+                  <div className="flex h-9 w-20 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#F0E7E1] px-3">
+                    <div className="h-2.5 w-7 rounded bg-[#DCCDC5]" />
+
+                    <div className="h-4 w-5 rounded-md bg-[#E3D8D1]" />
                   </div>
 
-                  <div className="h-5 w-20 animate-pulse rounded bg-[#F2DDD5]" />
+                  {/* Filter 1 */}
+                  <div className="flex h-9 w-32 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
+                    <div className="h-2.5 w-16 rounded bg-[#E3D8D1]" />
 
-                  <div className="flex justify-between border-t border-[#EEE5DF] pt-2.5">
-                    <div className="h-3 w-16 animate-pulse rounded bg-[#EEE5DF]" />
-                    <div className="h-3 w-10 animate-pulse rounded bg-[#F2DDD5]" />
+                    <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
+                  </div>
+
+                  {/* Filter 2 */}
+                  <div className="flex h-9 w-36 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
+                    <div className="h-2.5 w-20 rounded bg-[#E3D8D1]" />
+
+                    <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
+                  </div>
+
+                  {/* Filter 3 */}
+                  <div className="flex h-9 w-28 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
+                    <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
+
+                    <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* PRODUCTS SHIMMER */}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
+              {Array.from({ length: 12 }).map((_, index) => (
+                <div key={index} className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.04)]">
+                  {/* Product Image */}
+                  <div className="relative aspect-square bg-[#F3EAE4]" />
+
+                  {/* Product Details */}
+                  <div className="space-y-3 border-t border-[#EEE5DF] bg-[#FFFCFA] p-3">
+                    {/* Category */}
+                    <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
+
+                    {/* Title */}
+                    <div className="space-y-1.5">
+                      <div className="h-3.5 w-full rounded bg-[#E5DDD7]" />
+
+                      <div className="h-3.5 w-4/5 rounded bg-[#E5DDD7]" />
+                    </div>
+
+                    {/* Rating */}
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-9 rounded bg-[#DDE8DF]" />
+
+                      <div className="h-3 w-12 rounded bg-[#E8DDD4]" />
+                    </div>
+
+                    {/* Price */}
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-20 rounded bg-[#E5D3CD]" />
+
+                      <div className="h-3 w-12 rounded bg-[#E8DDD4]" />
+                    </div>
+
+                    {/* Bottom */}
+                    <div className="flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
+                      <div className="h-3 w-16 rounded bg-[#E8DDD4]" />
+
+                      <div className="h-3 w-10 rounded bg-[#E5D3CD]" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : products.length === 0 ? (
           /* EMPTY */
@@ -223,7 +306,7 @@ export default function CategoryProducts() {
 
             <h2 className="mt-4 text-lg font-extrabold text-[#351C18]">No Products Found</h2>
 
-            <p className="mt-1.5 max-w-sm text-xs leading-5 text-[#806C63]">{selectedSubCategory ? `No products found in ${selectedSubCategory}.` : `There are currently no products available in this category.`}</p>
+            <p className="mt-1.5 max-w-sm text-xs leading-5 text-[#806C63]">{selectedSubCategory ? `No products found in ${selectedSubCategory}.` : 'There are currently no products available in this category.'}</p>
 
             {selectedSubCategory ? (
               <button
@@ -253,7 +336,6 @@ export default function CategoryProducts() {
                 <>
                   {/* IMAGE */}
                   <div className={`relative flex aspect-square items-center justify-center overflow-hidden p-3 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
-                    {/* Decorative */}
                     {!isDisabled && <div className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#F7EEE7] opacity-70 transition-transform duration-500 group-hover:scale-150" />}
 
                     {/* DISCOUNT */}
@@ -281,7 +363,7 @@ export default function CategoryProducts() {
                       </div>
                     )}
 
-                    {/* Bottom Glow */}
+                    {/* BOTTOM GLOW */}
                     {!isDisabled && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-linear-to-t from-[#351C18]/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />}
                   </div>
 

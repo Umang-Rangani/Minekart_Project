@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, Mail, Phone, MapPin, MessageCircle, Clock3, Send, LoaderCircle, Package } from 'lucide-react'
+import { ArrowRight, Mail, Phone, MapPin, MessageCircle, Clock3, Send, LoaderCircle, Package, MessagesSquare } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import BreadCrumb from '../../user/BreadCrumb'
 import { axiosInstance } from '../../config/axiosConfig'
@@ -93,7 +93,7 @@ export default function ContactUs() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2] max-w-350 mx-auto  ">
+    <div className="min-h-screen   mx-auto  ">
       <BreadCrumb items={items} />
 
       <div className="py-5 ">
@@ -203,26 +203,7 @@ export default function ContactUs() {
 
                 <ArrowRight size={14} className="ml-auto shrink-0 text-[#C7B6AE] transition group-hover:translate-x-1 group-hover:text-[#A51D26]" />
               </Link>
-
-            
             </div>
-
-              {/* My Support */}
-              <Link to="/my-support" className="group  mt-4 flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 transition hover:border-[#D9B7B2] hover:bg-[#F7EEE7]">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#A51D26] shadow-sm">
-                  <MessageCircle size={18} strokeWidth={1.8} />
-                </div>
-
-                <div className="min-w-0">
-                  <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Support</p>
-
-                  <p className="mt-0.5 text-xs font-extrabold text-[#351C18]">My Support</p>
-
-                  <p className="mt-0.5 text-[9px] text-[#806C63]">View support tickets</p>
-                </div>
-
-                <ArrowRight size={14} className="ml-auto shrink-0 text-[#C7B6AE] transition group-hover:translate-x-1 group-hover:text-[#A51D26]" />
-              </Link>
 
             {/* Support Details */}
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -250,6 +231,25 @@ export default function ContactUs() {
                 </div>
               </div>
             </div>
+
+            {/* My Support */}
+            <Link to="/my-support" className="group  mt-4 flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 transition hover:border-[#D9B7B2] hover:bg-[#F7EEE7]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#A51D26] shadow-sm">
+                {/* <MessageCircle  /> */}
+
+                <MessagesSquare size={18} strokeWidth={1.8} />
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Support</p>
+
+                <p className="mt-0.5 text-xs font-extrabold text-[#351C18]">My Support</p>
+
+                <p className="mt-0.5 text-[9px] text-[#806C63]">View support chat</p>
+              </div>
+
+              <ArrowRight size={14} className="ml-auto shrink-0 text-[#C7B6AE] transition group-hover:translate-x-1 group-hover:text-[#A51D26]" />
+            </Link>
           </div>
 
           {/* Send Message */}
