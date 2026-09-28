@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
 import toast from 'react-hot-toast'
+import CartShimmer from '../userShimmer/CartShimmer'
 
 export default function Cart() {
   const navigate = useNavigate()
 
-  const { cart, increaseCartItem, decreaseCartItem, removeCartItem } = useCart()
+  const { cart, cartLoading, increaseCartItem, decreaseCartItem, removeCartItem } = useCart()
 
   const cartItems = cart?.items || []
 
@@ -125,6 +126,10 @@ export default function Cart() {
 
   const items = [{ title: 'Cart', link: null }]
 
+  if (cartLoading) {
+    return <CartShimmer />
+  }
+
   return (
     <div className="min-h-screen bg-[#FBF7F2]">
       <BreadCrumb items={items} />
@@ -227,12 +232,13 @@ export default function Cart() {
                   return (
                     <div
                       key={`${product?._id}-${item.size || 'no-size'}`}
-                      className={`overflow-hidden rounded-2xl border transition-all duration-300 ${
+                      className={`overflow-hidden rounded-2xl border transition-all duration-300 h-40 ${
                         disabled || stockExceeded
                           ? 'border-[#D9D9D9] bg-[#F3F3F3] shadow-none'
                           : 'border-[#E8DDD4] bg-white shadow-[0_3px_12px_rgba(73,54,49,0.045)] hover:-translate-y-0.5 hover:border-[#D4BDB2] hover:shadow-[0_8px_22px_rgba(73,54,49,0.08)]'
                       }`}
                     >
+                      
                       {/* DISABLED TOP BAR */}
                       {(disabled || stockExceeded) && (
                         <div className="flex items-center gap-2 border-b border-[#D9D9D9] bg-[#EAEAEA] px-3 py-2">
@@ -278,7 +284,7 @@ export default function Cart() {
                                 <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${disabled || stockExceeded ? 'bg-[#999999]' : 'bg-[#3E8B62]'}`} />
                               </div>
 
-                              <h3 className={`mt-1 line-clamp-2 text-[13px] font-bold leading-4.5 sm:text-sm ${disabled || stockExceeded ? 'text-[#888888]' : 'text-[#351C18]'}`}>{product?.productName}</h3>
+                              <h3 className={`mt-1 truncate  text-[13px] font-bold leading-4.5 sm:text-sm ${disabled || stockExceeded ? 'text-[#888888]' : 'text-[#351C18]'}`}>{product?.productName}</h3>
                             </div>
 
                             {/* ACTIONS */}

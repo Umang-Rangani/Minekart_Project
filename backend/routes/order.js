@@ -8,6 +8,8 @@ const Payment = require('../model/payment')
 const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirmationEmail')
 const User = require('../model/users')
 const { sendEmail } = require('../utils/sendEmail')
+const { orderPlacedEmail } = require('../utils/emailTemplates/orderPlacedEmail')
+const { orderCancelledEmail } = require('../utils/emailTemplates/orderCancelledEmail')
 
 // ! <order className="js"></order>
 
@@ -96,28 +98,34 @@ router.post('/', authMiddleware, async (req, res) => {
       paidAt: null,
     })
 
+    // Send Order Placed Email
     try {
-      const html = orderConfirmationEmail({
+      const populatedOrder = await Order.findById(order._id).populate({
+        path: 'items.productId',
+        select: 'productName images price discountPrice',
+      })
+
+      const html = orderPlacedEmail({
         name: user.name,
-        orderId: order.orderId,
-        items: order.items,
-        subtotal: order.subtotal,
-        deliveryCharge: order.deliveryCharge,
-        tax: order.tax,
-        totalAmount: order.totalAmount,
-        paymentMethod: order.paymentMethod,
-        shippingAddress: order.shippingAddress,
+        orderId: populatedOrder.orderId,
+        items: populatedOrder.items,
+        subtotal: populatedOrder.subtotal,
+        deliveryCharge: populatedOrder.deliveryCharge,
+        tax: populatedOrder.tax,
+        totalAmount: populatedOrder.totalAmount,
+        paymentMethod: populatedOrder.paymentMethod,
+        shippingAddress: populatedOrder.shippingAddress,
       })
 
       await sendEmail({
         to: user.email,
-        subject: `Order Confirmed - ${order.orderId} 🛍️`,
+        subject: `Order Placed - ${populatedOrder.orderId} 🛍️`,
         html,
       })
 
-      console.log('✅ Order confirmation email sent')
+      console.log('✅ Order placed email sent')
     } catch (emailError) {
-      console.error('⚠️ Order email failed:', emailError.message)
+      console.error('⚠️ Order placed email failed:', emailError.message)
     }
 
     res.status(201).json({
@@ -206,6 +214,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
 
 // ! users ne order delete mate
 // ! CANCEL ORDER => User mate
+// ! CANCEL ORDER => User mate
 router.put('/:id/cancel', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.user
@@ -234,12 +243,59 @@ router.put('/:id/cancel', authMiddleware, async (req, res) => {
       })
     }
 
+    // Prevent duplicate cancellation
+    const previousStatus = order.orderStatus
+
     order.orderStatus = 'Cancelled'
     order.cancellationReason = cancellationReason.trim()
     order.cancelledAt = new Date()
     order.cancelledBy = 'User'
 
     await order.save()
+
+    // ! Send cancellation email
+    if (previousStatus !== 'Cancelled') {
+      try {
+        const user = await User.findById(userId).select('name email')
+
+        const populatedOrder = await Order.findById(order._id).populate({
+          path: 'items.productId',
+          select: 'productName images price discountPrice',
+        })
+
+        if (user?.email && populatedOrder) {
+          const emailItems = populatedOrder.items.map((item) => ({
+            productName: item.productId?.productName || 'Product',
+            quantity: item.quantity || 0,
+            totalPrice: Number(item.price || item.productId?.discountPrice || item.productId?.price || 0) * Number(item.quantity || 0),
+          }))
+
+          const html = orderCancelledEmail({
+            name: user.name,
+            orderId: populatedOrder.orderId,
+            items: emailItems,
+            subtotal: populatedOrder.subtotal,
+            deliveryCharge: populatedOrder.deliveryCharge,
+            tax: populatedOrder.tax,
+            totalAmount: populatedOrder.totalAmount,
+            paymentMethod: populatedOrder.paymentMethod,
+            shippingAddress: populatedOrder.shippingAddress,
+            cancellationReason: populatedOrder.cancellationReason,
+            cancelledBy: 'User',
+          })
+
+          await sendEmail({
+            to: user.email,
+            subject: `Order Cancelled - ${populatedOrder.orderId} ❌`,
+            html,
+          })
+
+          console.log('✅ User cancellation email sent')
+        }
+      } catch (emailError) {
+        console.error('⚠️ User cancellation email failed:', emailError.message)
+      }
+    }
 
     res.status(200).json({
       success: true,
@@ -257,56 +313,58 @@ router.put('/:id/cancel', authMiddleware, async (req, res) => {
   }
 })
 
-// ! Update Order Status => Admin mate
-router.put('/:id/status', async (req, res) => {
-  try {
-    const { id } = req.params
-    const { orderStatus } = req.body
 
-    const allowedStatuses = ['Pending', 'Confirmed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled', 'Returned']
 
-    if (!allowedStatuses.includes(orderStatus)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid order status',
-      })
-    }
+// // ! Update Order Status => Admin mate
+// router.put('/:id/status', async (req, res) => {
+//   try {
+//     const { id } = req.params
+//     const { orderStatus } = req.body
 
-    const order = await Order.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          orderStatus,
-        },
-      },
-      {
-        new: true,
-        runValidators: true,
-      },
-    )
+//     const allowedStatuses = ['Pending', 'Confirmed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled', 'Returned']
 
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found',
-      })
-    }
+//     if (!allowedStatuses.includes(orderStatus)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'Invalid order status',
+//       })
+//     }
 
-    res.status(200).json({
-      success: true,
-      message: 'Order status updated successfully',
-      data: order,
-    })
-  } catch (error) {
-    console.log('Update Order Status Error:', error)
+//     const order = await Order.findByIdAndUpdate(
+//       id,
+//       {
+//         $set: {
+//           orderStatus,
+//         },
+//       },
+//       {
+//         new: true,
+//         runValidators: true,
+//       },
+//     )
 
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-      error: error.message,
-    })
-  }
-})
+//     if (!order) {
+//       return res.status(404).json({
+//         success: false,
+//         message: 'Order not found',
+//       })
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: 'Order status updated successfully',
+//       data: order,
+//     })
+//   } catch (error) {
+//     console.log('Update Order Status Error:', error)
+
+//     res.status(500).json({
+//       success: false,
+//       message: 'Internal server error',
+//       error: error.message,
+//     })
+//   }
+// })
 
 // ! RETURN ORDER
 router.put('/:id/return', authMiddleware, async (req, res) => {

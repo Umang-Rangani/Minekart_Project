@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, CreditCard, MapPin,
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import BreadCrumb from './BreadCrumb'
 import { axiosInstance } from '../config/axiosConfig'
+import OrderSuccessShimmer from '../userShimmer/OrderSuccessShimmer'
 
 export default function OrderSuccess() {
   const navigate = useNavigate()
@@ -51,19 +52,7 @@ export default function OrderSuccess() {
 
   // ! Loading
   if (loading) {
-    return (
-      <div className="min-h-[70vh] bg-[#FBF7F2] px-4 py-10">
-        <div className="mx-auto max-w-5xl">
-          <div className="flex min-h-[55vh] items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#E8DDD4] border-t-[#8E181F]" />
-
-              <p className="text-xs font-semibold text-[#806C63]">Loading your order...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return <OrderSuccessShimmer />
   }
 
   // ! Order not found
@@ -139,10 +128,10 @@ export default function OrderSuccess() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2]">
+    <div className="pb-10">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto w-full pb-10 pt-4 sm:pt-6">
+      <div className="mx-auto w-full  pt-5">
         {/* HEADER */}
         <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
           <div className="flex min-w-0 items-center gap-2.5">

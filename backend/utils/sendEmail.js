@@ -14,16 +14,10 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-export async function sendEmail({
-  to,
-  subject,
-  html,
-  attachments,
-  bcc = [],
-}) {
+export async function sendEmail({ to, subject, html, attachments, bcc = [] }) {
   try {
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"MineKart" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,

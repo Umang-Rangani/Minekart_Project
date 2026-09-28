@@ -165,10 +165,10 @@ export default function MyOrders() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2]">
+    <div className="min-h-screen pb-10">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto w-full pb-10 pt-4 sm:pt-5">
+      <div className="mx-auto w-full  pt-5">
         {/* PAGE HEADER */}
         <div className="mb-5 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:h-17 sm:px-4">
           <div className="flex min-w-0 items-center gap-2.5">

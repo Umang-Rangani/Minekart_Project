@@ -5,6 +5,7 @@ import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
 import { axiosInstance } from '../config/axiosConfig'
 import toast from 'react-hot-toast'
+import CheckoutShimmer from '../userShimmer/CheckoutShimmer'
 
 export default function Checkout() {
   const navigate = useNavigate()
@@ -157,15 +158,7 @@ export default function Checkout() {
 
   // ! Cart Loading
   if (cartLoading) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#FBF7F2]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#E8DDD4] border-t-[#8E181F]" />
-
-          <p className="text-sm font-semibold text-[#806C63]">Loading checkout...</p>
-        </div>
-      </div>
-    )
+    return <CheckoutShimmer />
   }
 
   // ! Empty Cart
@@ -232,8 +225,6 @@ export default function Checkout() {
             <span className="hidden text-[9px] font-bold text-[#34704F] sm:inline">Secure Checkout</span>
           </div>
         </div>
-
-    
 
         {/* MAIN CONTENT */}
         <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_390px]">

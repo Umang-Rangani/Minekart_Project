@@ -4,6 +4,11 @@ const router = express.Router()
 const authMiddleware = require('../middleware/authMiddleware')
 const Order = require('../model/order')
 const Payment = require('../model/payment')
+const User = require('../model/users')
+
+const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirmationEmail')
+const { sendEmail } = require('../utils/sendEmail')
+const { orderCancelledEmail } = require('../utils/emailTemplates/orderCancelledEmail')
 
 // ! adminOrderRoutes.js
 
@@ -140,7 +145,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
 router.put('/:id/status', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params
-    const { orderStatus } = req.body
+    const { orderStatus, cancellationReason = '' } = req.body
 
     const allowedStatuses = ['Pending', 'Confirmed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled', 'Returned']
 
@@ -176,17 +181,122 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
       })
     }
 
+    // Previous status
+    const previousStatus = order.orderStatus
+
     // Update order status
     order.orderStatus = orderStatus
 
-    // Cancellation details
+    
+    // ADMIN CANCEL ORDER
     if (orderStatus === 'Cancelled') {
       order.cancelledBy = 'Admin'
       order.cancelledAt = new Date()
+
+      // Save admin cancellation reason
+      if (cancellationReason.trim()) {
+        order.cancellationReason = cancellationReason.trim()
+      }
     }
 
     await order.save()
 
+    
+    // ORDER CONFIRMATION EMAIL
+    if (orderStatus === 'Confirmed' && previousStatus !== 'Confirmed') {
+      try {
+        const user = await User.findById(order.userId).select('name email')
+
+        if (user?.email) {
+          const populatedOrder = await Order.findById(order._id).populate({
+            path: 'items.productId',
+            select: 'productName images price discountPrice',
+          })
+
+          const html = orderConfirmationEmail({
+            name: user.name,
+            orderId: populatedOrder.orderId,
+            items: populatedOrder.items,
+            subtotal: populatedOrder.subtotal,
+            deliveryCharge: populatedOrder.deliveryCharge,
+            tax: populatedOrder.tax,
+            totalAmount: populatedOrder.totalAmount,
+            paymentMethod: populatedOrder.paymentMethod,
+            shippingAddress: populatedOrder.shippingAddress,
+          })
+
+          await sendEmail({
+            to: user.email,
+            subject: `Order Confirmed - ${populatedOrder.orderId} 🛍️`,
+            html,
+          })
+
+          console.log(`✅ Order confirmation email sent to ${user.email}`)
+        } else {
+          console.log('⚠️ User email not found. Confirmation email skipped.')
+        }
+      } catch (emailError) {
+        // Email fail thay to order status fail na thavo joiye
+        console.error('⚠️ Order confirmation email failed:', emailError.message)
+      }
+    }
+
+    
+    // ADMIN CANCELLED EMAIL
+    if (orderStatus === 'Cancelled' && previousStatus !== 'Cancelled') {
+      try {
+        const user = await User.findById(order.userId).select('name email')
+
+        if (user?.email) {
+          const populatedOrder = await Order.findById(order._id).populate({
+            path: 'items.productId',
+            select: 'productName images price discountPrice',
+          })
+
+          const emailItems = populatedOrder.items.map((item) => ({
+            productName: item.productId?.productName || 'Product',
+
+            quantity: item.quantity || 0,
+
+            totalPrice: Number(item.price || item.productId?.discountPrice || item.productId?.price || 0) * Number(item.quantity || 0),
+          }))
+
+          const html = orderCancelledEmail({
+            name: user.name,
+            orderId: populatedOrder.orderId,
+            items: emailItems,
+            subtotal: populatedOrder.subtotal,
+            deliveryCharge: populatedOrder.deliveryCharge,
+            tax: populatedOrder.tax,
+            totalAmount: populatedOrder.totalAmount,
+            paymentMethod: populatedOrder.paymentMethod,
+            shippingAddress: populatedOrder.shippingAddress,
+
+            // Admin cancellation reason
+            cancellationReason: populatedOrder.cancellationReason,
+
+            // Important
+            cancelledBy: 'Admin',
+          })
+
+          await sendEmail({
+            to: user.email,
+            subject: `Order Cancelled - ${populatedOrder.orderId} ❌`,
+            html,
+          })
+
+          console.log(`✅ Order cancellation email sent to ${user.email}`)
+        } else {
+          console.log('⚠️ User email not found. Cancellation email skipped.')
+        }
+      } catch (emailError) {
+        // Email fail thay to cancellation fail na thavu joiye
+        console.error('⚠️ Order cancellation email failed:', emailError.message)
+      }
+    }
+
+    
+    // GET UPDATED ORDER
     const updatedOrder = await Order.findById(order._id)
       .populate({
         path: 'userId',
