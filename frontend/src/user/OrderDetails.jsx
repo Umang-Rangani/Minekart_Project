@@ -3,6 +3,7 @@ import { ArrowLeft, CalendarDays, Check, CheckCircle2, ChevronRight, CircleCheck
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import BreadCrumb from './BreadCrumb'
+import OrderDetailsShimmer from '../userShimmer/OrderDetailsShimmer'
 
 // ! Order Tracking
 const orderStatuses = [
@@ -164,21 +165,7 @@ export default function OrderDetails() {
 
   // ! Loading
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FBF7F2]">
-        <div className="mx-auto w-full animate-pulse">
-          <div className="h-16 rounded-xl border border-[#E8DDD4] bg-white sm:h-17" />
-
-          <div className="mt-4 h-24 rounded-xl border border-[#E8DDD4] bg-white sm:mt-5" />
-
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:mt-5 lg:grid-cols-[270px_minmax(0,1fr)_310px]">
-            <div className="h-125 rounded-2xl bg-white" />
-            <div className="h-125 rounded-2xl bg-white" />
-            <div className="h-100 rounded-2xl bg-white" />
-          </div>
-        </div>
-      </div>
-    )
+    return <OrderDetailsShimmer />
   }
 
   // ! Order Not Found

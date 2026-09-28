@@ -4,8 +4,9 @@ import { ArrowLeft, CheckCircle2, Clock3, LoaderCircle, MessageSquare, Send, Shi
 import { axiosInstance } from '../../config/axiosConfig'
 import toast from 'react-hot-toast'
 import BreadCrumb from '../../user/BreadCrumb'
+import MySupportDetailsShimmer from '../../userShimmer/MySupportDetailsShimmer'
 
-export default function SupportDetails() {
+export default function MySupportDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -105,13 +106,7 @@ export default function SupportDetails() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-[60vh] bg-[#F7EEE7] px-3 py-4 sm:px-5">
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <LoaderCircle size={28} className="animate-spin text-[#A51D26]" />
-        </div>
-      </div>
-    )
+    return <MySupportDetailsShimmer />
   }
 
   if (!contact) {
@@ -136,7 +131,7 @@ export default function SupportDetails() {
   ]
 
   return (
-    <div className="min-h-screen  max-w-350 mx-auto ">
+    <div className="min-h-screen mx-auto ">
       <BreadCrumb items={items} />
 
       <div className=" py-5 ">

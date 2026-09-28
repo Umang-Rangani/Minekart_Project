@@ -3,6 +3,8 @@ import { CalendarDays, Check, ChevronRight, Clock3, Package, ShieldCheck, Shoppi
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import BreadCrumb from './BreadCrumb'
+import CartShimmer from '../userShimmer/CartShimmer'
+import MyOrdersShimmer from '../userShimmer/MyOrdersShimmer'
 
 export default function MyOrders() {
   const navigate = useNavigate()
@@ -104,57 +106,7 @@ export default function MyOrders() {
 
   // ! Loading
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FBF7F2]">
-        <div className="mx-auto w-full pt-4 sm:pt-5">
-          {/* HEADER SKELETON */}
-          <div className="mb-5 h-16 animate-pulse rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:h-17 sm:px-4">
-            <div className="flex h-full items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-lg bg-[#E8DDD4] sm:h-10 sm:w-10" />
-
-                <div>
-                  <div className="h-3 w-24 rounded bg-[#E8DDD4]" />
-
-                  <div className="mt-1.5 h-2 w-40 rounded bg-[#F0E8E2]" />
-                </div>
-              </div>
-
-              <div className="h-8 w-20 rounded-lg bg-[#F0E8E2]" />
-            </div>
-          </div>
-
-          {/* CARD SKELETON */}
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="animate-pulse overflow-hidden rounded-xl border border-[#E8DDD4] bg-white">
-                <div className="border-b border-[#E8DDD4] bg-[#FBF7F2] p-4">
-                  <div className="h-4 w-36 rounded bg-[#E8DDD4]" />
-
-                  <div className="mt-2 h-2.5 w-24 rounded bg-[#F0E8E2]" />
-                </div>
-
-                <div className="space-y-3 p-4">
-                  <div className="flex gap-3">
-                    <div className="h-18 w-16 rounded-lg bg-[#F0E8E2]" />
-
-                    <div className="flex-1">
-                      <div className="h-3 w-3/4 rounded bg-[#E8DDD4]" />
-
-                      <div className="mt-2 h-2.5 w-1/2 rounded bg-[#F0E8E2]" />
-                    </div>
-                  </div>
-
-                  <div className="h-20 rounded-xl bg-[#F7EEE7]" />
-
-                  <div className="h-10 rounded-lg bg-[#E8DDD4]" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
+    return <MyOrdersShimmer />
   }
 
   const items = [

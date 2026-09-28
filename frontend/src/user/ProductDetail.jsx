@@ -18,7 +18,10 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState('')
   const [selectedSize, setSelectedSize] = useState('')
   const [quantity, setQuantity] = useState(0)
+
   const [loading, setLoading] = useState(true)
+  const [relatedLoading, setRelatedLoading] = useState(false)
+
   const [toast, setToast] = useState('')
 
   // Product status
@@ -40,18 +43,24 @@ export default function ProductDetail() {
   }
 
   // Get related products
-  const getRelatedProducts = async (subCategoryId) => {
+  const getRelatedProducts = async (subCategoryId, productId) => {
     try {
-      const res = await axiosInstance.get(`/product/related/${subCategoryId}/${id}`)
+      setRelatedLoading(true)
 
-      setRelatedProducts(res.data?.data || [])
+      const res = await axiosInstance.get(`/product/related/${subCategoryId}/${productId}`)
+
+      if (res.data?.success) {
+        setRelatedProducts(res.data.data || [])
+      } else {
+        setRelatedProducts([])
+      }
     } catch (error) {
-      console.error('Get related products error:', error.response?.data || error.message)
-
+      console.log('Related Products Error:', error)
       setRelatedProducts([])
+    } finally {
+      setRelatedLoading(false)
     }
   }
-
   // Get Product
   const getProduct = async () => {
     try {

@@ -4,11 +4,15 @@ import { ArrowRight, PackageSearch, Search, Package, Truck, MapPin, CheckCircle2
 import toast from 'react-hot-toast'
 import BreadCrumb from '../../user/BreadCrumb'
 import { axiosInstance } from '../../config/axiosConfig'
+import TrackOrderResultShimmer from '../../userShimmer/TrackOrderResultShimmer'
 
 export default function TrackOrder() {
   const [orderId, setOrderId] = useState('')
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(false)
+
+  // localstorage
+  const TRACK_ORDER_KEY = 'minekart_track_order_id'
 
   useEffect(() => {
     window.scrollTo({
@@ -17,6 +21,12 @@ export default function TrackOrder() {
     })
 
     document.title = 'TrackOrder | MineKart'
+
+    const savedOrderId = localStorage.getItem(TRACK_ORDER_KEY)
+
+    if (savedOrderId) {
+      setOrderId(savedOrderId)
+    }
   }, [])
 
   const items = [
@@ -66,6 +76,8 @@ export default function TrackOrder() {
       toast.error('Please enter your order ID')
       return
     }
+
+    localStorage.setItem(TRACK_ORDER_KEY, trimmedOrderId)
 
     try {
       setLoading(true)
@@ -202,8 +214,10 @@ export default function TrackOrder() {
           </div>
         </div>
 
+        {loading && <TrackOrderResultShimmer />}
+
         {/* Order Result */}
-        {order && (
+        {!loading && order && (
           <div className="mt-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.04)]">
             {/* Order Header */}
             <div className="flex flex-col gap-3 border-b border-[#E8DDD4] bg-[#FBF7F2] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
@@ -323,7 +337,7 @@ export default function TrackOrder() {
         )}
 
         {/* Empty / How it works */}
-        {!order && (
+        {!loading && !order && (
           <div className="mt-5 rounded-2xl border border-[#E8DDD4] bg-white p-5 shadow-[0_4px_16px_rgba(73,54,49,0.04)] sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <div>

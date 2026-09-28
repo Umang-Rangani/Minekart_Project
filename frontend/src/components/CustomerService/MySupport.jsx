@@ -4,6 +4,7 @@ import { Check, ChevronRight, Clock3, LoaderCircle, MessageSquare, Plus, UserRou
 import { toast } from 'react-hot-toast'
 import { axiosInstance } from '../../config/axiosConfig'
 import BreadCrumb from '../../user/BreadCrumb'
+import MySupportShimmer from '../../userShimmer/MySupportShimmer'
 
 export default function MySupport() {
   const [contacts, setContacts] = useState([])
@@ -67,17 +68,7 @@ export default function MySupport() {
   const filteredContacts = selectedStatus ? contacts.filter((contact) => contact.status === selectedStatus) : contacts
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FBF7F2] px-3 py-5 sm:px-5">
-        <div className="mx-auto flex min-h-125 items-center justify-center">
-          <div className="flex flex-col items-center gap-3 text-[#806C63]">
-            <LoaderCircle size={30} className="animate-spin text-[#A51D26]" />
-
-            <p className="text-sm font-semibold">Loading support requests...</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <MySupportShimmer />
   }
 
   const items = [

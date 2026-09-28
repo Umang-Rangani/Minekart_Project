@@ -44,7 +44,7 @@ import AdminContactMessages from './admin/AdminContactMessages .jsx'
 import AdminContactMessageView from './admin/AdminContactMessageView.jsx'
 import AdminOrderView from './admin/AdminOrderView.jsx'
 import MySupport from './components/CustomerService/MySupport.jsx'
-import SupportDetails from './components/CustomerService/SupportDetails.jsx'
+import MySupportDetails from './components/CustomerService/MySupportDetails.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -107,7 +107,7 @@ export default function App() {
           <Route path="/contact" element={<ContactUs />} />
 
           <Route path="/my-support" element={<MySupport />} />
-          <Route path="/my-support/:id" element={<SupportDetails />} />
+          <Route path="/my-support/:id" element={<MySupportDetails />} />
         </Route>
 
         {/*  AUTH  */}
