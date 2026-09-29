@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag, ExternalLink, AlertCircle, CircleCheck, PackageCheck, BadgeIndianRupee } from 'lucide-react'
+import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag, ExternalLink, AlertCircle, CircleCheck, PackageCheck, BadgeIndianRupee, CreditCard } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
@@ -136,7 +136,8 @@ export default function Cart() {
 
       <div className="mx-auto w-full pb-10 pt-4 sm:pt-5">
         {/* PAGE HEADER */}
-        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-20 sm:px-4">
+          {/* Left - Cart */}
           <div className="flex min-w-0 items-center gap-2.5">
             <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
               <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
@@ -153,12 +154,44 @@ export default function Cart() {
             </div>
           </div>
 
-          <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-2 text-[8px] font-bold text-[#67544D] sm:px-2.5 sm:text-[9px]">
-            <ShoppingBag size={12} strokeWidth={2} className="text-[#8E181F]" />
+          {/* Progress */}
+          <div className="flex min-w-0 flex-1 items-center justify-center px-2 sm:px-6">
+            <div className="flex w-full max-w-100 items-center">
+              {/* Cart - Active */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#A51D26] text-white shadow-[0_3px_9px_rgba(165,29,38,0.25)] ring-3 ring-[#F1E3DC] sm:h-9 sm:w-9">
+                  <ShoppingBag size={14} strokeWidth={2} />
+                </div>
 
-            <span>
-              {totalItems} {totalItems === 1 ? 'Item' : 'Items'}
-            </span>
+                <span className="hidden text-[9px] font-extrabold text-[#7D171C] sm:block">Cart</span>
+              </div>
+
+              {/* Progress Line */}
+              <div className="mx-2 h-0.5 flex-1 bg-[#D8C9C1] sm:mx-3">
+                <div className="h-full w-0 rounded-full bg-[#A51D26]" />
+              </div>
+
+              {/* Checkout */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] sm:h-9 sm:w-9">
+                  <CreditCard size={14} strokeWidth={1.8} />
+                </div>
+
+                <span className="hidden text-[9px] font-bold text-[#9A857B] sm:block">Checkout</span>
+              </div>
+
+              {/* Progress Line */}
+              <div className="mx-2 h-0.5 flex-1 bg-[#D8C9C1] sm:mx-3" />
+
+              {/* Confirm */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] sm:h-9 sm:w-9">
+                  <CircleCheck size={14} strokeWidth={1.8} />
+                </div>
+
+                <span className="hidden text-[9px] font-bold text-[#9A857B] sm:block">Confirm</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -238,7 +271,6 @@ export default function Cart() {
                           : 'border-[#E8DDD4] bg-white shadow-[0_3px_12px_rgba(73,54,49,0.045)] hover:-translate-y-0.5 hover:border-[#D4BDB2] hover:shadow-[0_8px_22px_rgba(73,54,49,0.08)]'
                       }`}
                     >
-                      
                       {/* DISABLED TOP BAR */}
                       {(disabled || stockExceeded) && (
                         <div className="flex items-center gap-2 border-b border-[#D9D9D9] bg-[#EAEAEA] px-3 py-2">
@@ -313,41 +345,43 @@ export default function Cart() {
                             </div>
                           </div>
 
-                          {/* SIZE */}
-                          {item.size && (
-                            <div
-                              className={`mt-2 inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[9px] font-semibold ${
-                                disabled || stockExceeded ? 'border-[#D9D9D9] bg-[#EAEAEA] text-[#888888]' : 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'
-                              }`}
-                            >
-                              Size:
-                              <span className={`font-extrabold ${disabled || stockExceeded ? 'text-[#777777]' : 'text-[#351C18]'}`}>{item.size}</span>
-                            </div>
-                          )}
-
-                          {/* STOCK INFO */}
-                          <div className="mt-2 flex flex-wrap items-center gap-2">
-                            {disabled ? (
-                              <span className="inline-flex items-center gap-1 rounded-md bg-[#E7E7E7] px-2 py-1 text-[8px] font-bold text-[#888888]">
-                                <AlertCircle size={10} />
-                                Unavailable
-                              </span>
-                            ) : stockExceeded ? (
-                              <span className="inline-flex items-center gap-1 rounded-md bg-[#E7E7E7] px-2 py-1 text-[8px] font-bold text-[#777777]">
-                                <AlertCircle size={10} />
-                                Only {product?.stock || 0} available
-                              </span>
-                            ) : product?.stock <= 5 ? (
-                              <span className="inline-flex items-center gap-1 rounded-md bg-[#FFF7EA] px-2 py-1 text-[8px] font-bold text-[#B87935]">
-                                <PackageCheck size={10} />
-                                Only {product.stock} left
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 rounded-md bg-[#F0F8F3] px-2 py-1 text-[8px] font-bold text-[#3E8B62]">
-                                <CircleCheck size={10} />
-                                In Stock
-                              </span>
+                          <div className="flex gap-5 justify-start items-center">
+                            {/* SIZE */}
+                            {item.size && (
+                              <div
+                                className={`mt-2 inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[9px] font-semibold ${
+                                  disabled || stockExceeded ? 'border-[#D9D9D9] bg-[#EAEAEA] text-[#888888]' : 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'
+                                }`}
+                              >
+                                Size:
+                                <span className={`font-extrabold ${disabled || stockExceeded ? 'text-[#777777]' : 'text-[#351C18]'}`}>{item.size}</span>
+                              </div>
                             )}
+
+                            {/* STOCK INFO */}
+                            <div className="mt-2 flex flex-wrap items-center  gap-2">
+                              {disabled ? (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#E7E7E7] px-2 py-1 text-[8px] font-bold text-[#888888]">
+                                  <AlertCircle size={10} />
+                                  Unavailable
+                                </span>
+                              ) : stockExceeded ? (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#E7E7E7] px-2 py-1 text-[8px] font-bold text-[#777777]">
+                                  <AlertCircle size={10} />
+                                  Only {product?.stock || 0} available
+                                </span>
+                              ) : product?.stock <= 5 ? (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#FFF7EA] px-2 py-1 text-[8px] font-bold text-[#B87935]">
+                                  <PackageCheck size={10} />
+                                  Only {product.stock} left
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#F0F8F3] px-2 py-1 text-[8px] font-bold text-[#3E8B62]">
+                                  <CircleCheck size={10} />
+                                  In Stock
+                                </span>
+                              )}
+                            </div>
                           </div>
 
                           {/* PRICE + QUANTITY */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check, ChevronRight, CreditCard, MapPin, Plus, ShieldCheck, ShoppingBag, Smartphone, Truck, Wallet } from 'lucide-react'
+import { ArrowLeft, Check, ChevronRight, CircleCheck, CreditCard, MapPin, Plus, ShieldCheck, ShoppingBag, Smartphone, Truck, Wallet } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
@@ -126,18 +126,6 @@ export default function Checkout() {
 
       const order = res.data.data.order
 
-      toast.success('Order placed successfully!')
-
-      const clearCartResponse = await clearCart()
-
-      if (!clearCartResponse.success) {
-        console.log('Cart Clear Error:', clearCartResponse.message)
-
-        toast.error(clearCartResponse.message || 'Failed to clear cart')
-
-        return
-      }
-
       const params = new URLSearchParams({
         orderId: order.orderId,
         paymentMethod: order.paymentMethod,
@@ -146,7 +134,15 @@ export default function Checkout() {
         totalAmount: String(order.totalAmount),
       })
 
+      // Open success page immediately
       navigate(`/order-success?${params.toString()}`)
+
+      // Clear cart in background
+      clearCart().then((clearCartResponse) => {
+        if (!clearCartResponse?.success) {
+          console.log('Cart Clear Error:', clearCartResponse?.message)
+        }
+      })
     } catch (error) {
       console.log('Place Order Error:', error.response?.data || error.message)
 
@@ -204,12 +200,13 @@ export default function Checkout() {
 
       <div className="mx-auto w-full pb-10 pt-4 sm:pt-6">
         {/* CHECKOUT HEADER */}
-        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-20 sm:px-4">
+          {/* Left - Checkout */}
           <div className="flex min-w-0 items-center gap-2.5">
             <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
               <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
 
-              <ShoppingBag size={18} strokeWidth={1.9} className="relative z-10" />
+              <CreditCard size={18} strokeWidth={1.9} className="relative z-10" />
             </div>
 
             <div className="min-w-0">
@@ -219,10 +216,42 @@ export default function Checkout() {
             </div>
           </div>
 
-          <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#D5E8DA] bg-[#F0F8F3] px-2.5 sm:px-3">
-            <ShieldCheck size={13} className="text-[#3E8B62]" />
+          {/* Progress */}
+          <div className="flex min-w-0 flex-1 items-center justify-center px-2 sm:px-6">
+            <div className="flex w-full max-w-100 items-center">
+              {/* Cart - Completed */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#A51D26] text-white shadow-[0_3px_9px_rgba(165,29,38,0.25)] ring-3 ring-[#F1E3DC] sm:h-9 sm:w-9">
+                  <ShoppingBag size={14} strokeWidth={2} />
+                </div>
 
-            <span className="hidden text-[9px] font-bold text-[#34704F] sm:inline">Secure Checkout</span>
+                <span className="hidden text-[9px] font-extrabold text-[#7D171C] sm:block">Cart</span>
+              </div>
+
+              {/* Completed Line */}
+              <div className="mx-2 h-0.5 flex-1 rounded-full bg-[#A51D26] sm:mx-3" />
+
+              {/* Checkout - Active */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#8E181F] text-white shadow-[0_3px_10px_rgba(142,24,31,0.30)] ring-3 ring-[#F1E3DC] sm:h-9 sm:w-9">
+                  <CreditCard size={14} strokeWidth={2} />
+                </div>
+
+                <span className="hidden text-[9px] font-extrabold text-[#7D171C] sm:block">Checkout</span>
+              </div>
+
+              {/* Upcoming Line */}
+              <div className="mx-2 h-0.5 flex-1 rounded-full bg-[#D8C9C1] sm:mx-3" />
+
+              {/* Confirm - Upcoming */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] sm:h-9 sm:w-9">
+                  <CircleCheck size={14} strokeWidth={1.8} />
+                </div>
+
+                <span className="hidden text-[9px] font-bold text-[#9A857B] sm:block">Confirm</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -260,37 +289,41 @@ export default function Checkout() {
                     return (
                       <div
                         key={`${product._id}-${item.size || 'no-size'}`}
-                        className="group flex gap-3 rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] p-2.5 transition-all duration-200 hover:border-[#D4BDB2] hover:shadow-[0_3px_12px_rgba(73,54,49,0.05)]"
+                        className="group flex min-h-25 gap-3 rounded-xl border border-[#E8DDD4] bg-white p-2.5 transition-all duration-200 hover:border-[#D4BDB2] hover:bg-[#FFFCFA] hover:shadow-[0_4px_14px_rgba(73,54,49,0.06)] sm:min-h-27.5 sm:p-3"
                       >
                         {/* IMAGE */}
-                        <div className="flex h-22 w-18 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E8DDD4] bg-white sm:h-24 sm:w-20">
+                        <div className="relative flex h-20 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] sm:h-22 sm:w-18">
+                          <div className="absolute inset-0 bg-white" />
+
                           <img
                             src={product.images?.[0] ? `http://localhost:3000${product.images[0]}` : '/placeholder.png'}
                             alt={product.productName}
-                            className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                            className="relative z-10 h-full w-full object-contain p-1.5 transition-transform duration-300 group-hover:scale-105 sm:p-2"
                           />
                         </div>
 
                         {/* DETAILS */}
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
+                        <div className="flex min-w-0 flex-1 flex-col justify-center">
+                          <p className="truncate text-[8px] font-bold uppercase tracking-[0.08em] text-[#9A857B]">{product.brand?.brandName || 'Brand'}</p>
 
                           <h3 className="mt-1 line-clamp-2 text-[12px] font-bold leading-4.5 text-[#351C18] sm:text-[13px]">{product.productName}</h3>
 
-                          <div className="mt-2 flex flex-wrap gap-1.5">
-                            {item.size && <span className="rounded-md bg-[#F7EEE7] px-2 py-1 text-[8px] font-bold text-[#67544D]">Size: {item.size}</span>}
+                          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                            {item.size && <span className="inline-flex items-center rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-2 py-1 text-[8px] font-bold text-[#67544D]">Size: {item.size}</span>}
 
-                            <span className="rounded-md border border-[#E8DDD4] bg-white px-2 py-1 text-[8px] font-bold text-[#806C63]">Qty: {item.quantity}</span>
+                            <span className="inline-flex items-center rounded-md border border-[#E8DDD4] bg-[#FBF7F2] px-2 py-1 text-[8px] font-bold text-[#806C63]">Qty: {item.quantity}</span>
                           </div>
                         </div>
 
                         {/* PRICE */}
-                        <div className="shrink-0 text-right">
-                          <p className="text-sm font-extrabold text-[#351C18] sm:text-base">₹{item.totalPrice.toLocaleString('en-IN')}</p>
+                        <div className="flex shrink-0 flex-col items-end justify-center">
+                          <p className="text-sm font-extrabold tracking-tight text-[#351C18] sm:text-base">₹{item.totalPrice.toLocaleString('en-IN')}</p>
 
-                          <p className="mt-1 text-[8px] text-[#9A857B]">
+                          <p className="mt-1 text-[8px] font-medium text-[#9A857B]">
                             ₹{(item.discountPrice || item.price).toLocaleString('en-IN')} × {item.quantity}
                           </p>
+
+                          <span className="mt-2 rounded-md bg-[#F7EEE7] px-1.5 py-0.5 text-[7px] font-bold text-[#8E181F]">Item Total</span>
                         </div>
                       </div>
                     )

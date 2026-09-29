@@ -5,11 +5,14 @@ const authMiddleware = require('../middleware/authMiddleware')
 const Order = require('../model/order')
 const Address = require('../model/address')
 const Payment = require('../model/payment')
-const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirmationEmail')
 const User = require('../model/users')
 const { sendEmail } = require('../utils/sendEmail')
 const { orderPlacedEmail } = require('../utils/emailTemplates/orderPlacedEmail')
 const { orderCancelledEmail } = require('../utils/emailTemplates/orderCancelledEmail')
+
+// Admin notification
+const createAdminNotification = require('../utils/createAdminNotification')
+const ADMIN_NOTIFICATION_TYPES = require('../constants/adminNotificationTypes')
 
 // ! <order className="js"></order>
 
@@ -98,7 +101,44 @@ router.post('/', authMiddleware, async (req, res) => {
       paidAt: null,
     })
 
-    // Send Order Placed Email
+    // Send response immediately
+    res.status(201).json({
+      success: true,
+      message: 'Order placed successfully',
+      data: {
+        order,
+        payment,
+      },
+    })
+
+    // --------------------------------
+    // Background tasks
+    // --------------------------------
+
+    // Admin notification
+    try {
+      const io = req.app.get('io')
+
+      await createAdminNotification({
+        type: ADMIN_NOTIFICATION_TYPES.NEW_ORDER,
+        title: 'New order received',
+        message: `New order ${order.orderId} has been placed by ${user.name}.`,
+        orderId: order._id,
+        userId: user._id,
+        metadata: {
+          orderNumber: order.orderId,
+          totalAmount: order.totalAmount,
+          paymentMethod: order.paymentMethod,
+        },
+        io,
+      })
+
+      console.log(`✅ Admin notification created for new order ${order.orderId}`)
+    } catch (notificationError) {
+      console.error('⚠️ Admin notification failed:', notificationError.message)
+    }
+
+    // Order email
     try {
       const populatedOrder = await Order.findById(order._id).populate({
         path: 'items.productId',
@@ -127,15 +167,6 @@ router.post('/', authMiddleware, async (req, res) => {
     } catch (emailError) {
       console.error('⚠️ Order placed email failed:', emailError.message)
     }
-
-    res.status(201).json({
-      success: true,
-      message: 'Order placed successfully',
-      data: {
-        order,
-        payment,
-      },
-    })
   } catch (error) {
     console.log('Create Order Error:', error)
 
@@ -213,7 +244,6 @@ router.get('/:id', authMiddleware, async (req, res) => {
 })
 
 // ! users ne order delete mate
-// ! CANCEL ORDER => User mate
 // ! CANCEL ORDER => User mate
 router.put('/:id/cancel', authMiddleware, async (req, res) => {
   try {
@@ -312,59 +342,6 @@ router.put('/:id/cancel', authMiddleware, async (req, res) => {
     })
   }
 })
-
-
-
-// // ! Update Order Status => Admin mate
-// router.put('/:id/status', async (req, res) => {
-//   try {
-//     const { id } = req.params
-//     const { orderStatus } = req.body
-
-//     const allowedStatuses = ['Pending', 'Confirmed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled', 'Returned']
-
-//     if (!allowedStatuses.includes(orderStatus)) {
-//       return res.status(400).json({
-//         success: false,
-//         message: 'Invalid order status',
-//       })
-//     }
-
-//     const order = await Order.findByIdAndUpdate(
-//       id,
-//       {
-//         $set: {
-//           orderStatus,
-//         },
-//       },
-//       {
-//         new: true,
-//         runValidators: true,
-//       },
-//     )
-
-//     if (!order) {
-//       return res.status(404).json({
-//         success: false,
-//         message: 'Order not found',
-//       })
-//     }
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'Order status updated successfully',
-//       data: order,
-//     })
-//   } catch (error) {
-//     console.log('Update Order Status Error:', error)
-
-//     res.status(500).json({
-//       success: false,
-//       message: 'Internal server error',
-//       error: error.message,
-//     })
-//   }
-// })
 
 // ! RETURN ORDER
 router.put('/:id/return', authMiddleware, async (req, res) => {

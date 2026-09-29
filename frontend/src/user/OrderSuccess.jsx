@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, CreditCard, MapPin, Package, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, CreditCard, MapPin, Package, ShieldCheck, ShoppingBag, Truck, CircleCheck  } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import BreadCrumb from './BreadCrumb'
 import { axiosInstance } from '../config/axiosConfig'
@@ -133,12 +133,13 @@ export default function OrderSuccess() {
 
       <div className="mx-auto w-full  pt-5">
         {/* HEADER */}
-        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-20 sm:px-4">
+          {/* Left - Order Confirmation */}
           <div className="flex min-w-0 items-center gap-2.5">
             <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
               <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
 
-              <Package size={18} strokeWidth={1.8} className="relative z-10" />
+              <CircleCheck size={18} strokeWidth={1.8} className="relative z-10" />
             </div>
 
             <div className="min-w-0">
@@ -148,12 +149,45 @@ export default function OrderSuccess() {
             </div>
           </div>
 
-          <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#D5E8DA] bg-[#F0F8F3] px-2 sm:px-2.5">
-            <ShieldCheck size={12} className="text-[#3E8B62]" />
+          {/* Progress */}
+          <div className="flex min-w-0 flex-1 items-center justify-center px-2 sm:px-6">
+            <div className="flex w-full max-w-100 items-center">
+              {/* Cart - Completed */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#A51D26] text-white shadow-[0_3px_9px_rgba(165,29,38,0.25)] ring-3 ring-[#F1E3DC] sm:h-9 sm:w-9">
+                  <ShoppingBag size={14} strokeWidth={2} />
+                </div>
 
-            <span className="hidden text-[9px] font-bold text-[#34704F] sm:inline">Order Confirmed</span>
+                <span className="hidden text-[9px] font-extrabold text-[#7D171C] sm:block">Cart</span>
+              </div>
+
+              {/* Completed Line */}
+              <div className="mx-2 h-0.5 flex-1 rounded-full bg-[#A51D26] sm:mx-3" />
+
+              {/* Checkout - Completed */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#A51D26] text-white shadow-[0_3px_9px_rgba(165,29,38,0.25)] ring-3 ring-[#F1E3DC] sm:h-9 sm:w-9">
+                  <CreditCard size={14} strokeWidth={2} />
+                </div>
+
+                <span className="hidden text-[9px] font-extrabold text-[#7D171C] sm:block">Checkout</span>
+              </div>
+
+              {/* Completed Line */}
+              <div className="mx-2 h-0.5 flex-1 rounded-full bg-[#A51D26] sm:mx-3" />
+
+              {/* Confirm - Active */}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#7D171C] text-white shadow-[0_3px_10px_rgba(125,23,28,0.30)] ring-3 ring-[#F1E3DC] sm:h-9 sm:w-9">
+                  <CircleCheck size={14} strokeWidth={2} />
+                </div>
+
+                <span className="hidden text-[9px] font-extrabold text-[#7D171C] sm:block">Confirm</span>
+              </div>
+            </div>
           </div>
         </div>
+
 
         {/* SUCCESS HERO */}
         <div className="relative mb-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-linear-to-br from-[#351C18] via-[#5A2A25] to-[#7D171C] px-5 py-8 shadow-[0_10px_30px_rgba(73,54,49,0.12)] sm:px-8 sm:py-10">

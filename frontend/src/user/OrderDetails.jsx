@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, CalendarDays, Check, CheckCircle2, ChevronRight, CircleCheck, Clock3, CreditCard, MapPin, Package, Receipt, ShieldCheck, ShoppingBag, Truck, X, XCircle } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Check, CheckCircle2, CircleCheck, Clock3, CreditCard, MapPin, Package, Receipt, ShieldCheck, ShoppingBag, Truck, XCircle } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import BreadCrumb from './BreadCrumb'
@@ -202,91 +202,114 @@ export default function OrderDetails() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2]">
+    <div className={`min-h-screen ${isCancelled ? 'bg-[#F5F3F2]' : 'bg-[#FBF7F2]'}`}>
       <BreadCrumb items={items} />
 
       <div className="mx-auto w-full pt-4 sm:pt-5">
         {/* HEADER */}
-        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+        <div
+          className={`mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4 ${
+            isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'
+          }`}
+        >
           <div className="flex min-w-0 items-center gap-2.5">
-            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
-              <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
+            <div
+              className={`relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg sm:h-10 sm:w-10 ${
+                isCancelled ? 'bg-[#E8E4E2] text-[#8F837E]' : 'bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)]'
+              }`}
+            >
+              <div className={`absolute -right-2 -top-2 h-6 w-6 rounded-full ${isCancelled ? 'bg-white/40' : 'bg-white/10'}`} />
 
-              <Package size={18} strokeWidth={1.8} className="relative z-10" />
+              {isCancelled ? <XCircle size={18} strokeWidth={1.8} className="relative z-10" /> : <Package size={18} strokeWidth={1.8} className="relative z-10" />}
             </div>
 
             <div className="min-w-0">
-              <h1 className="truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-sm">Order Details</h1>
+              <h1 className={`truncate text-xs font-extrabold tracking-tight sm:text-sm ${isCancelled ? 'text-[#665D59]' : 'text-[#351C18]'}`}>Order Details</h1>
 
-              <p className="mt-0.5 truncate text-[9px] text-[#806C63] sm:text-[10px]">Order #{order.orderId || order._id}</p>
+              <p className={`mt-0.5 truncate text-[9px] sm:text-[10px] ${isCancelled ? 'text-[#9A918C]' : 'text-[#806C63]'}`}>Order #{order.orderId || order._id}</p>
             </div>
           </div>
 
           <div
             className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg border px-2 text-[8px] font-bold sm:px-2.5 sm:text-[9px] ${
-              isCancelled ? 'border-[#F0C8CB] bg-[#FCEBEC] text-[#A51D26]' : isReturned ? 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]' : isDelivered ? 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]' : 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'
+              isCancelled ? 'border-[#DDD7D4] bg-[#EEECEA] text-[#786E69]' : isReturned ? 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]' : isDelivered ? 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]' : 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'
             }`}
           >
-            <span className={`h-1.5 w-1.5 rounded-full ${isCancelled ? 'bg-[#A51D26]' : isReturned ? 'bg-[#B87935]' : isDelivered ? 'bg-[#3E8B62]' : 'bg-[#D4A373]'}`} />
+            <span className={`h-1.5 w-1.5 rounded-full ${isCancelled ? 'bg-[#9A817B]' : isReturned ? 'bg-[#B87935]' : isDelivered ? 'bg-[#3E8B62]' : 'bg-[#D4A373]'}`} />
 
             <span>{order.orderStatus}</span>
           </div>
         </div>
 
+        {/* CANCELLED NOTICE */}
+        {isCancelled && (
+          <div className="mb-4 flex items-center gap-3 rounded-xl border border-[#DED8D5] bg-[#F1EFED] px-4 py-3 sm:mb-5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E6E1DE] text-[#8F625D]">
+              <XCircle size={16} />
+            </div>
+
+            <div className="min-w-0">
+              <p className="text-xs font-extrabold text-[#705F5A]">This order is cancelled</p>
+
+              <p className="mt-0.5 text-[10px] text-[#958A85]">This order is closed and no longer active.</p>
+            </div>
+
+            <span className="ml-auto hidden shrink-0 rounded-md border border-[#DDD6D2] bg-white px-2 py-1 text-[8px] font-extrabold uppercase tracking-wide text-[#918681] sm:inline-flex">Closed</span>
+          </div>
+        )}
+
         {/* ORDER META */}
         <div className="mb-4 grid grid-cols-2 gap-3 sm:mb-5 sm:grid-cols-3">
-          <div className="rounded-xl border border-[#E8DDD4] bg-white p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)]">
+          <div className={`rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-[#ECE9E7] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
                 <Receipt size={13} />
               </div>
 
               <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Order ID</span>
             </div>
 
-            <p className="mt-2 truncate text-[10px] font-extrabold text-[#351C18] sm:text-xs">#{order.orderId || order._id}</p>
+            <p className={`mt-2 truncate text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>#{order.orderId || order._id}</p>
           </div>
 
-          <div className="rounded-xl border border-[#E8DDD4] bg-white p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)]">
+          <div className={`rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-[#ECE9E7] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
                 <CalendarDays size={13} />
               </div>
 
               <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Ordered On</span>
             </div>
 
-            <p className="mt-2 text-[10px] font-extrabold text-[#351C18] sm:text-xs">{formatDate(order.createdAt)}</p>
+            <p className={`mt-2 text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{formatDate(order.createdAt)}</p>
           </div>
 
-          <div className="col-span-2 rounded-xl border border-[#E8DDD4] bg-white p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] sm:col-span-1">
+          <div className={`col-span-2 rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] sm:col-span-1 ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-[#ECE9E7] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
                 <CreditCard size={13} />
               </div>
 
               <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Payment</span>
             </div>
 
-            <p className="mt-2 truncate text-[10px] font-extrabold text-[#351C18] sm:text-xs">{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
+            <p className={`mt-2 truncate text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
           </div>
         </div>
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[270px_minmax(0,1fr)_310px]">
           {/* TRACKING */}
-          <div className="order-2 rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)] lg:order-1">
-            <div className="border-b border-[#EEE5DF] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] p-4 sm:p-5">
+          <div className={`order-2 rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] lg:order-1 ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
+            <div className={`border-b p-4 sm:p-5 ${isCancelled ? 'border-[#E2DDDA] bg-linear-to-r from-[#F8F7F6] to-[#F1EFED]' : 'border-[#EEE5DF] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7]'}`}>
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-sm font-extrabold text-[#351C18]">Order Tracking</h2>
+                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Order Tracking</h2>
 
-                  <p className="mt-1 text-[10px] leading-4 text-[#806C63]">Track your order progress.</p>
+                  <p className="mt-1 text-[10px] leading-4 text-[#918681]">{isCancelled ? 'Tracking is disabled because this order is cancelled.' : 'Track your order progress.'}</p>
                 </div>
 
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
-                  <Truck size={17} />
-                </div>
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${isCancelled ? 'bg-[#EAE7E5] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>{isCancelled ? <XCircle size={17} /> : <Truck size={17} />}</div>
               </div>
             </div>
 
@@ -294,17 +317,19 @@ export default function OrderDetails() {
               {orderStatuses.map((item, index) => {
                 const Icon = item.icon
 
-                const isCompleted = index <= currentStatusIndex
-                const isCurrent = index === currentStatusIndex
+                const isCompleted = !isCancelled && index <= currentStatusIndex
+
+                const isCurrent = !isCancelled && index === currentStatusIndex
+
                 const isLast = index === orderStatuses.length - 1
 
                 return (
                   <div key={item.status} className="relative flex gap-3">
-                    {!isLast && <div className={`absolute left-4.5 top-9 h-[calc(100%-8px)] w-0.5 ${index < currentStatusIndex ? 'bg-[#A51D26]' : 'bg-[#E8DDD4]'}`} />}
+                    {!isLast && <div className={`absolute left-4.5 top-9 h-[calc(100%-8px)] w-0.5 ${isCancelled ? 'bg-[#D8D2CE]' : index < currentStatusIndex ? 'bg-[#A51D26]' : 'bg-[#E8DDD4]'}`} />}
 
                     <div
                       className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 ${
-                        isCompleted ? 'border-[#8E181F] bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white' : 'border-[#E2D5CC] bg-white text-[#B7A49B]'
+                        isCancelled ? 'border-[#D8D2CE] bg-[#F1EFED] text-[#A39A95]' : isCompleted ? 'border-[#8E181F] bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white' : 'border-[#E2D5CC] bg-white text-[#B7A49B]'
                       } ${isCurrent ? 'ring-4 ring-[#F7EEE7]' : ''}`}
                     >
                       <Icon size={15} strokeWidth={2.3} />
@@ -312,12 +337,12 @@ export default function OrderDetails() {
 
                     <div className={`${isLast ? 'pb-0' : 'pb-6'} min-w-0`}>
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <h3 className={`text-xs font-extrabold ${isCompleted ? 'text-[#351C18]' : 'text-[#B7A49B]'}`}>{item.label}</h3>
+                        <h3 className={`text-xs font-extrabold ${isCancelled ? 'text-[#8A817C]' : isCompleted ? 'text-[#351C18]' : 'text-[#B7A49B]'}`}>{item.label}</h3>
 
                         {isCurrent && <span className="rounded-md bg-[#F7EEE7] px-1.5 py-0.5 text-[8px] font-extrabold text-[#8E181F]">Current</span>}
                       </div>
 
-                      <p className={`mt-1 text-[10px] leading-4 ${isCompleted ? 'text-[#806C63]' : 'text-[#B7A49B]'}`}>{item.description}</p>
+                      <p className={`mt-1 text-[10px] leading-4 ${isCancelled ? 'text-[#AAA19C]' : isCompleted ? 'text-[#806C63]' : 'text-[#B7A49B]'}`}>{item.description}</p>
                     </div>
                   </div>
                 )
@@ -325,20 +350,24 @@ export default function OrderDetails() {
 
               {/* CANCELLED */}
               {isCancelled && (
-                <div className="mt-5 rounded-xl border border-[#F0C8CB] bg-[#FCEBEC] p-3.5">
+                <div className="mt-5 rounded-xl border border-[#DED8D5] bg-[#F3F1F0] p-3.5">
                   <div className="flex items-start gap-2.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#A51D26]">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E7E3E0] text-[#8F625D]">
                       <XCircle size={15} />
                     </div>
 
                     <div className="min-w-0">
-                      <h3 className="text-xs font-extrabold text-[#A51D26]">Order Cancelled</h3>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-xs font-extrabold text-[#705F5A]">Order Cancelled</h3>
 
-                      <p className="mt-1 text-[10px] leading-4 text-[#A51D26]">This order has been cancelled.</p>
+                        <span className="rounded-md border border-[#DDD6D2] bg-white px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-[#918681]">Closed</span>
+                      </div>
 
-                      {order.cancellationReason && <p className="mt-1.5 text-[10px] font-semibold text-[#8E181F]">Reason: {order.cancellationReason}</p>}
+                      <p className="mt-1 text-[10px] leading-4 text-[#8F8782]">This order is no longer active.</p>
 
-                      {order.cancelledAt && <p className="mt-1 text-[9px] font-medium text-[#A44A3F]">Cancelled on: {formatDate(order.cancelledAt)}</p>}
+                      {order.cancellationReason && <p className="mt-1.5 text-[10px] font-semibold text-[#786D68]">Reason: {order.cancellationReason}</p>}
+
+                      {order.cancelledAt && <p className="mt-1 text-[9px] font-medium text-[#9A918C]">Cancelled on: {formatDate(order.cancelledAt)}</p>}
                     </div>
                   </div>
                 </div>
@@ -368,12 +397,12 @@ export default function OrderDetails() {
           {/* CENTER CONTENT */}
           <div className="order-1 min-w-0 space-y-4 sm:space-y-5 lg:order-2">
             {/* ORDER ITEMS */}
-            <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-              <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
+            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
+              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-[#E2DDDA] bg-linear-to-r from-[#F8F7F6] to-[#F1EFED]' : 'border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7]'}`}>
                 <div className="flex items-center gap-2">
-                  <ShoppingBag size={17} className="text-[#8E181F]" />
+                  <ShoppingBag size={17} className={isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'} />
 
-                  <h2 className="text-sm font-extrabold text-[#351C18]">Ordered Items</h2>
+                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Ordered Items</h2>
                 </div>
 
                 <span className="rounded-lg bg-white px-2.5 py-1 text-[9px] font-extrabold text-[#67544D] shadow-sm">
@@ -384,8 +413,8 @@ export default function OrderDetails() {
               <div className="max-h-97 overflow-y-auto scrollbar-thin [scrollbar-color:#CDBDB4_transparent]">
                 <div className="divide-y divide-[#EEE5DF]">
                   {order.items?.map((item, index) => (
-                    <div key={`${order._id}-${index}`} className="flex gap-3 p-3.5 transition-colors duration-200 hover:bg-[#FFFCFA] sm:gap-4 sm:p-4">
-                      <div className="flex h-19 w-19 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] sm:h-20 sm:w-20">
+                    <div key={`${order._id}-${index}`} className={`flex gap-3 p-3.5 sm:gap-4 sm:p-4 ${isCancelled ? 'opacity-70' : 'transition-colors duration-200 hover:bg-[#FFFCFA]'}`}>
+                      <div className={`flex h-19 w-19 shrink-0 items-center justify-center overflow-hidden rounded-xl border sm:h-20 sm:w-20 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED] grayscale' : 'border-[#E2D5CC] bg-[#FBF7F2]'}`}>
                         {item.image ? (
                           <img src={`http://localhost:3000${item.image}`} alt={item.productName} className="h-full w-full object-contain p-1.5 transition-transform duration-300 hover:scale-105" />
                         ) : (
@@ -394,7 +423,7 @@ export default function OrderDetails() {
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <h3 className="line-clamp-2 text-xs font-bold leading-5 text-[#351C18] sm:text-sm">{item.productName}</h3>
+                        <h3 className={`line-clamp-2 text-xs font-bold leading-5 sm:text-sm ${isCancelled ? 'text-[#756B66]' : 'text-[#351C18]'}`}>{item.productName}</h3>
 
                         <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
                           <span className="text-[10px] font-semibold text-[#806C63]">Qty: {item.quantity}</span>
@@ -408,7 +437,7 @@ export default function OrderDetails() {
                           )}
                         </div>
 
-                        <p className="mt-2 text-sm font-extrabold text-[#8E181F]">₹{formatPrice(item.totalPrice)}</p>
+                        <p className={`mt-2 text-sm font-extrabold ${isCancelled ? 'text-[#8F817B]' : 'text-[#8E181F]'}`}>₹{formatPrice(item.totalPrice)}</p>
                       </div>
                     </div>
                   ))}
@@ -417,28 +446,28 @@ export default function OrderDetails() {
             </div>
 
             {/* DELIVERY ADDRESS */}
-            <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-              <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
+            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
+              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-[#E2DDDA] bg-linear-to-r from-[#F8F7F6] to-[#F1EFED]' : 'border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7]'}`}>
                 <div className="flex items-center gap-2">
-                  <MapPin size={17} className="text-[#8E181F]" />
+                  <MapPin size={17} className={isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'} />
 
-                  <h2 className="text-sm font-extrabold text-[#351C18]">Delivery Address</h2>
+                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Delivery Address</h2>
                 </div>
 
-                <span className="rounded-md bg-[#F7EEE7] px-2 py-1 text-[8px] font-extrabold uppercase tracking-wider text-[#8E181F]">Delivery</span>
+                <span className={`rounded-md px-2 py-1 text-[8px] font-extrabold uppercase tracking-wider ${isCancelled ? 'bg-[#ECE9E7] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>Delivery</span>
               </div>
 
               <div className="p-4 sm:p-5">
-                <div className="relative overflow-hidden rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-4">
-                  <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#A51D26]/[0.035]" />
+                <div className={`relative overflow-hidden rounded-xl border p-4 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
+                  <div className={`absolute -right-8 -top-8 h-20 w-20 rounded-full ${isCancelled ? 'bg-[#8F817B]/5' : 'bg-[#A51D26]/[0.035]'}`} />
 
                   <div className="relative flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#8E181F] shadow-sm">
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm ${isCancelled ? 'bg-[#E7E3E0] text-[#918681]' : 'bg-white text-[#8E181F]'}`}>
                       <MapPin size={17} />
                     </div>
 
                     <div className="min-w-0">
-                      <p className="text-sm font-extrabold text-[#351C18]">{order.shippingAddress?.fullName}</p>
+                      <p className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{order.shippingAddress?.fullName}</p>
 
                       <p className="mt-1.5 text-xs leading-5 text-[#806C63]">
                         {order.shippingAddress?.addressLine}
@@ -451,7 +480,7 @@ export default function OrderDetails() {
                       <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                         <span className="text-[10px] font-bold text-[#9A857B]">Phone</span>
 
-                        <span className="text-xs font-bold text-[#351C18]">{order.shippingAddress?.phone}</span>
+                        <span className={`text-xs font-bold ${isCancelled ? 'text-[#786D68]' : 'text-[#351C18]'}`}>{order.shippingAddress?.phone}</span>
                       </div>
                     </div>
                   </div>
@@ -460,36 +489,38 @@ export default function OrderDetails() {
             </div>
 
             {/* PAYMENT */}
-            <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-              <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7] px-4 py-3.5 sm:px-5">
+            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
+              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-[#E2DDDA] bg-linear-to-r from-[#F8F7F6] to-[#F1EFED]' : 'border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7]'}`}>
                 <div className="flex items-center gap-2">
-                  <CreditCard size={17} className="text-[#8E181F]" />
+                  <CreditCard size={17} className={isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'} />
 
-                  <h2 className="text-sm font-extrabold text-[#351C18]">Payment Information</h2>
+                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Payment Information</h2>
                 </div>
 
-                <ShieldCheck size={16} className="text-[#3E8B62]" />
+                <ShieldCheck size={16} className={isCancelled ? 'text-[#918681]' : 'text-[#3E8B62]'} />
               </div>
 
               <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 sm:p-5">
-                <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5">
+                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
                   <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Payment Method</p>
 
-                  <p className="mt-1.5 text-xs font-extrabold text-[#351C18]">{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
+                  <p className={`mt-1.5 text-xs font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
                 </div>
 
-                <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5">
+                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
                   <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Payment Status</p>
 
-                  <span className={`mt-1.5 inline-flex rounded-md px-2 py-1 text-[9px] font-extrabold ${paymentStatusClass}`}>{order.paymentStatus || 'Pending'}</span>
+                  <span className={`mt-1.5 inline-flex rounded-md px-2 py-1 text-[9px] font-extrabold ${isCancelled ? 'bg-[#E7E3E0] text-[#918681]' : paymentStatusClass}`}>{order.paymentStatus || 'Pending'}</span>
                 </div>
               </div>
 
               <div className="border-t border-[#E8DDD4] px-4 pb-4 sm:px-5">
-                <div className="flex items-start gap-2.5 rounded-xl bg-[#F7EEE7] p-3.5">
-                  <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#8E181F]" />
+                <div className={`flex items-start gap-2.5 rounded-xl p-3.5 ${isCancelled ? 'bg-[#F1EFED]' : 'bg-[#F7EEE7]'}`}>
+                  <ShieldCheck size={16} className={`mt-0.5 shrink-0 ${isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'}`} />
 
-                  <p className="text-[10px] font-semibold leading-5 text-[#67544D]">{isCOD ? 'Payment will be collected in cash when your order is delivered.' : 'Payment will be collected online when your order is delivered.'}</p>
+                  <p className={`text-[10px] font-semibold leading-5 ${isCancelled ? 'text-[#8C827D]' : 'text-[#67544D]'}`}>
+                    {isCOD ? 'Payment will be collected in cash when your order is delivered.' : 'Payment will be collected online when your order is delivered.'}
+                  </p>
                 </div>
               </div>
             </div>
@@ -640,26 +671,26 @@ export default function OrderDetails() {
 
           {/* RIGHT SUMMARY */}
           <div className="order-3">
-            <div className="sticky top-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_6px_24px_rgba(73,54,49,0.07)]">
+            <div className={`sticky top-5 overflow-hidden rounded-2xl border shadow-[0_6px_24px_rgba(73,54,49,0.07)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
               {/* SUMMARY HEADER */}
-              <div className="relative overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A2A25] to-[#7D171C] px-4 py-4 sm:px-5">
+              <div className={`relative overflow-hidden px-4 py-4 sm:px-5 ${isCancelled ? 'bg-linear-to-br from-[#5E5956] via-[#716A66] to-[#817974]' : 'bg-linear-to-br from-[#351C18] via-[#5A2A25] to-[#7D171C]'}`}>
                 <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white/5" />
 
                 <div className="relative flex items-center gap-2">
-                  <Receipt size={17} className="text-white/80" />
+                  {isCancelled ? <XCircle size={17} className="text-white/80" /> : <Receipt size={17} className="text-white/80" />}
 
                   <h2 className="text-sm font-extrabold text-white">Order Summary</h2>
                 </div>
 
-                <p className="relative mt-1 text-[9px] text-white/55">Payment & order total</p>
+                <p className="relative mt-1 text-[9px] text-white/55">{isCancelled ? 'Cancelled order summary' : 'Payment & order total'}</p>
               </div>
 
               <div className="p-4 sm:p-5">
                 {/* ORDER TOTAL */}
-                <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5">
+                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
                   <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Total Amount</p>
 
-                  <p className="mt-1 text-2xl font-extrabold tracking-tight text-[#8E181F]">₹{formatPrice(order.totalAmount)}</p>
+                  <p className={`mt-1 text-2xl font-extrabold tracking-tight ${isCancelled ? 'text-[#786E69]' : 'text-[#8E181F]'}`}>₹{formatPrice(order.totalAmount)}</p>
                 </div>
 
                 {/* PRICE DETAILS */}
@@ -670,19 +701,19 @@ export default function OrderDetails() {
                     <div className="flex items-center justify-between gap-3">
                       <span className="text-xs text-[#806C63]">Subtotal</span>
 
-                      <span className="text-xs font-bold text-[#351C18]">₹{formatPrice(order.subtotal)}</span>
+                      <span className={`text-xs font-bold ${isCancelled ? 'text-[#786E69]' : 'text-[#351C18]'}`}>₹{formatPrice(order.subtotal)}</span>
                     </div>
 
                     <div className="flex items-center justify-between gap-3">
                       <span className="text-xs text-[#806C63]">Delivery</span>
 
-                      <span className="text-xs font-bold text-[#3E8B62]">{order.deliveryCharge === 0 ? 'FREE' : `₹${formatPrice(order.deliveryCharge)}`}</span>
+                      <span className={`text-xs font-bold ${isCancelled ? 'text-[#918681]' : 'text-[#3E8B62]'}`}>{order.deliveryCharge === 0 ? 'FREE' : `₹${formatPrice(order.deliveryCharge)}`}</span>
                     </div>
 
                     <div className="flex items-center justify-between gap-3">
                       <span className="text-xs text-[#806C63]">Tax</span>
 
-                      <span className="text-xs font-bold text-[#351C18]">₹{formatPrice(order.tax)}</span>
+                      <span className={`text-xs font-bold ${isCancelled ? 'text-[#786E69]' : 'text-[#351C18]'}`}>₹{formatPrice(order.tax)}</span>
                     </div>
                   </div>
                 </div>
@@ -693,32 +724,38 @@ export default function OrderDetails() {
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-xs font-extrabold text-[#67544D]">Total Paid</span>
 
-                  <span className="text-lg font-extrabold text-[#8E181F]">₹{formatPrice(order.totalAmount)}</span>
+                  <span className={`text-lg font-extrabold ${isCancelled ? 'text-[#786E69]' : 'text-[#8E181F]'}`}>₹{formatPrice(order.totalAmount)}</span>
                 </div>
 
                 {/* PAYMENT STATUS */}
-                <div className={`mt-4 rounded-xl px-3 py-3 ${order.paymentStatus === 'Paid' ? 'bg-[#EAF6EF]' : order.paymentStatus === 'Failed' ? 'bg-[#FCEBEC]' : 'bg-[#FFF9ED]'}`}>
+                <div className={`mt-4 rounded-xl px-3 py-3 ${isCancelled ? 'bg-[#F1EFED]' : order.paymentStatus === 'Paid' ? 'bg-[#EAF6EF]' : order.paymentStatus === 'Failed' ? 'bg-[#FCEBEC]' : 'bg-[#FFF9ED]'}`}>
                   <div className="flex items-center gap-2">
-                    <CreditCard size={14} className={order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#B87935]'} />
+                    <CreditCard size={14} className={isCancelled ? 'text-[#918681]' : order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#B87935]'} />
 
                     <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#67544D]">Payment</span>
 
-                    <span className={`ml-auto text-[9px] font-extrabold ${order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#A05A16]'}`}>{order.paymentStatus || 'Pending'}</span>
+                    <span className={`ml-auto text-[9px] font-extrabold ${isCancelled ? 'text-[#918681]' : order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#A05A16]'}`}>
+                      {order.paymentStatus || 'Pending'}
+                    </span>
                   </div>
                 </div>
 
                 {/* SECURITY */}
-                <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#EAF6EF] px-3 py-2.5">
-                  <CheckCircle2 size={14} className="shrink-0 text-[#3E8B62]" />
+                <div className={`mt-3 flex items-center gap-2 rounded-xl px-3 py-2.5 ${isCancelled ? 'bg-[#F1EFED]' : 'bg-[#EAF6EF]'}`}>
+                  <CheckCircle2 size={14} className={`shrink-0 ${isCancelled ? 'text-[#918681]' : 'text-[#3E8B62]'}`} />
 
-                  <p className="text-[9px] font-bold text-[#3E8B62]">Your order information is secure</p>
+                  <p className={`text-[9px] font-bold ${isCancelled ? 'text-[#918681]' : 'text-[#3E8B62]'}`}>{isCancelled ? 'This order is closed and no longer active.' : 'Your order information is secure'}</p>
                 </div>
 
                 {/* BACK BUTTON */}
                 <button
                   type="button"
                   onClick={() => navigate('/orders')}
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-4 py-3 text-xs font-extrabold text-[#67544D] transition-all duration-300 hover:border-[#8E181F] hover:bg-[#F7EEE7] hover:text-[#8E181F]"
+                  className={`mt-4 flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs font-extrabold transition-all duration-300 ${
+                    isCancelled
+                      ? 'border-[#D9D3D0] bg-[#F1EFED] text-[#756B66] hover:border-[#B9ADA7] hover:bg-[#EAE7E5] hover:text-[#665B56]'
+                      : 'border-[#E2D5CC] bg-white text-[#67544D] hover:border-[#8E181F] hover:bg-[#F7EEE7] hover:text-[#8E181F]'
+                  }`}
                 >
                   <ArrowLeft size={15} />
                   Back to My Orders
@@ -730,9 +767,9 @@ export default function OrderDetails() {
 
         {/* FOOTER */}
         <div className="flex items-center justify-center gap-2 py-5">
-          <CheckCircle2 size={13} className="text-[#9A857B]" />
+          <CheckCircle2 size={13} className={isCancelled ? 'text-[#B0A7A2]' : 'text-[#9A857B]'} />
 
-          <p className="text-[10px] font-medium text-[#9A857B] sm:text-[11px]">Thank you for shopping with MineKart.</p>
+          <p className={`text-[10px] font-medium sm:text-[11px] ${isCancelled ? 'text-[#AAA19C]' : 'text-[#9A857B]'}`}>Thank you for shopping with MineKart.</p>
         </div>
       </div>
     </div>

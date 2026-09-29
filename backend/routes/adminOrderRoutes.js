@@ -6,11 +6,12 @@ const Order = require('../model/order')
 const Payment = require('../model/payment')
 const User = require('../model/users')
 
-const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirmationEmail')
 const { sendEmail } = require('../utils/sendEmail')
 const { orderCancelledEmail } = require('../utils/emailTemplates/orderCancelledEmail')
 
-// ! adminOrderRoutes.js
+// Notification
+const createNotification = require('../utils/createNotification')
+const NOTIFICATION_TYPES = require('../constants/notificationTypes')
 
 // GET ALL ORDERS
 router.get('/', authMiddleware, async (req, res) => {
@@ -187,13 +188,11 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
     // Update order status
     order.orderStatus = orderStatus
 
-    
     // ADMIN CANCEL ORDER
     if (orderStatus === 'Cancelled') {
       order.cancelledBy = 'Admin'
       order.cancelledAt = new Date()
 
-      // Save admin cancellation reason
       if (cancellationReason.trim()) {
         order.cancellationReason = cancellationReason.trim()
       }
@@ -201,7 +200,73 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
 
     await order.save()
 
-    
+    // CREATE USER NOTIFICATION
+    const io = req.app.get('io')
+
+    const notificationMap = {
+      Confirmed: {
+        type: NOTIFICATION_TYPES.ORDER_CONFIRMED,
+        title: 'Order confirmed',
+        message: `Your order ${order.orderId} has been confirmed successfully.`,
+      },
+
+      Processing: {
+        type: NOTIFICATION_TYPES.ORDER_PACKED,
+        title: 'Order is being processed',
+        message: `Your order ${order.orderId} is now being processed.`,
+      },
+
+      Shipped: {
+        type: NOTIFICATION_TYPES.ORDER_SHIPPED,
+        title: 'Order shipped',
+        message: `Your order ${order.orderId} has been shipped.`,
+      },
+
+      'Out for Delivery': {
+        type: NOTIFICATION_TYPES.OUT_FOR_DELIVERY,
+        title: 'Out for delivery',
+        message: `Your order ${order.orderId} is out for delivery.`,
+      },
+
+      Delivered: {
+        type: NOTIFICATION_TYPES.ORDER_DELIVERED,
+        title: 'Order delivered',
+        message: `Your order ${order.orderId} has been delivered successfully.`,
+      },
+
+      Cancelled: {
+        type: NOTIFICATION_TYPES.ORDER_CANCELLED,
+        title: 'Order cancelled',
+        message: `Your order ${order.orderId} has been cancelled.`,
+      },
+    }
+
+    const notificationData = notificationMap[orderStatus]
+
+    if (notificationData && previousStatus !== orderStatus) {
+      try {
+        await createNotification({
+          userId: order.userId,
+
+          type: notificationData.type,
+
+          title: notificationData.title,
+
+          message: notificationData.message,
+
+          // IMPORTANT:
+          // Schema માં orderId ObjectId છે
+          orderId: order._id,
+
+          io,
+        })
+
+        console.log(`✅ Notification created: ${order.orderId} → ${orderStatus}`)
+      } catch (notificationError) {
+        console.error('⚠️ Order notification failed:', notificationError)
+      }
+    }
+
     // ORDER CONFIRMATION EMAIL
     if (orderStatus === 'Confirmed' && previousStatus !== 'Confirmed') {
       try {
@@ -213,17 +278,15 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
             select: 'productName images price discountPrice',
           })
 
-          const html = orderConfirmationEmail({
-            name: user.name,
-            orderId: populatedOrder.orderId,
-            items: populatedOrder.items,
-            subtotal: populatedOrder.subtotal,
-            deliveryCharge: populatedOrder.deliveryCharge,
-            tax: populatedOrder.tax,
-            totalAmount: populatedOrder.totalAmount,
-            paymentMethod: populatedOrder.paymentMethod,
-            shippingAddress: populatedOrder.shippingAddress,
-          })
+          const html = `
+            <div>
+              <p>Hello ${user.name},</p>
+              <p>
+                Your order <strong>${populatedOrder.orderId}</strong>
+                has been confirmed successfully.
+              </p>
+            </div>
+          `
 
           await sendEmail({
             to: user.email,
@@ -236,12 +299,10 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
           console.log('⚠️ User email not found. Confirmation email skipped.')
         }
       } catch (emailError) {
-        // Email fail thay to order status fail na thavo joiye
         console.error('⚠️ Order confirmation email failed:', emailError.message)
       }
     }
 
-    
     // ADMIN CANCELLED EMAIL
     if (orderStatus === 'Cancelled' && previousStatus !== 'Cancelled') {
       try {
@@ -271,11 +332,7 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
             totalAmount: populatedOrder.totalAmount,
             paymentMethod: populatedOrder.paymentMethod,
             shippingAddress: populatedOrder.shippingAddress,
-
-            // Admin cancellation reason
             cancellationReason: populatedOrder.cancellationReason,
-
-            // Important
             cancelledBy: 'Admin',
           })
 
@@ -290,12 +347,10 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
           console.log('⚠️ User email not found. Cancellation email skipped.')
         }
       } catch (emailError) {
-        // Email fail thay to cancellation fail na thavu joiye
         console.error('⚠️ Order cancellation email failed:', emailError.message)
       }
     }
 
-    
     // GET UPDATED ORDER
     const updatedOrder = await Order.findById(order._id)
       .populate({

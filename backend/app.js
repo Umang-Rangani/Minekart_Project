@@ -24,10 +24,11 @@ var orderRouter = require('./routes/order')
 const adminOrderRoutes = require('./routes/adminOrderRoutes')
 const adminDashboard = require('./routes/adminDashboard')
 
+const adminNotification = require('./routes/adminNotification')
+const notification = require('./routes/notification')
+
 dotenv.config()
 var app = express()
-
-
 
 console.log('EMAIL_USER:', process.env.EMAIL_USER)
 console.log('EMAIL_PASS exists:', !!process.env.EMAIL_PASS)
@@ -66,6 +67,9 @@ app.use('/contact', contactRouter)
 
 app.use('/admin/orders', adminOrderRoutes)
 app.use('/admin/dashboard', adminDashboard)
+app.use('/admin-notification', adminNotification)
+
+app.use('/notification', notification)
 
 mongoose
   .connect(process.env.MONGO_URI)

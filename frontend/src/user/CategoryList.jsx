@@ -27,8 +27,8 @@ export default function CategoryList() {
   }, [])
 
   return (
-    <div className="fixed left-0 top-26 z-40 w-full border-y border-[#E8DDD4] bg-[#FFFDFC]/98 shadow-[0_4px_18px_rgba(73,54,49,0.08)] backdrop-blur-xl">
-      <div className="flex w-full items-stretch h-23">
+    <div className="fixed left-0 top-26 z-40 w-full  ">
+      <div className="flex mx-auto w-full max-w-[1600px]  items-stretch h-23 border-y border-[#E8DDD4]  bg-[#FFFDFC]/98 shadow-[0_4px_18px_rgba(73,54,49,0.08)] backdrop-blur-xl">
         {/* For You */}
         <div className="shrink-0 border-r border-[#E8DDD4] bg-[#FBF7F2]">
           {loading ? (

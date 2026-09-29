@@ -45,6 +45,8 @@ import AdminContactMessageView from './admin/AdminContactMessageView.jsx'
 import AdminOrderView from './admin/AdminOrderView.jsx'
 import MySupport from './components/CustomerService/MySupport.jsx'
 import MySupportDetails from './components/CustomerService/MySupportDetails.jsx'
+import Notifications from './pages/Notifications.jsx'
+import AdminNotifications from './admin/AdminNotifications.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -91,7 +93,7 @@ export default function App() {
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-success" element={<OrderSuccess />} />
-          
+
           <Route path="/orders" element={<MyOrders />} />
           <Route path="orders/:id" element={<OrderDetails />} />
 
@@ -99,6 +101,8 @@ export default function App() {
 
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/update" element={<ProfileUpdate />} />
+
+          <Route path="/notifications" element={<Notifications />} />
 
           {/* footer */}
           <Route path="/customer-help" element={<HelpCenter />} />
@@ -143,6 +147,8 @@ export default function App() {
             <Route path="orders/:id" element={<AdminOrderView />} />
 
             <Route path="users" element={<AdminUsers />} />
+
+            <Route path="/admin/notifications" element={<AdminNotifications />} />
 
             <Route path="contact-messages" element={<AdminContactMessages />} />
             <Route path="contact-messages/:id" element={<AdminContactMessageView />} />

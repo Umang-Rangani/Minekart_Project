@@ -15,19 +15,37 @@ export default function CartShimmer() {
 
       <div className="mx-auto w-full pb-10 pt-4 sm:pt-5">
         {/* PAGE HEADER */}
-        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-20 sm:px-4">
+          {/* Left - Cart */}
           <div className="flex min-w-0 items-center gap-2.5">
-            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#F0E7E1] sm:h-10 sm:w-10">
-              <ShoppingBag size={18} className="text-[#D8C9C0]" />
-            </div>
+            <Shimmer className="h-9 w-9 shrink-0 rounded-lg sm:h-10 sm:w-10" />
 
             <div className="min-w-0">
-              <Shimmer className="h-3 w-20 sm:h-3.5 sm:w-24" />
-              <Shimmer className="mt-2 h-2.5 w-28 sm:h-2.5 sm:w-32" />
+              <Shimmer className="h-3 w-20 rounded sm:h-3.5 sm:w-24" />
+
+              <Shimmer className="mt-2 h-2.5 w-28 rounded sm:w-32" />
             </div>
           </div>
 
-          <Shimmer className="h-8 w-16 rounded-lg sm:w-20" />
+          {/* Progress Shimmer */}
+          <div className="flex min-w-0 flex-1 items-center justify-center px-2 sm:px-6">
+            <div className="flex w-full max-w-100 items-center">
+              {/* Cart */}
+              <Shimmer className="h-8 w-8 shrink-0 rounded-full sm:h-9 sm:w-9" />
+
+              {/* Line */}
+              <Shimmer className="mx-2 h-0.5 flex-1 rounded-full sm:mx-3" />
+
+              {/* Checkout */}
+              <Shimmer className="h-8 w-8 shrink-0 rounded-full sm:h-9 sm:w-9" />
+
+              {/* Line */}
+              <Shimmer className="mx-2 h-0.5 flex-1 rounded-full sm:mx-3" />
+
+              {/* Confirm */}
+              <Shimmer className="h-8 w-8 shrink-0 rounded-full sm:h-9 sm:w-9" />
+            </div>
+          </div>
         </div>
 
         {/* MAIN CART */}

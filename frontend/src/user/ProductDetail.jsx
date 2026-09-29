@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ShoppingCart, Star, Minus, Plus, Trash2, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, ChevronRight, Tag, AlertCircle, PackageCheck, XCircle } from 'lucide-react'
+import { ShoppingCart, Star, Minus, Plus, Trash2, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, ChevronRight, Tag, AlertCircle, PackageCheck, XCircle, PackageOpen } from 'lucide-react'
 import { useUser } from '../context/userProvider'
 import { useCart } from '../context/CartProvider'
 import { axiosInstance } from '../config/axiosConfig'
@@ -19,6 +19,7 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState('')
   const [quantity, setQuantity] = useState(0)
 
+  // Separate loading states
   const [loading, setLoading] = useState(true)
   const [relatedLoading, setRelatedLoading] = useState(false)
 
@@ -43,28 +44,29 @@ export default function ProductDetail() {
   }
 
   // Get related products
-  const getRelatedProducts = async (subCategoryId, productId) => {
+  const getRelatedProducts = async (subCategoryId) => {
     try {
       setRelatedLoading(true)
+      setRelatedProducts([])
 
-      const res = await axiosInstance.get(`/product/related/${subCategoryId}/${productId}`)
+      const res = await axiosInstance.get(`/product/related/${subCategoryId}/${id}`)
 
-      if (res.data?.success) {
-        setRelatedProducts(res.data.data || [])
-      } else {
-        setRelatedProducts([])
-      }
+      setRelatedProducts(res.data?.data || [])
     } catch (error) {
-      console.log('Related Products Error:', error)
+      console.error('Get related products error:', error.response?.data || error.message)
+
       setRelatedProducts([])
     } finally {
       setRelatedLoading(false)
     }
   }
+
   // Get Product
   const getProduct = async () => {
     try {
       setLoading(true)
+      setRelatedLoading(false)
+      setRelatedProducts([])
 
       const res = await axiosInstance.get(`/product/${id}`)
 
@@ -85,18 +87,23 @@ export default function ProductDetail() {
 
       setSelectedSize('')
 
+      // Related products loading starts independently
       if (data.subCategory?._id) {
         getRelatedProducts(data.subCategory._id)
       } else {
         setRelatedProducts([])
+        setRelatedLoading(false)
       }
 
       document.title = `${data.productName} | MineKart`
+
+      setLoading(false)
     } catch (error) {
       console.error('Get product error:', error.response?.data || error.message)
 
       setProduct(null)
       setRelatedProducts([])
+      setRelatedLoading(false)
     } finally {
       setLoading(false)
     }
@@ -212,13 +219,103 @@ export default function ProductDetail() {
     }
   }
 
-  // Loading
+  const itemss = [
+    {
+      title: '...',
+      link: null,
+    },
+  ]
+
+  // Main Product Shimmer
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#FBF7F2]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#E8DDD4] border-t-[#8E181F]" />
-          <p className="text-sm font-medium text-[#806C63]">Loading product...</p>
+      <div className="min-h-screen bg-[#FBF7F2]">
+        <BreadCrumb items={itemss} />
+        <div className="mx-auto w-full pb-10 pt-5 ">
+          {/* Main Product Shimmer */}
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[53%_47%]">
+            {/* Image Shimmer */}
+            <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_5px_20px_rgba(73,54,49,0.06)]">
+              <div className="p-3 sm:p-4">
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  {/* Thumbnails */}
+                  <div className="order-2 flex gap-3 overflow-hidden sm:order-1 sm:w-19 sm:flex-col">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                      <div key={index} className="h-17 w-17 shrink-0 animate-pulse rounded-xl bg-[#EDE5DF]" />
+                    ))}
+                  </div>
+
+                  {/* Main Image */}
+                  <div className="order-1 flex min-h-95 flex-1 animate-pulse items-center justify-center rounded-xl bg-[#F0E9E4] sm:min-h-127">
+                    <div className="flex h-56 w-56 items-center justify-center rounded-2xl sm:h-72 sm:w-72">
+                      <PackageOpen size={64} strokeWidth={1.4} className="text-[#9A857B] sm:size-30" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Information Shimmer */}
+            <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] p-5 shadow-[0_5px_20px_rgba(73,54,49,0.06)] sm:p-6 lg:p-7">
+              <div className="animate-pulse">
+                {/* Category */}
+                <div className="h-6 w-24 rounded-lg bg-[#E8DDD4]" />
+
+                {/* Product name */}
+                <div className="mt-4 h-7 w-4/5 rounded bg-[#E8DDD4]" />
+                <div className="mt-2 h-7 w-3/5 rounded bg-[#EDE5DF]" />
+
+                {/* Brand */}
+                <div className="mt-5 flex items-center gap-2">
+                  <div className="h-7 w-7 rounded-lg bg-[#E8DDD4]" />
+                  <div className="h-3 w-32 rounded bg-[#EDE5DF]" />
+                </div>
+
+                {/* Rating */}
+                <div className="mt-5 flex items-center gap-3">
+                  <div className="h-7 w-16 rounded-lg bg-[#E8DDD4]" />
+                  <div className="h-3 w-28 rounded bg-[#EDE5DF]" />
+                </div>
+
+                <div className="my-5 h-px bg-[#E8DDD4]" />
+
+                {/* Price */}
+                <div className="rounded-2xl border border-[#E8DDD4] bg-[#FBF7F2] p-4">
+                  <div className="h-8 w-28 rounded bg-[#E8DDD4]" />
+                  <div className="mt-3 h-3 w-40 rounded bg-[#EDE5DF]" />
+                </div>
+
+                {/* Description */}
+                <div className="mt-6">
+                  <div className="mb-3 flex items-center gap-2">
+                    <div className="h-7 w-7 rounded-lg bg-[#E8DDD4]" />
+                    <div className="h-4 w-32 rounded bg-[#E8DDD4]" />
+                  </div>
+
+                  <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-4">
+                    <div className="h-3 w-full rounded bg-[#EDE5DF]" />
+                    <div className="mt-2 h-3 w-11/12 rounded bg-[#EDE5DF]" />
+                    <div className="mt-2 h-3 w-3/4 rounded bg-[#EDE5DF]" />
+                  </div>
+                </div>
+
+                {/* Stock */}
+                <div className="mt-5 flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5">
+                  <div className="h-10 w-10 shrink-0 rounded-xl bg-[#E8DDD4]" />
+                  <div className="flex-1">
+                    <div className="h-3 w-32 rounded bg-[#E8DDD4]" />
+                    <div className="mt-2 h-2.5 w-48 rounded bg-[#EDE5DF]" />
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="h-12 rounded-xl bg-[#E8DDD4]" />
+                  <div className="h-12 rounded-xl bg-[#DCCBC2]" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -257,7 +354,7 @@ export default function ProductDetail() {
   ]
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       {/* Toast */}
       {toast && (
         <div className="fixed right-4 top-5 z-9999 animate-[slideIn_0.3s_ease-out] sm:right-5">
@@ -274,6 +371,7 @@ export default function ProductDetail() {
       <BreadCrumb items={items} />
 
       <section className="mx-auto w-full pb-10 pt-5">
+        {/* MAIN PRODUCTS */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[53%_47%]">
           {/* LEFT - IMAGES */}
           <div className={`self-start overflow-hidden rounded-2xl border shadow-[0_5px_20px_rgba(73,54,49,0.06)] lg:sticky lg:top-28 ${isDisabled ? 'border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#E8DDD4] bg-white'}`}>
@@ -654,8 +752,61 @@ export default function ProductDetail() {
         </div>
 
         {/* RELATED PRODUCTS */}
-        {relatedProducts.length > 0 && (
-          <section className="mt-10 border-t border-[#E8DDD4] pt-8 sm:mt-12 sm:pt-10 ">
+        {relatedLoading && (
+          <section className="mt-10 border-t border-[#E8DDD4] pt-8 sm:mt-12 sm:pt-10">
+            {/* Related Header Shimmer */}
+            <div className="mb-5 flex items-end justify-between gap-4 animate-pulse">
+              <div className="min-w-0">
+                <div className="mb-2 flex items-center gap-2">
+                  <div className="h-1.5 w-8 rounded-full bg-[#E8DDD4]" />
+
+                  <div className="h-3 w-28 rounded bg-[#E8DDD4]" />
+                </div>
+
+                <div className="h-6 w-72 max-w-full rounded bg-[#E8DDD4]" />
+
+                <div className="mt-2 h-3 w-56 rounded bg-[#EDE5DF]" />
+              </div>
+
+              <div className="h-7 w-20 shrink-0 rounded-md bg-[#E8DDD4]" />
+            </div>
+
+            {/* Related Cards Shimmer */}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)]">
+                  {/* Image */}
+                  <div className="flex h-44 animate-pulse items-center justify-center bg-[#F0E9E4] p-3 sm:h-48 lg:h-52">
+                  </div>
+
+                  {/* Info */}
+                  <div className="animate-pulse border-t border-[#EEE5DF] bg-[#FFFCFA] px-3 py-3">
+                    <div className="h-2.5 w-16 rounded bg-[#E8DDD4]" />
+
+                    <div className="mt-2 h-3.5 w-full rounded bg-[#E8DDD4]" />
+                    <div className="mt-1.5 h-3.5 w-4/5 rounded bg-[#EDE5DF]" />
+
+                    <div className="mt-2.5 flex items-center gap-1.5">
+                      <div className="h-4 w-10 rounded bg-[#E8DDD4]" />
+                      <div className="h-2.5 w-14 rounded bg-[#EDE5DF]" />
+                    </div>
+
+                    <div className="mt-2.5 h-5 w-20 rounded bg-[#E8DDD4]" />
+
+                    <div className="mt-2.5 flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
+                      <div className="h-2.5 w-14 rounded bg-[#EDE5DF]" />
+                      <div className="h-2.5 w-10 rounded bg-[#E8DDD4]" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Related Products Data */}
+        {!relatedLoading && relatedProducts.length > 0 && (
+          <section className="mt-10 border-t border-[#E8DDD4] pt-8 sm:mt-12 sm:pt-10">
             <div className="mb-5 flex items-end justify-between gap-4">
               <div>
                 <div className="mb-2 flex items-center gap-2">
