@@ -12,6 +12,7 @@ const { orderCancelledEmail } = require('../utils/emailTemplates/orderCancelledE
 // Notification
 const createNotification = require('../utils/createNotification')
 const NOTIFICATION_TYPES = require('../constants/notificationTypes')
+const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirmationEmail')
 
 // GET ALL ORDERS
 router.get('/', authMiddleware, async (req, res) => {
@@ -278,15 +279,17 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
             select: 'productName images price discountPrice',
           })
 
-          const html = `
-            <div>
-              <p>Hello ${user.name},</p>
-              <p>
-                Your order <strong>${populatedOrder.orderId}</strong>
-                has been confirmed successfully.
-              </p>
-            </div>
-          `
+          const html = orderConfirmationEmail({
+            name: user.name,
+            orderId: populatedOrder.orderId,
+            items: populatedOrder.items,
+            subtotal: populatedOrder.subtotal,
+            deliveryCharge: populatedOrder.deliveryCharge,
+            tax: populatedOrder.tax,
+            totalAmount: populatedOrder.totalAmount,
+            paymentMethod: populatedOrder.paymentMethod,
+            shippingAddress: populatedOrder.shippingAddress,
+          })
 
           await sendEmail({
             to: user.email,
