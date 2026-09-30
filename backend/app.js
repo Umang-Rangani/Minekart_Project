@@ -45,6 +45,10 @@ app.use(
   }),
 )
 
+
+
+// ${import.meta.env.VITE_API_URL}
+
 app.use(
   express.urlencoded({
     extended: false,
@@ -141,3 +145,8 @@ app.use(function (err, req, res, next) {
 })
 
 module.exports = app
+
+
+
+// ${import.meta.env.VITE_API_URL}
+// http://localhost:3000
