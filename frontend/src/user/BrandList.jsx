@@ -88,7 +88,7 @@ export default function BrandList() {
                     {/* 65% Image */}
                     <div className={`relative flex h-39 shrink-0 items-center justify-center overflow-hidden px-4 sm:h-42 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
                       {!isDisabled && <div className="absolute -right-7 -top-7 h-16 w-16 rounded-full bg-[#A51D26]/[0.035] transition-transform duration-500 group-hover:scale-150" />}
-
+ 
                       {value.brandLogo ? (
                         <img
                           src={`http://localhost:3000${value.brandLogo}`}
