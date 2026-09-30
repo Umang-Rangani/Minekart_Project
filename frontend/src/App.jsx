@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Home from './user/Home'
-import Login from './pages/Login'
+import Login from './pages/LogIn'
 import Register from './pages/Register'
 import AdminLayout from './admin/AdminLayout'
 import AdminDashboard from './admin/AdminDashboard'
