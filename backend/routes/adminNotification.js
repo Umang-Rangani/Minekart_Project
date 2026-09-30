@@ -1,6 +1,6 @@
 const express = require('express')
 const authMiddleware = require('../middleware/authMiddleware')
-const AdminNotification = require('../model/AdminNotification')
+const AdminNotification = require('../model/adminNotification')
 
 const router = express.Router()
 

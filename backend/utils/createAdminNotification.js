@@ -1,4 +1,4 @@
-const AdminNotification = require("../model/AdminNotification")
+const AdminNotification = require("../model/adminNotification")
 
 const createAdminNotification = async ({ type, title, message, orderId = null, userId = null, metadata = {}, io = null }) => {
   const notification = await AdminNotification.create({
