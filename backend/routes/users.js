@@ -156,12 +156,11 @@ router.post('/login', async (req, res) => {
 
     // Store token in cookie
     res.cookie('token', token, {
-      httpOnly: true,
-      secure: false,
+      httpOnly: false,
+      secure: true,
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
-
     return res.status(200).json({
       success: true,
       message: 'Login successful',
