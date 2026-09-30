@@ -3,7 +3,7 @@ const router = express.Router()
 
 const authMiddleware = require('../middleware/authMiddleware')
 const Cart = require('../model/cart')
-const Product = require('../model/Product')
+const Product = require('../model/product')
 
 // ! Get User Cart
 router.get('/', authMiddleware, async (req, res) => {
