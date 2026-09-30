@@ -1,6 +1,6 @@
 import axios from 'axios'
 
 export const axiosInstance = axios.create({
-  baseURL: 'https://minekart-api.vercel.app',
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 })

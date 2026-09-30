@@ -3,7 +3,6 @@ import { axiosInstance } from '../config/axiosConfig'
 import { Link } from 'react-router-dom'
 import { ChevronRight, Store, ShoppingBag } from 'lucide-react'
 import BreadCrumb from './BreadCrumb'
-import { LIVE_URL } from '../constants/constant'
 
 export default function Brands() {
   const [brand, setBrand] = useState([])
@@ -142,7 +141,7 @@ export default function Brands() {
 
                     {value.brandLogo ? (
                       <img
-                        src={`${LIVE_URL}${value.brandLogo}`}
+                        src={`${import.meta.env.VITE_API_URL}${value.brandLogo}`}
                         alt={value.brandName}
                         className={`relative z-10 h-full w-full object-contain ${isDisabled ? 'grayscale opacity-45' : 'transition-transform duration-300 group-hover:scale-105'}`}
                       />
