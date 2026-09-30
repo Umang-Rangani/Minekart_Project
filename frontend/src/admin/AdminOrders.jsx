@@ -462,7 +462,7 @@ export default function AdminOrders() {
                         <div className="flex -space-x-2">
                           {order.items?.slice(0, 3).map((item, itemIndex) => (
                             <div key={itemIndex} className="flex size-9 items-center justify-center overflow-hidden rounded-lg border-2 border-white bg-[#F8F6F2]">
-                              {item.image ? <img src={`http://localhost:3000${item.image}`} alt={item.productName} className="h-full w-full object-contain" /> : <Package size={15} className="text-[#99938B]" />}
+                              {item.image ? <img src={`${import.meta.env.VITE_API_URL}${item.image}`} alt={item.productName} className="h-full w-full object-contain" /> : <Package size={15} className="text-[#99938B]" />}
                             </div>
                           ))}
                         </div>

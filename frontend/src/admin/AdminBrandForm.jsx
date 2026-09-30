@@ -37,7 +37,7 @@ export default function AdminBrandForm() {
       return image
     }
 
-    return `http://localhost:3000${image}`
+    return `${import.meta.env.VITE_API_URL}${image}`
   }
 
   //  GET BRAND

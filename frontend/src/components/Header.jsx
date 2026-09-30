@@ -217,7 +217,7 @@ export default function Header() {
             <button type="button" onClick={handleAccountToggle} className={`group flex items-center gap-2 rounded-xl px-1.5 py-1.5 transition-all duration-200 sm:px-2 ${accountOpen ? 'bg-[#F7EEE7]' : 'hover:bg-[#F7EEE7]'}`}>
               {user?.avatar ? (
                 <div className="h-9 w-9 overflow-hidden rounded-full border-2 border-[#E7D8D0] bg-[#F7EEE7] sm:h-10 sm:w-10">
-                  <img src={`http://localhost:3000${user.avatar}`} alt={user.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                  <img src={`${import.meta.env.VITE_API_URL}${user.avatar}`} alt={user.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
                 </div>
               ) : (
                 <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E2D5CC] bg-[#F7EEE7] text-[#8E181F] transition-all duration-200 group-hover:border-[#CDAFA4] sm:h-10 sm:w-10">
@@ -242,7 +242,7 @@ export default function Header() {
                   <div className="border-b border-[#EEE5DF] bg-linear-to-br from-[#FBF5F0] to-[#F7EEE7] px-4 py-4">
                     <div className="flex items-center gap-3">
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm">
-                        {user.avatar ? <img src={`http://localhost:3000${user.avatar}`} alt={user.name} className="h-full w-full object-cover" /> : <User size={19} strokeWidth={2} />}
+                        {user.avatar ? <img src={`${import.meta.env.VITE_API_URL}${user.avatar}`} alt={user.name} className="h-full w-full object-cover" /> : <User size={19} strokeWidth={2} />}
                       </div>
 
                       <div className="min-w-0 flex-1">
@@ -324,11 +324,7 @@ export default function Header() {
             <div className="relative shrink-0">
               <button type="button" onClick={handleNotificationToggle} className={`group flex shrink-0 items-center gap-2 rounded-xl px-1.5 py-1.5 transition-all duration-200 sm:px-2 ${notificationOpen ? 'bg-[#F7EEE7]' : 'hover:bg-[#F7EEE7]'}`}>
                 <div className="relative">
-                  <div
-                    className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200 sm:h-10 sm:w-10 ${
-                      notificationOpen ? 'bg-[#F2DDD5] text-[#8E181F]' : 'bg-[#F7EEE7] text-[#493631]  group-hover:text-[#8E181F]'
-                    }`}
-                  >
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200 sm:h-10 sm:w-10 ${notificationOpen ? 'bg-[#F2DDD5] text-[#8E181F]' : 'bg-[#F7EEE7] text-[#493631]  group-hover:text-[#8E181F]'}`}>
                     <Bell size={21} strokeWidth={1.9} className="transition-transform duration-200 group-hover:-translate-y-0.5" />
                   </div>
 
@@ -338,7 +334,6 @@ export default function Header() {
                     </span>
                   )}
                 </div>
-
               </button>
 
               {/* NOTIFICATION DROPDOWN */}
@@ -461,7 +456,6 @@ export default function Header() {
 
                 <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-[#A51D26] px-1 text-[8px] font-extrabold text-white shadow-sm">{cart?.totalQuantity || 0}</span>
               </div>
-
             </button>
           )}
         </div>

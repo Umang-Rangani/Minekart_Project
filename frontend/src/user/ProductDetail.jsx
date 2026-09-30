@@ -404,7 +404,7 @@ export default function ProductDetail() {
                         }`}
                       >
                         <img
-                          src={`http://localhost:3000${image}`}
+                          src={`${import.meta.env.VITE_API_URL}${image}`}
                           alt={`${product.productName} ${index + 1}`}
                           className={`h-full w-full object-contain transition-transform duration-300 ${isDisabled ? 'grayscale opacity-50' : 'group-hover:scale-105'}`}
                         />
@@ -423,7 +423,7 @@ export default function ProductDetail() {
 
                   {selectedImage ? (
                     <img
-                      src={`http://localhost:3000${selectedImage}`}
+                      src={`${import.meta.env.VITE_API_URL}${selectedImage}`}
                       alt={product.productName}
                       className={`relative z-10 max-h-118 w-full object-contain transition-transform duration-500 ${isDisabled ? 'grayscale opacity-50' : 'hover:scale-[1.035]'}`}
                     />
@@ -867,7 +867,11 @@ export default function ProductDetail() {
                       )}
 
                       {item.images?.length > 0 ? (
-                        <img src={`http://localhost:3000${item.images[0]}`} alt={item.productName} className={`h-full w-full object-contain transition-transform duration-500 ${itemDisabled ? 'grayscale opacity-45' : 'group-hover:scale-105'}`} />
+                        <img
+                          src={`${import.meta.env.VITE_API_URL}${item.images[0]}`}
+                          alt={item.productName}
+                          className={`h-full w-full object-contain transition-transform duration-500 ${itemDisabled ? 'grayscale opacity-45' : 'group-hover:scale-105'}`}
+                        />
                       ) : (
                         <div className={`flex flex-col items-center gap-1.5 ${itemDisabled ? 'text-[#999999]' : 'text-[#A28E85]'}`}>
                           <Info size={25} strokeWidth={1.5} />

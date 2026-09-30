@@ -178,7 +178,7 @@ const AdminOrderView = () => {
       link: null,
     },
   ]
-  
+
   return (
     <div className="min-h-screen bg-[#F4F2EE] space-y-6">
       <AdminBreadCrumb items={items} />
@@ -409,7 +409,7 @@ const AdminOrderView = () => {
                         <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#E3DED6] bg-[#F7F7F5]">
                           {/* src={item.image || item.productId?.images?.[0]} */}
                           {item.image || item.productId?.images?.[0] ? (
-                            <img src={`http://localhost:3000${item.image || item.productId?.images?.[0]}`} alt={item.productName} className="h-full w-full object-contain" />
+                            <img src={`${import.meta.env.VITE_API_URL}${item.image || item.productId?.images?.[0]}`} alt={item.productName} className="h-full w-full object-contain" />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center text-[#99938B]">
                               <Package size={22} />

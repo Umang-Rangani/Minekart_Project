@@ -416,7 +416,7 @@ export default function OrderDetails() {
                     <div key={`${order._id}-${index}`} className={`flex gap-3 p-3.5 sm:gap-4 sm:p-4 ${isCancelled ? 'opacity-70' : 'transition-colors duration-200 hover:bg-[#FFFCFA]'}`}>
                       <div className={`flex h-19 w-19 shrink-0 items-center justify-center overflow-hidden rounded-xl border sm:h-20 sm:w-20 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED] grayscale' : 'border-[#E2D5CC] bg-[#FBF7F2]'}`}>
                         {item.image ? (
-                          <img src={`http://localhost:3000${item.image}`} alt={item.productName} className="h-full w-full object-contain p-1.5 transition-transform duration-300 hover:scale-105" />
+                          <img src={`${import.meta.env.VITE_API_URL}${item.image}`} alt={item.productName} className="h-full w-full object-contain p-1.5 transition-transform duration-300 hover:scale-105" />
                         ) : (
                           <Package size={26} strokeWidth={1.5} className="text-[#B7A49B]" />
                         )}

@@ -4,7 +4,7 @@ import { axiosInstance } from '../config/axiosConfig'
 
 const AdminNotificationContext = createContext(null)
 
-const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:3000', {
+const socket = io(import.meta.env.VITE_API_URL || '${import.meta.env.VITE_API_URL}', {
   withCredentials: true,
   autoConnect: false,
 })

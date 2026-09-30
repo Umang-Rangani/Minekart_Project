@@ -510,7 +510,7 @@ export default function AdminDashboard() {
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#EEEAE4] text-[10px] font-extrabold text-[#6B6258]">{String(index + 1).padStart(2, '0')}</span>
 
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E3DED6] bg-white">
-                      {product.images?.[0] ? <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="h-full w-full object-contain p-1" /> : <Package size={18} className="text-[#B4AAA1]" />}
+                      {product.images?.[0] ? <img src={`${import.meta.env.VITE_API_URL}${product.images[0]}`} alt={product.productName} className="h-full w-full object-contain p-1" /> : <Package size={18} className="text-[#B4AAA1]" />}
                     </div>
 
                     <div className="min-w-0 flex-1">
@@ -557,7 +557,7 @@ export default function AdminDashboard() {
                   className="rounded-xl border border-[#E8E1D8] bg-[#FBFAF7] p-3 transition-all duration-200 hover:border-[#D7CFC5] hover:bg-white hover:shadow-sm"
                 >
                   <div className="flex h-28 items-center justify-center overflow-hidden rounded-lg border border-[#E7E0D8] bg-white">
-                    {product.images?.[0] ? <img src={`http://localhost:3000${product.images[0]}`} alt={product.productName} className="h-full w-full object-contain p-2" /> : <Package size={25} className="text-[#B4AAA1]" />}
+                    {product.images?.[0] ? <img src={`${import.meta.env.VITE_API_URL}${product.images[0]}`} alt={product.productName} className="h-full w-full object-contain p-2" /> : <Package size={25} className="text-[#B4AAA1]" />}
                   </div>
 
                   <p className="mt-3 truncate text-xs font-bold text-[#3F3A35]">{product.productName}</p>

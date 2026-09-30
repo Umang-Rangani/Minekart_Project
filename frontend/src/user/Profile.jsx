@@ -274,7 +274,7 @@ export default function Profile() {
               <div className="-mt-11 flex items-end justify-between">
                 <div className="relative">
                   <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#F7EEE7] text-xl font-extrabold text-[#8E181F] shadow-lg sm:h-22 sm:w-22">
-                    {user.avatar ? <img src={`http://localhost:3000${user.avatar}`} alt={user.name} className="h-full w-full object-cover" /> : initials}
+                    {user.avatar ? <img src={`${import.meta.env.VITE_API_URL}${user.avatar}`} alt={user.name} className="h-full w-full object-cover" /> : initials}
                   </div>
 
                   <span className="absolute bottom-0.5 right-0.5 h-4 w-4 rounded-full border-2 border-white bg-[#3E8B62]" />

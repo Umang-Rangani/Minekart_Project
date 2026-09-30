@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, CreditCard, MapPin, Package, ShieldCheck, ShoppingBag, Truck, CircleCheck  } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, CreditCard, MapPin, Package, ShieldCheck, ShoppingBag, Truck, CircleCheck } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import BreadCrumb from './BreadCrumb'
 import { axiosInstance } from '../config/axiosConfig'
@@ -188,7 +188,6 @@ export default function OrderSuccess() {
           </div>
         </div>
 
-
         {/* SUCCESS HERO */}
         <div className="relative mb-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-linear-to-br from-[#351C18] via-[#5A2A25] to-[#7D171C] px-5 py-8 shadow-[0_10px_30px_rgba(73,54,49,0.12)] sm:px-8 sm:py-10">
           <div className="absolute -left-12 -top-12 h-32 w-32 rounded-full bg-white/5" />
@@ -315,7 +314,7 @@ export default function OrderSuccess() {
                       >
                         {/* IMAGE */}
                         <div className="flex h-20 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E8DDD4] bg-white sm:h-22 sm:w-18">
-                          {item.image ? <img src={`http://localhost:3000${item.image}`} alt={item.productName} className="h-full w-full object-contain p-1.5" /> : <Package size={22} className="text-[#9A857B]" />}
+                          {item.image ? <img src={`${import.meta.env.VITE_API_URL}${item.image}`} alt={item.productName} className="h-full w-full object-contain p-1.5" /> : <Package size={22} className="text-[#9A857B]" />}
                         </div>
 
                         {/* DETAILS */}

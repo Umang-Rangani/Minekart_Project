@@ -47,7 +47,7 @@ export default function AdminUsers() {
       return imagePath
     }
 
-    return `http://localhost:3000${imagePath}`
+    return `${import.meta.env.VITE_API_URL}${imagePath}`
   }
 
   useEffect(() => {
@@ -357,7 +357,7 @@ export default function AdminUsers() {
                                 onClick={() => {
                                   handleModalOpen(user)
                                   setOpenMenu(null)
-                                  console.log("hiii", user);
+                                  console.log('hiii', user)
                                 }}
                                 className="w-full px-4 py-2.5 text-left text-sm font-medium text-[#A44A3F] transition hover:bg-[#F8F6F2]"
                               >

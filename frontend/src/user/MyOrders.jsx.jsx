@@ -307,7 +307,7 @@ export default function MyOrders() {
                             {/* IMAGE */}
                             <div className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border sm:h-17 sm:w-17 ${isCancelled ? 'border-[#E2DEDB] bg-[#F4F2F1] grayscale' : 'border-[#E2D5CC] bg-white'}`}>
                               {item.image ? (
-                                <img src={`http://localhost:3000${item.image}`} alt={item.productName} className={`h-full w-full object-contain p-1.5 ${isCancelled ? 'grayscale opacity-65' : ''}`} />
+                                <img src={`${import.meta.env.VITE_API_URL}${item.image}`} alt={item.productName} className={`h-full w-full object-contain p-1.5 ${isCancelled ? 'grayscale opacity-65' : ''}`} />
                               ) : (
                                 <Package size={23} strokeWidth={1.5} className="text-[#B7A49B]" />
                               )}

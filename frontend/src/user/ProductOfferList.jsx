@@ -110,10 +110,9 @@ export default function ProductOfferList() {
                   </div>
                 )}
 
-
                 {/* Product Image */}
                 {product.offerImage ? (
-                  <img src={`http://localhost:3000${product.offerImage}`} alt={product.productName} className="relative z-10 h-full w-full object-contain transition-transform duration-700 group-hover:scale-105" />
+                  <img src={`${import.meta.env.VITE_API_URL}${product.offerImage}`} alt={product.productName} className="relative z-10 h-full w-full object-contain transition-transform duration-700 group-hover:scale-105" />
                 ) : (
                   <div className="relative z-10 flex h-full w-full items-center justify-center bg-white text-[#9A857B]">
                     <ShoppingCart size={30} strokeWidth={1.5} />

@@ -296,7 +296,7 @@ export default function Checkout() {
                           <div className="absolute inset-0 bg-white" />
 
                           <img
-                            src={product.images?.[0] ? `http://localhost:3000${product.images[0]}` : '/placeholder.png'}
+                            src={product.images?.[0] ? `${import.meta.env.VITE_API_URL}${product.images[0]}` : '/placeholder.png'}
                             alt={product.productName}
                             className="relative z-10 h-full w-full object-contain p-1.5 transition-transform duration-300 group-hover:scale-105 sm:p-2"
                           />

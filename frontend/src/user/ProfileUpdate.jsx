@@ -248,7 +248,7 @@ export default function ProfileUpdate() {
                   <div className="relative">
                     <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#F7EEE7] text-[#A51D26] shadow-[0_6px_20px_rgba(73,54,49,0.12)] ring-1 ring-[#E8DDD4] sm:h-28 sm:w-28">
                       {avatarPreview ? (
-                        <img src={avatarPreview.startsWith('blob:') ? avatarPreview : `http://localhost:3000${avatarPreview}`} alt={formData.name || 'Profile'} className="h-full w-full object-cover" />
+                        <img src={avatarPreview.startsWith('blob:') ? avatarPreview : `${import.meta.env.VITE_API_URL}${avatarPreview}`} alt={formData.name || 'Profile'} className="h-full w-full object-cover" />
                       ) : (
                         <User size={42} strokeWidth={1.5} />
                       )}
