@@ -18,7 +18,7 @@ export default function Home() {
       </section>
 
       {/* Home Content */}
-      <main className="w-full pt-2 sm:pt-15 lg:pt-18 pb-15">
+      <main className="w-full pt-16 sm:pt-15 lg:pt-18 pb-15">
         {/* Top Brands */}
         <section className="w-full border-b border-[#F0E7E1]">
           <div className="py-7 sm:py-9  lg:py-10">

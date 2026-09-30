@@ -326,7 +326,7 @@ export default function Header() {
                 <div className="relative">
                   <div
                     className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200 sm:h-10 sm:w-10 ${
-                      notificationOpen ? 'bg-[#F2DDD5] text-[#8E181F]' : 'bg-[#F7EEE7] text-[#493631] group-hover:bg-[#F2DDD5] group-hover:text-[#8E181F]'
+                      notificationOpen ? 'bg-[#F2DDD5] text-[#8E181F]' : 'bg-[#F7EEE7] text-[#493631]  group-hover:text-[#8E181F]'
                     }`}
                   >
                     <Bell size={21} strokeWidth={1.9} className="transition-transform duration-200 group-hover:-translate-y-0.5" />
@@ -339,7 +339,6 @@ export default function Header() {
                   )}
                 </div>
 
-                <span className="hidden text-xs font-extrabold text-[#493631] md:block">Notifications</span>
               </button>
 
               {/* NOTIFICATION DROPDOWN */}
@@ -456,14 +455,13 @@ export default function Header() {
               className="group relative flex shrink-0 items-center gap-2 rounded-xl px-1.5 py-1.5 transition-all duration-200 hover:bg-[#F7EEE7] sm:px-2"
             >
               <div className="relative">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#493631] transition-all duration-200 group-hover:bg-[#F2DDD5] group-hover:text-[#8E181F] sm:h-10 sm:w-10">
-                  <ShoppingCart size={21} strokeWidth={1.9} className="transition-transform duration-200 group-hover:-translate-y-0.5" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#493631] transition-all duration-700  group-hover:text-[#8E181F] sm:h-10 sm:w-10">
+                  <ShoppingCart size={21} strokeWidth={1.9} className="transition-all duration-600 group-hover:scale-102" />
                 </div>
 
                 <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-[#A51D26] px-1 text-[8px] font-extrabold text-white shadow-sm">{cart?.totalQuantity || 0}</span>
               </div>
 
-              <span className="hidden text-xs font-extrabold text-[#493631] md:block">Cart</span>
             </button>
           )}
         </div>
