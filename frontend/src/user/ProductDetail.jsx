@@ -17,7 +17,9 @@ export default function ProductDetail() {
   const [relatedProducts, setRelatedProducts] = useState([])
   const [selectedImage, setSelectedImage] = useState('')
   const [selectedSize, setSelectedSize] = useState('')
+
   const [quantity, setQuantity] = useState(0)
+  const [cartUpdating, setCartUpdating] = useState(false)
 
   // Separate loading states
   const [loading, setLoading] = useState(true)
@@ -120,7 +122,7 @@ export default function ProductDetail() {
 
   // Cart Quantity Sync
   useEffect(() => {
-    if (!cart?.items || !product) return
+    if (!cart?.items || !product || cartUpdating) return
 
     const cartItem = cart.items.find((item) => item.productId?._id?.toString() === product._id?.toString() && item.size === (selectedSize || null))
 
@@ -129,7 +131,7 @@ export default function ProductDetail() {
     } else {
       setQuantity(0)
     }
-  }, [cart, product, selectedSize])
+  }, [cart, product, selectedSize, cartUpdating])
 
   // Add Product
   const addProductToCart = async () => {
@@ -149,6 +151,7 @@ export default function ProductDetail() {
     }
 
     setQuantity(1)
+    setCartUpdating(true)
 
     try {
       const res = await addToCart({
@@ -163,16 +166,16 @@ export default function ProductDetail() {
       }
     } catch (error) {
       setQuantity(0)
-
-      showToast('Something went wrong. Please try again.')
-
       console.log('Add to cart error:', error)
+      showToast('Something went wrong. Please try again.')
+    } finally {
+      setCartUpdating(false)
     }
   }
 
   // Increase Quantity
   const increaseQuantity = async () => {
-    if (isDisabled) return
+    if (isDisabled || cartUpdating) return
 
     if (quantity >= product.stock) {
       showToast('Maximum available stock reached.')
@@ -180,6 +183,7 @@ export default function ProductDetail() {
     }
 
     setQuantity((prev) => prev + 1)
+    setCartUpdating(true)
 
     try {
       const res = await increaseCartItem({
@@ -194,14 +198,18 @@ export default function ProductDetail() {
     } catch (error) {
       setQuantity((prev) => Math.max(prev - 1, 0))
       console.log('Increase quantity error:', error)
+      showToast('Something went wrong. Please try again.')
+    } finally {
+      setCartUpdating(false)
     }
   }
 
   // Decrease Quantity
   const decreaseQuantity = async () => {
-    if (quantity <= 0) return
+    if (quantity <= 0 || cartUpdating) return
 
     setQuantity((prev) => Math.max(prev - 1, 0))
+    setCartUpdating(true)
 
     try {
       const res = await decreaseCartItem({
@@ -216,6 +224,9 @@ export default function ProductDetail() {
     } catch (error) {
       setQuantity((prev) => prev + 1)
       console.log('Decrease quantity error:', error)
+      showToast('Something went wrong. Please try again.')
+    } finally {
+      setCartUpdating(false)
     }
   }
 
@@ -692,18 +703,22 @@ export default function ProductDetail() {
                   </button>
                 ) : (
                   <div className="flex h-12 w-full items-center overflow-hidden rounded-xl border border-[#D7C6BC] bg-[#FBF7F2] shadow-sm">
-                    <button type="button" onClick={decreaseQuantity} className="flex h-full w-14 shrink-0 items-center justify-center border-r border-[#E3D6CE] text-[#493631] transition-all duration-200 hover:bg-[#F3E4DC] hover:text-[#8E181F]">
+                    <button
+                      type="button"
+                      onClick={decreaseQuantity}
+                      disabled={cartUpdating}
+                      className="flex h-full w-14 shrink-0 items-center justify-center border-r border-[#E3D6CE] text-[#493631] transition-all duration-200 hover:bg-[#F3E4DC] hover:text-[#8E181F] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
                       {quantity === 1 ? <Trash2 size={18} strokeWidth={2.2} /> : <Minus size={19} strokeWidth={2.5} />}
                     </button>
-
                     <div className="flex h-full flex-1 items-center justify-center">
-                      <span className="text-sm font-bold text-[#351C18]">{quantity} in cart</span>
+                      {cartUpdating ? <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#D8C9C1] border-t-[#8E181F]" /> : <span className="text-sm font-bold text-[#351C18]">{quantity} in cart</span>}
                     </div>
 
                     <button
                       type="button"
                       onClick={increaseQuantity}
-                      disabled={quantity >= product.stock}
+                      disabled={quantity >= product.stock || cartUpdating}
                       className="flex h-full w-14 shrink-0 items-center justify-center border-l border-[#E3D6CE] text-[#493631] transition-all duration-200 hover:bg-[#F3E4DC] hover:text-[#8E181F] disabled:cursor-not-allowed disabled:bg-[#E4E4E4] disabled:text-[#999999] disabled:opacity-100"
                     >
                       <Plus size={19} strokeWidth={2.5} />
@@ -776,8 +791,7 @@ export default function ProductDetail() {
               {Array.from({ length: 6 }).map((_, index) => (
                 <div key={index} className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)]">
                   {/* Image */}
-                  <div className="flex h-44 animate-pulse items-center justify-center bg-[#F0E9E4] p-3 sm:h-48 lg:h-52">
-                  </div>
+                  <div className="flex h-44 animate-pulse items-center justify-center bg-[#F0E9E4] p-3 sm:h-48 lg:h-52"></div>
 
                   {/* Info */}
                   <div className="animate-pulse border-t border-[#EEE5DF] bg-[#FFFCFA] px-3 py-3">

@@ -87,12 +87,14 @@ export default function CartShimmer() {
                         </div>
                       </div>
 
-                      {/* SIZE */}
-                      <Shimmer className="mt-2 h-6 w-14 rounded-md" />
+                      <div className="flex gap-5 items-center ">
+                        {/* SIZE */}
+                        <Shimmer className="mt-2 h-6 w-14 rounded-md" />
 
-                      {/* STOCK */}
-                      <div className="mt-2 flex items-center gap-2">
-                        <Shimmer className="h-6 w-20 rounded-md" />
+                        {/* STOCK */}
+                        <div className="mt-2 flex items-center gap-2">
+                          <Shimmer className="h-6 w-20 rounded-md" />
+                        </div>
                       </div>
 
                       {/* PRICE + QUANTITY */}
