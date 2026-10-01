@@ -48,6 +48,7 @@ import MySupportDetails from './components/CustomerService/MySupportDetails.jsx'
 import Notifications from './pages/Notifications.jsx'
 import AdminNotifications from './admin/AdminNotifications.jsx'
 import HeroPage from './user/HeroPage.jsx'
+import NotFoundPage from './user/NotFoundPage.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -65,7 +66,11 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* <Route path="/" element={<HeroPage />} /> */}
         {/*  USER  */}
+
+        <Route path="/*" element={<NotFoundPage />} />
+
         <Route path="/" element={<UserLayout />}>
           <Route path="/" element={<Home />} />
 

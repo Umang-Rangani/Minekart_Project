@@ -6,9 +6,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../context/userProvider'
 import { useCart } from '../context/CartProvider'
 import { useNotifications } from '../context/NotificationProvider'
+import { getImageUrl } from '../utils/imageUrl'
 
 const getNotificationIcon = (type) => {
-  if (['ORDER_PLACED', 'ORDER_CONFIRMED', 'ORDER_PACKED', 'ORDER_SHIPPED', 'OUT_FOR_DELIVERY', 'ORDER_DELIVERED', 'ORDER_CANCELLED'].includes(tyjpe)) {
+  if (['ORDER_PLACED', 'ORDER_CONFIRMED', 'ORDER_PACKED', 'ORDER_SHIPPED', 'OUT_FOR_DELIVERY', 'ORDER_DELIVERED', 'ORDER_CANCELLED'].includes(type)) {
     return Package
   }
 
@@ -163,10 +164,10 @@ export default function Header() {
               setAccountOpen(false)
               setNotificationOpen(false)
             }}
-            className="flex shrink-0 items-center gap-2.5"
+            className="group flex shrink-0 items-center gap-2.5"
           >
-            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-[#E4CFC5] bg-[#F6E9E0] sm:h-12 sm:w-12">
-              <img src="/cart_image.jpg" alt="MineKart" className="h-9 w-9 object-contain sm:h-10 sm:w-10" />
+            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-[#E4CFC5] bg-[#F6E9E0] transition-all duration-300 group-hover:-translate-y-1 group-hover:rotate-2 group-hover:shadow-lg sm:h-12 sm:w-12">
+              <img src="/cart_image.jpg" alt="MineKart" className="h-9 w-9 object-contain animate-bounce-slow transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10" />
             </div>
 
             <div className="hidden leading-none sm:block">
@@ -456,9 +457,7 @@ export default function Header() {
             >
               <ShoppingCart size={20} strokeWidth={1.9} />
 
-              <span className="absolute -right-1 -top-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[8px] font-extrabold leading-none text-white">
-                {cart?.totalQuantity || 0}
-              </span>
+              <span className="absolute -right-1 -top-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[8px] font-extrabold leading-none text-white">{cart?.totalQuantity || 0}</span>
             </button>
           )}
         </div>

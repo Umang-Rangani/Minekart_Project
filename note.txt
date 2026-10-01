@@ -463,3 +463,155 @@ export default function Header() {
     </header>
   )
 }
+
+
+
+// App.jsx
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import Home from './user/Home'
+import Login from './pages/LogIn'
+import Register from './pages/Register'
+import AdminLayout from './admin/AdminLayout'
+import AdminDashboard from './admin/AdminDashboard'
+import AdminProducts from './admin/AdminProducts'
+import AdminOrders from './admin/AdminOrders'
+import { useUser } from './context/userProvider'
+import { useEffect } from 'react'
+import AdminCategory from './admin/AdminCategory'
+import AdminBrand from './admin/AdminBrand'
+import UserLayout from './user/UserLayout'
+import AdminSubCategory from './admin/AdminSubCategory'
+import AdminUsers from './admin/AdminUsers'
+import ProductDetail from './user/ProductDetail'
+import BrandProducts from './user/BrandProducts'
+import CategoryProducts from './user/CategoryProducts'
+import Cart from './user/Cart'
+import Categories from './user/Categories'
+import Brands from './user/Brands'
+import Checkout from './user/Checkout'
+import Profile from './user/Profile'
+import OrderSuccess from './user/OrderSuccess'
+import MyOrders from './user/MyOrders.jsx'
+import OrderDetails from './user/OrderDetails.jsx'
+import SearchProducts from './user/SearchProducts.jsx'
+import AdminProductsForm from './admin/AdminProductsForm.jsx'
+import AdminProductsView from './admin/AdminProductsView.jsx'
+import AdminCategoryForm from './admin/AdminCategoryForm.jsx'
+import AdminCategoryView from './admin/AdminCategoryView.jsx'
+import AdminSubCategoryForm from './admin/AdminSubCategoryForm.jsx'
+import AdminSubCategoryView from './admin/AdminSubCategoryView.jsx'
+import AdminBrandView from './admin/AdminBrandView.jsx'
+import AdminBrandForm from './admin/AdminBrandForm.jsx'
+import AdminProtected from './admin/AdminProtected.jsx'
+import { Toaster } from 'react-hot-toast'
+import ProfileUpdate from './user/ProfileUpdate.jsx'
+import HelpCenter from './components/CustomerService/HelpCenter.jsx'
+import TrackOrder from './components/CustomerService/TrackOrder.jsx'
+import ReturnsRefunds from './components/CustomerService/ReturnsRefunds.jsx'
+import ContactUs from './components/CustomerService/ContactUs.jsx'
+import AdminContactMessages from './admin/AdminContactMessages .jsx'
+import AdminContactMessageView from './admin/AdminContactMessageView.jsx'
+import AdminOrderView from './admin/AdminOrderView.jsx'
+import MySupport from './components/CustomerService/MySupport.jsx'
+import MySupportDetails from './components/CustomerService/MySupportDetails.jsx'
+import Notifications from './pages/Notifications.jsx'
+import AdminNotifications from './admin/AdminNotifications.jsx'
+import HeroPage from './user/HeroPage.jsx'
+
+export default function App() {
+  const { user, loading, showLogin, setShowLogin } = useUser()
+
+  useEffect(() => {
+    if (!loading && !user) {
+      setShowLogin(true)
+    }
+  }, [loading, user, setShowLogin])
+
+  if (loading) {
+    return <HeroPage />
+  }
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/*  USER  */}
+        <Route path="/" element={<UserLayout />}>
+          <Route path="/" element={<Home />} />
+
+          <Route path="/category" element={<Categories />} />
+          <Route path="/brands" element={<Brands />} />
+
+          <Route path="/category/:id/products" element={<CategoryProducts />} />
+          <Route path="/brand/:id/products" element={<BrandProducts />} />
+          <Route path="product/:id" element={<ProductDetail />} />
+
+          <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
+
+          <Route path="/orders" element={<MyOrders />} />
+          <Route path="orders/:id" element={<OrderDetails />} />
+
+          <Route path="/search" element={<SearchProducts />} />
+
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/update" element={<ProfileUpdate />} />
+
+          <Route path="/notifications" element={<Notifications />} />
+
+          {/* footer */}
+          <Route path="/customer-help" element={<HelpCenter />} />
+          <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/returns" element={<ReturnsRefunds />} />
+          <Route path="/contact" element={<ContactUs />} />
+
+          <Route path="/my-support" element={<MySupport />} />
+          <Route path="/my-support/:id" element={<MySupportDetails />} />
+        </Route>
+
+        {/*  AUTH  */}
+        <Route path="/register" element={<Register />} />
+        {/* <Route path="/login" element={<Login />} /> */}
+
+        {/*  ADMIN  */}
+        <Route element={<AdminProtected />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+
+            <Route path="category" element={<AdminCategory />} />
+            <Route path="category/new" element={<AdminCategoryForm />} />
+            <Route path="category/:id/update" element={<AdminCategoryForm />} />
+            <Route path="category/:id" element={<AdminCategoryView />} />
+
+            <Route path="subcategory" element={<AdminSubCategory />} />
+            <Route path="subcategory/new" element={<AdminSubCategoryForm />} />
+            <Route path="subcategory/:id/update" element={<AdminSubCategoryForm />} />
+            <Route path="subcategory/:id" element={<AdminSubCategoryView />} />
+
+            <Route path="brand" element={<AdminBrand />} />
+            <Route path="brand/new" element={<AdminBrandForm />} />
+            <Route path="brand/:id/update" element={<AdminBrandForm />} />
+            <Route path="brand/:id" element={<AdminBrandView />} />
+
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="products/new" element={<AdminProductsForm />} />
+            <Route path="products/:id/update" element={<AdminProductsForm />} />
+            <Route path="products/:id" element={<AdminProductsView />} />
+
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="orders/:id" element={<AdminOrderView />} />
+
+            <Route path="users" element={<AdminUsers />} />
+
+            <Route path="/admin/notifications" element={<AdminNotifications />} />
+
+            <Route path="contact-messages" element={<AdminContactMessages />} />
+            <Route path="contact-messages/:id" element={<AdminContactMessageView />} />
+          </Route>
+        </Route>
+      </Routes>
+
+      {showLogin && <Login onClose={() => setShowLogin(false)} />}
+    </BrowserRouter>
+  )
+}
