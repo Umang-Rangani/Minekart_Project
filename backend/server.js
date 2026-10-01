@@ -1,0 +1,115 @@
+#!/usr/bin/env node
+
+var app = require('./app')
+var debug = require('debug')('backend:server')
+var http = require('http')
+var { Server } = require('socket.io')
+var jwt = require('jsonwebtoken')
+
+var port = normalizePort(process.env.PORT || '3000')
+app.set('port', port)
+
+var server = http.createServer(app)
+
+var io = new Server(server, {
+  cors: {
+    origin: process.env.ALLOWED_ORIGIN || 'http://localhost:5173',
+    credentials: true,
+  },
+})
+
+
+
+app.set('io', io)
+
+io.use((socket, next) => {
+  try {
+    const token = socket.handshake.headers.cookie
+      ?.split(';')
+      .map((cookie) => cookie.trim())
+      .find((cookie) => cookie.startsWith('token='))
+      ?.slice(6)
+
+    if (!token) {
+      return next(new Error('Authentication required'))
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+    if (!decoded.userId) {
+      return next(new Error('Invalid authentication'))
+    }
+
+    socket.userId = decoded.userId
+
+    next()
+  } catch (error) {
+    console.error('Socket Authentication Error:', error.message)
+
+    next(new Error('Invalid authentication'))
+  }
+})
+
+io.on('connection', (socket) => {
+  const userId = socket.userId.toString()
+
+  socket.join(`user:${userId}`)
+
+  console.log(`Socket connected: ${socket.id}`)
+  console.log(`User joined room: user:${userId}`)
+
+  socket.on('disconnect', () => {
+    console.log(`Socket disconnected: ${socket.id}`)
+  })
+})
+
+server.listen(port)
+
+server.on('error', onError)
+
+server.on('listening', onListening)
+
+function normalizePort(val) {
+  var port = parseInt(val, 10)
+
+  if (isNaN(port)) {
+    return val
+  }
+
+  if (port >= 0) {
+    return port
+  }
+
+  return false
+}
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error
+  }
+
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
+
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges')
+      process.exit(1)
+      break
+
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use')
+      process.exit(1)
+      break
+
+    default:
+      throw error
+  }
+}
+
+function onListening() {
+  var addr = server.address()
+
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
+
+  debug('Listening on ' + bind)
+}
