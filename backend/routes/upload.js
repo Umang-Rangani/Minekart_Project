@@ -54,6 +54,14 @@ router.post('/', handleUpload, async (req, res) => {
     })
   }
 
+  if (process.env.VERCEL && !useBlobStorage()) {
+    return res.status(500).json({
+      success: false,
+      message: 'File storage is not configured',
+      error: 'BLOB_READ_WRITE_TOKEN is missing. Connect a Vercel Blob store to this project and redeploy.',
+    })
+  }
+
   try {
     const folder = sanitizeSegment(req.body.uploadFolder, 'common')
     const filename = sanitizeSegment(req.body.filename || path.parse(req.file.originalname).name, 'file')
