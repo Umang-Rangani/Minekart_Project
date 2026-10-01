@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { PackageSearch, Search, ChevronRight, ShoppingBag, ArrowLeft } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -201,7 +202,7 @@ export default function SearchProducts() {
 
                     {/* PRODUCT IMAGE */}
                     {product.images?.[0] ? (
-                      <img src={`${import.meta.env.VITE_API_URL}${product.images[0]}`} alt={product.productName} className="relative z-10 h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" />
+                      <img src={getImageUrl(product.images[0])} alt={product.productName} className="relative z-10 h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" />
                     ) : (
                       <div className="relative z-10 flex flex-col items-center gap-1.5 text-[#B7A49B]">
                         <PackageSearch size={27} strokeWidth={1.4} />

@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { Search, Eye, Package, ShoppingBag, Clock3, CheckCircle2, XCircle, UserRound, ShieldCheck, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -462,7 +463,7 @@ export default function AdminOrders() {
                         <div className="flex -space-x-2">
                           {order.items?.slice(0, 3).map((item, itemIndex) => (
                             <div key={itemIndex} className="flex size-9 items-center justify-center overflow-hidden rounded-lg border-2 border-white bg-[#F8F6F2]">
-                              {item.image ? <img src={`${import.meta.env.VITE_API_URL}${item.image}`} alt={item.productName} className="h-full w-full object-contain" /> : <Package size={15} className="text-[#99938B]" />}
+                              {item.image ? <img src={getImageUrl(item.image)} alt={item.productName} className="h-full w-full object-contain" /> : <Package size={15} className="text-[#99938B]" />}
                             </div>
                           ))}
                         </div>

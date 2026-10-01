@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Star, ShoppingBag, ChevronRight, Store } from 'lucide-react'
@@ -65,7 +66,7 @@ export default function BrandProducts() {
             <div className="flex min-w-0 items-center gap-2.5">
               <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white sm:h-10 sm:w-10">
                 {brand?.brandLogo ? (
-                  <img src={`${import.meta.env.VITE_API_URL}${brand.brandLogo}`} alt={brand.brandName} className="h-full w-full object-contain p-1" />
+                  <img src={getImageUrl(brand.brandLogo)} alt={brand.brandName} className="h-full w-full object-contain p-1" />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white">
                     <Store size={18} strokeWidth={1.8} />
@@ -206,7 +207,7 @@ export default function BrandProducts() {
 
                     {/* Product Image */}
                     {product.images?.length > 0 ? (
-                      <img src={`${import.meta.env.VITE_API_URL}${product.images[0]}`} alt={product.productName} className={imageClass} />
+                      <img src={getImageUrl(product.images[0])} alt={product.productName} className={imageClass} />
                     ) : (
                       <div className="relative z-10 flex flex-col items-center gap-2 text-[#999999]">
                         <ShoppingBag size={28} strokeWidth={1.5} />
@@ -284,7 +285,7 @@ export default function BrandProducts() {
 
                     {/* Product Image */}
                     {product.images?.length > 0 ? (
-                      <img src={`${import.meta.env.VITE_API_URL}${product.images[0]}`} alt={product.productName} className="relative z-10 h-full w-full object-contain transition-transform duration-500 group-hover:scale-105" />
+                      <img src={getImageUrl(product.images[0])} alt={product.productName} className="relative z-10 h-full w-full object-contain transition-transform duration-500 group-hover:scale-105" />
                     ) : (
                       <div className="relative z-10 flex flex-col items-center gap-2 text-[#9A857B]">
                         <ShoppingBag size={28} strokeWidth={1.5} />

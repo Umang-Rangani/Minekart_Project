@@ -1,4 +1,4 @@
-export const orderCancelledEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax, totalAmount, paymentMethod, shippingAddress, cancellationReason, cancelledBy }) => {
+const orderCancelledEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax, totalAmount, paymentMethod, shippingAddress, cancellationReason, cancelledBy }) => {
   const formatPrice = (price) => `₹${Number(price || 0).toLocaleString('en-IN')}`
 
   const itemRows = (items || [])
@@ -1286,3 +1286,5 @@ export const orderCancelledEmail = ({ name, orderId, items, subtotal, deliveryCh
 </html>
 `
 }
+
+module.exports = { orderCancelledEmail }

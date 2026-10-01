@@ -1,6 +1,7 @@
 const Notification = require('../model/notification')
+const { getUserChannel, isRealtimeEnabled, publish } = require('./realtime')
 
-const createNotification = async ({ userId, type, title, message, orderId = null, metadata = {}, io = null }) => {
+const createNotification = async ({ userId, type, title, message, orderId = null, metadata = {} }) => {
   const notification = await Notification.create({
     userId,
     type,
@@ -10,10 +11,10 @@ const createNotification = async ({ userId, type, title, message, orderId = null
     metadata,
   })
 
-  if (io) {
+  if (isRealtimeEnabled()) {
     const populatedNotification = await Notification.findById(notification._id).populate('orderId', '_id orderId orderStatus totalAmount')
 
-    io.to(`user:${userId.toString()}`).emit('notification:new', populatedNotification)
+    await publish(getUserChannel(userId), 'notification-new', populatedNotification)
 
     return populatedNotification
   }

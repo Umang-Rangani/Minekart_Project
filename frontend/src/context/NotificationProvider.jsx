@@ -1,20 +1,20 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
-import { io } from 'socket.io-client'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { useUser } from './userProvider'
 import { axiosInstance } from '../config/axiosConfig'
+import { POLL_INTERVAL, getUserChannel, subscribeToChannel } from '../utils/realtime'
 
 const NotificationContext = createContext()
 
 export const NotificationProvider = ({ children }) => {
   const { user } = useUser()
 
-  const socketRef = useRef(null)
+  const userId = user?._id || user?.id
 
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [notificationLoading, setNotificationLoading] = useState(false)
 
-  const getNotifications = async () => {
+  const getNotifications = async ({ silent = false } = {}) => {
     if (!user) {
       setNotifications([])
       setUnreadCount(0)
@@ -22,7 +22,9 @@ export const NotificationProvider = ({ children }) => {
     }
 
     try {
-      setNotificationLoading(true)
+      if (!silent) {
+        setNotificationLoading(true)
+      }
 
       const response = await axiosInstance.get('/notification')
 
@@ -141,30 +143,15 @@ export const NotificationProvider = ({ children }) => {
   }, [user])
 
   useEffect(() => {
-    if (!user) {
-      if (socketRef.current) {
-        socketRef.current.disconnect()
-        socketRef.current = null
-      }
-
+    if (!userId) {
       return
     }
 
-    const socket = io(import.meta.env.VITE_API_URL, {
-      withCredentials: true,
-    })
+    let cancelled = false
+    let unsubscribe = null
+    let pollTimer = null
 
-    socketRef.current = socket
-
-    socket.on('connect', () => {
-      console.log('Notification socket connected:', socket.id)
-    })
-
-    socket.on('connect_error', (error) => {
-      console.error('Notification socket error:', error.message)
-    })
-
-    socket.on('notification:new', (notification) => {
+    const handleNewNotification = (notification) => {
       setNotifications((prev) => {
         const exists = prev.some((item) => item._id === notification._id)
 
@@ -178,22 +165,27 @@ export const NotificationProvider = ({ children }) => {
       if (!notification.isRead) {
         setUnreadCount((prev) => prev + 1)
       }
-    })
+    }
 
-    socket.on('disconnect', (reason) => {
-      console.log('Notification socket disconnected:', reason)
+    subscribeToChannel(getUserChannel(userId), 'notification-new', handleNewNotification).then((unsubscribeFn) => {
+      if (cancelled) {
+        unsubscribeFn?.()
+        return
+      }
+
+      if (unsubscribeFn) {
+        unsubscribe = unsubscribeFn
+      } else {
+        pollTimer = setInterval(() => getNotifications({ silent: true }), POLL_INTERVAL)
+      }
     })
 
     return () => {
-      socket.off('connect')
-      socket.off('connect_error')
-      socket.off('notification:new')
-      socket.off('disconnect')
-
-      socket.disconnect()
-      socketRef.current = null
+      cancelled = true
+      unsubscribe?.()
+      clearInterval(pollTimer)
     }
-  }, [user])
+  }, [userId])
 
   return (
     <NotificationContext.Provider

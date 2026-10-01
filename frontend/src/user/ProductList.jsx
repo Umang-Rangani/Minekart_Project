@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Star, ShoppingCart, ChevronRight, Package, ArrowRight, Sparkles } from 'lucide-react'
@@ -26,12 +27,6 @@ export default function ProductList() {
   useEffect(() => {
     getProducts()
   }, [])
-
-  const getImageUrl = (image) => {
-    if (!image) return ''
-
-    return image.startsWith('http') ? image : `${import.meta.env.VITE_API_URL}${image}`
-  }
 
   if (loading) {
     return (

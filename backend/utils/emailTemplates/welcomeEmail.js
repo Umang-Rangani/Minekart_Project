@@ -1,4 +1,4 @@
-export const welcomeEmail = (name) => {
+const welcomeEmail = (name) => {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -539,3 +539,5 @@ export const welcomeEmail = (name) => {
 </html>
 `
 }
+
+module.exports = { welcomeEmail }

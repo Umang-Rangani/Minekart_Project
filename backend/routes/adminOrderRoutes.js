@@ -202,8 +202,6 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
     await order.save()
 
     // CREATE USER NOTIFICATION
-    const io = req.app.get('io')
-
     const notificationMap = {
       Confirmed: {
         type: NOTIFICATION_TYPES.ORDER_CONFIRMED,
@@ -258,8 +256,6 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
           // IMPORTANT:
           // Schema માં orderId ObjectId છે
           orderId: order._id,
-
-          io,
         })
 
         console.log(`✅ Notification created: ${order.orderId} → ${orderStatus}`)

@@ -6,7 +6,7 @@ import { deleteFile } from '../utils/uploadFile'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import AdminTrashBox from './AdminTrashBox'
 import toast from 'react-hot-toast'
-import { LIVE_URL } from '../constants/constant'
+import { getImageUrl } from '../utils/imageUrl'
 
 export default function AdminBrand() {
   const navigate = useNavigate()
@@ -126,17 +126,6 @@ export default function AdminBrand() {
       icon: AlertTriangle,
     },
   ]
-
-  // ! Image URL
-  const getImageUrl = (image) => {
-    if (!image) return ''
-
-    if (image.startsWith('http')) {
-      return image
-    }
-
-    return `${LIVE_URL}${image}`
-  }
 
   const items = [{ title: 'Brands', link: null }]
 

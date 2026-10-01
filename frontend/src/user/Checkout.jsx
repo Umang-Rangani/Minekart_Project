@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check, ChevronRight, CircleCheck, CreditCard, MapPin, Plus, ShieldCheck, ShoppingBag, Smartphone, Truck, Wallet } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -296,7 +297,7 @@ export default function Checkout() {
                           <div className="absolute inset-0 bg-white" />
 
                           <img
-                            src={product.images?.[0] ? `${import.meta.env.VITE_API_URL}${product.images[0]}` : '/placeholder.png'}
+                            src={product.images?.[0] ? getImageUrl(product.images[0]) : '/placeholder.png'}
                             alt={product.productName}
                             className="relative z-10 h-full w-full object-contain p-1.5 transition-transform duration-300 group-hover:scale-105 sm:p-2"
                           />

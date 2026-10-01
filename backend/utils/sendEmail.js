@@ -1,10 +1,4 @@
-import nodemailer from 'nodemailer'
-import dotenv from 'dotenv'
-
-dotenv.config()
-
-console.log('EMAIL USER:', process.env.EMAIL_USER)
-console.log('EMAIL PASS EXISTS:', !!process.env.EMAIL_PASS)
+const nodemailer = require('nodemailer')
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -14,7 +8,7 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-export async function sendEmail({ to, subject, html, attachments, bcc = [] }) {
+async function sendEmail({ to, subject, html, attachments, bcc = [] }) {
   try {
     const mailOptions = {
       from: `"MineKart" <${process.env.EMAIL_USER}>`,
@@ -39,3 +33,5 @@ export async function sendEmail({ to, subject, html, attachments, bcc = [] }) {
     throw error
   }
 }
+
+module.exports = { sendEmail }

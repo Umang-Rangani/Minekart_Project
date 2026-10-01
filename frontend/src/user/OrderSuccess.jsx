@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, CreditCard, MapPin, Package, ShieldCheck, ShoppingBag, Truck, CircleCheck } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -314,7 +315,7 @@ export default function OrderSuccess() {
                       >
                         {/* IMAGE */}
                         <div className="flex h-20 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E8DDD4] bg-white sm:h-22 sm:w-18">
-                          {item.image ? <img src={`${import.meta.env.VITE_API_URL}${item.image}`} alt={item.productName} className="h-full w-full object-contain p-1.5" /> : <Package size={22} className="text-[#9A857B]" />}
+                          {item.image ? <img src={getImageUrl(item.image)} alt={item.productName} className="h-full w-full object-contain p-1.5" /> : <Package size={22} className="text-[#9A857B]" />}
                         </div>
 
                         {/* DETAILS */}

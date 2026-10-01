@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Star, ShoppingBag, ChevronRight, Package, SlidersHorizontal, Check } from 'lucide-react'
@@ -74,12 +75,6 @@ export default function CategoryProducts() {
     } finally {
       setLoading(false)
     }
-  }
-
-  const getImageUrl = (image) => {
-    if (!image) return ''
-
-    return image.startsWith('http') ? image : `${import.meta.env.VITE_API_URL}${image}`
   }
 
   const items = [

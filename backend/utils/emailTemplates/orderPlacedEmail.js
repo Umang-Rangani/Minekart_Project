@@ -1,4 +1,4 @@
-export const orderPlacedEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax, totalAmount, paymentMethod, shippingAddress }) => {
+const orderPlacedEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax, totalAmount, paymentMethod, shippingAddress }) => {
   const formatPrice = (price) => `₹${Number(price || 0).toLocaleString('en-IN')}`
 
   const itemRows = (items || [])
@@ -946,3 +946,5 @@ export const orderPlacedEmail = ({ name, orderId, items, subtotal, deliveryCharg
 </html>
 `
 }
+
+module.exports = { orderPlacedEmail }
