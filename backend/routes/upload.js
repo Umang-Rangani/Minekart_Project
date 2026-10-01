@@ -61,7 +61,7 @@ router.post('/', handleUpload, async (req, res) => {
       error: 'BLOB_READ_WRITE_TOKEN is missing. Connect a Vercel Blob store to this project and redeploy.',
     })
   }
-
+ 
   try {
     const folder = sanitizeSegment(req.body.uploadFolder, 'common')
     const filename = sanitizeSegment(req.body.filename || path.parse(req.file.originalname).name, 'file')
