@@ -134,7 +134,7 @@ export default function Footer() {
                 </span>
 
                 <span className="leading-5">
-                  Ahmedabad,
+                  Nikol 382350, Ahmedabad,
                   <br />
                   Gujarat, India
                 </span>
@@ -155,7 +155,7 @@ export default function Footer() {
                   <Mail size={17} />
                 </span>
 
-                <span className="break-all">support@minekart.com</span>
+                <span className="break-all">mansirangani@minekart.com</span>
               </a>
             </div>
           </div>

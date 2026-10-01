@@ -1,4 +1,4 @@
-import { Sparkles, Video } from 'lucide-react'
+import { Sparkles, Video, Watch  } from 'lucide-react'
 import { GiClothes, GiRunningShoe, GiSmartphone, GiLaptop, GiShoppingBag, GiHouse, GiGamepad, GiCarWheel, GiMuscleUp, GiBookshelf, GiKnifeFork, GiCardboardBox } from 'react-icons/gi'
 
 export const iconList = [
@@ -28,9 +28,9 @@ export const iconList = [
     icon: GiShoppingBag,
   },
   {
-    name: 'Home',
-    value: 'GiHouse',
-    icon: GiHouse,
+    name: 'Watches',
+    value: 'Watch',
+    icon: Watch,
   },
   {
     name: 'Beauty and Grooming',

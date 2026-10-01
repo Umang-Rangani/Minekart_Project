@@ -150,7 +150,7 @@ export const NotificationProvider = ({ children }) => {
       return
     }
 
-    const socket = io(import.meta.env.VITE_API_URL, {
+    const socket = io(import.meta.env.VITE_SOCKET_URL || `${import.meta.env.VITE_API_URL}`, {
       withCredentials: true,
     })
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, LayoutGrid, X, Layers, CheckCircle2, CircleOff, Tags } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, LayoutGrid, X, Watch, CheckCircle2, CircleOff, Tags } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { iconList } from '../data/iconMap'
@@ -40,7 +40,7 @@ export default function AdminCategory() {
     }
   }
 
-  // ! open pop up 
+  // ! open pop up
   const handleModalOpen = (data) => {
     setDeleteItem(data)
     setDeleteModalOpen(true)

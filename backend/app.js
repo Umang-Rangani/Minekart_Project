@@ -1,11 +1,11 @@
 var createError = require('http-errors')
 var express = require('express')
+var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 var cors = require('cors')
 var mongoose = require('mongoose')
 var dotenv = require('dotenv')
-var path = require("path")
 
 dotenv.config()
 
@@ -34,7 +34,9 @@ console.log('EMAIL_PASS exists:', !!process.env.EMAIL_PASS)
 console.log('EMAIL_BCC:', process.env.EMAIL_BCC)
 console.log('ALLOWED_ORIGIN:', process.env.ALLOWED_ORIGIN)
 
-// Middleware
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'jade')
+
 app.use(logger('dev'))
 
 app.use(
@@ -42,6 +44,10 @@ app.use(
     limit: '10mb',
   }),
 )
+
+
+
+// ${import.meta.env.VITE_API_URL}
 
 app.use(
   express.urlencoded({
@@ -52,11 +58,8 @@ app.use(
 
 app.use(cookieParser())
 
-// CORS
 const allowedOrigins = process.env.ALLOWED_ORIGIN
-  ? process.env.ALLOWED_ORIGIN
-      .split(',')
-      .map((origin) => origin.trim())
+  ? process.env.ALLOWED_ORIGIN.split(',').map((origin) => origin.trim())
   : []
 
 app.use(
@@ -76,13 +79,11 @@ app.use(
   }),
 )
 
-// Uploads
 app.use(
   '/uploads',
   express.static(path.join(__dirname, 'uploads')),
 )
 
-// Routes
 app.use('/', indexRouter)
 
 app.use('/users', usersRouter)
@@ -115,7 +116,6 @@ app.use('/admin-notification', adminNotification)
 
 app.use('/notification', notification)
 
-// MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -125,22 +125,27 @@ mongoose
     console.error('MongoDB connection error:', err)
   })
 
-// 404 Handler
 app.use(function (req, res, next) {
   next(createError(404))
 })
 
-// Error Handler
 app.use(function (err, req, res, next) {
   console.error(err)
 
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Internal Server Error',
-  })
+  res.locals.message = err.message
+
+  res.locals.error =
+    req.app.get('env') === 'development'
+      ? err
+      : {}
+
+  res.status(err.status || 500)
+
+  res.render('error')
 })
 
 module.exports = app
+
 
 
 // ${import.meta.env.VITE_API_URL}

@@ -1,4 +1,4 @@
-import { Search, ChevronDown, ShoppingCart, UserCircle, Store, User, Package, LogOut, Bell, CheckCheck, ArrowRight, CreditCard, RotateCcw, Megaphone, Settings } from 'lucide-react'
+import { Search, ChevronDown, ShoppingCart, UserCircle, User, Package, LogOut, Bell, CheckCheck, ArrowRight, CreditCard, RotateCcw, Megaphone, Settings } from 'lucide-react'
 
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -84,7 +84,6 @@ export default function Header() {
     localStorage.setItem('minekart_search', search)
   }, [search])
 
-  // Close both dropdowns when clicking outside header
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (headerRef.current && !headerRef.current.contains(event.target)) {
@@ -136,9 +135,9 @@ export default function Header() {
   }
 
   return (
-    <header ref={headerRef} className="fixed left-0 top-0 z-50 w-full text-[#351C18]">
+    <header ref={headerRef} className="fixed left-0 top-0 z-50 w-full text-[#35231F]">
       {/* TOP OFFER BAR */}
-      <div className="bg-[#351C18] text-white">
+      <div className="bg-[#3B211D] text-[#FFF9F5]">
         <div className="mx-auto flex h-8 max-w-[1600px] items-center justify-between px-3 sm:px-5 lg:px-7">
           <div className="flex min-w-0 items-center gap-3 text-[9px] font-medium sm:gap-5 sm:text-[10px]">
             <span className="truncate">Free Shipping on Orders Above ₹999</span>
@@ -150,12 +149,12 @@ export default function Header() {
             <span className="hidden md:inline">Easy Returns</span>
           </div>
 
-          <span className="hidden shrink-0 text-[9px] text-white/70 lg:block">Need Help? 1800-123-4567</span>
+          <span className="hidden shrink-0 text-[9px] text-white/65 lg:block">Need Help? 1800-123-4567</span>
         </div>
       </div>
 
       {/* MAIN HEADER */}
-      <div className="border-b border-[#E8DDD4] bg-[#FFFDFC]/95 shadow-[0_4px_18px_rgba(73,54,49,0.07)] backdrop-blur-md">
+      <div className="border-b border-[#E7D8CE] bg-[#FFFCF9]/95 shadow-[0_5px_22px_rgba(59,33,29,0.08)] backdrop-blur-md">
         <div className="mx-auto flex h-18 max-w-[1600px] items-center gap-3 px-3 sm:h-19 sm:px-5 lg:gap-5 lg:px-7">
           {/* LOGO */}
           <Link
@@ -164,28 +163,26 @@ export default function Header() {
               setAccountOpen(false)
               setNotificationOpen(false)
             }}
-            className="group flex shrink-0 items-center gap-2.5"
+            className="flex shrink-0 items-center gap-2.5"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-[0_9px_20px_rgba(125,23,28,0.22)] sm:h-11 sm:w-11">
-              <div className="pointer-events-none absolute -right-3 -top-3 h-7 w-7 rounded-full bg-white/10" />
-
-              <Store size={22} strokeWidth={2} className="relative z-10" />
+            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-[#E4CFC5] bg-[#F6E9E0] sm:h-12 sm:w-12">
+              <img src="/cart_image.jpg" alt="MineKart" className="h-9 w-9 object-contain sm:h-10 sm:w-10" />
             </div>
 
             <div className="hidden leading-none sm:block">
-              <h1 className="text-[22px] font-black tracking-tight text-[#351C18] lg:text-[24px]">
+              <h1 className="text-[22px] font-black tracking-tight text-[#35231F] lg:text-[24px]">
                 Mine
-                <span className="text-[#A51D26]">Kart</span>
+                <span className="text-[#9D2932]">Kart</span>
               </h1>
 
-              <p className="mt-1 text-[7px] font-bold tracking-[0.18em] text-[#9A857B] lg:text-[8px]">SHOP MORE • LIVE BETTER</p>
+              <p className="mt-1 text-[7px] font-bold tracking-[0.18em] text-[#967E74] lg:text-[8px]">SHOP MORE • LIVE BETTER</p>
             </div>
           </Link>
 
           {/* SEARCH */}
           <div className="group min-w-0 flex-1">
-            <div className="flex h-10 w-full items-center overflow-hidden rounded-xl border border-[#DED1C9] bg-[#F8F4F1] transition-all duration-200 focus-within:border-[#A51D26] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(165,29,38,0.06)] sm:h-11">
-              <Search size={18} strokeWidth={2} className="ml-3 shrink-0 text-[#806C63] transition-colors duration-200 group-focus-within:text-[#A51D26] sm:ml-3.5" />
+            <div className="flex h-10 w-full items-center overflow-hidden rounded-xl border border-[#DDCDC3] bg-[#F8F1EC] transition-colors duration-200 focus-within:border-[#A52C35] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(165,44,53,0.07)] sm:h-11">
+              <Search size={18} strokeWidth={2} className="ml-3 shrink-0 text-[#8D766D] transition-colors duration-200 group-focus-within:text-[#A52C35] sm:ml-3.5" />
 
               <input
                 type="text"
@@ -197,13 +194,13 @@ export default function Header() {
                   }
                 }}
                 placeholder="Search products, brands and more..."
-                className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-[11px] text-[#351C18] outline-none placeholder:text-[#9A857B] sm:px-3 sm:text-xs md:text-sm"
+                className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-[11px] text-[#35231F] outline-none placeholder:text-[#9D8980] sm:px-3 sm:text-xs md:text-sm"
               />
 
               <button
                 type="button"
                 onClick={handleSearch}
-                className="mr-1 flex h-8 items-center justify-center rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] px-3.5 text-[10px] font-bold text-white shadow-sm transition-all duration-200 hover:from-[#681419] hover:to-[#8E181F] active:scale-95 sm:h-9 sm:px-5 sm:text-xs"
+                className="mr-1 flex h-8 items-center justify-center rounded-lg bg-linear-to-r from-[#7F2028] to-[#A52C35] px-3.5 text-[10px] font-bold text-white shadow-sm transition-colors duration-200 hover:from-[#69191F] hover:to-[#8E242C] sm:h-9 sm:px-5 sm:text-xs"
               >
                 <span className="hidden sm:inline">Search</span>
 
@@ -214,24 +211,28 @@ export default function Header() {
 
           {/* ACCOUNT */}
           <div className="relative shrink-0">
-            <button type="button" onClick={handleAccountToggle} className={`group flex items-center gap-2 rounded-xl px-1.5 py-1.5 transition-all duration-200 sm:px-2 ${accountOpen ? 'bg-[#F7EEE7]' : 'hover:bg-[#F7EEE7]'}`}>
+            <button
+              type="button"
+              onClick={handleAccountToggle}
+              className={`group flex items-center gap-2 rounded-xl border border-transparent px-1.5 py-1.5 transition-colors duration-200 sm:px-2 ${accountOpen ? 'border-[#D9C4BA] bg-[#F7EEE7]' : 'hover:border-[#D9C4BA] hover:bg-[#F7EEE7]'}`}
+            >
               {user?.avatar ? (
-                <div className="h-9 w-9 overflow-hidden rounded-full border-2 border-[#E7D8D0] bg-[#F7EEE7] sm:h-10 sm:w-10">
-                  <img src={`${import.meta.env.VITE_API_URL}${user.avatar}`} alt={user.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                <div className="h-9 w-9 overflow-hidden rounded-full border-2 border-[#E1D0C7] bg-[#F5E9E2] sm:h-10 sm:w-10">
+                  <img src={`${import.meta.env.VITE_API_URL}${user.avatar}`} alt={user.name} className="h-full w-full object-cover" />
                 </div>
               ) : (
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E2D5CC] bg-[#F7EEE7] text-[#8E181F] transition-all duration-200 group-hover:border-[#CDAFA4] sm:h-10 sm:w-10">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E1D0C7] bg-[#F5E9E2] text-[#8E2931] transition-colors duration-200 group-hover:border-[#C9A79C] group-hover:bg-[#EFE0D7] sm:h-10 sm:w-10">
                   <UserCircle size={23} strokeWidth={1.8} />
                 </div>
               )}
 
               <div className="hidden max-w-25 text-left lg:block">
-                <p className="text-[8px] font-medium uppercase tracking-wider text-[#9A857B]">{user ? 'Welcome back' : 'Account'}</p>
+                <p className="text-[8px] font-medium uppercase tracking-wider text-[#967E74]">{user ? 'Welcome back' : 'Account'}</p>
 
-                <p className="mt-0.5 truncate text-xs font-extrabold text-[#351C18]">{user ? user.name : 'Login'}</p>
+                <p className="mt-0.5 truncate text-xs font-extrabold text-[#35231F]">{user ? user.name : 'Login'}</p>
               </div>
 
-              {user && <ChevronDown size={14} strokeWidth={2} className={`hidden transition-all duration-200 lg:block ${accountOpen ? 'rotate-180 text-[#A51D26]' : 'text-[#806C63]'}`} />}
+              {user && <ChevronDown size={14} strokeWidth={2} className={`hidden transition-colors duration-200 lg:block ${accountOpen ? 'rotate-180 text-[#A52C35]' : 'text-[#806C63]'}`} />}
             </button>
 
             {/* ACCOUNT DROPDOWN */}
@@ -257,7 +258,7 @@ export default function Header() {
 
                   {/* MENU */}
                   <div className="p-2">
-                    <Link to="/profile" onClick={() => setAccountOpen(false)} className="group flex items-center gap-3 rounded-xl px-3 py-3 text-xs font-semibold text-[#493631] transition-all duration-200 hover:bg-[#F8ECE6] hover:text-[#8E181F]">
+                    <Link to="/profile" onClick={() => setAccountOpen(false)} className="group flex items-center gap-3 rounded-xl px-3 py-3 text-xs font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#8E181F]">
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F] transition-colors group-hover:bg-[#F2DDD5]">
                         <User size={17} strokeWidth={1.9} />
                       </span>
@@ -268,10 +269,14 @@ export default function Header() {
                         <span className="mt-0.5 block text-[9px] font-normal text-[#9A857B]">Manage your personal information</span>
                       </span>
 
-                      <ArrowRight size={14} className="text-[#B6A39A] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[#A51D26]" />
+                      <ArrowRight size={14} className="text-[#B6A39A] transition-colors group-hover:text-[#A51D26]" />
                     </Link>
 
-                    <Link to="/orders" onClick={() => setAccountOpen(false)} className="group mt-1 flex items-center gap-3 rounded-xl px-3 py-3 text-xs font-semibold text-[#493631] transition-all duration-200 hover:bg-[#F8ECE6] hover:text-[#8E181F]">
+                    <Link
+                      to="/orders"
+                      onClick={() => setAccountOpen(false)}
+                      className="group mt-1 flex items-center gap-3 rounded-xl px-3 py-3 text-xs font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#8E181F]"
+                    >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F] transition-colors group-hover:bg-[#F2DDD5]">
                         <Package size={17} strokeWidth={1.9} />
                       </span>
@@ -282,7 +287,7 @@ export default function Header() {
                         <span className="mt-0.5 block text-[9px] font-normal text-[#9A857B]">Track and manage your orders</span>
                       </span>
 
-                      <ArrowRight size={14} className="text-[#B6A39A] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[#A51D26]" />
+                      <ArrowRight size={14} className="text-[#B6A39A] transition-colors group-hover:text-[#A51D26]" />
                     </Link>
                   </div>
 
@@ -296,7 +301,7 @@ export default function Header() {
                         setNotificationOpen(false)
                         navigate('/')
                       }}
-                      className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-xs font-semibold text-[#A51D26] transition-all duration-200 hover:bg-[#FFF1F1]"
+                      className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-xs font-semibold text-[#A51D26] transition-colors duration-200 hover:bg-[#FFF1F1]"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#FFF1F1] text-[#A51D26] transition-colors group-hover:bg-[#FFE5E5]">
                         <LogOut size={17} strokeWidth={1.9} />
@@ -308,7 +313,7 @@ export default function Header() {
                         <span className="mt-0.5 block text-[9px] font-normal text-[#B17A73]">Sign out from your account</span>
                       </span>
 
-                      <ArrowRight size={14} className="text-[#D1AAA4] transition-transform duration-200 group-hover:translate-x-0.5" />
+                      <ArrowRight size={14} className="text-[#D1AAA4] transition-colors" />
                     </button>
                   </div>
                 </div>
@@ -317,23 +322,25 @@ export default function Header() {
           </div>
 
           {/* DIVIDER */}
-          {user && <div className="hidden h-9 w-px shrink-0 bg-[#E5D8D0] sm:block" />}
+          {user && <div className="hidden h-9 w-px shrink-0 bg-[#E5D6CD] sm:block" />}
 
-          {/* NOTIFICATIONS */}
+          {/* NOTIFICATION */}
           {user && (
             <div className="relative shrink-0">
-              <button type="button" onClick={handleNotificationToggle} className={`group flex shrink-0 items-center gap-2 rounded-xl px-1.5 py-1.5 transition-all duration-200 sm:px-2 ${notificationOpen ? 'bg-[#F7EEE7]' : 'hover:bg-[#F7EEE7]'}`}>
-                <div className="relative">
-                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200 sm:h-10 sm:w-10 ${notificationOpen ? 'bg-[#F2DDD5] text-[#8E181F]' : 'bg-[#F7EEE7] text-[#493631]  group-hover:text-[#8E181F]'}`}>
-                    <Bell size={21} strokeWidth={1.9} className="transition-transform duration-200 group-hover:-translate-y-0.5" />
-                  </div>
+              <button
+                type="button"
+                onClick={handleNotificationToggle}
+                className={`group relative flex h-10 w-10 items-center justify-center rounded-xl border transition-colors duration-200 ${
+                  notificationOpen ? 'border-[#CFA8A0] bg-[#EFE0D7] text-[#922A32]' : 'border-[#E4D5CD] bg-[#F7EEE7] text-[#4C3630] hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#922A32]'
+                }`}
+              >
+                <Bell size={20} strokeWidth={1.9} />
 
-                  {unreadCount > 0 && (
-                    <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-[#A51D26] px-1 text-[8px] font-extrabold text-white shadow-sm">
-                      {unreadCount > 99 ? '99+' : unreadCount}
-                    </span>
-                  )}
-                </div>
+                {unreadCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[8px] font-extrabold leading-none text-white">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
               </button>
 
               {/* NOTIFICATION DROPDOWN */}
@@ -342,22 +349,20 @@ export default function Header() {
                   <div className="w-96 overflow-hidden rounded-2xl border border-[#E3D6CE] bg-white shadow-[0_20px_50px_rgba(53,28,24,0.16)]">
                     {/* HEADER */}
                     <div className="flex items-center justify-between border-b border-[#EEE5DF] bg-linear-to-r from-[#FFFCFA] to-[#FBF5F0] px-5 py-4">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#A51D26]">
-                            <Bell size={16} strokeWidth={1.9} />
-                          </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#A51D26]">
+                          <Bell size={16} strokeWidth={1.9} />
+                        </div>
 
-                          <div>
-                            <h3 className="text-sm font-black text-[#351C18]">Notifications</h3>
+                        <div>
+                          <h3 className="text-sm font-black text-[#351C18]">Notifications</h3>
 
-                            <p className="mt-0.5 text-[9px] text-[#9A857B]">{unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'You are all caught up'}</p>
-                          </div>
+                          <p className="mt-0.5 text-[9px] text-[#9A857B]">{unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'You are all caught up'}</p>
                         </div>
                       </div>
 
                       {unreadCount > 0 && (
-                        <button type="button" onClick={handleMarkAllRead} className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-[9px] font-bold text-[#A51D26] transition-all duration-200 hover:bg-[#F8ECE6] hover:text-[#681419]">
+                        <button type="button" onClick={handleMarkAllRead} className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-[9px] font-bold text-[#A51D26] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#681419]">
                           <CheckCheck size={13} />
                           Mark all
                         </button>
@@ -385,10 +390,10 @@ export default function Header() {
                               key={notification._id}
                               type="button"
                               onClick={() => handleNotificationClick(notification)}
-                              className={`group flex w-full items-start gap-3 border-b border-[#F1E9E4] px-5 py-4 text-left transition-all duration-200 last:border-b-0 hover:bg-[#FFF8F4] ${!notification.isRead ? 'bg-[#FFFCFA]' : 'bg-white'}`}
+                              className={`group flex w-full items-start gap-3 border-b border-[#F1E9E4] px-5 py-4 text-left transition-colors duration-200 last:border-b-0 hover:bg-[#FFF8F4] ${!notification.isRead ? 'bg-[#FFFCFA]' : 'bg-white'}`}
                             >
                               {/* ICON */}
-                              <div className={`relative mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${notification.isRead ? 'bg-[#F7EEE7] text-[#806C63]' : 'bg-[#F8E8E5] text-[#A51D26]'}`}>
+                              <div className={`relative mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${notification.isRead ? 'bg-[#F7EEE7] text-[#806C63]' : 'bg-[#F8E8E5] text-[#A51D26]'}`}>
                                 <Icon size={17} strokeWidth={1.8} />
 
                                 {!notification.isRead && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#A51D26]" />}
@@ -407,7 +412,7 @@ export default function Header() {
                                 {notification.orderId && (
                                   <span className="mt-2 inline-flex items-center gap-1 text-[9px] font-extrabold text-[#A51D26]">
                                     View order
-                                    <ArrowRight size={10} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                                    <ArrowRight size={10} />
                                   </span>
                                 )}
                               </div>
@@ -426,7 +431,7 @@ export default function Header() {
                           setAccountOpen(false)
                           navigate('/notifications')
                         }}
-                        className="flex w-full items-center justify-center gap-2 border-t border-[#EEE5DF] bg-[#FFFCFA] px-5 py-4 text-[10px] font-extrabold text-[#A51D26] transition-all duration-200 hover:bg-[#F8ECE6]"
+                        className="flex w-full items-center justify-center gap-2 border-t border-[#EEE5DF] bg-[#FFFCFA] px-5 py-4 text-[10px] font-extrabold text-[#A51D26] transition-colors duration-200 hover:bg-[#F8ECE6]"
                       >
                         View all notifications
                         <ArrowRight size={13} />
@@ -447,15 +452,13 @@ export default function Header() {
                 setNotificationOpen(false)
                 navigate('/cart')
               }}
-              className="group relative flex shrink-0 items-center gap-2 rounded-xl px-1.5 py-1.5 transition-all duration-200 hover:bg-[#F7EEE7] sm:px-2"
+              className="group relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#E4D5CD] bg-[#F7EEE7] text-[#4C3630] transition-colors duration-200 hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#922A32]"
             >
-              <div className="relative">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#493631] transition-all duration-700  group-hover:text-[#8E181F] sm:h-10 sm:w-10">
-                  <ShoppingCart size={21} strokeWidth={1.9} className="transition-all duration-600 group-hover:scale-102" />
-                </div>
+              <ShoppingCart size={20} strokeWidth={1.9} />
 
-                <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-[#A51D26] px-1 text-[8px] font-extrabold text-white shadow-sm">{cart?.totalQuantity || 0}</span>
-              </div>
+              <span className="absolute -right-1 -top-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[8px] font-extrabold leading-none text-white">
+                {cart?.totalQuantity || 0}
+              </span>
             </button>
           )}
         </div>

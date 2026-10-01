@@ -86,14 +86,14 @@ export default function BrandList() {
                 const cardContent = (
                   <>
                     {/* 65% Image */}
-                    <div className={`relative flex h-39 shrink-0 items-center justify-center overflow-hidden px-4 sm:h-42 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
+                    <div className={`relative flex h-39 shrink-0 items-center justify-center overflow-hidden px-4 sm:h-42 ${isDisabled ? 'bg-white' : 'bg-white'}`}>
                       {!isDisabled && <div className="absolute -right-7 -top-7 h-16 w-16 rounded-full bg-[#A51D26]/[0.035] transition-transform duration-500 group-hover:scale-150" />}
 
                       {value.brandLogo ? (
                         <img
                           src={`${import.meta.env.VITE_API_URL}${value.brandLogo}`}
                           alt={value.brandName}
-                          className={`relative z-10 h-12 w-full object-contain sm:h-14 ${isDisabled ? 'grayscale opacity-45' : 'transition-transform duration-300 group-hover:scale-105'}`}
+                          className={`relative z-10 h-12 w-full object-contain sm:h-14 ${isDisabled ? 'grayscale opacity-45 ' : 'transition-transform duration-300 group-hover:scale-105'}`}
                         />
                       ) : (
                         <div className={`relative z-10 flex h-12 w-full items-center justify-center sm:h-14 ${isDisabled ? 'text-[#999999]' : 'text-[#9A857B]'}`}>

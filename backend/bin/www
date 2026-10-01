@@ -18,8 +18,6 @@ var io = new Server(server, {
   },
 })
 
-
-
 app.set('io', io)
 
 io.use((socket, next) => {
@@ -55,8 +53,8 @@ io.on('connection', (socket) => {
 
   socket.join(`user:${userId}`)
 
-  console.log(`Socket connected: ${socket.id}`)
-  console.log(`User joined room: user:${userId}`)
+  // console.log(`Socket connected: ${socket.id}`)
+  // console.log(`User joined room: user:${userId}`)
 
   socket.on('disconnect', () => {
     console.log(`Socket disconnected: ${socket.id}`)
@@ -92,12 +90,12 @@ function onError(error) {
 
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges')
+      // console.error(bind + ' requires elevated privileges')
       process.exit(1)
       break
 
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use')
+      // console.error(bind + ' is already in use')
       process.exit(1)
       break
 

@@ -262,6 +262,7 @@ export default function AdminBrand() {
                     {/* DESCRIPTION */}
                     <td className="px-5 py-4">
                       <p className="max-w-75 truncate text-sm text-[#6F6A64]">{brand.description || '-'}</p>
+                      {/* {brand.brandLogo} */}
                     </td>
 
                     {/* LOGO */}
