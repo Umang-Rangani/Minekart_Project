@@ -209,6 +209,7 @@ export default function Header() {
           {/* MOBILE SEARCH OPEN */}
           {mobileSearchOpen ? (
             <>
+              {/* SEARCH INPUT */}
               <div className="min-w-0 flex-1">
                 <div className="flex h-10 w-full items-center overflow-hidden rounded-xl border border-[#A52C35] bg-white shadow-[0_0_0_3px_rgba(165,44,53,0.07)] sm:h-11">
                   <Search size={17} strokeWidth={2} className="ml-2.5 shrink-0 text-[#A52C35] sm:ml-3" />
@@ -231,6 +232,7 @@ export default function Header() {
                     className="h-full min-w-0 flex-1 bg-transparent px-2 text-[11px] text-[#35231F] outline-none placeholder:text-[#9D8980] sm:px-3 sm:text-sm"
                   />
 
+                  {/* SEARCH BUTTON */}
                   <button
                     type="button"
                     onClick={handleSearch}
@@ -240,30 +242,12 @@ export default function Header() {
                     <Search size={14} strokeWidth={2.3} />
                   </button>
 
+                  {/* CLOSE BUTTON */}
                   <button type="button" onClick={closeMobileSearch} className="mr-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#806C63] transition-colors hover:bg-[#F7EEE7] hover:text-[#A52C35]" aria-label="Close search">
-                    <X size={16} strokeWidth={2} />
+                    <X size={17} strokeWidth={2} />
                   </button>
                 </div>
               </div>
-
-              {/* MOBILE SEARCH MODE CART */}
-              {user && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAccountOpen(false)
-                    setNotificationOpen(false)
-                    setMobileSearchOpen(false)
-                    navigate('/cart')
-                  }}
-                  className="group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E4D5CD] bg-[#F7EEE7] text-[#4C3630] transition-colors duration-200 hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#922A32] sm:h-10 sm:w-10"
-                  aria-label="Cart"
-                >
-                  <ShoppingCart size={18} strokeWidth={1.9} />
-
-                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[7px] font-extrabold leading-none text-white">{cart?.totalQuantity || 0}</span>
-                </button>
-              )}
             </>
           ) : (
             <>
