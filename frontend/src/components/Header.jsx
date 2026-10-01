@@ -139,8 +139,8 @@ export default function Header() {
     <header ref={headerRef} className="fixed left-0 top-0 z-50 w-full text-[#35231F]">
       {/* TOP OFFER BAR */}
       <div className="bg-[#3B211D] text-[#FFF9F5]">
-        <div className="mx-auto flex h-8 max-w-[1600px] items-center justify-between px-3 sm:px-5 lg:px-7">
-          <div className="flex min-w-0 items-center gap-3 text-[9px] font-medium sm:gap-5 sm:text-[10px]">
+        <div className="mx-auto flex h-7 max-w-[1600px] items-center justify-center px-3 sm:h-8 sm:justify-between sm:px-5 lg:px-7">
+          <div className="flex min-w-0 items-center gap-2 text-[8px] font-medium sm:gap-5 sm:text-[10px]">
             <span className="truncate">Free Shipping on Orders Above ₹999</span>
 
             <span className="hidden h-3 w-px bg-white/20 sm:block" />
@@ -156,34 +156,332 @@ export default function Header() {
 
       {/* MAIN HEADER */}
       <div className="border-b border-[#E7D8CE] bg-[#FFFCF9]/95 shadow-[0_5px_22px_rgba(59,33,29,0.08)] backdrop-blur-md">
-        <div className="mx-auto flex h-18 max-w-[1600px] items-center gap-3 px-3 sm:h-19 sm:px-5 lg:gap-5 lg:px-7">
-          {/* LOGO */}
-          <Link
-            to="/"
-            onClick={() => {
-              setAccountOpen(false)
-              setNotificationOpen(false)
-            }}
-            className="group flex shrink-0 items-center gap-2.5"
-          >
-            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-[#E4CFC5] bg-[#F6E9E0] transition-all duration-300 group-hover:-translate-y-1 group-hover:rotate-2 group-hover:shadow-lg sm:h-12 sm:w-12">
-              <img src="/cart_image.jpg" alt="MineKart" className="h-9 w-9 object-contain animate-bounce-slow transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10" />
+        <div className="mx-auto max-w-[1600px] px-3 sm:px-5 lg:px-7">
+          {/* MAIN ROW */}
+          <div className="flex h-15 items-center gap-2 sm:h-18 sm:gap-3 lg:gap-5">
+            {/* LOGO */}
+            <Link
+              to="/"
+              onClick={() => {
+                setAccountOpen(false)
+                setNotificationOpen(false)
+              }}
+              className="flex shrink-0 items-center gap-2.5"
+            >
+              <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-[#E4CFC5] bg-[#F6E9E0] sm:h-11 sm:w-11 lg:h-12 lg:w-12">
+                <img src="/cart_image.jpg" alt="MineKart" className="h-7 w-7 object-contain sm:h-9 sm:w-9 lg:h-10 lg:w-10" />
+              </div>
+
+              <div className="hidden leading-none sm:block">
+                <h1 className="text-[19px] font-black tracking-tight text-[#35231F] lg:text-[24px]">
+                  Mine
+                  <span className="text-[#9D2932]">Kart</span>
+                </h1>
+
+                <p className="mt-1 text-[6px] font-bold tracking-[0.18em] text-[#967E74] lg:text-[8px]">SHOP MORE • LIVE BETTER</p>
+              </div>
+            </Link>
+
+            {/* SEARCH - DESKTOP */}
+            <div className="hidden min-w-0 flex-1 sm:block">
+              <div className="group flex h-10 w-full items-center overflow-hidden rounded-xl border border-[#DDCDC3] bg-[#F8F1EC] transition-colors duration-200 focus-within:border-[#A52C35] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(165,44,53,0.07)] lg:h-11">
+                <Search size={18} strokeWidth={2} className="ml-3 shrink-0 text-[#8D766D] transition-colors duration-200 group-focus-within:text-[#A52C35] lg:ml-3.5" />
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch()
+                    }
+                  }}
+                  placeholder="Search products, brands and more..."
+                  className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-[11px] text-[#35231F] outline-none placeholder:text-[#9D8980] sm:px-3 sm:text-xs md:text-sm"
+                />
+
+                <button
+                  type="button"
+                  onClick={handleSearch}
+                  className="mr-1 flex h-8 items-center justify-center rounded-lg bg-linear-to-r from-[#7F2028] to-[#A52C35] px-3.5 text-[10px] font-bold text-white shadow-sm transition-colors duration-200 hover:from-[#69191F] hover:to-[#8E242C] lg:h-9 lg:px-5 lg:text-xs"
+                >
+                  <span className="hidden sm:inline">Search</span>
+
+                  <Search size={14} strokeWidth={2.3} className="sm:hidden" />
+                </button>
+              </div>
             </div>
 
-            <div className="hidden leading-none sm:block">
-              <h1 className="text-[22px] font-black tracking-tight text-[#35231F] lg:text-[24px]">
-                Mine
-                <span className="text-[#9D2932]">Kart</span>
-              </h1>
+            {/* RIGHT ACTIONS */}
+            <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+              {/* ACCOUNT */}
+              <div className="relative shrink-0">
+                <button
+                  type="button"
+                  onClick={handleAccountToggle}
+                  className={`group flex h-10 items-center gap-2 rounded-xl border px-1.5 transition-colors duration-200 sm:h-11 sm:px-2 ${
+                    accountOpen ? 'border-[#D9C4BA] bg-[#F7EEE7]' : 'border-transparent hover:border-[#D9C4BA] hover:bg-[#F7EEE7]'
+                  }`}
+                >
+                  {user?.avatar ? (
+                    <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-[#E1D0C7] bg-[#F5E9E2] sm:h-9 sm:w-9">
+                      <img src={`${import.meta.env.VITE_API_URL}${user.avatar}`} alt={user.name} className="h-full w-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E1D0C7] bg-[#F5E9E2] text-[#8E2931] transition-colors duration-200 group-hover:border-[#C9A79C] group-hover:bg-[#EFE0D7] sm:h-9 sm:w-9">
+                      <UserCircle size={21} strokeWidth={1.8} />
+                    </div>
+                  )}
 
-              <p className="mt-1 text-[7px] font-bold tracking-[0.18em] text-[#967E74] lg:text-[8px]">SHOP MORE • LIVE BETTER</p>
+                  <div className="hidden max-w-25 text-left md:block">
+                    <p className="text-[8px] font-medium uppercase tracking-wider text-[#967E74]">{user ? 'Welcome back' : 'Account'}</p>
+
+                    <p className="mt-0.5 truncate text-xs font-extrabold text-[#35231F]">{user ? user.name : 'Login'}</p>
+                  </div>
+
+                  {user && <ChevronDown size={14} strokeWidth={2} className={`hidden transition-colors duration-200 md:block ${accountOpen ? 'rotate-180 text-[#A52C35]' : 'text-[#806C63]'}`} />}
+                </button>
+
+                {/* ACCOUNT DROPDOWN */}
+                {user && accountOpen && (
+                  <div className="absolute right-0 top-full z-70 pt-3">
+                    <div className="w-[calc(100vw-24px)] max-w-72 overflow-hidden rounded-2xl border border-[#E3D6CE] bg-white shadow-[0_20px_50px_rgba(53,28,24,0.16)]">
+                      {/* PROFILE HEADER */}
+                      <div className="border-b border-[#EEE5DF] bg-linear-to-br from-[#FBF5F0] to-[#F7EEE7] px-4 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm">
+                            {user.avatar ? <img src={getImageUrl(user.avatar)} alt={user.name} className="h-full w-full object-cover" /> : <User size={19} strokeWidth={2} />}
+                          </div>
+
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-extrabold text-[#351C18]">{user.name}</p>
+
+                            <p className="mt-0.5 truncate text-[10px] text-[#9A857B]">{user.email}</p>
+
+                            <span className="mt-1.5 inline-flex items-center rounded-full bg-white px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide text-[#8E181F] shadow-sm">My Account</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* MENU */}
+                      <div className="p-2">
+                        <Link
+                          to="/profile"
+                          onClick={() => setAccountOpen(false)}
+                          className="group flex items-center gap-3 rounded-xl px-3 py-3 text-xs font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#8E181F]"
+                        >
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F] transition-colors group-hover:bg-[#F2DDD5]">
+                            <User size={17} strokeWidth={1.9} />
+                          </span>
+
+                          <span className="flex-1">
+                            <span className="block font-bold">My Profile</span>
+
+                            <span className="mt-0.5 block text-[9px] font-normal text-[#9A857B]">Manage your personal information</span>
+                          </span>
+
+                          <ArrowRight size={14} className="text-[#B6A39A] transition-colors group-hover:text-[#A51D26]" />
+                        </Link>
+
+                        <Link
+                          to="/orders"
+                          onClick={() => setAccountOpen(false)}
+                          className="group mt-1 flex items-center gap-3 rounded-xl px-3 py-3 text-xs font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#8E181F]"
+                        >
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F] transition-colors group-hover:bg-[#F2DDD5]">
+                            <Package size={17} strokeWidth={1.9} />
+                          </span>
+
+                          <span className="flex-1">
+                            <span className="block font-bold">My Orders</span>
+
+                            <span className="mt-0.5 block text-[9px] font-normal text-[#9A857B]">Track and manage your orders</span>
+                          </span>
+
+                          <ArrowRight size={14} className="text-[#B6A39A] transition-colors group-hover:text-[#A51D26]" />
+                        </Link>
+                      </div>
+
+                      {/* LOGOUT */}
+                      <div className="border-t border-[#EEE5DF] p-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            logout()
+                            setAccountOpen(false)
+                            setNotificationOpen(false)
+                            navigate('/')
+                          }}
+                          className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-xs font-semibold text-[#A51D26] transition-colors duration-200 hover:bg-[#FFF1F1]"
+                        >
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#FFF1F1] text-[#A51D26] transition-colors group-hover:bg-[#FFE5E5]">
+                            <LogOut size={17} strokeWidth={1.9} />
+                          </span>
+
+                          <span className="flex-1">
+                            <span className="block font-bold">Logout</span>
+
+                            <span className="mt-0.5 block text-[9px] font-normal text-[#B17A73]">Sign out from your account</span>
+                          </span>
+
+                          <ArrowRight size={14} className="text-[#D1AAA4]" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* DIVIDER */}
+              {user && <div className="hidden h-8 w-px bg-[#E5D6CD] sm:block" />}
+
+              {/* NOTIFICATION + CART */}
+              {user && (
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  {/* NOTIFICATION */}
+                  <div className="relative shrink-0">
+                    <button
+                      type="button"
+                      onClick={handleNotificationToggle}
+                      className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border transition-colors duration-200 sm:h-10 sm:w-10 ${
+                        notificationOpen ? 'border-[#CFA8A0] bg-[#EFE0D7] text-[#922A32]' : 'border-[#E4D5CD] bg-[#F7EEE7] text-[#4C3630] hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#922A32]'
+                      }`}
+                    >
+                      <Bell size={19} strokeWidth={1.9} />
+
+                      {unreadCount > 0 && (
+                        <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[7px] font-extrabold leading-none text-white sm:h-4.5 sm:min-w-4.5 sm:text-[8px]">
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </span>
+                      )}
+                    </button>
+
+                    {/* NOTIFICATION DROPDOWN */}
+                    {notificationOpen && (
+                      <div className="absolute right-0 top-full z-80 pt-3">
+                        <div className="w-[calc(100vw-24px)] max-w-96 overflow-hidden rounded-2xl border border-[#E3D6CE] bg-white shadow-[0_20px_50px_rgba(53,28,24,0.16)]">
+                          {/* HEADER */}
+                          <div className="flex items-center justify-between border-b border-[#EEE5DF] bg-linear-to-r from-[#FFFCFA] to-[#FBF5F0] px-4 py-3.5 sm:px-5 sm:py-4">
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#A51D26]">
+                                <Bell size={16} strokeWidth={1.9} />
+                              </div>
+
+                              <div>
+                                <h3 className="text-sm font-black text-[#351C18]">Notifications</h3>
+
+                                <p className="mt-0.5 text-[9px] text-[#9A857B]">{unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'You are all caught up'}</p>
+                              </div>
+                            </div>
+
+                            {unreadCount > 0 && (
+                              <button type="button" onClick={handleMarkAllRead} className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-[9px] font-bold text-[#A51D26] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#681419]">
+                                <CheckCheck size={13} />
+                                Mark all
+                              </button>
+                            )}
+                          </div>
+
+                          {/* NOTIFICATION LIST */}
+                          {notifications.length === 0 ? (
+                            <div className="flex min-h-56 flex-col items-center justify-center px-6 text-center">
+                              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+                                <Bell size={23} strokeWidth={1.7} />
+                              </div>
+
+                              <p className="mt-4 text-sm font-bold text-[#493631]">No notifications yet</p>
+
+                              <p className="mt-1 max-w-55 text-[10px] leading-4 text-[#9A857B]">We will keep you updated about your orders and account activity.</p>
+                            </div>
+                          ) : (
+                            <div className="max-h-96 overflow-y-auto">
+                              {notifications.slice(0, 3).map((notification) => {
+                                const Icon = getNotificationIcon(notification.type)
+
+                                return (
+                                  <button
+                                    key={notification._id}
+                                    type="button"
+                                    onClick={() => handleNotificationClick(notification)}
+                                    className={`group flex w-full items-start gap-3 border-b border-[#F1E9E4] px-4 py-4 text-left transition-colors duration-200 last:border-b-0 hover:bg-[#FFF8F4] sm:px-5 ${
+                                      !notification.isRead ? 'bg-[#FFFCFA]' : 'bg-white'
+                                    }`}
+                                  >
+                                    {/* ICON */}
+                                    <div className={`relative mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 ${notification.isRead ? 'bg-[#F7EEE7] text-[#806C63]' : 'bg-[#F8E8E5] text-[#A51D26]'}`}>
+                                      <Icon size={16} strokeWidth={1.8} />
+
+                                      {!notification.isRead && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#A51D26]" />}
+                                    </div>
+
+                                    {/* CONTENT */}
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-start justify-between gap-2">
+                                        <p className={`min-w-0 truncate text-[11px] ${notification.isRead ? 'font-semibold text-[#493631]' : 'font-extrabold text-[#351C18]'}`}>{notification.title}</p>
+
+                                        <span className="shrink-0 text-[8px] font-medium text-[#A8968D]">{formatNotificationDate(notification.createdAt)}</span>
+                                      </div>
+
+                                      <p className="mt-1 line-clamp-2 text-[10px] leading-4 text-[#806C63]">{notification.message}</p>
+
+                                      {notification.orderId && (
+                                        <span className="mt-2 inline-flex items-center gap-1 text-[9px] font-extrabold text-[#A51D26]">
+                                          View order
+                                          <ArrowRight size={10} />
+                                        </span>
+                                      )}
+                                    </div>
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          )}
+
+                          {/* FOOTER */}
+                          {notifications.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setNotificationOpen(false)
+                                setAccountOpen(false)
+                                navigate('/notifications')
+                              }}
+                              className="flex w-full items-center justify-center gap-2 border-t border-[#EEE5DF] bg-[#FFFCFA] px-5 py-4 text-[10px] font-extrabold text-[#A51D26] transition-colors duration-200 hover:bg-[#F8ECE6]"
+                            >
+                              View all notifications
+                              <ArrowRight size={13} />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* CART */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAccountOpen(false)
+                      setNotificationOpen(false)
+                      navigate('/cart')
+                    }}
+                    className="group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E4D5CD] bg-[#F7EEE7] text-[#4C3630] transition-colors duration-200 hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#922A32] sm:h-10 sm:w-10"
+                  >
+                    <ShoppingCart size={19} strokeWidth={1.9} />
+
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[7px] font-extrabold leading-none text-white sm:h-4.5 sm:min-w-4.5 sm:text-[8px]">
+                      {cart?.totalQuantity || 0}
+                    </span>
+                  </button>
+                </div>
+              )}
             </div>
-          </Link>
+          </div>
 
-          {/* SEARCH */}
-          <div className="group min-w-0 flex-1">
-            <div className="flex h-10 w-full items-center overflow-hidden rounded-xl border border-[#DDCDC3] bg-[#F8F1EC] transition-colors duration-200 focus-within:border-[#A52C35] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(165,44,53,0.07)] sm:h-11">
-              <Search size={18} strokeWidth={2} className="ml-3 shrink-0 text-[#8D766D] transition-colors duration-200 group-focus-within:text-[#A52C35] sm:ml-3.5" />
+          {/* MOBILE SEARCH */}
+          <div className="pb-2.5 sm:hidden">
+            <div className="group flex h-10 w-full items-center overflow-hidden rounded-xl border border-[#DDCDC3] bg-[#F8F1EC] transition-colors duration-200 focus-within:border-[#A52C35] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(165,44,53,0.07)]">
+              <Search size={17} strokeWidth={2} className="ml-3 shrink-0 text-[#8D766D]" />
 
               <input
                 type="text"
@@ -195,271 +493,18 @@ export default function Header() {
                   }
                 }}
                 placeholder="Search products, brands and more..."
-                className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-[11px] text-[#35231F] outline-none placeholder:text-[#9D8980] sm:px-3 sm:text-xs md:text-sm"
+                className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-[11px] text-[#35231F] outline-none placeholder:text-[#9D8980]"
               />
 
               <button
                 type="button"
                 onClick={handleSearch}
-                className="mr-1 flex h-8 items-center justify-center rounded-lg bg-linear-to-r from-[#7F2028] to-[#A52C35] px-3.5 text-[10px] font-bold text-white shadow-sm transition-colors duration-200 hover:from-[#69191F] hover:to-[#8E242C] sm:h-9 sm:px-5 sm:text-xs"
+                className="mr-1 flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-r from-[#7F2028] to-[#A52C35] text-white shadow-sm transition-colors duration-200 hover:from-[#69191F] hover:to-[#8E242C]"
               >
-                <span className="hidden sm:inline">Search</span>
-
-                <Search size={14} strokeWidth={2.3} className="sm:hidden" />
+                <Search size={14} strokeWidth={2.3} />
               </button>
             </div>
           </div>
-
-          {/* ACCOUNT */}
-          <div className="relative shrink-0">
-            <button
-              type="button"
-              onClick={handleAccountToggle}
-              className={`group flex items-center gap-2 rounded-xl border border-transparent px-1.5 py-1.5 transition-colors duration-200 sm:px-2 ${accountOpen ? 'border-[#D9C4BA] bg-[#F7EEE7]' : 'hover:border-[#D9C4BA] hover:bg-[#F7EEE7]'}`}
-            >
-              {user?.avatar ? (
-                <div className="h-9 w-9 overflow-hidden rounded-full border-2 border-[#E1D0C7] bg-[#F5E9E2] sm:h-10 sm:w-10">
-                  <img src={`${import.meta.env.VITE_API_URL}${user.avatar}`} alt={user.name} className="h-full w-full object-cover" />
-                </div>
-              ) : (
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E1D0C7] bg-[#F5E9E2] text-[#8E2931] transition-colors duration-200 group-hover:border-[#C9A79C] group-hover:bg-[#EFE0D7] sm:h-10 sm:w-10">
-                  <UserCircle size={23} strokeWidth={1.8} />
-                </div>
-              )}
-
-              <div className="hidden max-w-25 text-left lg:block">
-                <p className="text-[8px] font-medium uppercase tracking-wider text-[#967E74]">{user ? 'Welcome back' : 'Account'}</p>
-
-                <p className="mt-0.5 truncate text-xs font-extrabold text-[#35231F]">{user ? user.name : 'Login'}</p>
-              </div>
-
-              {user && <ChevronDown size={14} strokeWidth={2} className={`hidden transition-colors duration-200 lg:block ${accountOpen ? 'rotate-180 text-[#A52C35]' : 'text-[#806C63]'}`} />}
-            </button>
-
-            {/* ACCOUNT DROPDOWN */}
-            {user && accountOpen && (
-              <div className="absolute right-0 top-full z-70 pt-3">
-                <div className="w-72 overflow-hidden rounded-2xl border border-[#E3D6CE] bg-white shadow-[0_20px_50px_rgba(53,28,24,0.16)]">
-                  {/* PROFILE HEADER */}
-                  <div className="border-b border-[#EEE5DF] bg-linear-to-br from-[#FBF5F0] to-[#F7EEE7] px-4 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm">
-                        {user.avatar ? <img src={getImageUrl(user.avatar)} alt={user.name} className="h-full w-full object-cover" /> : <User size={19} strokeWidth={2} />}
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-extrabold text-[#351C18]">{user.name}</p>
-
-                        <p className="mt-0.5 truncate text-[10px] text-[#9A857B]">{user.email}</p>
-
-                        <span className="mt-1.5 inline-flex items-center rounded-full bg-white px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide text-[#8E181F] shadow-sm">My Account</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* MENU */}
-                  <div className="p-2">
-                    <Link to="/profile" onClick={() => setAccountOpen(false)} className="group flex items-center gap-3 rounded-xl px-3 py-3 text-xs font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#8E181F]">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F] transition-colors group-hover:bg-[#F2DDD5]">
-                        <User size={17} strokeWidth={1.9} />
-                      </span>
-
-                      <span className="flex-1">
-                        <span className="block font-bold">My Profile</span>
-
-                        <span className="mt-0.5 block text-[9px] font-normal text-[#9A857B]">Manage your personal information</span>
-                      </span>
-
-                      <ArrowRight size={14} className="text-[#B6A39A] transition-colors group-hover:text-[#A51D26]" />
-                    </Link>
-
-                    <Link
-                      to="/orders"
-                      onClick={() => setAccountOpen(false)}
-                      className="group mt-1 flex items-center gap-3 rounded-xl px-3 py-3 text-xs font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#8E181F]"
-                    >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F] transition-colors group-hover:bg-[#F2DDD5]">
-                        <Package size={17} strokeWidth={1.9} />
-                      </span>
-
-                      <span className="flex-1">
-                        <span className="block font-bold">My Orders</span>
-
-                        <span className="mt-0.5 block text-[9px] font-normal text-[#9A857B]">Track and manage your orders</span>
-                      </span>
-
-                      <ArrowRight size={14} className="text-[#B6A39A] transition-colors group-hover:text-[#A51D26]" />
-                    </Link>
-                  </div>
-
-                  {/* LOGOUT */}
-                  <div className="border-t border-[#EEE5DF] p-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        logout()
-                        setAccountOpen(false)
-                        setNotificationOpen(false)
-                        navigate('/')
-                      }}
-                      className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-xs font-semibold text-[#A51D26] transition-colors duration-200 hover:bg-[#FFF1F1]"
-                    >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#FFF1F1] text-[#A51D26] transition-colors group-hover:bg-[#FFE5E5]">
-                        <LogOut size={17} strokeWidth={1.9} />
-                      </span>
-
-                      <span className="flex-1">
-                        <span className="block font-bold">Logout</span>
-
-                        <span className="mt-0.5 block text-[9px] font-normal text-[#B17A73]">Sign out from your account</span>
-                      </span>
-
-                      <ArrowRight size={14} className="text-[#D1AAA4] transition-colors" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* DIVIDER */}
-          {user && <div className="hidden h-9 w-px shrink-0 bg-[#E5D6CD] sm:block" />}
-
-          {/* NOTIFICATION */}
-          {user && (
-            <div className="relative shrink-0">
-              <button
-                type="button"
-                onClick={handleNotificationToggle}
-                className={`group relative flex h-10 w-10 items-center justify-center rounded-xl border transition-colors duration-200 ${
-                  notificationOpen ? 'border-[#CFA8A0] bg-[#EFE0D7] text-[#922A32]' : 'border-[#E4D5CD] bg-[#F7EEE7] text-[#4C3630] hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#922A32]'
-                }`}
-              >
-                <Bell size={20} strokeWidth={1.9} />
-
-                {unreadCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[8px] font-extrabold leading-none text-white">
-                    {unreadCount > 99 ? '99+' : unreadCount}
-                  </span>
-                )}
-              </button>
-
-              {/* NOTIFICATION DROPDOWN */}
-              {notificationOpen && (
-                <div className="absolute right-0 top-full z-80 pt-3">
-                  <div className="w-96 overflow-hidden rounded-2xl border border-[#E3D6CE] bg-white shadow-[0_20px_50px_rgba(53,28,24,0.16)]">
-                    {/* HEADER */}
-                    <div className="flex items-center justify-between border-b border-[#EEE5DF] bg-linear-to-r from-[#FFFCFA] to-[#FBF5F0] px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#A51D26]">
-                          <Bell size={16} strokeWidth={1.9} />
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-black text-[#351C18]">Notifications</h3>
-
-                          <p className="mt-0.5 text-[9px] text-[#9A857B]">{unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'You are all caught up'}</p>
-                        </div>
-                      </div>
-
-                      {unreadCount > 0 && (
-                        <button type="button" onClick={handleMarkAllRead} className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-[9px] font-bold text-[#A51D26] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#681419]">
-                          <CheckCheck size={13} />
-                          Mark all
-                        </button>
-                      )}
-                    </div>
-
-                    {/* NOTIFICATION LIST */}
-                    {notifications.length === 0 ? (
-                      <div className="flex min-h-56 flex-col items-center justify-center px-6 text-center">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
-                          <Bell size={23} strokeWidth={1.7} />
-                        </div>
-
-                        <p className="mt-4 text-sm font-bold text-[#493631]">No notifications yet</p>
-
-                        <p className="mt-1 max-w-55 text-[10px] leading-4 text-[#9A857B]">We will keep you updated about your orders and account activity.</p>
-                      </div>
-                    ) : (
-                      <div className="max-h-96 overflow-y-auto">
-                        {notifications.slice(0, 3).map((notification) => {
-                          const Icon = getNotificationIcon(notification.type)
-
-                          return (
-                            <button
-                              key={notification._id}
-                              type="button"
-                              onClick={() => handleNotificationClick(notification)}
-                              className={`group flex w-full items-start gap-3 border-b border-[#F1E9E4] px-5 py-4 text-left transition-colors duration-200 last:border-b-0 hover:bg-[#FFF8F4] ${!notification.isRead ? 'bg-[#FFFCFA]' : 'bg-white'}`}
-                            >
-                              {/* ICON */}
-                              <div className={`relative mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${notification.isRead ? 'bg-[#F7EEE7] text-[#806C63]' : 'bg-[#F8E8E5] text-[#A51D26]'}`}>
-                                <Icon size={17} strokeWidth={1.8} />
-
-                                {!notification.isRead && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#A51D26]" />}
-                              </div>
-
-                              {/* CONTENT */}
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-start justify-between gap-3">
-                                  <p className={`truncate text-[11px] ${notification.isRead ? 'font-semibold text-[#493631]' : 'font-extrabold text-[#351C18]'}`}>{notification.title}</p>
-
-                                  <span className="shrink-0 text-[8px] font-medium text-[#A8968D]">{formatNotificationDate(notification.createdAt)}</span>
-                                </div>
-
-                                <p className="mt-1 line-clamp-2 text-[10px] leading-4 text-[#806C63]">{notification.message}</p>
-
-                                {notification.orderId && (
-                                  <span className="mt-2 inline-flex items-center gap-1 text-[9px] font-extrabold text-[#A51D26]">
-                                    View order
-                                    <ArrowRight size={10} />
-                                  </span>
-                                )}
-                              </div>
-                            </button>
-                          )
-                        })}
-                      </div>
-                    )}
-
-                    {/* FOOTER */}
-                    {notifications.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setNotificationOpen(false)
-                          setAccountOpen(false)
-                          navigate('/notifications')
-                        }}
-                        className="flex w-full items-center justify-center gap-2 border-t border-[#EEE5DF] bg-[#FFFCFA] px-5 py-4 text-[10px] font-extrabold text-[#A51D26] transition-colors duration-200 hover:bg-[#F8ECE6]"
-                      >
-                        View all notifications
-                        <ArrowRight size={13} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* CART */}
-          {user && (
-            <button
-              type="button"
-              onClick={() => {
-                setAccountOpen(false)
-                setNotificationOpen(false)
-                navigate('/cart')
-              }}
-              className="group relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#E4D5CD] bg-[#F7EEE7] text-[#4C3630] transition-colors duration-200 hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#922A32]"
-            >
-              <ShoppingCart size={20} strokeWidth={1.9} />
-
-              <span className="absolute -right-1 -top-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#A52C35] px-1 text-[8px] font-extrabold leading-none text-white">{cart?.totalQuantity || 0}</span>
-            </button>
-          )}
         </div>
       </div>
     </header>
