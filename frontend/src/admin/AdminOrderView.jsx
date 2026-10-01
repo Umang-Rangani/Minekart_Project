@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, CheckCircle2, Clock3, CreditCard, MapPin, Package, Phone, ReceiptText, Truck, User } from 'lucide-react'
@@ -409,7 +410,7 @@ const AdminOrderView = () => {
                         <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#E3DED6] bg-[#F7F7F5]">
                           {/* src={item.image || item.productId?.images?.[0]} */}
                           {item.image || item.productId?.images?.[0] ? (
-                            <img src={`${import.meta.env.VITE_API_URL}${item.image || item.productId?.images?.[0]}`} alt={item.productName} className="h-full w-full object-contain" />
+                            <img src={getImageUrl(item.image || item.productId?.images?.[0])} alt={item.productName} className="h-full w-full object-contain" />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center text-[#99938B]">
                               <Package size={22} />

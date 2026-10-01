@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Plus, X } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -30,16 +31,6 @@ export default function AdminBrandForm() {
   const fileInputRef = useRef(null)
 
   //  IMAGE URL
-  const getImageUrl = (image) => {
-    if (!image) return ''
-
-    if (image.startsWith('http')) {
-      return image
-    }
-
-    return `${import.meta.env.VITE_API_URL}${image}`
-  }
-
   //  GET BRAND
   const getBrand = async () => {
     try {

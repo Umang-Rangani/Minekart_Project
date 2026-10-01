@@ -4,10 +4,11 @@ var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 var cors = require('cors')
-var mongoose = require('mongoose')
 var dotenv = require('dotenv')
 
 dotenv.config()
+
+var connectDB = require('./utils/db')
 
 var indexRouter = require('./routes/index')
 var uploadRouter = require('./routes/upload')
@@ -21,6 +22,7 @@ var cartRouter = require('./routes/cart')
 var addressRouter = require('./routes/address')
 var paymentRouter = require('./routes/payment')
 var orderRouter = require('./routes/order')
+var realtimeRouter = require('./routes/realtime')
 
 const adminOrderRoutes = require('./routes/adminOrderRoutes')
 const adminDashboard = require('./routes/adminDashboard')
@@ -29,15 +31,10 @@ const notification = require('./routes/notification')
 
 var app = express()
 
-console.log('EMAIL_USER:', process.env.EMAIL_USER)
-console.log('EMAIL_PASS exists:', !!process.env.EMAIL_PASS)
-console.log('EMAIL_BCC:', process.env.EMAIL_BCC)
-console.log('ALLOWED_ORIGIN:', process.env.ALLOWED_ORIGIN)
+// Vercel terminates TLS in front of the function, needed for secure cookies
+app.set('trust proxy', 1)
 
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'jade')
-
-app.use(logger('dev'))
+app.use(logger(process.env.NODE_ENV === 'production' ? 'tiny' : 'dev'))
 
 app.use(
   express.json({
@@ -58,31 +55,41 @@ app.use(
 
 app.use(cookieParser())
 
+const defaultOrigins = ['http://localhost:5173', 'https://minekart.vercel.app']
+
 const allowedOrigins = process.env.ALLOWED_ORIGIN
-  ? process.env.ALLOWED_ORIGIN.split(',').map((origin) => origin.trim())
-  : []
+  ? process.env.ALLOWED_ORIGIN.split(',').map((origin) => origin.trim().replace(/\/$/, ''))
+  : defaultOrigins
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) {
+      if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true)
       }
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true)
-      }
-
-      return callback(new Error('Not allowed by CORS'))
+      return callback(createError(403, `Origin ${origin} is not allowed by CORS`))
     },
     credentials: true,
   }),
 )
 
-app.use(
-  '/uploads',
-  express.static(path.join(__dirname, 'uploads')),
-)
+// Locally serves /uploads/*; on Vercel the public/ folder is served by the CDN instead
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB()
+    next()
+  } catch (error) {
+    console.error('MongoDB connection error:', error)
+
+    res.status(503).json({
+      success: false,
+      message: 'Database connection failed',
+    })
+  }
+})
 
 app.use('/', indexRouter)
 
@@ -116,37 +123,21 @@ app.use('/admin-notification', adminNotification)
 
 app.use('/notification', notification)
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('MongoDB connected successfully')
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err)
-  })
+app.use('/realtime', realtimeRouter)
 
 app.use(function (req, res, next) {
   next(createError(404))
 })
 
 app.use(function (err, req, res, next) {
-  console.error(err)
+  if (!err.status || err.status >= 500) {
+    console.error(err)
+  }
 
-  res.locals.message = err.message
-
-  res.locals.error =
-    req.app.get('env') === 'development'
-      ? err
-      : {}
-
-  res.status(err.status || 500)
-
-  res.render('error')
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal server error',
+  })
 })
 
 module.exports = app
-
-
-
-// ${import.meta.env.VITE_API_URL}
-// http://localhost:3000

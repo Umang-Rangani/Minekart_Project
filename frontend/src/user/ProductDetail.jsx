@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ShoppingCart, Star, Minus, Plus, Trash2, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, ChevronRight, Tag, AlertCircle, PackageCheck, XCircle, PackageOpen } from 'lucide-react'
@@ -404,7 +405,7 @@ export default function ProductDetail() {
                         }`}
                       >
                         <img
-                          src={`${import.meta.env.VITE_API_URL}${image}`}
+                          src={getImageUrl(image)}
                           alt={`${product.productName} ${index + 1}`}
                           className={`h-full w-full object-contain transition-transform duration-300 ${isDisabled ? 'grayscale opacity-50' : 'group-hover:scale-105'}`}
                         />
@@ -423,7 +424,7 @@ export default function ProductDetail() {
 
                   {selectedImage ? (
                     <img
-                      src={`${import.meta.env.VITE_API_URL}${selectedImage}`}
+                      src={getImageUrl(selectedImage)}
                       alt={product.productName}
                       className={`relative z-10 max-h-118 w-full object-contain transition-transform duration-500 ${isDisabled ? 'grayscale opacity-50' : 'hover:scale-[1.035]'}`}
                     />
@@ -868,7 +869,7 @@ export default function ProductDetail() {
 
                       {item.images?.length > 0 ? (
                         <img
-                          src={`${import.meta.env.VITE_API_URL}${item.images[0]}`}
+                          src={getImageUrl(item.images[0])}
                           alt={item.productName}
                           className={`h-full w-full object-contain transition-transform duration-500 ${itemDisabled ? 'grayscale opacity-45' : 'group-hover:scale-105'}`}
                         />

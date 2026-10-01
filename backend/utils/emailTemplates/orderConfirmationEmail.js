@@ -1,4 +1,4 @@
-export const orderConfirmationEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax, totalAmount, paymentMethod, shippingAddress }) => {
+const orderConfirmationEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax, totalAmount, paymentMethod, shippingAddress }) => {
   const formatPrice = (price) => `₹${Number(price || 0).toLocaleString('en-IN')}`
 
   const itemRows = (items || [])
@@ -797,3 +797,5 @@ export const orderConfirmationEmail = ({ name, orderId, items, subtotal, deliver
 </html>
 `
 }
+
+module.exports = { orderConfirmationEmail }

@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
 import { Link } from 'react-router-dom'
@@ -91,7 +92,7 @@ export default function BrandList() {
 
                       {value.brandLogo ? (
                         <img
-                          src={`${import.meta.env.VITE_API_URL}${value.brandLogo}`}
+                          src={getImageUrl(value.brandLogo)}
                           alt={value.brandName}
                           className={`relative z-10 h-12 w-full object-contain sm:h-14 ${isDisabled ? 'grayscale opacity-45 ' : 'transition-transform duration-300 group-hover:scale-105'}`}
                         />

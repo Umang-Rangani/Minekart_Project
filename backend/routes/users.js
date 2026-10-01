@@ -7,6 +7,7 @@ const authMiddleware = require('../middleware/authMiddleware')
 const User = require('../model/users')
 const { sendEmail } = require('../utils/sendEmail')
 const { welcomeEmail } = require('../utils/emailTemplates/welcomeEmail')
+const { authCookieOptions, AUTH_COOKIE_MAX_AGE } = require('../utils/cookieOptions')
 
 /* GET users listing. */
 
@@ -69,21 +70,22 @@ router.post('/register', async (req, res) => {
     const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
     res.cookie('token', token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      ...authCookieOptions,
+      maxAge: AUTH_COOKIE_MAX_AGE,
     })
 
     const html = welcomeEmail(newUser.name)
 
-    // console.log('📧 Sending welcome email to:', newUser.email)
+    try {
+      await sendEmail({
+        to: email.toLowerCase(),
+        subject: 'Welcome to MineKart 🎉',
+        html,
+      })
+    } catch (emailError) {
+      console.error('⚠️ Welcome email failed:', emailError.message)
+    }
 
-    await sendEmail({
-      to: email.toLowerCase(),
-      subject: 'Welcome to MineKart 🎉',
-      html,
-    })
     return res.status(201).json({
       success: true,
       message: 'User registered successfully',
@@ -156,10 +158,8 @@ router.post('/login', async (req, res) => {
 
     // Store token in cookie
     res.cookie('token', token, {
-      httpOnly: false,
-      secure: true,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      ...authCookieOptions,
+      maxAge: AUTH_COOKIE_MAX_AGE,
     })
     return res.status(200).json({
       success: true,
@@ -187,11 +187,7 @@ router.post('/login', async (req, res) => {
 // ! logout
 router.post('/logout', (req, res) => {
   try {
-    res.clearCookie('token', {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-    })
+    res.clearCookie('token', authCookieOptions)
 
     return res.status(200).json({
       success: true,

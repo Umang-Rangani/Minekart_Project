@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
@@ -40,16 +41,6 @@ export default function AdminUsers() {
   }
 
   // Image URL
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return ''
-
-    if (imagePath.startsWith('http')) {
-      return imagePath
-    }
-
-    return `${import.meta.env.VITE_API_URL}${imagePath}`
-  }
-
   useEffect(() => {
     getUsers()
   }, [])

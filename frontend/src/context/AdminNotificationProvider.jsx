@@ -1,15 +1,15 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { io } from 'socket.io-client'
 import { axiosInstance } from '../config/axiosConfig'
+import { useUser } from './userProvider'
+import { ADMIN_CHANNEL, POLL_INTERVAL, subscribeToChannel } from '../utils/realtime'
 
 const AdminNotificationContext = createContext(null)
 
-const socket = io(import.meta.env.VITE_API_URL || '${import.meta.env.VITE_API_URL}', {
-  withCredentials: true,
-  autoConnect: false,
-})
-
 export const AdminNotificationProvider = ({ children }) => {
+  const { user, loading: userLoading } = useUser()
+
+  const isAdmin = user?.role === 'Admin'
+
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -30,26 +30,54 @@ export const AdminNotificationProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    if (userLoading) {
+      return
+    }
+
+    if (!isAdmin) {
+      setNotifications([])
+      setUnreadCount(0)
+      setLoading(false)
+      return
+    }
+
     fetchNotifications()
-  }, [])
+  }, [isAdmin, userLoading])
 
   useEffect(() => {
+    if (!isAdmin) {
+      return
+    }
+
+    let cancelled = false
+    let unsubscribe = null
+    let pollTimer = null
+
     const handleNewNotification = (notification) => {
       setNotifications((prev) => [notification, ...prev])
 
       setUnreadCount((prev) => prev + 1)
     }
 
-    socket.on('admin-notification:new', handleNewNotification)
+    subscribeToChannel(ADMIN_CHANNEL, 'admin-notification-new', handleNewNotification).then((unsubscribeFn) => {
+      if (cancelled) {
+        unsubscribeFn?.()
+        return
+      }
 
-    socket.connect()
+      if (unsubscribeFn) {
+        unsubscribe = unsubscribeFn
+      } else {
+        pollTimer = setInterval(fetchNotifications, POLL_INTERVAL)
+      }
+    })
 
     return () => {
-      socket.off('admin-notification:new', handleNewNotification)
-
-      socket.disconnect()
+      cancelled = true
+      unsubscribe?.()
+      clearInterval(pollTimer)
     }
-  }, [])
+  }, [isAdmin])
 
   const markAsRead = async (notificationId) => {
     try {

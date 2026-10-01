@@ -1,65 +1,15 @@
 #!/usr/bin/env node
 
+// Local development server. On Vercel, app.js is used directly as a serverless function.
+
 var app = require('../app')
 var debug = require('debug')('backend:server')
 var http = require('http')
-var { Server } = require('socket.io')
-var jwt = require('jsonwebtoken')
 
 var port = normalizePort(process.env.PORT || '3000')
 app.set('port', port)
 
 var server = http.createServer(app)
-
-var io = new Server(server, {
-  cors: {
-    origin: process.env.ALLOWED_ORIGIN || 'http://localhost:5173',
-    credentials: true,
-  },
-})
-
-app.set('io', io)
-
-io.use((socket, next) => {
-  try {
-    const token = socket.handshake.headers.cookie
-      ?.split(';')
-      .map((cookie) => cookie.trim())
-      .find((cookie) => cookie.startsWith('token='))
-      ?.slice(6)
-
-    if (!token) {
-      return next(new Error('Authentication required'))
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-    if (!decoded.userId) {
-      return next(new Error('Invalid authentication'))
-    }
-
-    socket.userId = decoded.userId
-
-    next()
-  } catch (error) {
-    console.error('Socket Authentication Error:', error.message)
-
-    next(new Error('Invalid authentication'))
-  }
-})
-
-io.on('connection', (socket) => {
-  const userId = socket.userId.toString()
-
-  socket.join(`user:${userId}`)
-
-  // console.log(`Socket connected: ${socket.id}`)
-  // console.log(`User joined room: user:${userId}`)
-
-  socket.on('disconnect', () => {
-    console.log(`Socket disconnected: ${socket.id}`)
-  })
-})
 
 server.listen(port)
 
@@ -109,5 +59,6 @@ function onListening() {
 
   var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
 
+  console.log('Server listening on ' + bind)
   debug('Listening on ' + bind)
 }

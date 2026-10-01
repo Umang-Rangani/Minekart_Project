@@ -1,4 +1,5 @@
 const express = require('express')
+const { waitUntil } = require('@vercel/functions')
 const router = express.Router()
 
 const authMiddleware = require('../middleware/authMiddleware')
@@ -115,58 +116,60 @@ router.post('/', authMiddleware, async (req, res) => {
     // Background tasks
     // --------------------------------
 
-    // Admin notification
-    try {
-      const io = req.app.get('io')
+    const runBackgroundTasks = async () => {
+      // Admin notification
+      try {
+        await createAdminNotification({
+          type: ADMIN_NOTIFICATION_TYPES.NEW_ORDER,
+          title: 'New order received',
+          message: `New order ${order.orderId} has been placed by ${user.name}.`,
+          orderId: order._id,
+          userId: user._id,
+          metadata: {
+            orderNumber: order.orderId,
+            totalAmount: order.totalAmount,
+            paymentMethod: order.paymentMethod,
+          },
+        })
 
-      await createAdminNotification({
-        type: ADMIN_NOTIFICATION_TYPES.NEW_ORDER,
-        title: 'New order received',
-        message: `New order ${order.orderId} has been placed by ${user.name}.`,
-        orderId: order._id,
-        userId: user._id,
-        metadata: {
-          orderNumber: order.orderId,
-          totalAmount: order.totalAmount,
-          paymentMethod: order.paymentMethod,
-        },
-        io,
-      })
+        console.log(`✅ Admin notification created for new order ${order.orderId}`)
+      } catch (notificationError) {
+        console.error('⚠️ Admin notification failed:', notificationError.message)
+      }
 
-      console.log(`✅ Admin notification created for new order ${order.orderId}`)
-    } catch (notificationError) {
-      console.error('⚠️ Admin notification failed:', notificationError.message)
+      // Order email
+      try {
+        const populatedOrder = await Order.findById(order._id).populate({
+          path: 'items.productId',
+          select: 'productName images price discountPrice',
+        })
+
+        const html = orderPlacedEmail({
+          name: user.name,
+          orderId: populatedOrder.orderId,
+          items: populatedOrder.items,
+          subtotal: populatedOrder.subtotal,
+          deliveryCharge: populatedOrder.deliveryCharge,
+          tax: populatedOrder.tax,
+          totalAmount: populatedOrder.totalAmount,
+          paymentMethod: populatedOrder.paymentMethod,
+          shippingAddress: populatedOrder.shippingAddress,
+        })
+
+        await sendEmail({
+          to: user.email,
+          subject: `Order Placed - ${populatedOrder.orderId} 🛍️`,
+          html,
+        })
+
+        console.log('✅ Order placed email sent')
+      } catch (emailError) {
+        console.error('⚠️ Order placed email failed:', emailError.message)
+      }
     }
 
-    // Order email
-    try {
-      const populatedOrder = await Order.findById(order._id).populate({
-        path: 'items.productId',
-        select: 'productName images price discountPrice',
-      })
-
-      const html = orderPlacedEmail({
-        name: user.name,
-        orderId: populatedOrder.orderId,
-        items: populatedOrder.items,
-        subtotal: populatedOrder.subtotal,
-        deliveryCharge: populatedOrder.deliveryCharge,
-        tax: populatedOrder.tax,
-        totalAmount: populatedOrder.totalAmount,
-        paymentMethod: populatedOrder.paymentMethod,
-        shippingAddress: populatedOrder.shippingAddress,
-      })
-
-      await sendEmail({
-        to: user.email,
-        subject: `Order Placed - ${populatedOrder.orderId} 🛍️`,
-        html,
-      })
-
-      console.log('✅ Order placed email sent')
-    } catch (emailError) {
-      console.error('⚠️ Order placed email failed:', emailError.message)
-    }
+    // Keeps the Vercel function alive until background work finishes
+    waitUntil(runBackgroundTasks())
   } catch (error) {
     console.log('Create Order Error:', error)
 

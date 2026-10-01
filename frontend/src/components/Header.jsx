@@ -8,7 +8,7 @@ import { useCart } from '../context/CartProvider'
 import { useNotifications } from '../context/NotificationProvider'
 
 const getNotificationIcon = (type) => {
-  if (['ORDER_PLACED', 'ORDER_CONFIRMED', 'ORDER_PACKED', 'ORDER_SHIPPED', 'OUT_FOR_DELIVERY', 'ORDER_DELIVERED', 'ORDER_CANCELLED'].includes(type)) {
+  if (['ORDER_PLACED', 'ORDER_CONFIRMED', 'ORDER_PACKED', 'ORDER_SHIPPED', 'OUT_FOR_DELIVERY', 'ORDER_DELIVERED', 'ORDER_CANCELLED'].includes(tyjpe)) {
     return Package
   }
 
@@ -243,7 +243,7 @@ export default function Header() {
                   <div className="border-b border-[#EEE5DF] bg-linear-to-br from-[#FBF5F0] to-[#F7EEE7] px-4 py-4">
                     <div className="flex items-center gap-3">
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm">
-                        {user.avatar ? <img src={`${import.meta.env.VITE_API_URL}${user.avatar}`} alt={user.name} className="h-full w-full object-cover" /> : <User size={19} strokeWidth={2} />}
+                        {user.avatar ? <img src={getImageUrl(user.avatar)} alt={user.name} className="h-full w-full object-cover" /> : <User size={19} strokeWidth={2} />}
                       </div>
 
                       <div className="min-w-0 flex-1">

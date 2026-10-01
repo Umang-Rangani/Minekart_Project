@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Pencil, X, Image as ImageIcon } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -38,16 +39,6 @@ export default function AdminProductsView() {
   }, [id])
 
   // IMAGE URL
-  const getImageUrl = (image) => {
-    if (!image) return ''
-
-    if (image.startsWith('http')) {
-      return image
-    }
-
-    return `${import.meta.env.VITE_API_URL}${image}`
-  }
-
   // LOADING
   if (loading) {
     return (

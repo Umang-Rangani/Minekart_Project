@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Plus, X, ArrowLeft } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -90,16 +91,6 @@ export default function AdminProductsForm() {
   }
 
   // IMAGE URL
-  const getImageUrl = (image) => {
-    if (!image) return ''
-
-    if (image.startsWith('http')) {
-      return image
-    }
-
-    return `${import.meta.env.VITE_API_URL}${image}`
-  }
-
   // GET PRODUCT FOR EDIT
 
   const getProduct = async () => {

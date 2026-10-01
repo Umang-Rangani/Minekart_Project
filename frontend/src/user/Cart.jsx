@@ -1,3 +1,4 @@
+import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect } from 'react'
 import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag, ExternalLink, AlertCircle, CircleCheck, PackageCheck, BadgeIndianRupee, CreditCard } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -292,7 +293,7 @@ export default function Cart() {
                         >
                           {product?.images?.[0] ? (
                             <img
-                              src={`${import.meta.env.VITE_API_URL}${product.images[0]}`}
+                              src={getImageUrl(product.images[0])}
                               alt={product.productName}
                               className={`h-full w-full object-contain p-2.5 transition-transform duration-300 sm:p-3 ${disabled || stockExceeded ? 'grayscale opacity-50' : 'hover:scale-105'}`}
                             />

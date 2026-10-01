@@ -2,22 +2,30 @@
   "name": "backend",
   "version": "0.0.0",
   "private": true,
+  "type": "commonjs",
+  "main": "app.js",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "serve": "node ./bin/www"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.0",
+    "@vercel/functions": "^3.9.9",
     "bcrypt": "^6.0.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.6",
     "debug": "~2.6.9",
     "dotenv": "^17.4.2",
-    "express": "~4.16.1",
+    "express": "^4.22.3",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.5",
     "morgan": "~1.9.1",
     "multer": "^2.3.0",
     "nodemailer": "^10.0.10",
-    "socket.io": "^4.8.4"
+    "pusher": "^5.3.4"
   }
 }
