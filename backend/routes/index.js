@@ -1,9 +1,12 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+var router = express.Router()
 
-module.exports = router;
+router.get('/', function(req, res) {
+  res.json({
+    success: true,
+    message: 'MineKart API is running',
+  })
+})
+
+module.exports = router
