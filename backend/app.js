@@ -5,6 +5,7 @@ var logger = require('morgan')
 var cors = require('cors')
 var mongoose = require('mongoose')
 var dotenv = require('dotenv')
+var path = require("path")
 
 dotenv.config()
 
@@ -78,7 +79,7 @@ app.use(
 // Uploads
 app.use(
   '/uploads',
-  express.static('uploads'),
+  express.static(path.join(__dirname, 'uploads')),
 )
 
 // Routes
