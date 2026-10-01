@@ -230,6 +230,81 @@ router.get('/profile', authMiddleware, async (req, res) => {
   }
 })
 
+// ! Update Profile
+router.put('/profile', authMiddleware, async (req, res) => {
+  try {
+    const { name, email, phone, avatar, password } = req.body
+
+    // Required fields
+    if (!name || !email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name and email are required',
+      })
+    }
+
+    // Find logged-in user
+    const user = await User.findById(req.user.userId)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+
+    // Check email already used by another user
+    const existingUser = await User.findOne({
+      email: email.toLowerCase(),
+      _id: { $ne: req.user.userId },
+    })
+
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: 'User with this email already exists',
+      })
+    }
+
+    // Update basic profile details
+    user.name = name.trim()
+    user.email = email.toLowerCase().trim()
+    user.phone = phone?.trim() || ''
+    user.avatar = avatar || ''
+
+    // Update password only if provided
+    if (password && password.trim()) {
+      user.password = await bcrypt.hash(password.trim(), 10)
+    }
+
+    await user.save()
+
+    // Return user without password
+    const updatedUser = await User.findById(user._id).select('-password')
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: updatedUser,
+    })
+  } catch (error) {
+    console.error('Update Profile Error:', error)
+
+    // Duplicate email safety
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: 'User with this email already exists',
+      })
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to update profile',
+    })
+  }
+})
+
 // ! Admin Activate / Deactivate
 router.put('/:id', async (req, res) => {
   try {

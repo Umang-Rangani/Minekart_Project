@@ -26,10 +26,8 @@ export default function NotFoundPage() {
       {/* Main */}
       <main className="relative z-10 flex min-h-screen items-center px-5 py-10 sm:px-8 lg:px-14">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-10 lg:flex-row lg:gap-16">
-
           {/* LEFT - Illustration */}
           <div className="relative flex h-80 w-full items-center justify-center sm:h-105 lg:h-125 lg:w-[52%]">
-
             {/* Glow */}
             <div className="absolute h-60 w-60 rounded-full bg-[#A51D26]/8 blur-[70px] sm:h-80 sm:w-80 lg:h-105 lg:w-105" />
 
@@ -40,9 +38,7 @@ export default function NotFoundPage() {
 
             {/* 404 Badge */}
             <div className="absolute left-[13%] top-[13%] flex h-16 w-16 rotate-[-10deg] items-center justify-center rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_12px_30px_rgba(73,54,49,0.08)] sm:left-[17%] sm:top-[14%] sm:h-20 sm:w-20">
-              <span className="text-lg font-black tracking-tight text-[#A51D26] sm:text-xl">
-                404
-              </span>
+              <span className="text-lg font-black tracking-tight text-[#A51D26] sm:text-xl">404</span>
             </div>
 
             {/* Small Shopping Icon */}
@@ -52,11 +48,7 @@ export default function NotFoundPage() {
 
             {/* Cart */}
             <div className="relative z-10 animate-[cartFloat_4s_ease-in-out_infinite]">
-              <img
-                src="/cart_image.jpg"
-                alt="MineKart"
-                className="h-70 w-70 object-contain drop-shadow-[0_30px_30px_rgba(73,54,49,0.18)] sm:h-90 sm:w-90 lg:h-110 lg:w-110"
-              />
+              <img src="/cart_image.jpg" alt="MineKart" className="h-70 w-70 object-contain drop-shadow-[0_30px_30px_rgba(73,54,49,0.18)] sm:h-90 sm:w-90 lg:h-110 lg:w-110" />
             </div>
 
             {/* Ground Shadow */}
@@ -70,14 +62,11 @@ export default function NotFoundPage() {
 
           {/* RIGHT - Content */}
           <div className="flex w-full max-w-xl flex-col items-center text-center lg:w-[48%] lg:items-start lg:text-left">
-
             {/* Small Label */}
             <div className="mb-5 flex items-center gap-3">
               <span className="h-px w-8 bg-[#A51D26]" />
 
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#907A70]">
-                Oops! Something went missing
-              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#907A70]">Oops! Something went missing</span>
 
               <span className="h-px w-8 bg-[#A51D26] lg:hidden" />
             </div>
@@ -102,27 +91,16 @@ export default function NotFoundPage() {
             </h2>
 
             {/* Description */}
-            <p className="mt-5 max-w-md text-sm leading-7 text-[#806C63] sm:text-base">
-              Looks like the page you're looking for isn't here. It may have
-              moved, disappeared, or taken a little shopping break.
-            </p>
+            <p className="mt-5 max-w-md text-sm leading-7 text-[#806C63] sm:text-base">Looks like the page you're looking for isn't here. It may have moved, disappeared, or taken a little shopping break.</p>
 
             {/* Buttons */}
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-
-              <Link
-                to="/"
-                className="group inline-flex h-12 items-center justify-center gap-2.5 rounded-xl bg-[#A51D26] px-6 text-sm font-bold text-white shadow-[0_10px_25px_rgba(165,29,38,0.18)] transition-colors duration-200 hover:bg-[#8E181F]"
-              >
+              <Link to="/" className="group inline-flex h-12 items-center justify-center gap-2.5 rounded-xl bg-[#A51D26] px-6 text-sm font-bold text-white shadow-[0_10px_25px_rgba(165,29,38,0.18)] transition-colors duration-200 hover:bg-[#8E181F]">
                 <Home size={17} strokeWidth={2} />
 
                 <span>Back to Home</span>
 
-                <ArrowRight
-                  size={16}
-                  strokeWidth={2}
-                  className="transition-transform duration-200 group-hover:translate-x-0.5"
-                />
+                <ArrowRight size={16} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
 
               <button
@@ -140,19 +118,13 @@ export default function NotFoundPage() {
             <div className="mt-7 flex items-center gap-2 text-xs text-[#A08C82]">
               <Search size={14} strokeWidth={1.8} />
 
-              <span>
-                Or head back and continue shopping
-              </span>
+              <span>Or head back and continue shopping</span>
             </div>
 
             {/* Mini Brand */}
             <div className="mt-9 flex items-center gap-2.5 border-t border-[#E8DDD4] pt-5">
               <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg border border-[#E4CFC5] bg-[#F6E9E0]">
-                <img
-                  src="/cart_image.jpg"
-                  alt="MineKart"
-                  className="h-7 w-7 object-contain"
-                />
+                <img src="/cart_image.jpg" alt="MineKart" className="h-7 w-7 object-contain" />
               </div>
 
               <div className="text-left leading-none">
@@ -160,9 +132,7 @@ export default function NotFoundPage() {
                   Mine<span className="text-[#A51D26]">Kart</span>
                 </p>
 
-                <p className="mt-1 text-[7px] font-bold tracking-[0.18em] text-[#967E74]">
-                  SHOP MORE • LIVE BETTER
-                </p>
+                <p className="mt-1 text-[7px] font-bold tracking-[0.18em] text-[#967E74]">SHOP MORE • LIVE BETTER</p>
               </div>
             </div>
           </div>
