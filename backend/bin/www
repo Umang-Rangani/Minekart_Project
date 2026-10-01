@@ -18,6 +18,8 @@ var io = new Server(server, {
   },
 })
 
+
+
 app.set('io', io)
 
 io.use((socket, next) => {
