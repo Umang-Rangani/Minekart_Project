@@ -119,7 +119,6 @@ router.post('/', async (req, res) => {
 
 // UPDATE CATEGORY
 // PUT /Category/:id
-
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params

@@ -1,5 +1,5 @@
 import { getImageUrl } from '../utils/imageUrl'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag, ExternalLink, AlertCircle, CircleCheck, PackageCheck, BadgeIndianRupee, CreditCard } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
@@ -11,6 +11,10 @@ export default function Cart() {
   const navigate = useNavigate()
 
   const { cart, cartLoading, increaseCartItem, decreaseCartItem, removeCartItem } = useCart()
+
+  // quantity board ma loading
+  const [updatingItem, setUpdatingItem] = useState(null)
+  const getItemKey = (item) => `${item.productId?._id}-${item.size || 'no-size'}`
 
   const cartItems = cart?.items || []
 
@@ -86,11 +90,16 @@ export default function Cart() {
 
   const decreaseQuantity = async (item) => {
     const product = item.productId
+    const itemKey = getItemKey(item)
 
     if (isItemDisabled(item)) {
       toast.error('This product is currently unavailable')
       return
     }
+
+    if (updatingItem === itemKey) return
+
+    setUpdatingItem(itemKey)
 
     try {
       const res = await decreaseCartItem({
@@ -103,6 +112,8 @@ export default function Cart() {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Unable to decrease quantity')
+    } finally {
+      setUpdatingItem(null)
     }
   }
 
@@ -139,7 +150,7 @@ export default function Cart() {
             <div className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
               <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
 
-              <ShoppingBag size={16} strokeWidth={1.9} className="relative z-10 sm:h-18 sm:w-18" />
+              <ShoppingBag size={18} strokeWidth={1.9} className="relative z-10 " />
             </div>
 
             <div className="min-w-0">
@@ -343,7 +354,8 @@ export default function Cart() {
                           </div>
 
                           {/* SIZE + STOCK */}
-                          <div className="flex flex-wrap items-center gap-1.5 sm:gap-5">
+                          <div className="flex flex-wrap items-end gap-x-2 gap-y-1.5 sm:items-center sm:gap-5">
+                            {/* SIZE */}
                             {item.size && (
                               <div
                                 className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[8px] font-semibold sm:mt-2 sm:px-2 sm:py-1 sm:text-[9px] ${
@@ -355,7 +367,8 @@ export default function Cart() {
                               </div>
                             )}
 
-                            <div className="mt-1.5 flex flex-wrap items-center gap-1.5 sm:mt-2 sm:gap-2">
+                            {/* STOCK - DESKTOP ONLY */}
+                            <div className="mt-1.5 hidden flex-wrap items-center gap-1.5 sm:mt-2 sm:flex sm:gap-2">
                               {disabled ? (
                                 <span className="inline-flex items-center gap-1 rounded-md bg-[#E7E7E7] px-1.5 py-0.5 text-[7px] font-bold text-[#888888] sm:px-2 sm:py-1 sm:text-[8px]">
                                   <AlertCircle size={9} />
@@ -378,38 +391,48 @@ export default function Cart() {
                                 </span>
                               )}
                             </div>
+
+                            {/* MOBILE PRICE */}
+                            <div className="mt-1 flex w-full items-end gap-2 sm:hidden">
+                              <p className={`text-[7px] font-bold uppercase leading-none tracking-wider ${disabled || stockExceeded ? 'text-[#999999]' : 'text-[#9A857B]'}`}>PRICE</p>
+
+                              <div className="flex items-end gap-1 leading-none">
+                                <span className={`text-base font-extrabold leading-none ${disabled || stockExceeded ? 'text-[#777777]' : 'text-[#351C18]'}`}>₹{unitPrice.toLocaleString('en-IN')}</span>
+
+                                {originalPrice > unitPrice && <span className={`text-[8px] font-medium leading-none line-through ${disabled || stockExceeded ? 'text-[#AAAAAA]' : 'text-[#9A857B]'}`}>₹{originalPrice.toLocaleString('en-IN')}</span>}
+                              </div>
+                            </div>
                           </div>
 
                           {/* PRICE + QUANTITY */}
-                          <div className={`mt-2.5 flex flex-wrap items-end justify-between gap-2 border-t pt-2.5 sm:mt-3 sm:gap-3 sm:pt-3 ${disabled || stockExceeded ? 'border-[#D9D9D9]' : 'border-[#F0E7E1]'}`}>
-                            {/* PRICE */}
-                            <div>
-                              <p className={`text-[7px] font-bold uppercase tracking-wider sm:text-[8px] ${disabled || stockExceeded ? 'text-[#999999]' : 'text-[#9A857B]'}`}>Price</p>
+                          <div className={`mt-2.5 flex items-center justify-between gap-2 border-t pt-2.5 sm:mt-3 sm:items-end sm:gap-3 sm:pt-3 ${disabled || stockExceeded ? 'border-[#D9D9D9]' : 'border-[#F0E7E1]'}`}>
+                            {/* DESKTOP PRICE */}
+                            <div className="hidden sm:block">
+                              <p className={`text-[8px] font-bold uppercase tracking-wider ${disabled || stockExceeded ? 'text-[#999999]' : 'text-[#9A857B]'}`}>Price</p>
 
                               <div className="mt-0.5 flex flex-wrap items-center gap-1">
-                                <span className={`text-sm font-extrabold sm:text-base ${disabled || stockExceeded ? 'text-[#777777]' : 'text-[#351C18]'}`}>₹{unitPrice.toLocaleString('en-IN')}</span>
+                                <span className={`text-base font-extrabold ${disabled || stockExceeded ? 'text-[#777777]' : 'text-[#351C18]'}`}>₹{unitPrice.toLocaleString('en-IN')}</span>
 
-                                {originalPrice > unitPrice && <span className={`text-[8px] line-through sm:text-[9px] ${disabled || stockExceeded ? 'text-[#AAAAAA]' : 'text-[#9A857B]'}`}>₹{originalPrice.toLocaleString('en-IN')}</span>}
+                                {originalPrice > unitPrice && <span className={`text-[9px] line-through ${disabled || stockExceeded ? 'text-[#AAAAAA]' : 'text-[#9A857B]'}`}>₹{originalPrice.toLocaleString('en-IN')}</span>}
                               </div>
                             </div>
 
                             {/* QUANTITY + TOTAL */}
-                            <div className="flex items-end gap-2 sm:gap-3">
-                              <div className={`flex h-7 overflow-hidden rounded-lg border sm:h-8 ${disabled || stockExceeded ? 'border-[#D1D1D1] bg-[#EAEAEA]' : 'border-[#DCCFC7] bg-white'}`}>
+                            <div className="flex w-full items-center justify-between sm:w-auto sm:items-end sm:gap-3">
+                              {/* QUANTITY */}
+                              <div className={`flex h-8 overflow-hidden rounded-lg border ${disabled || stockExceeded ? 'border-[#D1D1D1] bg-[#EAEAEA]' : 'border-[#DCCFC7] bg-white'}`}>
                                 <button
                                   type="button"
                                   onClick={() => decreaseQuantity(item)}
-                                  disabled={disabled}
-                                  className={`flex w-7 items-center justify-center border-r sm:w-8 ${disabled ? 'cursor-not-allowed border-[#D1D1D1] text-[#999999]' : 'border-[#DCCFC7] text-[#67544D] hover:bg-[#F7EEE7] hover:text-[#8E181F]'}`}
-                                >
-                                  {item.quantity === 1 ? <Trash2 size={11} /> : <Minus size={11} />}
-                                </button>
-
-                                <span
-                                  className={`flex min-w-7 items-center justify-center border-x text-[10px] font-extrabold sm:min-w-9 sm:text-[11px] ${
-                                    disabled || stockExceeded ? 'border-[#D1D1D1] text-[#888888]' : 'border-[#DCCFC7] text-[#351C18]'
+                                  disabled={disabled || updatingItem === getItemKey(item)}
+                                  className={`flex w-8 items-center justify-center border-r ${
+                                    disabled || updatingItem === getItemKey(item) ? 'cursor-not-allowed border-[#D1D1D1] text-[#999999]' : 'border-[#DCCFC7] text-[#67544D] hover:bg-[#F7EEE7] hover:text-[#8E181F]'
                                   }`}
                                 >
+                                  {updatingItem === getItemKey(item) ? <span className="h-3 w-3 animate-spin rounded-full border-2 border-[#D8CBC4] border-t-[#8E181F]" /> : item.quantity === 1 ? <Trash2 size={11} /> : <Minus size={11} />}
+                                </button>
+
+                                <span className={`flex min-w-9 items-center justify-center border-x text-[10px] font-extrabold ${disabled || stockExceeded ? 'border-[#D1D1D1] text-[#888888]' : 'border-[#DCCFC7] text-[#351C18]'}`}>
                                   {item.quantity}
                                 </span>
 
@@ -417,16 +440,24 @@ export default function Cart() {
                                   type="button"
                                   onClick={() => increaseQuantity(item)}
                                   disabled={disabled || item.quantity >= (product?.stock || 0)}
-                                  className={`flex w-7 items-center justify-center sm:w-8 ${disabled || item.quantity >= (product?.stock || 0) ? 'cursor-not-allowed text-[#999999]' : 'text-[#8E181F] hover:bg-[#F7EEE7]'}`}
+                                  className={`flex w-8 items-center justify-center ${disabled || item.quantity >= (product?.stock || 0) ? 'cursor-not-allowed text-[#999999]' : 'text-[#8E181F] hover:bg-[#F7EEE7]'}`}
                                 >
                                   <Plus size={11} />
                                 </button>
                               </div>
 
-                              <div className="min-w-14 text-right sm:min-w-20">
-                                <p className="text-[7px] font-bold uppercase tracking-wider text-[#9A857B] sm:text-[8px]">Total</p>
+                              {/* MOBILE TOTAL */}
+                              <div className="text-right sm:hidden">
+                                <p className="text-[7px] font-bold uppercase tracking-wider text-[#9A857B]">Total</p>
 
-                                <p className={`text-xs font-extrabold sm:text-sm ${disabled || stockExceeded ? 'text-[#777777]' : 'text-[#8E181F]'}`}>₹{itemTotal.toLocaleString('en-IN')}</p>
+                                <p className={`text-sm font-extrabold ${disabled || stockExceeded ? 'text-[#777777]' : 'text-[#8E181F]'}`}>₹{itemTotal.toLocaleString('en-IN')}</p>
+                              </div>
+
+                              {/* DESKTOP TOTAL */}
+                              <div className="hidden min-w-20 text-right sm:block">
+                                <p className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Total</p>
+
+                                <p className={`text-sm font-extrabold ${disabled || stockExceeded ? 'text-[#777777]' : 'text-[#8E181F]'}`}>₹{itemTotal.toLocaleString('en-IN')}</p>
                               </div>
                             </div>
                           </div>

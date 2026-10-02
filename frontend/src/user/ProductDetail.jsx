@@ -356,6 +356,10 @@ export default function ProductDetail() {
 
   const items = [
     {
+      title: 'Products',
+      link: '/products',
+    },
+    {
       title: product.category?.categoryName,
       link: `/category/${product.category?._id}/products`,
     },
@@ -404,11 +408,7 @@ export default function ProductDetail() {
                           isDisabled ? 'cursor-not-allowed border-[#D9D9D9] bg-[#F3F3F3]' : selected ? 'border-[#A51D26] bg-[#FFF8F5] shadow-sm ring-1 ring-[#A51D26]/20' : 'border-[#E8DDD4] bg-white hover:border-[#CDAFA4] hover:shadow-sm'
                         }`}
                       >
-                        <img
-                          src={getImageUrl(image)}
-                          alt={`${product.productName} ${index + 1}`}
-                          className={`h-full w-full object-contain transition-transform duration-300 ${isDisabled ? 'grayscale opacity-50' : 'group-hover:scale-105'}`}
-                        />
+                        <img src={getImageUrl(image)} alt={`${product.productName} ${index + 1}`} className={`h-full w-full object-contain transition-transform duration-300 ${isDisabled ? 'grayscale opacity-50' : 'group-hover:scale-105'}`} />
 
                         {!isDisabled && selected && <span className="absolute bottom-0.5 left-1/2 h-0.5 w-7 -translate-x-1/2 rounded-full bg-[#A51D26]" />}
                       </button>
@@ -423,11 +423,7 @@ export default function ProductDetail() {
                   <div className={`pointer-events-none absolute -bottom-24 -left-20 h-56 w-56 rounded-full ${isDisabled ? 'bg-[#E2E2E2]' : 'bg-[#D4A373]/[0.035]'}`} />
 
                   {selectedImage ? (
-                    <img
-                      src={getImageUrl(selectedImage)}
-                      alt={product.productName}
-                      className={`relative z-10 max-h-118 w-full object-contain transition-transform duration-500 ${isDisabled ? 'grayscale opacity-50' : 'hover:scale-[1.035]'}`}
-                    />
+                    <img src={getImageUrl(selectedImage)} alt={product.productName} className={`relative z-10 max-h-118 w-full object-contain transition-transform duration-500 ${isDisabled ? 'grayscale opacity-50' : 'hover:scale-[1.035]'}`} />
                   ) : (
                     <div className="flex flex-col items-center justify-center text-[#888888]">
                       <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E5E5E5]">
@@ -868,11 +864,7 @@ export default function ProductDetail() {
                       )}
 
                       {item.images?.length > 0 ? (
-                        <img
-                          src={getImageUrl(item.images[0])}
-                          alt={item.productName}
-                          className={`h-full w-full object-contain transition-transform duration-500 ${itemDisabled ? 'grayscale opacity-45' : 'group-hover:scale-105'}`}
-                        />
+                        <img src={getImageUrl(item.images[0])} alt={item.productName} className={`h-full w-full object-contain transition-transform duration-500 ${itemDisabled ? 'grayscale opacity-45' : 'group-hover:scale-105'}`} />
                       ) : (
                         <div className={`flex flex-col items-center gap-1.5 ${itemDisabled ? 'text-[#999999]' : 'text-[#A28E85]'}`}>
                           <Info size={25} strokeWidth={1.5} />

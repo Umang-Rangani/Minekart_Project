@@ -1,36 +1,36 @@
 import React from 'react'
-import { Mail, Phone, MapPin, ArrowRight, Globe, Camera, MessageCircle, Play, ShoppingBag, UserRound, RotateCcw } from 'lucide-react'
+import { Mail, Phone, MapPin, ArrowRight, Globe, Camera, MessageCircle, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function Footer() {
   return (
     <footer className="bg-[#351C18] text-white">
       {/* Main Footer */}
-      <div className="mx-auto max-w-[1600px] px-5 py-12 sm:px-7 lg:py-14">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-14">
+      <div className="mx-auto max-w-[1600px] px-5 py-9 sm:px-7 sm:py-12 lg:py-14">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4 lg:gap-14">
           {/* Brand */}
-          <div>
-            <Link to="/" className="group inline-flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#B5262D] shadow-lg shadow-black/20 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-105">
-                <span className="text-lg font-extrabold">M</span>
+          <div className="text-center sm:text-left">
+            <Link to="/" className="group inline-flex items-center gap-2.5 sm:gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#B5262D] shadow-lg shadow-black/20 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-105 sm:h-11 sm:w-11">
+                <span className="text-base font-extrabold sm:text-lg">M</span>
               </div>
 
-              <span className="text-2xl font-extrabold tracking-tight">
+              <span className="text-xl font-extrabold tracking-tight sm:text-2xl">
                 Mine
                 <span className="text-[#E17B7F]">Kart</span>
               </span>
             </Link>
 
-            <p className="mt-5 max-w-sm text-sm leading-6 text-[#D4C4BD]">Your trusted online shopping destination for fashion, electronics, mobiles, home products and more.</p>
+            <p className="mx-auto mt-4 max-w-sm text-xs leading-5 text-[#D4C4BD] sm:mx-0 sm:mt-5 sm:text-sm sm:leading-6">Your trusted online shopping destination for fashion, electronics, mobiles, home products and more.</p>
 
             {/* Social */}
-            <div className="mt-6 flex items-center gap-2.5">
+            <div className="mt-5 flex items-center justify-center gap-2 sm:mt-6 sm:justify-start sm:gap-2.5">
               <Link
                 to="/"
                 aria-label="MineKart"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[#D4C4BD] transition-all duration-300 hover:-translate-y-1 hover:border-[#A51D26] hover:bg-[#8E181F] hover:text-white"
               >
-                <Globe size={17} />
+                <Globe size={16} />
               </Link>
 
               <Link
@@ -38,7 +38,7 @@ export default function Footer() {
                 aria-label="Profile"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[#D4C4BD] transition-all duration-300 hover:-translate-y-1 hover:border-[#A51D26] hover:bg-[#8E181F] hover:text-white"
               >
-                <Camera size={17} />
+                <Camera size={16} />
               </Link>
 
               <Link
@@ -46,7 +46,7 @@ export default function Footer() {
                 aria-label="Orders"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[#D4C4BD] transition-all duration-300 hover:-translate-y-1 hover:border-[#A51D26] hover:bg-[#8E181F] hover:text-white"
               >
-                <MessageCircle size={17} />
+                <MessageCircle size={16} />
               </Link>
 
               <Link
@@ -54,83 +54,84 @@ export default function Footer() {
                 aria-label="Cart"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[#D4C4BD] transition-all duration-300 hover:-translate-y-1 hover:border-[#A51D26] hover:bg-[#8E181F] hover:text-white"
               >
-                <ShoppingBag size={17} />
+                <ShoppingBag size={16} />
               </Link>
             </div>
           </div>
 
           {/* Shop */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-white">Shop</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-white sm:text-sm">Shop</h3>
 
-            <div className="mt-5 space-y-3">
-              <Link to="/search?q=Mobiles" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+            <div className="mt-4 space-y-2.5 sm:mt-5 sm:space-y-3">
+              <Link to="/search?q=Mobiles" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Mobiles
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link to="/search?q=Fashion" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+              <Link to="/search?q=Fashion" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Fashion
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link to="/search?q=Electronics" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+              <Link to="/search?q=Electronics" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Electronics
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link to="/search?q=Home" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+              <Link to="/search?q=Home" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Home & Kitchen
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link to="/search?q=Best Sellers" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+              <Link to="/search?q=Best Sellers" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Best Sellers
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
           </div>
+
           {/* Customer Service */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-white">Customer Service</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-white sm:text-sm">Customer Service</h3>
 
-            <div className="mt-5 space-y-3">
-              <Link to="/customer-help" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+            <div className="mt-4 space-y-2.5 sm:mt-5 sm:space-y-3">
+              <Link to="/customer-help" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Help Center
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link to="/orders" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+              <Link to="/orders" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 My Orders
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link to="/track-order" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+              <Link to="/track-order" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Track Order
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link to="/returns" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+              <Link to="/returns" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Returns & Refunds
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
 
-              <Link to="/contact" className="group flex items-center gap-2 text-sm text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F]">
+              <Link to="/contact" className="group flex items-center gap-2 text-xs text-[#CDBDB5] transition-all duration-300 hover:translate-x-1 hover:text-[#E17B7F] sm:text-sm">
                 Contact Us
-                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
           </div>
 
           {/* Contact */}
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-white">Contact Us</h3>
+          <div className="sm:col-span-2 lg:col-span-1">
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-white sm:text-sm">Contact Us</h3>
 
-            <div className="mt-5 space-y-4">
+            <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
               {/* Location */}
-              <div className="group flex gap-3 text-sm text-[#CDBDB5]">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#D65A5F]">
-                  <MapPin size={17} />
+              <div className="group flex gap-2.5 text-xs text-[#CDBDB5] sm:gap-3 sm:text-sm">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#D65A5F] sm:h-9 sm:w-9 sm:rounded-xl">
+                  <MapPin size={16} />
                 </span>
 
                 <span className="leading-5">
@@ -141,21 +142,21 @@ export default function Footer() {
               </div>
 
               {/* Phone */}
-              <a href="tel:+919999999999" className="group flex items-center gap-3 text-sm text-[#CDBDB5] transition-colors duration-300 hover:text-white">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#D65A5F] transition-all duration-300 group-hover:bg-[#8E181F] group-hover:text-white">
-                  <Phone size={17} />
+              <a href="tel:+919999999999" className="group flex items-center gap-2.5 text-xs text-[#CDBDB5] transition-colors duration-300 hover:text-white sm:gap-3 sm:text-sm">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#D65A5F] transition-all duration-300 group-hover:bg-[#8E181F] group-hover:text-white sm:h-9 sm:w-9 sm:rounded-xl">
+                  <Phone size={16} />
                 </span>
 
                 <span>+91 99999 99999</span>
               </a>
 
               {/* Email */}
-              <a href="mailto:support@minekart.com" className="group flex items-center gap-3 text-sm text-[#CDBDB5] transition-colors duration-300 hover:text-white">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#D65A5F] transition-all duration-300 group-hover:bg-[#8E181F] group-hover:text-white">
-                  <Mail size={17} />
+              <a href="mailto:support@minekart.com" className="group flex items-center gap-2.5 text-xs text-[#CDBDB5] transition-colors duration-300 hover:text-white sm:gap-3 sm:text-sm">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#D65A5F] transition-all duration-300 group-hover:bg-[#8E181F] group-hover:text-white sm:h-9 sm:w-9 sm:rounded-xl">
+                  <Mail size={16} />
                 </span>
 
-                <span className="break-all">mansirangani@minekart.com</span>
+                <span className="break-all">mansi@minekart.com</span>
               </a>
             </div>
           </div>
@@ -164,16 +165,16 @@ export default function Footer() {
 
       {/* Trust Bar */}
       <div className="border-y border-white/10 bg-[#2C1714]">
-        <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-2 px-5 py-4 text-center sm:flex-row sm:px-7 sm:text-left">
-          <p className="text-xs text-[#BFAEA6]">Genuine Products&nbsp; • &nbsp;Secure Shopping&nbsp; • &nbsp;Easy Returns</p>
+        <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-2 px-5 py-3.5 text-center sm:flex-row sm:px-7 sm:py-4 sm:text-left">
+          <p className="text-[10px] leading-5 text-[#BFAEA6] sm:text-xs">Genuine Products&nbsp; • &nbsp;Secure Shopping&nbsp; • &nbsp;Easy Returns</p>
 
-          <p className="text-xs font-semibold text-[#D65A5F]">Shop with confidence</p>
+          <Link to={"/tictactoe"} className="text-[10px] font-semibold text-[#D65A5F] sm:text-xs">Time Pass Game</Link>
         </div>
       </div>
 
       {/* Bottom Footer */}
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-3 px-5 py-5 text-xs text-[#AFA09A] sm:flex-row sm:px-7">
+        <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-3 px-5 py-4 text-[10px] text-[#AFA09A] sm:flex-row sm:px-7 sm:py-5 sm:text-xs">
           <p>© 2026 MineKart. All rights reserved.</p>
 
           <div className="flex items-center gap-5">

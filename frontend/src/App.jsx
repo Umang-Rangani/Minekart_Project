@@ -49,6 +49,8 @@ import Notifications from './pages/Notifications.jsx'
 import AdminNotifications from './admin/AdminNotifications.jsx'
 import HeroPage from './user/HeroPage.jsx'
 import NotFoundPage from './user/NotFoundPage.jsx'
+import Products from './user/Products.jsx'
+import TicTacToe from './game/TicTacToe.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -76,6 +78,7 @@ export default function App() {
 
           <Route path="/category" element={<Categories />} />
           <Route path="/brands" element={<Brands />} />
+          <Route path="/products" element={<Products />} />
 
           <Route path="/category/:id/products" element={<CategoryProducts />} />
           <Route path="/brand/:id/products" element={<BrandProducts />} />
@@ -103,6 +106,11 @@ export default function App() {
 
           <Route path="/my-support" element={<MySupport />} />
           <Route path="/my-support/:id" element={<MySupportDetails />} />
+
+
+          <Route path="/tictactoe" element={<TicTacToe />} />
+
+
         </Route>
 
         {/*  AUTH  */}

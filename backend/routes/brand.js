@@ -1,13 +1,55 @@
 const express = require('express')
 
 const Brand = require('../model/brand')
+const Product = require('../model/product')
 
 const router = express.Router()
 
+// router.get('/', async (req, res) => {
+//   try {
+//     const data = await Brand.find().sort({ createdAt: -1 })
+
+//     res.status(200).json({
+//       success: true,
+//       data,
+//     })
+//   } catch (error) {
+//     console.log('Get brands error:', error)
+
+//     res.status(500).json({
+//       success: false,
+//       message: 'Failed to get brands',
+//     })
+//   }
+// })
 
 router.get('/', async (req, res) => {
   try {
-    const data = await Brand.find().sort({ createdAt: -1 })
+    const { category } = req.query
+
+    let data
+
+    // Category select નથી કરી
+    if (!category) {
+      data = await Brand.find({
+        status: 'Active',
+      }).sort({ createdAt: -1 })
+    }
+
+    // Category select કરી છે
+    else {
+      const products = await Product.find({
+        category,
+        status: 'Active',
+      }).select('brand')
+
+      const brandIds = [...new Set(products.map((product) => product.brand?.toString()).filter(Boolean))]
+
+      data = await Brand.find({
+        _id: { $in: brandIds },
+        status: 'Active',
+      }).sort({ createdAt: -1 })
+    }
 
     res.status(200).json({
       success: true,
@@ -22,7 +64,6 @@ router.get('/', async (req, res) => {
     })
   }
 })
-
 
 router.get('/:id', async (req, res) => {
   try {
@@ -48,7 +89,6 @@ router.get('/:id', async (req, res) => {
     })
   }
 })
-
 
 router.post('/', async (req, res) => {
   try {
@@ -95,7 +135,6 @@ router.post('/', async (req, res) => {
     })
   }
 })
-
 
 router.put('/:id', async (req, res) => {
   try {
@@ -154,7 +193,6 @@ router.put('/:id', async (req, res) => {
     })
   }
 })
-
 
 router.delete('/:id', async (req, res) => {
   try {

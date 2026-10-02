@@ -1,6 +1,7 @@
 const express = require('express')
 const Product = require('../model/product')
 const SubCategory = require('../model/subcategory')
+const { default: mongoose } = require('mongoose')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
   }
 })
 
-// ! Search Products => SearchProducts.jsx
+// ! Search Product, Category, Brand, Subcategory => SearchProducts.jsx
 router.get('/search', async (req, res) => {
   try {
     const { q } = req.query
@@ -145,6 +146,321 @@ router.get('/search', async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'Failed to search products',
+    })
+  }
+})
+
+// ! Filter Products, Brands, Categorys, SubCategory, rating, stock, minprice, maxprice, sort => Products.jsx
+router.get('/filter', async (req, res) => {
+  try {
+    const { search, category, brand, rating, stock, minPrice, maxPrice, sort } = req.query
+
+    // Base Match
+    const matchStage = {
+      status: 'Active',
+    }
+
+    // Search => Product Name Only
+    if (search?.trim()) {
+      const escapedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+      matchStage.productName = {
+        $regex: escapedSearch,
+        $options: 'i',
+      }
+    }
+
+    // Category
+    if (category && category !== 'All') {
+      if (!mongoose.Types.ObjectId.isValid(category)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid category ID',
+        })
+      }
+
+      matchStage.category = new mongoose.Types.ObjectId(category)
+    }
+
+    // Brand
+    if (brand && brand !== 'All') {
+      if (!mongoose.Types.ObjectId.isValid(brand)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid brand ID',
+        })
+      }
+
+      matchStage.brand = new mongoose.Types.ObjectId(brand)
+    }
+
+    // Rating => Minimum rating
+    if (rating && rating !== 'All') {
+      const ratingValue = Number(rating)
+
+      if (Number.isFinite(ratingValue)) {
+        matchStage.rating = {
+          $gte: ratingValue,
+        }
+      }
+    }
+
+    // Stock => Only products having stock
+    if (stock === 'true') {
+      matchStage.stock = {
+        $gt: 0,
+      }
+    }
+
+    // Aggregation
+    const pipeline = [
+      {
+        $match: matchStage,
+      },
+
+      // Effective Selling Price
+      // discountPrice > 0 => discountPrice
+      // otherwise => price
+      {
+        $addFields: {
+          effectivePrice: {
+            $cond: [
+              {
+                $gt: ['$discountPrice', 0],
+              },
+              '$discountPrice',
+              '$price',
+            ],
+          },
+        },
+      },
+    ]
+
+    // Price Filter
+    const priceMatch = {}
+
+    if (minPrice !== undefined && minPrice !== '') {
+      const min = Number(minPrice)
+
+      if (Number.isFinite(min)) {
+        priceMatch.$gte = min
+      }
+    }
+
+    if (maxPrice !== undefined && maxPrice !== '') {
+      const max = Number(maxPrice)
+
+      if (Number.isFinite(max)) {
+        priceMatch.$lte = max
+      }
+    }
+
+    if (Object.keys(priceMatch).length > 0) {
+      pipeline.push({
+        $match: {
+          effectivePrice: priceMatch,
+        },
+      })
+    }
+
+    // Sort
+    switch (sort) {
+      case 'priceLow':
+        pipeline.push({
+          $sort: {
+            effectivePrice: 1,
+            _id: 1,
+          },
+        })
+        break
+
+      case 'priceHigh':
+        pipeline.push({
+          $sort: {
+            effectivePrice: -1,
+            _id: 1,
+          },
+        })
+        break
+
+      case 'rating':
+        pipeline.push({
+          $sort: {
+            rating: -1,
+            createdAt: -1,
+          },
+        })
+        break
+
+      case 'sold':
+        pipeline.push({
+          $sort: {
+            soldCount: -1,
+            createdAt: -1,
+          },
+        })
+        break
+
+      case 'latest':
+      default:
+        pipeline.push({
+          $sort: {
+            createdAt: -1,
+          },
+        })
+        break
+    }
+
+    // Category
+    pipeline.push({
+      $lookup: {
+        from: 'categoryminekarts',
+        let: {
+          categoryId: '$category',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ['$_id', '$$categoryId'],
+              },
+            },
+          },
+          {
+            $project: {
+              categoryName: 1,
+            },
+          },
+        ],
+        as: 'category',
+      },
+    })
+
+    // SubCategory
+    pipeline.push({
+      $lookup: {
+        from: 'subcategoryminekarts',
+        let: {
+          subCategoryId: '$subCategory',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ['$_id', '$$subCategoryId'],
+              },
+            },
+          },
+          {
+            $project: {
+              subCategoryName: 1,
+            },
+          },
+        ],
+        as: 'subCategory',
+      },
+    })
+
+    // Brand
+    pipeline.push({
+      $lookup: {
+        from: 'brandminekarts',
+        let: {
+          brandId: '$brand',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ['$_id', '$$brandId'],
+              },
+            },
+          },
+          {
+            $project: {
+              brandName: 1,
+              brandLogo: 1,
+            },
+          },
+        ],
+        as: 'brand',
+      },
+    })
+
+    // Convert arrays to objects
+    pipeline.push(
+      {
+        $unwind: {
+          path: '$category',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$subCategory',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$brand',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    )
+
+    // Remove effectivePrice from response
+    pipeline.push({
+      $project: {
+        productName: 1,
+        slug: 1,
+        description: 1,
+
+        category: 1,
+        subCategory: 1,
+        brand: 1,
+
+        images: 1,
+        offerImage: 1,
+        sizes: 1,
+
+        price: 1,
+        discount: 1,
+        discountPrice: 1,
+
+        status: 1,
+        isOffer: 1,
+
+        rating: 1,
+        stock: 1,
+        soldCount: 1,
+
+        warranty: 1,
+        warrantyDuration: 1,
+        warrantyType: 1,
+        returnPolicy: 1,
+        deliveryInfo: 1,
+
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    })
+
+    // Execute
+    const products = await Product.aggregate(pipeline)
+
+    return res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products,
+    })
+  } catch (error) {
+    console.error('Filter Products Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to filter products',
+      error: error.message,
     })
   }
 })
@@ -342,7 +658,6 @@ router.get('/related/:subCategoryId/:productId', async (req, res) => {
     })
   }
 })
-
 
 router.get('/:id', async (req, res) => {
   try {
