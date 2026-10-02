@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, LayoutGrid, X, Watch, CheckCircle2, CircleOff, Tags } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, LayoutGrid, X, CheckCircle2, CircleOff, Image, Eye } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
-import { iconList } from '../data/iconMap'
+import { getImageUrl } from '../utils/imageUrl'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import AdminTrashBox from './AdminTrashBox'
 import toast from 'react-hot-toast'
@@ -17,15 +17,12 @@ export default function AdminCategory() {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // delete popup
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [deleteItem, setDeleteItem] = useState(null)
 
-  // pagination
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(5)
 
-  // ! Get all categories
   const getCategories = async () => {
     try {
       setLoading(true)
@@ -40,21 +37,18 @@ export default function AdminCategory() {
     }
   }
 
-  // ! open pop up
   const handleModalOpen = (data) => {
     setDeleteItem(data)
     setDeleteModalOpen(true)
   }
 
-  // ! Delete category
   const deleteHandle = async () => {
     if (!deleteItem) return
 
     try {
       await axiosInstance.delete(`/category/${deleteItem._id}`)
-      // setDeleteItem(null)
 
-      toast.success('Product deleted successfully')
+      toast.success('Category deleted successfully')
     } catch (error) {
       console.error('Delete category error:', error.response?.data || error.message)
     } finally {
@@ -63,10 +57,8 @@ export default function AdminCategory() {
     }
   }
 
-  // ! Search
   const filteredCategories = categories.filter((category) => category.categoryName?.toLowerCase().includes(search.toLowerCase()))
 
-  // ! Pagination
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredCategories.length / itemsPerPage)
 
   const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage
@@ -75,25 +67,22 @@ export default function AdminCategory() {
 
   const currentCategories = itemsPerPage === 'all' ? filteredCategories : filteredCategories.slice(startIndex, endIndex)
 
-  // ! Pagination change
   const handleItemsPerPageChange = (value) => {
     setItemsPerPage(value)
     setCurrentPage(1)
   }
 
-  // ! Initial API
   useEffect(() => {
     getCategories()
   }, [])
 
-  // ! Category statistics
   const totalCategories = categories.length
 
   const activeCategories = categories.filter((category) => category.status === 'Active').length
 
   const inactiveCategories = categories.filter((category) => category.status === 'Inactive').length
 
-  const categoriesWithIcon = categories.filter((category) => category.categoryLucideIcons).length
+  const categoriesWithImage = categories.filter((category) => category.categoryImage).length
 
   const stats = [
     {
@@ -112,18 +101,11 @@ export default function AdminCategory() {
       icon: CircleOff,
     },
     {
-      title: 'Categories With Icon',
-      value: categoriesWithIcon,
-      icon: Tags,
+      title: 'Categories With Image',
+      value: categoriesWithImage,
+      icon: Image,
     },
   ]
-
-  // ! Category icon
-  const getCategoryIcon = (iconValue) => {
-    const foundIcon = iconList.find((item) => item.value === iconValue)
-
-    return foundIcon?.icon || LayoutGrid
-  }
 
   const items = [{ title: 'Categories', link: null }]
 
@@ -131,7 +113,7 @@ export default function AdminCategory() {
     <div className="space-y-6 transition-all duration-700">
       <AdminBreadCrumb items={items} />
 
-      {/*  STATS  */}
+      {/* STATS */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((item) => {
           const Icon = item.icon
@@ -154,7 +136,7 @@ export default function AdminCategory() {
         })}
       </div>
 
-      {/*  CATEGORY TABLE  */}
+      {/* CATEGORY TABLE */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
         {/* Toolbar */}
         <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
@@ -225,8 +207,6 @@ export default function AdminCategory() {
                 </tr>
               ) : currentCategories.length > 0 ? (
                 currentCategories.map((category, index) => {
-                  const Icon = getCategoryIcon(category.categoryLucideIcons)
-
                   return (
                     <tr key={category._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
                       {/* Index */}
@@ -237,8 +217,8 @@ export default function AdminCategory() {
                       {/* Category */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
-                            <Icon size={19} />
+                          <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#F1EEE8]">
+                            {category.categoryImage ? <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className="h-full w-full object-contain p-1.5" /> : <Image size={19} className="text-[#6B6258]" />}
                           </div>
 
                           <div className="min-w-0">
@@ -264,6 +244,16 @@ export default function AdminCategory() {
                       {/* Actions */}
                       <td className="px-5 py-4">
                         <div className="flex justify-end gap-1">
+                          {/* View */}
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/admin/category/${category._id}`)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            title="View Category"
+                          >
+                            <Eye size={16} />
+                          </button>
+
                           {/* Edit */}
                           <button
                             type="button"
@@ -294,7 +284,7 @@ export default function AdminCategory() {
           </table>
         </div>
 
-        {/*  FOOTER  */}
+        {/* FOOTER */}
         <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Showing */}
           <div className="flex items-center gap-2">
@@ -318,7 +308,6 @@ export default function AdminCategory() {
 
           {/* Pagination */}
           <div className="flex items-center gap-1">
-            {/* Previous */}
             <button
               type="button"
               disabled={currentPage === 1}
@@ -328,7 +317,6 @@ export default function AdminCategory() {
               ←
             </button>
 
-            {/* Pages */}
             {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
               <button
                 key={page}
@@ -340,7 +328,6 @@ export default function AdminCategory() {
               </button>
             ))}
 
-            {/* Next */}
             <button
               type="button"
               disabled={currentPage === totalPages || totalPages === 0}
@@ -353,13 +340,13 @@ export default function AdminCategory() {
         </div>
       </div>
 
-      {/*  DELETE MODAL  */}
+      {/* DELETE MODAL */}
       {deleteModalOpen && (
         <AdminTrashBox
           isOpen={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
           type="danger"
-          title="Delete User?"
+          title="Delete Category?"
           message={`Are you sure you want to delete this ${deleteItem.categoryName}`}
           actionButtonText="Delete"
           cancelButtonText="Cancel"

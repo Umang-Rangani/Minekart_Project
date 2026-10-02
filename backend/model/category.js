@@ -9,7 +9,7 @@ const categorySchema = new mongoose.Schema(
       unique: true,
     },
 
-    categoryLucideIcons: {
+    categoryImage: {
       type: String,
       default: '',
     },

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Star, ShoppingBag, ChevronRight, Package, SlidersHorizontal, Check } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
-import { iconMap } from '../data/iconMap'
 import BreadCrumb from './BreadCrumb'
 
 export default function CategoryProducts() {
@@ -52,8 +51,6 @@ export default function CategoryProducts() {
     getCategoryProducts()
   }, [id])
 
-  const Icon = category ? iconMap[category.categoryLucideIcons] : null
-
   /* SUBCATEGORY NAMES */
   const uniqueNames = [...new Set(allProducts.map((product) => product.subCategory?.subCategoryName).filter(Boolean))]
 
@@ -95,14 +92,14 @@ export default function CategoryProducts() {
       <div className="mx-auto w-full pt-5">
         {/* CATEGORY HEADER */}
         {!loading && category && (
-          <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+          <div className="mb-4 flex min-h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:min-h-17 sm:px-4">
             <div className="flex min-w-0 items-center gap-2.5">
-              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
-                <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
-
-                {Icon && <Icon size={18} strokeWidth={1.8} className="relative z-10" />}
+              {/* CATEGORY IMAGE */}
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#F7EEE7] text-[#8E181F] shadow-[0_3px_10px_rgba(73,54,49,0.06)] sm:h-10 sm:w-10">
+                {category.categoryImage ? <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className="h-full w-full object-contain " /> : <Package size={18} strokeWidth={1.8} />}
               </div>
 
+              {/* CATEGORY TEXT */}
               <div className="min-w-0">
                 <h1 className="truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-sm">{category.categoryName} Products</h1>
 
@@ -110,6 +107,7 @@ export default function CategoryProducts() {
               </div>
             </div>
 
+            {/* PRODUCT COUNT */}
             <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-2 text-[8px] font-bold text-[#67544D] sm:px-2.5 sm:text-[9px]">
               <ShoppingBag size={12} strokeWidth={2} className="text-[#8E181F]" />
 
@@ -123,12 +121,14 @@ export default function CategoryProducts() {
         {/* SUBCATEGORY FILTER */}
         {!loading && uniqueNames.length > 0 && (
           <div className="mb-5">
+            {/* FILTER LABEL */}
             <div className="mb-2 flex items-center gap-1.5">
-              <SlidersHorizontal size={13} className="text-[#8E181F]" />
+              <SlidersHorizontal size={13} strokeWidth={2} className="text-[#8E181F]" />
 
               <span className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Shop By</span>
             </div>
 
+            {/* FILTER LIST */}
             <div className="no-scrollbar overflow-x-auto pb-1">
               <div className="flex min-w-max items-center gap-2">
                 {/* ALL */}
@@ -178,70 +178,64 @@ export default function CategoryProducts() {
           </div>
         )}
 
-        {/* LOADING */}
+        {/* LOADING SHIMMER */}
         {loading ? (
           <div className="space-y-5 animate-pulse">
             {/* CATEGORY HEADER SHIMMER */}
-            <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+            <div className="flex min-h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:min-h-17 sm:px-4">
               <div className="flex min-w-0 items-center gap-2.5">
-                {/* Icon */}
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F3EAE4] sm:h-10 sm:w-10">
-                  <Package size={18} strokeWidth={1.7} className="text-[#CDBFB7]" />
-                </div>
+                {/* IMAGE SHIMMER */}
+                <div className="h-9 w-9 shrink-0 rounded-lg bg-[#F0E5DE] sm:h-10 sm:w-10" />
 
-                {/* Text */}
-                <div className="min-w-0">
+                {/* TEXT SHIMMER */}
+                <div className="min-w-0 space-y-2">
                   <div className="h-3.5 w-32 rounded-md bg-[#E3D8D1] sm:h-4 sm:w-36" />
 
-                  <div className="mt-2 h-2.5 w-48 rounded-md bg-[#EEE5DF] sm:w-52" />
+                  <div className="h-2.5 w-48 rounded-md bg-[#EEE5DF] sm:w-52" />
                 </div>
               </div>
 
-              {/* Count */}
+              {/* COUNT SHIMMER */}
               <div className="flex h-8 w-20 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] sm:w-22">
-                <ShoppingBag size={12} strokeWidth={2} className="text-[#CDBFB7]" />
+                <div className="h-3 w-3 rounded-full bg-[#DCCDC5]" />
 
                 <div className="h-2.5 w-8 rounded bg-[#E3D8D1]" />
               </div>
             </div>
 
-            {/* SHOP BY FILTER SHIMMER */}
+            {/* SHOP BY SHIMMER */}
             <div className="mb-5">
-              {/* Label */}
+              {/* LABEL */}
               <div className="mb-2 flex items-center gap-1.5">
-                <SlidersHorizontal size={13} strokeWidth={2} className="text-[#CDBFB7]" />
+                <div className="h-3.5 w-3.5 rounded bg-[#E3D8D1]" />
 
                 <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
               </div>
 
-              {/* Filter Pills */}
+              {/* PILLS */}
               <div className="no-scrollbar overflow-hidden pb-1">
                 <div className="flex min-w-max items-center gap-2">
-                  {/* All */}
+                  {/* ALL */}
                   <div className="flex h-9 w-20 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#F0E7E1] px-3">
                     <div className="h-2.5 w-7 rounded bg-[#DCCDC5]" />
-
                     <div className="h-4 w-5 rounded-md bg-[#E3D8D1]" />
                   </div>
 
-                  {/* Filter 1 */}
+                  {/* FILTER 1 */}
                   <div className="flex h-9 w-32 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
                     <div className="h-2.5 w-16 rounded bg-[#E3D8D1]" />
-
                     <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
                   </div>
 
-                  {/* Filter 2 */}
+                  {/* FILTER 2 */}
                   <div className="flex h-9 w-36 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
                     <div className="h-2.5 w-20 rounded bg-[#E3D8D1]" />
-
                     <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
                   </div>
 
-                  {/* Filter 3 */}
+                  {/* FILTER 3 */}
                   <div className="flex h-9 w-28 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
                     <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
-
                     <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
                   </div>
                 </div>
@@ -251,40 +245,36 @@ export default function CategoryProducts() {
             {/* PRODUCTS SHIMMER */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
               {Array.from({ length: 12 }).map((_, index) => (
-                <div key={index} className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.04)]">
-                  {/* Product Image */}
-                  <div className="relative aspect-square bg-[#F3EAE4]" />
+                <div key={index} className="flex min-h-88 flex-col overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.04)] sm:min-h-90">
+                  {/* IMAGE */}
+                  <div className="aspect-square shrink-0 bg-[#F3EAE4]" />
 
-                  {/* Product Details */}
-                  <div className="space-y-3 border-t border-[#EEE5DF] bg-[#FFFCFA] p-3">
-                    {/* Category */}
+                  {/* DETAILS */}
+                  <div className="flex flex-1 flex-col space-y-3 border-t border-[#EEE5DF] bg-[#FFFCFA] p-3">
+                    {/* CATEGORY */}
                     <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
 
-                    {/* Title */}
+                    {/* TITLE */}
                     <div className="space-y-1.5">
                       <div className="h-3.5 w-full rounded bg-[#E5DDD7]" />
-
                       <div className="h-3.5 w-4/5 rounded bg-[#E5DDD7]" />
                     </div>
 
-                    {/* Rating */}
+                    {/* RATING */}
                     <div className="flex items-center gap-2">
                       <div className="h-5 w-9 rounded bg-[#DDE8DF]" />
-
                       <div className="h-3 w-12 rounded bg-[#E8DDD4]" />
                     </div>
 
-                    {/* Price */}
+                    {/* PRICE */}
                     <div className="flex items-center gap-2">
                       <div className="h-5 w-20 rounded bg-[#E5D3CD]" />
-
                       <div className="h-3 w-12 rounded bg-[#E8DDD4]" />
                     </div>
 
-                    {/* Bottom */}
-                    <div className="flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
+                    {/* BOTTOM */}
+                    <div className="mt-auto flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
                       <div className="h-3 w-16 rounded bg-[#E8DDD4]" />
-
                       <div className="h-3 w-10 rounded bg-[#E5D3CD]" />
                     </div>
                   </div>
@@ -293,7 +283,7 @@ export default function CategoryProducts() {
             </div>
           </div>
         ) : products.length === 0 ? (
-          /* EMPTY */
+          // EMPTY
           <div className="flex min-h-90 flex-col items-center justify-center rounded-2xl border border-dashed border-[#D8C9C0] bg-white px-5 text-center shadow-[0_2px_10px_rgba(73,54,49,0.03)]">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
               <Package size={28} strokeWidth={1.6} />
@@ -318,11 +308,13 @@ export default function CategoryProducts() {
             )}
           </div>
         ) : (
-          /* PRODUCTS */
+          //  PRODUCTS
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
             {products.map((product) => {
               const isInactive = product.status === 'Inactive'
+
               const isOutOfStock = product.stock <= 0
+
               const isDisabled = isInactive || isOutOfStock
 
               const isLowStock = !isDisabled && product.stock > 0 && product.stock <= 5
@@ -330,7 +322,8 @@ export default function CategoryProducts() {
               const productCard = (
                 <>
                   {/* IMAGE */}
-                  <div className={`relative flex aspect-square items-center justify-center overflow-hidden p-3 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
+                  <div className={`relative flex aspect-square shrink-0 items-center justify-center overflow-hidden p-3 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
+                    {/* BACKGROUND GLOW */}
                     {!isDisabled && <div className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#F7EEE7] opacity-70 transition-transform duration-500 group-hover:scale-150" />}
 
                     {/* DISCOUNT */}
@@ -347,7 +340,7 @@ export default function CategoryProducts() {
                       <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[8px] font-bold text-[#B87935] sm:text-[9px]">Only {product.stock} left</span>
                     ) : null}
 
-                    {/* IMAGE */}
+                    {/* PRODUCT IMAGE */}
                     {product.images?.length > 0 ? (
                       <img src={getImageUrl(product.images[0])} alt={product.productName} className={`relative z-10 h-full w-full object-contain ${isDisabled ? 'grayscale opacity-40' : 'transition-transform duration-500 group-hover:scale-105'}`} />
                     ) : (
@@ -416,14 +409,14 @@ export default function CategoryProducts() {
               )
 
               return isDisabled ? (
-                <div key={product._id} aria-disabled="true" className="group flex min-h-88 cursor-not-allowed flex-col overflow-hidden rounded-2xl border border-[#D9D9D9] bg-[#F3F3F3] shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+                <div key={product._id} aria-disabled="true" className="group flex min-h-88 cursor-not-allowed flex-col overflow-hidden rounded-2xl border border-[#D9D9D9] bg-[#F3F3F3] shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:min-h-90">
                   {productCard}
                 </div>
               ) : (
                 <Link
                   key={product._id}
                   to={`/product/${product._id}`}
-                  className="group flex min-h-88 flex-col overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)]"
+                  className="group flex min-h-88 flex-col overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)] sm:min-h-90"
                 >
                   {productCard}
                 </Link>

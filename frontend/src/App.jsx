@@ -107,10 +107,7 @@ export default function App() {
           <Route path="/my-support" element={<MySupport />} />
           <Route path="/my-support/:id" element={<MySupportDetails />} />
 
-
           <Route path="/tictactoe" element={<TicTacToe />} />
-
-
         </Route>
 
         {/*  AUTH  */}

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
 import { Link, NavLink } from 'react-router-dom'
-import { Zap } from 'lucide-react'
-import { iconMap } from '../data/iconMap'
+import { Image, Zap } from 'lucide-react'
+// import { iconMap } from '../data/iconMap'
+import { getImageUrl } from '../utils/imageUrl'
 
 export default function CategoryList() {
   const [categories, setCategories] = useState([])
@@ -74,16 +75,16 @@ export default function CategoryList() {
               </div>
             ) : (
               categories?.data?.map((category) => {
-                const Icon = iconMap[category.categoryLucideIcons]
+                // const Icon = iconMap[category.categoryLucideIcons]
 
                 const active = activeCategory === category._id
                 const isDisabled = category.status === 'Inactive'
 
                 const categoryContent = (
                   <>
-                    {/* CATEGORY ICON */}
+                    {/* CATEGORY ICON & IMAGE */}
                     <div
-                      className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl sm:h-9 sm:w-9 ${
+                      className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-md sm:h-9 sm:w-9 ${
                         isDisabled
                           ? 'bg-[#E8E5E2] text-[#999999]'
                           : active
@@ -91,14 +92,18 @@ export default function CategoryList() {
                             : 'bg-[#F7EEE7] text-[#67544D] group-hover:bg-[#F2DDD5] group-hover:text-[#8E181F]'
                       }`}
                     >
-                      {Icon && <Icon size={16} strokeWidth={1.9} />}
+                      {category.categoryImage ? (
+                        <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className={`h-full w-full object-contain overflow-hidden rounded-md ${isDisabled ? 'grayscale opacity-40' : ''}`} />
+                      ) : (
+                        <Image size={16} strokeWidth={2} />
+                      )}
                     </div>
 
                     {/* CATEGORY NAME */}
                     <span className={`max-w-18 truncate whitespace-nowrap text-[9px] sm:max-w-23 sm:text-xs ${isDisabled ? 'font-semibold text-[#888888]' : active ? 'font-bold text-[#8E181F]' : 'font-semibold'}`}>{category.categoryName}</span>
 
                     {/* INACTIVE */}
-                    {isDisabled && <span className="rounded-md bg-[#E8E5E2] px-1 py-0.5 text-[6px] font-bold uppercase tracking-wide text-[#888888] sm:px-1.5 sm:text-[7px]">Inactive</span>}
+                    {/* {isDisabled && <span className="rounded-md bg-[#E8E5E2] px-1 py-0.5 text-[6px] font-bold uppercase tracking-wide text-[#888888] sm:px-1.5 sm:text-[7px]">Inactive</span>} */}
 
                     {/* ACTIVE INDICATOR */}
                     {active && !isDisabled && <span className="absolute bottom-0 left-2 right-2 h-0.75 rounded-t-full bg-linear-to-r from-[#7D171C] to-[#B5262D] sm:left-3 sm:right-3" />}

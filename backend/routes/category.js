@@ -3,17 +3,6 @@ const mongoose = require('mongoose')
 const Category = require('../model/category')
 var router = express.Router()
 
-/* GET home page. */
-// router.get('/', async (req, res, next) => {
-//   try {
-//     const data = await Category.find()
-//     res.status(200).json(data)
-//   } catch (error) {
-//     console.log(error)
-//   }
-// })
-
-
 router.get('/', async (req, res) => {
   try {
     const data = await Category.find().sort({
@@ -69,10 +58,9 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-
 router.post('/', async (req, res) => {
   try {
-    const { categoryName, categoryLucideIcons, description, status } = req.body
+    const { categoryName, categoryImage, description, status } = req.body
 
     // ! Validation
     if (!categoryName || !categoryName.trim()) {
@@ -97,7 +85,7 @@ router.post('/', async (req, res) => {
     // ! Create
     const data = await Category.create({
       categoryName: categoryName.trim(),
-      categoryLucideIcons: categoryLucideIcons || '',
+      categoryImage: categoryImage || '',
       description: description || '',
       status: status || 'Active',
     })
@@ -118,12 +106,12 @@ router.post('/', async (req, res) => {
 })
 
 // UPDATE CATEGORY
-// PUT /Category/:id
+// PUT /category/:id
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params
 
-    const { categoryName, categoryLucideIcons, description, status } = req.body
+    const { categoryName, categoryImage, description, status } = req.body
 
     // ! Check ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -141,7 +129,7 @@ router.put('/:id', async (req, res) => {
       })
     }
 
-    // ! Check duplicate category name , Nu match id
+    // ! Check duplicate category name, nu match id
     const existingCategory = await Category.findOne({
       categoryName: categoryName.trim(),
       _id: { $ne: id },
@@ -159,7 +147,7 @@ router.put('/:id', async (req, res) => {
       id,
       {
         categoryName: categoryName.trim(),
-        categoryLucideIcons: categoryLucideIcons || '',
+        categoryImage: categoryImage || '',
         description: description || '',
         status: status || 'Active',
       },
@@ -190,7 +178,6 @@ router.put('/:id', async (req, res) => {
     })
   }
 })
-
 
 router.delete('/:id', async (req, res) => {
   try {
