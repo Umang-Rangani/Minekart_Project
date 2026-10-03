@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react'
-import { Camera, Mail, Lock, User, Phone, X, UserPlus, ArrowLeft, ShieldCheck, ImagePlus } from 'lucide-react'
+import React, { useEffect, useRef, useState } from 'react'
+import { Camera, Mail, Lock, User, Phone, X, UserPlus, ArrowLeft, ShieldCheck, ImagePlus, Maximize2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile } from '../utils/uploadFile'
@@ -14,7 +14,9 @@ export default function Register() {
 
   const [imageFile, setImageFile] = useState(null)
   const [preview, setPreview] = useState('')
+
   const [showProfilePopup, setShowProfilePopup] = useState(false)
+  const [showImageViewer, setShowImageViewer] = useState(false)
 
   const [signUp, setSignUp] = useState({
     name: '',
@@ -26,6 +28,23 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  useEffect(() => {
+    const isOverlayOpen = showProfilePopup || showImageViewer
+
+    if (!isOverlayOpen) {
+      document.body.style.overflow = ''
+      return
+    }
+
+    const previousOverflow = document.body.style.overflow
+
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [showProfilePopup, showImageViewer])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -55,6 +74,10 @@ export default function Register() {
     setImageFile(file)
     setPreview(URL.createObjectURL(file))
     setError('')
+
+    if (showProfilePopup) {
+      setShowProfilePopup(true)
+    }
   }
 
   const clearHandle = () => {
@@ -70,6 +93,7 @@ export default function Register() {
     setError('')
     setSuccess('')
     setShowProfilePopup(false)
+    setShowImageViewer(false)
 
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -145,12 +169,22 @@ export default function Register() {
     setShowProfilePopup(false)
   }
 
+  const openImageViewer = () => {
+    if (!preview) return
+
+    setShowImageViewer(true)
+  }
+
+  const closeImageViewer = () => {
+    setShowImageViewer(false)
+  }
+
   const chooseProfilePhoto = () => {
     fileInputRef.current?.click()
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-3 py-3 sm:px-5 sm:py-6 lg:px-8">
+    <div className="relative flex h-screen min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-3 py-3 sm:px-5 sm:py-6 lg:px-8">
       {/* Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-[#241210] via-[#4B171A] to-[#8E181F]" />
@@ -261,7 +295,7 @@ export default function Register() {
           </div>
 
           {/* Main Form */}
-          <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[310px_1fr]">
+          <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[280px_1fr] lg:grid-cols-[310px_1fr]">
             {/* Desktop Profile Section */}
             <div className="relative hidden min-h-0 shrink-0 flex-col items-center justify-center overflow-hidden border-b border-[#E8DDD4] bg-linear-to-br from-[#FBF7F2] via-[#F8EFE9] to-[#F3E6DE] px-8 md:flex md:border-b-0 md:border-r">
               <div className="pointer-events-none absolute -left-16 top-8 h-40 w-40 rounded-full bg-[#A51D26]/6 blur-3xl" />
@@ -270,33 +304,54 @@ export default function Register() {
 
               {/* Profile Heading */}
               <div className="relative z-10 mb-5 text-center">
-                <div className="mx-auto mb-2.5 flex h-10 w-10 items-center justify-center rounded-xl bg-[#8E181F]/10 text-[#8E181F]">
-                  <User size={18} />
+                <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#8E181F]/10 text-[#8E181F]">
+                  <User size={17} />
                 </div>
 
-                <h2 className="text-base font-extrabold text-[#351C18]">Profile Photo</h2>
+                <h2 className="text-sm font-extrabold text-[#351C18]">Profile Photo</h2>
 
-                <p className="mt-1 text-xs text-[#806C63]">Personalize your account</p>
+                {/* <p className="mt-1 text-[10px] text-[#806C63]">Click image to preview</p> */}
               </div>
 
-              {/* Avatar */}
+              {/* Square Profile Image */}
               <div className="relative z-10">
-                <div className="relative flex h-44 w-44 items-center justify-center overflow-hidden rounded-full border-[5px] border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_10px_25px_rgba(73,54,49,0.15)] ring-1 ring-[#DCCBC1]">
-                  {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={78} strokeWidth={1.1} className="text-[#8E181F]/70" />}
+                <button
+                  type="button"
+                  onClick={openImageViewer}
+                  className="group relative block h-40 w-40 overflow-hidden rounded-full border-2 border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_14px_32px_rgba(73,54,49,0.16)] ring-1 ring-[#DCCBC1] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(73,54,49,0.20)] lg:h-44 lg:w-44"
+                >
+                  {preview ? (
+                    <img src={preview} alt="Profile Preview" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <User size={62} strokeWidth={1.1} className="text-[#8E181F]/70" />
+                    </div>
+                  )}
 
-                  <div className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/25 via-transparent to-[#351C18]/5" />
-                </div>
+                  <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/20 via-transparent to-[#351C18]/10" />
 
+                  {preview && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-[#351C18]/0 opacity-0 transition-all duration-300 group-hover:bg-[#351C18]/20 group-hover:opacity-100">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#8E181F] shadow-lg backdrop-blur-sm">
+                        <Maximize2 size={17} />
+                      </div>
+                    </div>
+                  )}
+                </button>
+
+                {/* Camera - Edit Only */}
                 <button
                   type="button"
                   onClick={chooseProfilePhoto}
-                  className="absolute bottom-1 right-1 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_5px_12px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105"
+                  className="absolute bottom-1 right-4 flex h-10 w-10 items-center justify-center rounded-xl border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_6px_16px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105"
+                  aria-label="Change profile photo"
                 >
-                  <Camera size={18} />
+                  <Camera size={17} />
                 </button>
-
-                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
               </div>
+
+              {/* Hidden Input */}
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
 
               {/* Upload Info */}
               <div className="relative z-10 mt-5 flex items-center gap-2 rounded-full border border-[#E2D5CC] bg-white/80 px-3.5 py-1.5 text-[10px] font-semibold text-[#806C63] shadow-sm backdrop-blur-sm">
@@ -305,32 +360,53 @@ export default function Register() {
               </div>
 
               <div className="relative z-10 mt-2 text-center">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A8958C]">Shop more • Live better</p>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#A8958C]">Click image to view • Camera to edit</p>
               </div>
             </div>
 
             {/* Form Area */}
             <div className="min-h-0 flex-1 overflow-y-auto bg-[#FFFDFC] p-4 sm:p-7 lg:p-9">
-              {/* Mobile Profile Photo Trigger */}
-              <button
-                type="button"
-                onClick={openProfilePopup}
-                className="mb-5 flex w-full items-center gap-3 rounded-2xl border border-[#E2D5CC] bg-[#FBF7F2] p-3.5 text-left transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] sm:hidden"
-              >
-                <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-sm ring-1 ring-[#DCCBC1]">
-                  {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={22} strokeWidth={1.2} className="text-[#8E181F]/70" />}
-                </div>
+              {/* Mobile Profile Section */}
+              <div className="mb-5 flex items-center gap-3 rounded-2xl border border-[#E2D5CC] bg-[#FBF7F2] p-3 shadow-[0_4px_14px_rgba(73,54,49,0.04)] sm:hidden">
+                {/* Image Only = Preview */}
+                <button
+                  type="button"
+                  onClick={openImageViewer}
+                  className="group relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-sm ring-1 ring-[#DCCBC1]"
+                  aria-label="Preview profile photo"
+                >
+                  {preview ? (
+                    <img src={preview} alt="Profile Preview" className="h-full w-full object-cover transition-transform duration-300 group-active:scale-95" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <User size={22} strokeWidth={1.2} className="text-[#8E181F]/70" />
+                    </div>
+                  )}
 
+                  {preview && (
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#351C18]/0 transition-all duration-200 group-active:bg-[#351C18]/15">
+                      <Maximize2 size={13} className="text-white opacity-0 drop-shadow-lg group-active:opacity-100" />
+                    </div>
+                  )}
+                </button>
+
+                {/* Text */}
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-extrabold text-[#351C18]">{preview ? 'Profile Photo Added' : 'Add Profile Photo'}</p>
+                  <p className="text-xs font-extrabold text-[#351C18]">{preview ? 'Profile Photo Added' : 'Profile Photo'}</p>
 
-                  <p className="mt-0.5 text-[10px] text-[#806C63]">{preview ? 'Tap to change your profile photo' : 'Optional • Personalize your account'}</p>
+                  <p className="mt-0.5 text-[10px] leading-4 text-[#806C63]">{preview ? 'Tap image to preview' : 'Add a photo to your account'}</p>
                 </div>
 
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#8E181F]/10 text-[#8E181F]">
-                  <Camera size={15} />
-                </div>
-              </button>
+                {/* ImagePlus = Popup */}
+                <button
+                  type="button"
+                  onClick={openProfilePopup}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E1D1C8] bg-white text-[#8E181F] shadow-sm transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] active:scale-95"
+                  aria-label="Open profile photo options"
+                >
+                  <ImagePlus size={17} />
+                </button>
+              </div>
 
               {/* Section Header */}
               <div className="mb-5 hidden items-center gap-2.5 sm:mb-6 sm:flex sm:gap-3">
@@ -465,19 +541,22 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Mobile Profile Photo Popup */}
+      {/* Mobile Profile Popup */}
       {showProfilePopup && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#241210]/60 px-4 backdrop-blur-md md:hidden" onClick={closeProfilePopup}>
-          <div className="relative w-full max-w-sm overflow-hidden rounded-[24px] border border-white/30 bg-[#FFFDFC]/95 shadow-[0_25px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center overflow-hidden bg-[#241210]/75 px-4 py-4 backdrop-blur-md md:hidden" onClick={closeProfilePopup}>
+          <div
+            className="relative flex max-h-[calc(100vh-32px)] w-full max-w-sm flex-col overflow-hidden rounded-[24px] border border-white/30 bg-[#FFFDFC]/95 shadow-[0_25px_80px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Popup Header */}
-            <div className="relative overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A211E] to-[#8E181F] px-5 py-4 text-white">
+            <div className="relative shrink-0 overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A211E] to-[#8E181F] px-5 py-4 text-white">
               <div className="absolute -right-10 -top-12 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
 
               <div className="relative flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-extrabold">Profile Photo</h3>
 
-                  <p className="mt-0.5 text-[10px] text-white/65">Personalize your MineKart account</p>
+                  <p className="mt-0.5 text-[10px] text-white/65">Tap image to view • Camera to edit</p>
                 </div>
 
                 <button type="button" onClick={closeProfilePopup} className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-white transition-all duration-300 hover:rotate-90 hover:bg-white/15">
@@ -487,47 +566,90 @@ export default function Register() {
             </div>
 
             {/* Popup Body */}
-            <div className="flex flex-col items-center px-6 py-7">
-              {/* Avatar */}
-              <div className="relative">
-                <div className="relative flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-[4px] border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_12px_30px_rgba(73,54,49,0.18)] ring-1 ring-[#DCCBC1]">
-                  {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={48} strokeWidth={1.1} className="text-[#8E181F]/70" />}
+            <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-6 py-6">
+              {/* Square Image */}
+              <div className="relative shrink-0">
+                <button
+                  type="button"
+                  onClick={openImageViewer}
+                  className="group relative block h-60 w-60 overflow-hidden rounded-full border-[4px] border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_15px_35px_rgba(73,54,49,0.18)] ring-1 ring-[#DCCBC1]"
+                >
+                  {preview ? (
+                    <img src={preview} alt="Profile Preview" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <User size={70} strokeWidth={1.1} className="text-[#8E181F]/70" />
+                    </div>
+                  )}
 
-                  <div className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/25 via-transparent to-[#351C18]/5" />
-                </div>
+                  <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/20 via-transparent to-[#351C18]/10" />
 
+                  {preview && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-[#351C18]/0 opacity-0 transition-all duration-300 group-hover:bg-[#351C18]/20 group-hover:opacity-100">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#8E181F] shadow-lg backdrop-blur-sm">
+                        <Maximize2 size={18} />
+                      </div>
+                    </div>
+                  )}
+                </button>
+
+                {/* Camera = Edit */}
                 <button
                   type="button"
                   onClick={chooseProfilePhoto}
-                  className="absolute bottom-0 right-0 flex h-10 w-10 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_5px_14px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+                  className="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_6px_16px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+                  aria-label="Change profile photo"
                 >
-                  <Camera size={16} />
+                  <Camera size={18} />
                 </button>
               </div>
 
               {/* Info */}
-              <div className="mt-4 flex items-center gap-1.5 rounded-full border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-1.5 text-[9px] font-semibold text-[#806C63]">
+              <div className="mt-5 flex shrink-0 items-center gap-1.5 rounded-full border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-1.5 text-[9px] font-semibold text-[#806C63]">
                 <ShieldCheck size={12} className="text-[#3E8B62]" />
                 JPG, PNG or WEBP
               </div>
 
-              {/* Choose Button */}
+              {/* Change Photo */}
               <button
                 type="button"
                 onClick={chooseProfilePhoto}
-                className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] text-xs font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F]"
+                className="mt-5 flex h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] text-xs font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F]"
               >
-                <ImagePlus size={16} />
+                <Camera size={16} />
                 {preview ? 'Change Photo' : 'Choose Photo'}
               </button>
 
-              {/* Continue */}
-              <button type="button" onClick={closeProfilePopup} className="mt-2.5 h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] text-xs font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8]">
+              {/* Done */}
+              <button
+                type="button"
+                onClick={closeProfilePopup}
+                className="mt-2.5 h-10 w-full shrink-0 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] text-xs font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8]"
+              >
                 Done
               </button>
 
               <p className="mt-3 text-center text-[9px] leading-4 text-[#A8958C]">Profile photo is optional</p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Viewer */}
+      {showImageViewer && preview && (
+        <div className="fixed inset-0 z-[200] flex h-screen w-screen items-center justify-center overflow-hidden bg-[#180908]/90 p-4 backdrop-blur-xl" onClick={closeImageViewer}>
+          <button
+            type="button"
+            onClick={closeImageViewer}
+            className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white backdrop-blur-md transition-all duration-300 hover:rotate-90 hover:bg-white/20 sm:right-6 sm:top-6"
+          >
+            <X size={19} />
+          </button>
+
+          <div className="relative flex max-h-[88vh] max-w-[92vw] items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <img src={preview} alt="Profile Preview Large" className="max-h-[88vh] max-w-[92vw] rounded-2xl object-contain shadow-[0_30px_100px_rgba(0,0,0,0.5)]" />
+
+            <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-[9px] font-semibold text-white/75 backdrop-blur-md">Profile Photo</div>
           </div>
         </div>
       )}
