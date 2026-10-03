@@ -1,6 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const path = require('path')
 
 const router = express.Router()
 const authMiddleware = require('../middleware/authMiddleware')
@@ -81,9 +82,10 @@ router.post('/register', async (req, res) => {
         to: email.toLowerCase(),
         subject: 'Welcome to MineKart 🎉',
         html,
+  
       })
     } catch (emailError) {
-      console.error('⚠️ Welcome email failed:', emailError.message)
+      console.error('⚠️ Welcome email failed:', emailError)
     }
 
     return res.status(201).json({
