@@ -119,10 +119,11 @@ router.post('/login', async (req, res) => {
       email: email.toLowerCase(),
     })
 
+    // Account not found
     if (!user) {
-      return res.status(401).json({
+      return res.status(404).json({
         success: false,
-        message: 'Invalid email or password',
+        message: 'Account not found',
       })
     }
 
@@ -161,6 +162,7 @@ router.post('/login', async (req, res) => {
       ...authCookieOptions,
       maxAge: AUTH_COOKIE_MAX_AGE,
     })
+
     return res.status(200).json({
       success: true,
       message: 'Login successful',
