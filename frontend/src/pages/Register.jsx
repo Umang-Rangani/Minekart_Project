@@ -215,7 +215,7 @@ export default function Register() {
       </div>
 
       {/* Register Card */}
-      <div className="relative z-10 flex h-[calc(100vh-32px)] max-h-[calc(100vh-32px)] w-full max-w-6xl flex-col overflow-hidden rounded-[30px] border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:max-h-[calc(100vh-48px)]">
+      <div className="relative z-10 flex h-[calc(100vh-32px)] max-h-[calc(100vh-32px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px]  sm:rounded-[30px] border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:max-h-[calc(100vh-48px)]">
         {/* Main Card */}
         <div className="relative z-10 flex h-full max-h-[calc(100vh-32px)] w-full max-w-6xl flex-col overflow-hidden rounded-[28px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:h-auto sm:max-h-[calc(100vh-48px)]">
           {/* Header */}
@@ -232,7 +232,7 @@ export default function Register() {
                 <div className="flex items-center gap-2 sm:gap-3">
                   {/* Icon */}
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/10 shadow-lg backdrop-blur-md sm:h-10 sm:w-10 sm:rounded-xl">
-                    <UserPlus size={16} strokeWidth={2} className="sm:size-[19px]" />
+                    <UserPlus size={16} strokeWidth={2} className="sm:size-4.75" />
                   </div>
 
                   {/* Text */}
@@ -250,7 +250,7 @@ export default function Register() {
                 onClick={() => navigate('/')}
                 className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition-all duration-300 hover:rotate-90 hover:bg-white/15 sm:h-9 sm:w-9 sm:rounded-xl"
               >
-                <X size={16} className="sm:size-[19px]" />
+                <X size={16} className="sm:size-4.75" />
               </button>
             </div>
 
@@ -312,7 +312,7 @@ export default function Register() {
             {/* Form Area */}
             <div className="min-h-0 flex-1 overflow-y-auto bg-[#FFFDFC] p-4 sm:p-7 lg:p-9">
               {/* Section Header */}
-              <div className="mb-5 flex items-center gap-2.5 sm:mb-6 sm:gap-3">
+              <div className="mb-5 flex items-center gap-2.5 sm:mb-6 sm:gap-3 max-sm:hidden">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/15 sm:h-11 sm:w-11">
                   <UserPlus size={16} className="sm:size-4.75" />
                 </div>
