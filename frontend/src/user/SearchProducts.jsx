@@ -14,7 +14,7 @@ export default function SearchProducts() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const items = [{ title: 'Search', link: null }]
+  const items = [{ title: 'Products', link: "/products" },{ title: 'Search', link: null }]
 
   useEffect(() => {
     const getProducts = async () => {

@@ -51,6 +51,9 @@ import HeroPage from './user/HeroPage.jsx'
 import NotFoundPage from './user/NotFoundPage.jsx'
 import Products from './user/Products.jsx'
 import TicTacToe from './game/TicTacToe.jsx'
+import Terms from './components/CustomerService/Terms.jsx'
+import Privacy from './components/CustomerService/Privacy.jsx'
+import Cookies from './components/CustomerService/Cookies.jsx'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
@@ -106,6 +109,10 @@ export default function App() {
 
           <Route path="/my-support" element={<MySupport />} />
           <Route path="/my-support/:id" element={<MySupportDetails />} />
+
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/cookies" element={<Cookies />} />
 
           <Route path="/tictactoe" element={<TicTacToe />} />
         </Route>

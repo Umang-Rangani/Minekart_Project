@@ -1,5 +1,6 @@
 import React from 'react'
-import { Mail, Phone, MapPin, ArrowRight, Globe, Camera, MessageCircle, ShoppingBag } from 'lucide-react'
+import { Mail, Phone, MapPin, ArrowRight, ShoppingBag } from 'lucide-react'
+import { FaInstagram, FaFacebookF, FaWhatsapp, FaYoutube } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 export default function Footer() {
@@ -11,9 +12,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="text-center sm:text-left">
             <Link to="/" className="group inline-flex items-center gap-2.5 sm:gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#B5262D] shadow-lg shadow-black/20 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-105 sm:h-11 sm:w-11">
-                <span className="text-base font-extrabold sm:text-lg">M</span>
-              </div>
+              <img src="/cart_image.jpg" alt="MineKart" className="h-10 w-10 rounded-xl object-contain transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-105 sm:h-11 sm:w-11" />
 
               <span className="text-xl font-extrabold tracking-tight sm:text-2xl">
                 Mine
@@ -25,37 +24,49 @@ export default function Footer() {
 
             {/* Social */}
             <div className="mt-5 flex items-center justify-center gap-2 sm:mt-6 sm:justify-start sm:gap-2.5">
-              <Link
-                to="/"
-                aria-label="MineKart"
+              {/* Instagram */}
+              <a
+                href="https://instagram.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[#D4C4BD] transition-all duration-300 hover:-translate-y-1 hover:border-[#A51D26] hover:bg-[#8E181F] hover:text-white"
               >
-                <Globe size={16} />
-              </Link>
+                <FaInstagram size={16} />
+              </a>
 
-              <Link
-                to="/profile"
-                aria-label="Profile"
+              {/* Facebook */}
+              <a
+                href="https://facebook.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[#D4C4BD] transition-all duration-300 hover:-translate-y-1 hover:border-[#A51D26] hover:bg-[#8E181F] hover:text-white"
               >
-                <Camera size={16} />
-              </Link>
+                <FaFacebookF size={15} />
+              </a>
 
-              <Link
-                to="/orders"
-                aria-label="Orders"
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/919999999999"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[#D4C4BD] transition-all duration-300 hover:-translate-y-1 hover:border-[#A51D26] hover:bg-[#8E181F] hover:text-white"
               >
-                <MessageCircle size={16} />
-              </Link>
+                <FaWhatsapp size={17} />
+              </a>
 
-              <Link
-                to="/cart"
-                aria-label="Cart"
+              {/* YouTube */}
+              <a
+                href="https://youtube.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-[#D4C4BD] transition-all duration-300 hover:-translate-y-1 hover:border-[#A51D26] hover:bg-[#8E181F] hover:text-white"
               >
-                <ShoppingBag size={16} />
-              </Link>
+                <FaYoutube size={17} />
+              </a>
             </div>
           </div>
 
@@ -147,11 +158,11 @@ export default function Footer() {
                   <Phone size={16} />
                 </span>
 
-                <span>+91 99999 99999</span>
+                <span>+91 94082 09662</span>
               </a>
 
               {/* Email */}
-              <a href="mailto:support@minekart.com" className="group flex items-center gap-2.5 text-xs text-[#CDBDB5] transition-colors duration-300 hover:text-white sm:gap-3 sm:text-sm">
+              <a href="mailto:mansi@minekart.com" className="group flex items-center gap-2.5 text-xs text-[#CDBDB5] transition-colors duration-300 hover:text-white sm:gap-3 sm:text-sm">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-[#D65A5F] transition-all duration-300 group-hover:bg-[#8E181F] group-hover:text-white sm:h-9 sm:w-9 sm:rounded-xl">
                   <Mail size={16} />
                 </span>
@@ -168,7 +179,9 @@ export default function Footer() {
         <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-2 px-5 py-3.5 text-center sm:flex-row sm:px-7 sm:py-4 sm:text-left">
           <p className="text-[10px] leading-5 text-[#BFAEA6] sm:text-xs">Genuine Products&nbsp; • &nbsp;Secure Shopping&nbsp; • &nbsp;Easy Returns</p>
 
-          <Link to={"/tictactoe"} className="text-[10px] font-semibold text-[#D65A5F] sm:text-xs">Time Pass Game</Link>
+          <Link to="/tictactoe" className="text-[10px] font-semibold text-[#D65A5F] sm:text-xs">
+            Time Pass Game
+          </Link>
         </div>
       </div>
 
@@ -178,15 +191,15 @@ export default function Footer() {
           <p>© 2026 MineKart. All rights reserved.</p>
 
           <div className="flex items-center gap-5">
-            <Link to="/" className="transition-colors duration-300 hover:text-white">
+            <Link to="/terms" className="transition-colors duration-300 hover:text-white">
               Terms
             </Link>
 
-            <Link to="/profile" className="transition-colors duration-300 hover:text-white">
+            <Link to="/privacy" className="transition-colors duration-300 hover:text-white">
               Privacy
             </Link>
 
-            <Link to="/" className="transition-colors duration-300 hover:text-white">
+            <Link to="/cookies" className="transition-colors duration-300 hover:text-white">
               Cookies
             </Link>
           </div>
