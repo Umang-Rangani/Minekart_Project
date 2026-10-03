@@ -1,7 +1,7 @@
 import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Camera, Eye, EyeOff, LockKeyhole, Mail, Phone, Save, ShieldCheck, User, UserRound, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Camera, Eye, EyeOff, LockKeyhole, Mail, Phone, Save, ShieldCheck, User, UserRound, CheckCircle2, X, Maximize2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { axiosInstance } from '../config/axiosConfig'
 import { useUser } from '../context/userProvider'
@@ -20,6 +20,7 @@ export default function ProfileUpdate() {
   const [avatarPreview, setAvatarPreview] = useState('')
 
   const [showPassword, setShowPassword] = useState(false)
+  const [showAvatarViewer, setShowAvatarViewer] = useState(false)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -44,8 +45,42 @@ export default function ProfileUpdate() {
     setAvatarPreview(user.avatar || '')
     setLoading(false)
 
-    document.title = `Profile-Update | MineKart`
+    document.title = 'Profile-Update | MineKart'
   }, [user])
+
+  useEffect(() => {
+    if (!showAvatarViewer) return
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowAvatarViewer(false)
+      }
+    }
+
+    const originalOverflow = document.body.style.overflow
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [showAvatarViewer])
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview?.startsWith('blob:')) {
+        URL.revokeObjectURL(avatarPreview)
+      }
+    }
+  }, [avatarPreview])
+
+  const getAvatarSrc = () => {
+    if (!avatarPreview) return ''
+
+    return avatarPreview.startsWith('blob:') ? avatarPreview : getImageUrl(avatarPreview)
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -63,12 +98,18 @@ export default function ProfileUpdate() {
 
     if (!file.type.startsWith('image/')) {
       toast.error('Please select a valid image')
+      e.target.value = ''
       return
     }
 
     if (file.size > 5 * 1024 * 1024) {
       toast.error('Image size must be less than 5MB')
+      e.target.value = ''
       return
+    }
+
+    if (avatarPreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(avatarPreview)
     }
 
     setAvatarFile(file)
@@ -151,16 +192,106 @@ export default function ProfileUpdate() {
 
   if (loading) {
     return (
-      <div className="min-h-[70vh] bg-[#FBF7F2] px-3 py-5 sm:px-5">
-        <div className="mx-auto max-w-6xl">
-          <div className="animate-pulse overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white">
-            <div className="h-16 bg-[#F7EEE7] sm:h-17" />
+      <div className="min-h-[70vh] bg-[#FBF7F2] px-3 py-4 sm:px-5 sm:py-5">
+        <div className="mx-auto">
+          <div className="animate-pulse">
+            {/* BREADCRUMB SHIMMER */}
+            <div className="mb-3 flex h-5 items-center gap-2 px-1 sm:mb-4">
+              <div className="h-3 w-14 rounded bg-[#E8DDD4]" />
+              <div className="h-3 w-3 rounded bg-[#EEE5DF]" />
+              <div className="h-3 w-20 rounded bg-[#E8DDD4]" />
+            </div>
 
-            <div className="space-y-5 p-5 sm:p-7">
-              <div className="h-20 w-20 rounded-full bg-[#EEE5DF]" />
-              <div className="h-11 rounded-xl bg-[#EEE5DF]" />
-              <div className="h-11 rounded-xl bg-[#EEE5DF]" />
-              <div className="h-11 rounded-xl bg-[#EEE5DF]" />
+            {/* HEADER SHIMMER */}
+            <div className="mb-4 flex h-16 items-center justify-between overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-lg bg-[#EEE5DF] sm:h-10 sm:w-10" />
+
+                <div className="space-y-1.5">
+                  <div className="h-3 w-24 rounded bg-[#E8DDD4] sm:w-28" />
+                  <div className="h-2.5 w-40 rounded bg-[#F0E9E4] sm:w-52" />
+                </div>
+              </div>
+
+              <div className="h-8 w-16 rounded-lg bg-[#F0E9E4] sm:w-20" />
+            </div>
+
+            {/* MAIN SHIMMER */}
+            <div className="grid items-start gap-4 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]">
+              {/* PHOTO SHIMMER */}
+              <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
+                <div className="h-20 bg-[#EEE5DF]" />
+
+                <div className="px-4 pb-5 sm:px-5">
+                  <div className="-mt-9 flex justify-center">
+                    <div className="h-24 w-24 rounded-full border-4 border-white bg-[#E8DDD4] shadow-sm sm:h-28 sm:w-28" />
+                  </div>
+
+                  <div className="mt-4 flex flex-col items-center">
+                    <div className="h-3.5 w-24 rounded bg-[#E8DDD4]" />
+                    <div className="mt-2 h-2.5 w-32 rounded bg-[#F0E9E4]" />
+                  </div>
+
+                  <div className="mt-4 h-10 rounded-xl bg-[#F0E9E4]" />
+
+                  <div className="mt-4 h-16 rounded-xl bg-[#F0E9E4]" />
+                </div>
+              </div>
+
+              {/* FORM SHIMMER */}
+              <div className="space-y-4">
+                <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white">
+                  <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
+                    <div className="h-9 w-9 rounded-xl bg-[#EEE5DF]" />
+
+                    <div className="space-y-1.5">
+                      <div className="h-3.5 w-36 rounded bg-[#E8DDD4]" />
+                      <div className="h-2.5 w-48 rounded bg-[#F0E9E4]" />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
+                    <div className="space-y-1.5">
+                      <div className="h-2.5 w-16 rounded bg-[#E8DDD4]" />
+                      <div className="h-11 rounded-xl bg-[#F0E9E4]" />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="h-2.5 w-20 rounded bg-[#E8DDD4]" />
+                      <div className="h-11 rounded-xl bg-[#F0E9E4]" />
+                    </div>
+
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <div className="h-2.5 w-24 rounded bg-[#E8DDD4]" />
+                      <div className="h-11 rounded-xl bg-[#F0E9E4]" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white">
+                  <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
+                    <div className="h-9 w-9 rounded-xl bg-[#EEE5DF]" />
+
+                    <div className="space-y-1.5">
+                      <div className="h-3.5 w-32 rounded bg-[#E8DDD4]" />
+                      <div className="h-2.5 w-48 rounded bg-[#F0E9E4]" />
+                    </div>
+                  </div>
+
+                  <div className="p-4 sm:p-5">
+                    <div className="h-11 rounded-xl bg-[#F0E9E4]" />
+
+                    <div className="mt-3 h-12 rounded-xl bg-[#F0E9E4]" />
+                  </div>
+                </div>
+
+                <div className="h-20 rounded-2xl bg-[#F0E9E4]" />
+
+                <div className="flex gap-2.5">
+                  <div className="h-11 flex-1 rounded-xl bg-[#E8DDD4] sm:flex-none sm:w-24" />
+                  <div className="h-11 flex-1 rounded-xl bg-[#E8DDD4] sm:flex-none sm:w-32" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -200,9 +331,41 @@ export default function ProfileUpdate() {
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-[#FBF7F2]">
+      {/* IMAGE VIEWER */}
+      {showAvatarViewer && avatarPreview && (
+        <div
+          className="fixed inset-0 z-200 flex h-screen w-screen items-center justify-center overflow-hidden bg-white/35 p-4 backdrop-blur-md"
+          onClick={() => setShowAvatarViewer(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Profile photo preview"
+        >
+          <button
+            type="button"
+            onClick={() => setShowAvatarViewer(false)}
+            aria-label="Close image preview"
+            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/75 text-[#351C18] shadow-[0_4px_16px_rgba(73,54,49,0.12)] backdrop-blur-md transition-all duration-300 hover:rotate-90 hover:bg-white hover:text-[#8E181F] sm:right-6 sm:top-6"
+          >
+            <X size={19} />
+          </button>
+
+          <div className="relative flex max-h-[82vh] max-w-[92vw] items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={getAvatarSrc()}
+              alt={formData.name || 'Profile'}
+              className="max-h-[76vh] max-w-[88vw] rounded-2xl object-contain shadow-[0_20px_60px_rgba(53,28,24,0.22)] sm:max-h-[80vh] sm:max-w-[82vw] md:max-w-[72vw] lg:max-w-[60vw] xl:max-w-[52vw]"
+            />
+
+            <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/70 bg-white/70 px-3 py-1.5 text-[9px] font-semibold text-[#67544D] shadow-sm backdrop-blur-md sm:bottom-4 sm:px-4 sm:py-2 sm:text-[10px]">
+              Profile Photo
+            </div>
+          </div>
+        </div>
+      )}
+
       <BreadCrumb items={items} />
 
-      <div className="mx-auto pb-8 pt-4  sm:pt-5 ">
+      <div className="mx-auto pb-8 pt-4 sm:pt-5">
         {/* HEADER */}
         <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
           <div className="flex min-w-0 items-center gap-2.5">
@@ -247,17 +410,33 @@ export default function ProfileUpdate() {
               <div className="px-4 pb-5 sm:px-5">
                 <div className="-mt-9 flex justify-center">
                   <div className="relative">
-                    <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#F7EEE7] text-[#A51D26] shadow-[0_6px_20px_rgba(73,54,49,0.12)] ring-1 ring-[#E8DDD4] sm:h-28 sm:w-28">
+                    {/* PROFILE IMAGE */}
+                    <div
+                      onClick={() => avatarPreview && setShowAvatarViewer(true)}
+                      className={`group flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#F7EEE7] text-[#A51D26] shadow-[0_6px_20px_rgba(73,54,49,0.12)] ring-1 ring-[#E8DDD4] sm:h-28 sm:w-28 ${
+                        avatarPreview ? 'cursor-zoom-in' : ''
+                      }`}
+                    >
                       {avatarPreview ? (
-                        <img src={avatarPreview.startsWith('blob:') ? avatarPreview : getImageUrl(avatarPreview)} alt={formData.name || 'Profile'} className="h-full w-full object-cover" />
+                        <>
+                          <img src={getAvatarSrc()} alt={formData.name || 'Profile'} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+
+                          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-all duration-300 group-hover:bg-black/20">
+                            <div className="flex h-8 w-8 scale-75 items-center justify-center rounded-full bg-white/90 text-[#8E181F] opacity-0 shadow-md transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
+                              <Maximize2 size={14} />
+                            </div>
+                          </div>
+                        </>
                       ) : (
                         <User size={42} strokeWidth={1.5} />
                       )}
                     </div>
 
+                    {/* CAMERA */}
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
+                      aria-label="Change profile photo"
                       className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-4 border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md transition hover:scale-105"
                     >
                       <Camera size={15} />
@@ -446,7 +625,7 @@ export default function ProfileUpdate() {
                   type="button"
                   onClick={() => navigate('/profile')}
                   disabled={saving}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                 >
                   <ArrowLeft size={15} />
                   Cancel
@@ -455,7 +634,7 @@ export default function ProfileUpdate() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-6 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.22)] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-6 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.22)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                 >
                   {saving ? (
                     <>

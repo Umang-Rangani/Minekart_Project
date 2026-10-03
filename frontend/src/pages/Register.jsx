@@ -543,11 +543,8 @@ export default function Register() {
 
       {/* Mobile Profile Popup */}
       {showProfilePopup && (
-        <div className="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center overflow-hidden bg-[#241210]/75 px-4 py-4 backdrop-blur-md md:hidden" onClick={closeProfilePopup}>
-          <div
-            className="relative flex max-h-[calc(100vh-32px)] w-full max-w-sm flex-col overflow-hidden rounded-[24px] border border-white/30 bg-[#FFFDFC]/95 shadow-[0_25px_80px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-100 flex h-screen w-screen items-center justify-center overflow-hidden bg-[#241210]/75 px-4 py-4 backdrop-blur-md md:hidden" onClick={closeProfilePopup}>
+          <div className="relative flex max-h-[calc(100vh-32px)] w-full max-w-sm flex-col overflow-hidden rounded-3xl border border-white/30 bg-[#FFFDFC]/95 shadow-[0_25px_80px_rgba(0,0,0,0.4)] backdrop-blur-xl" onClick={(e) => e.stopPropagation()}>
             {/* Popup Header */}
             <div className="relative shrink-0 overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A211E] to-[#8E181F] px-5 py-4 text-white">
               <div className="absolute -right-10 -top-12 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
@@ -572,7 +569,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={openImageViewer}
-                  className="group relative block h-60 w-60 overflow-hidden rounded-full border-[4px] border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_15px_35px_rgba(73,54,49,0.18)] ring-1 ring-[#DCCBC1]"
+                  className="group relative block h-60 w-60 overflow-hidden rounded-full border-4 border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_15px_35px_rgba(73,54,49,0.18)] ring-1 ring-[#DCCBC1]"
                 >
                   {preview ? (
                     <img src={preview} alt="Profile Preview" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -597,7 +594,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={chooseProfilePhoto}
-                  className="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_6px_16px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+                  className="absolute bottom-1 right-8 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_6px_16px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
                   aria-label="Change profile photo"
                 >
                   <Camera size={18} />
@@ -637,7 +634,7 @@ export default function Register() {
 
       {/* Image Viewer */}
       {showImageViewer && preview && (
-        <div className="fixed inset-0 z-[200] flex h-screen w-screen items-center justify-center overflow-hidden bg-[#180908]/90 p-4 backdrop-blur-xl" onClick={closeImageViewer}>
+        <div className="fixed inset-0 z-200 flex h-screen w-screen items-center justify-center overflow-hidden bg-[#180908]/90 p-4 backdrop-blur-xl" onClick={closeImageViewer}>
           <button
             type="button"
             onClick={closeImageViewer}
@@ -646,10 +643,19 @@ export default function Register() {
             <X size={19} />
           </button>
 
-          <div className="relative flex max-h-[88vh] max-w-[92vw] items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            <img src={preview} alt="Profile Preview Large" className="max-h-[88vh] max-w-[92vw] rounded-2xl object-contain shadow-[0_30px_100px_rgba(0,0,0,0.5)]" />
+          <div
+            className="relative flex max-h-[78vh] max-w-[86vw] items-center justify-center sm:max-h-[80vh] sm:max-w-[88vw] md:max-h-[82vh] md:max-w-[82vw] lg:max-h-[76vh] lg:max-w-[68vw] xl:max-h-[72vh] xl:max-w-[58vw]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={preview}
+              alt="Profile Preview Large"
+              className=" max-h-[72vh] max-w-[84vw] rounded-xl object-contain shadow-[0_30px_100px_rgba(0,0,0,0.5)] sm:max-h-[74vh] sm:max-w-[84vw] sm:rounded-2xl md:max-h-[76vh] md:max-w-[78vw] lg:max-h-[68vh] lg:max-w-[62vw] xl:max-h-[64vh] xl:max-w-[52vw] "
+            />
 
-            <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-[9px] font-semibold text-white/75 backdrop-blur-md">Profile Photo</div>
+            <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-[9px] font-semibold text-white/75 backdrop-blur-md sm:bottom-4 sm:px-4 sm:py-2 sm:text-[10px]">
+              Profile Photo
+            </div>
           </div>
         </div>
       )}
