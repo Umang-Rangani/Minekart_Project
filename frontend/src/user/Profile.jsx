@@ -60,6 +60,10 @@ export default function Profile() {
   }
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
     if (user) {
       getAddresses()
       document.title = `My-Profile | MineKart`

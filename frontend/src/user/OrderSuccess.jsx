@@ -373,7 +373,7 @@ export default function OrderSuccess() {
                           {order.shippingAddress.addressType && <span className="rounded-md bg-[#F7EEE7] px-1.5 py-0.5 text-[8px] font-bold text-[#67544D]">{order.shippingAddress.addressType}</span>}
                         </div>
 
-                        <p className="mt-1.5 text-[10px] leading-4.5 text-[#67544D]">{order.shippingAddress.address}</p>
+                        <p className="mt-1.5 text-[10px] leading-4.5 text-[#67544D]">{order.shippingAddress.addressLine}</p>
 
                         <p className="mt-1 text-[9px] font-semibold text-[#806C63]">
                           {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}
