@@ -6,7 +6,7 @@ import ProductOfferList from './ProductOfferList'
 
 export default function Home() {
   useEffect(() => {
-    document.title = 'Home | MineKart'
+    document.title = ' MineKart'
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 

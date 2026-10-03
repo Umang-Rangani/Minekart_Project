@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
 import { Link, NavLink } from 'react-router-dom'
-import { Image, Zap } from 'lucide-react'
-// import { iconMap } from '../data/iconMap'
+import { Image, Zap, ArrowRight } from 'lucide-react'
 import { getImageUrl } from '../utils/imageUrl'
 
 export default function CategoryList() {
@@ -75,14 +74,13 @@ export default function CategoryList() {
               </div>
             ) : (
               categories?.data?.map((category) => {
-                // const Icon = iconMap[category.categoryLucideIcons]
-
                 const active = activeCategory === category._id
+
                 const isDisabled = category.status === 'Inactive'
 
                 const categoryContent = (
                   <>
-                    {/* CATEGORY ICON & IMAGE */}
+                    {/* CATEGORY IMAGE */}
                     <div
                       className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-md sm:h-9 sm:w-9 ${
                         isDisabled
@@ -93,7 +91,7 @@ export default function CategoryList() {
                       }`}
                     >
                       {category.categoryImage ? (
-                        <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className={`h-full w-full object-contain overflow-hidden rounded-md ${isDisabled ? 'grayscale opacity-40' : ''}`} />
+                        <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className={`h-full w-full overflow-hidden rounded-md object-contain ${isDisabled ? 'grayscale opacity-40' : ''}`} />
                       ) : (
                         <Image size={16} strokeWidth={2} />
                       )}
@@ -101,9 +99,6 @@ export default function CategoryList() {
 
                     {/* CATEGORY NAME */}
                     <span className={`max-w-18 truncate whitespace-nowrap text-[9px] sm:max-w-23 sm:text-xs ${isDisabled ? 'font-semibold text-[#888888]' : active ? 'font-bold text-[#8E181F]' : 'font-semibold'}`}>{category.categoryName}</span>
-
-                    {/* INACTIVE */}
-                    {/* {isDisabled && <span className="rounded-md bg-[#E8E5E2] px-1 py-0.5 text-[6px] font-bold uppercase tracking-wide text-[#888888] sm:px-1.5 sm:text-[7px]">Inactive</span>} */}
 
                     {/* ACTIVE INDICATOR */}
                     {active && !isDisabled && <span className="absolute bottom-0 left-2 right-2 h-0.75 rounded-t-full bg-linear-to-r from-[#7D171C] to-[#B5262D] sm:left-3 sm:right-3" />}
@@ -139,6 +134,31 @@ export default function CategoryList() {
               })
             )}
           </div>
+        </div>
+
+        {/* VIEW ALL */}
+        <div className="shrink-0 border-l border-[#E8DDD4] bg-[#FBF7F2]">
+          {loading ? (
+            <div className="flex h-full w-18 flex-col items-center justify-center gap-1 px-2 sm:w-28 sm:gap-1.5 sm:px-5">
+              <div className="h-8 w-8 animate-pulse rounded-xl bg-[#E8DDD4] sm:h-9 sm:w-9" />
+
+              <div className="h-2 w-12 animate-pulse rounded bg-[#E8DDD4] sm:h-2.5 sm:w-14" />
+            </div>
+          ) : (
+            <Link
+              to="/category"
+              onClick={() => setActiveCategory(null)}
+              className="group relative flex h-full w-18 flex-col items-center justify-center gap-1 px-2 text-[#67544D] transition-colors duration-200 hover:bg-[#F7EEE7] hover:text-[#8E181F] sm:w-28 sm:gap-1.5 sm:px-5"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#F1E7E0] text-[#67544D] transition-all duration-200 group-hover:bg-[#F2DDD5] group-hover:text-[#8E181F] sm:h-9 sm:w-9">
+                <ArrowRight size={16} strokeWidth={2.2} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+              </div>
+
+              <span className="whitespace-nowrap text-[9px] font-semibold sm:text-xs">View All</span>
+
+              <span className="absolute bottom-0 left-2 right-2 h-0.75 origin-center scale-x-0 rounded-t-full bg-linear-to-r from-[#7D171C] to-[#B5262D] transition-transform duration-200 group-hover:scale-x-100 sm:left-3 sm:right-3" />
+            </Link>
+          )}
         </div>
       </div>
     </div>
