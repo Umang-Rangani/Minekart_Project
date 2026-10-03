@@ -219,38 +219,44 @@ export default function Register() {
         {/* Main Card */}
         <div className="relative z-10 flex h-full max-h-[calc(100vh-32px)] w-full max-w-6xl flex-col overflow-hidden rounded-[28px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:h-auto sm:max-h-[calc(100vh-48px)]">
           {/* Header */}
-          <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#321715] via-[#64171B] to-[#A51D26] px-5 py-5 text-white sm:px-8 sm:py-6">
+          <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#321715] via-[#64171B] to-[#A51D26] px-3.5 py-3 text-white sm:px-8 sm:py-6">
             {/* Header Glow */}
-            <div className="absolute -right-16 -top-24 h-56 w-56 rounded-full bg-white/7 blur-sm" />
+            <div className="absolute -right-16 -top-24 h-40 w-40 rounded-full bg-white/7 blur-sm sm:h-56 sm:w-56" />
 
-            <div className="absolute -bottom-28 right-[22%] h-52 w-52 rounded-full bg-[#D4A373]/10 blur-2xl" />
+            <div className="absolute -bottom-20 right-[18%] h-36 w-36 rounded-full bg-[#D4A373]/10 blur-2xl sm:-bottom-28 sm:h-52 sm:w-52" />
 
-            <div className="absolute -bottom-20 -left-16 h-40 w-40 rounded-full bg-[#A51D26]/30 blur-xl" />
+            <div className="absolute -bottom-14 -left-12 h-28 w-28 rounded-full bg-[#A51D26]/30 blur-xl sm:-bottom-20 sm:-left-16 sm:h-40 sm:w-40" />
 
             <div className="relative flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 shadow-lg backdrop-blur-md">
-                    <UserPlus size={19} strokeWidth={2} />
+                <div className="flex items-center gap-2 sm:gap-3">
+                  {/* Icon */}
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/10 shadow-lg backdrop-blur-md sm:h-10 sm:w-10 sm:rounded-xl">
+                    <UserPlus size={16} strokeWidth={2} className="sm:size-[19px]" />
                   </div>
 
+                  {/* Text */}
                   <div>
-                    <h1 className="text-xl font-extrabold tracking-tight sm:text-2xl">Create Account</h1>
+                    <h1 className="text-base font-extrabold tracking-tight sm:text-2xl">Create Account</h1>
 
-                    <p className="mt-0.5 text-[11px] text-[#F3DCD5] sm:text-xs">Your MineKart shopping journey starts here</p>
+                    <p className="mt-0.5 text-[9px] leading-3.5 text-[#F3DCD5] sm:text-xs">Your MineKart shopping journey starts here</p>
                   </div>
                 </div>
               </div>
 
-              <button type="button" onClick={() => navigate('/')} className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition-all duration-300 hover:rotate-90 hover:bg-white/15">
-                <X size={19} />
+              {/* Close */}
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition-all duration-300 hover:rotate-90 hover:bg-white/15 sm:h-9 sm:w-9 sm:rounded-xl"
+              >
+                <X size={16} className="sm:size-[19px]" />
               </button>
             </div>
 
             {/* Header Bottom Line */}
             <div className="absolute bottom-0 left-0 h-px w-full bg-linear-to-r from-transparent via-[#D4A373]/40 to-transparent" />
           </div>
-
           {/* Form */}
           <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[310px_1fr]">
             {/* Profile Section */}
@@ -278,7 +284,7 @@ export default function Register() {
 
                   {/* Inner shine */}
                   <div className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/25 via-transparent to-[#351C18]/5" />
-                </div>  
+                </div>
 
                 <button
                   type="button"
