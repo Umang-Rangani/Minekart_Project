@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Camera, Mail, Lock, User, Phone, X, UserPlus, ArrowLeft, ShieldCheck } from 'lucide-react'
+import { Camera, Mail, Lock, User, Phone, X, UserPlus, ArrowLeft, ShieldCheck, ImagePlus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile } from '../utils/uploadFile'
@@ -14,6 +14,7 @@ export default function Register() {
 
   const [imageFile, setImageFile] = useState(null)
   const [preview, setPreview] = useState('')
+  const [showProfilePopup, setShowProfilePopup] = useState(false)
 
   const [signUp, setSignUp] = useState({
     name: '',
@@ -68,6 +69,7 @@ export default function Register() {
     setPreview('')
     setError('')
     setSuccess('')
+    setShowProfilePopup(false)
 
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -135,21 +137,30 @@ export default function Register() {
     }
   }
 
+  const openProfilePopup = () => {
+    setShowProfilePopup(true)
+  }
+
+  const closeProfilePopup = () => {
+    setShowProfilePopup(false)
+  }
+
+  const chooseProfilePhoto = () => {
+    fileInputRef.current?.click()
+  }
+
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-3 py-4 sm:px-5 sm:py-6 lg:px-8">
-      {/* Premium MineKart Background */}
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-3 py-3 sm:px-5 sm:py-6 lg:px-8">
+      {/* Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Main gradients */}
         <div className="absolute inset-0 bg-linear-to-br from-[#241210] via-[#4B171A] to-[#8E181F]" />
 
-        {/* Large glow */}
         <div className="absolute -left-32 -top-32 h-105 w-105 rounded-full bg-[#A51D26]/35 blur-[100px]" />
 
         <div className="absolute -bottom-40 -right-32 h-125 w-125 rounded-full bg-[#D4A373]/15 blur-[120px]" />
 
         <div className="absolute left-[45%] top-[10%] h-56 w-56 rounded-full bg-[#7D171C]/30 blur-[90px]" />
 
-        {/* E-commerce grid */}
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
@@ -161,10 +172,10 @@ export default function Register() {
           }}
         />
 
-        {/* Decorative floating cards */}
         <div className="absolute left-[5%] top-[18%] hidden h-24 w-36 -rotate-12 rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-sm lg:block">
           <div className="p-4">
             <div className="h-2 w-16 rounded-full bg-white/20" />
+
             <div className="mt-3 h-2 w-24 rounded-full bg-white/10" />
 
             <div className="mt-4 flex gap-2">
@@ -189,12 +200,10 @@ export default function Register() {
           </div>
         </div>
 
-        {/* Floating circles */}
         <div className="absolute bottom-[13%] left-[13%] h-16 w-16 rounded-full border border-[#D4A373]/20 bg-[#D4A373]/5 backdrop-blur-sm" />
 
         <div className="absolute right-[16%] top-[15%] h-20 w-20 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm" />
 
-        {/* Brand decorative text */}
         <div className="absolute left-8 top-8 hidden select-none text-white/10 xl:block">
           <p className="text-4xl font-black tracking-tight">
             Mine
@@ -210,41 +219,35 @@ export default function Register() {
           <p className="mt-1 text-2xl font-black">STARTS HERE</p>
         </div>
 
-        {/* Dark overlay */}
         <div className="absolute inset-0 bg-[#1F0D0B]/20" />
       </div>
 
-      {/* Register Card */}
-      <div className="relative z-10 flex h-[calc(100vh-32px)] max-h-[calc(100vh-32px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px]  sm:rounded-[30px] border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:max-h-[calc(100vh-48px)]">
-        {/* Main Card */}
-        <div className="relative z-10 flex h-full max-h-[calc(100vh-32px)] w-full max-w-6xl flex-col overflow-hidden rounded-[28px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:h-auto sm:max-h-[calc(100vh-48px)]">
+      {/* Main Card */}
+      <div className="relative z-10 flex h-[calc(100vh-24px)] max-h-[calc(100vh-24px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px] border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:max-h-[calc(100vh-48px)] sm:rounded-[30px]">
+        <div className="relative z-10 flex h-full max-h-[calc(100vh-24px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:max-h-[calc(100vh-48px)] sm:rounded-[28px]">
           {/* Header */}
           <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#321715] via-[#64171B] to-[#A51D26] px-3.5 py-3 text-white sm:px-8 sm:py-6">
-            {/* Header Glow */}
             <div className="absolute -right-16 -top-24 h-40 w-40 rounded-full bg-white/7 blur-sm sm:h-56 sm:w-56" />
 
             <div className="absolute -bottom-20 right-[18%] h-36 w-36 rounded-full bg-[#D4A373]/10 blur-2xl sm:-bottom-28 sm:h-52 sm:w-52" />
 
             <div className="absolute -bottom-14 -left-12 h-28 w-28 rounded-full bg-[#A51D26]/30 blur-xl sm:-bottom-20 sm:-left-16 sm:h-40 sm:w-40" />
 
-            <div className="relative flex items-center justify-between">
-              <div>
+            <div className="relative flex items-center justify-between gap-3">
+              <div className="min-w-0">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  {/* Icon */}
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/10 shadow-lg backdrop-blur-md sm:h-10 sm:w-10 sm:rounded-xl">
                     <UserPlus size={16} strokeWidth={2} className="sm:size-4.75" />
                   </div>
 
-                  {/* Text */}
-                  <div>
+                  <div className="min-w-0">
                     <h1 className="text-base font-extrabold tracking-tight sm:text-2xl">Create Account</h1>
 
-                    <p className="mt-0.5 text-[9px] leading-3.5 text-[#F3DCD5] sm:text-xs">Your MineKart shopping journey starts here</p>
+                    <p className="mt-0.5 truncate text-[9px] leading-3.5 text-[#F3DCD5] sm:text-xs">Your MineKart shopping journey starts here</p>
                   </div>
                 </div>
               </div>
 
-              {/* Close */}
               <button
                 type="button"
                 onClick={() => navigate('/')}
@@ -254,65 +257,83 @@ export default function Register() {
               </button>
             </div>
 
-            {/* Header Bottom Line */}
             <div className="absolute bottom-0 left-0 h-px w-full bg-linear-to-r from-transparent via-[#D4A373]/40 to-transparent" />
           </div>
-          {/* Form */}
+
+          {/* Main Form */}
           <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[310px_1fr]">
-            {/* Profile Section */}
-            <div className="relative flex min-h-0 shrink-0 flex-col items-center justify-center overflow-hidden border-b border-[#E8DDD4] bg-linear-to-br from-[#FBF7F2] via-[#F8EFE9] to-[#F3E6DE] px-4 py-3 sm:px-6 sm:py-7 md:border-b-0 md:border-r md:px-8">
-              {/* Decorative glow */}
+            {/* Desktop Profile Section */}
+            <div className="relative hidden min-h-0 shrink-0 flex-col items-center justify-center overflow-hidden border-b border-[#E8DDD4] bg-linear-to-br from-[#FBF7F2] via-[#F8EFE9] to-[#F3E6DE] px-8 md:flex md:border-b-0 md:border-r">
               <div className="pointer-events-none absolute -left-16 top-8 h-40 w-40 rounded-full bg-[#A51D26]/6 blur-3xl" />
 
               <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-[#D4A373]/15 blur-3xl" />
 
               {/* Profile Heading */}
-              <div className="relative z-10 mb-2 text-center sm:mb-5 max-sm:hidden">
-                <div className="mx-auto mb-1.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#8E181F]/10 text-[#8E181F] sm:mb-2.5 sm:h-10 sm:w-10 sm:rounded-xl">
-                  <User size={14} className="sm:size-4.5" />
+              <div className="relative z-10 mb-5 text-center">
+                <div className="mx-auto mb-2.5 flex h-10 w-10 items-center justify-center rounded-xl bg-[#8E181F]/10 text-[#8E181F]">
+                  <User size={18} />
                 </div>
 
-                <h2 className="text-xs font-extrabold text-[#351C18] sm:text-base">Profile Photo</h2>
+                <h2 className="text-base font-extrabold text-[#351C18]">Profile Photo</h2>
 
-                <p className="mt-0.5 text-[9px] text-[#806C63] sm:mt-1 sm:text-xs">Personalize your account</p>
+                <p className="mt-1 text-xs text-[#806C63]">Personalize your account</p>
               </div>
 
               {/* Avatar */}
               <div className="relative z-10">
-                <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_10px_25px_rgba(73,54,49,0.15)] ring-1 ring-[#DCCBC1] sm:h-44 sm:w-44 sm:border-[5px]">
-                  {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={32} strokeWidth={1.1} className="text-[#8E181F]/70 sm:size-19.5" />}
+                <div className="relative flex h-44 w-44 items-center justify-center overflow-hidden rounded-full border-[5px] border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_10px_25px_rgba(73,54,49,0.15)] ring-1 ring-[#DCCBC1]">
+                  {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={78} strokeWidth={1.1} className="text-[#8E181F]/70" />}
 
-                  {/* Inner shine */}
                   <div className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/25 via-transparent to-[#351C18]/5" />
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_5px_12px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 sm:bottom-1 sm:right-1 sm:h-11 sm:w-11 sm:border-[3px]"
+                  onClick={chooseProfilePhoto}
+                  className="absolute bottom-1 right-1 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_5px_12px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105"
                 >
-                  <Camera size={12} className="sm:size-4.5" />
+                  <Camera size={18} />
                 </button>
 
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
               </div>
 
-              {/* Upload info */}
-              <div className="relative z-10 mt-5 flex items-center gap-1.5 rounded-full border border-[#E2D5CC] bg-white/80 px-2.5 py-1 text-[8px] font-semibold text-[#806C63] shadow-sm backdrop-blur-sm sm:mt-5 sm:gap-2 sm:px-3.5 sm:py-1.5 sm:text-[10px]">
-                <ShieldCheck size={10} className="text-[#3E8B62] sm:size-3.25" />
+              {/* Upload Info */}
+              <div className="relative z-10 mt-5 flex items-center gap-2 rounded-full border border-[#E2D5CC] bg-white/80 px-3.5 py-1.5 text-[10px] font-semibold text-[#806C63] shadow-sm backdrop-blur-sm">
+                <ShieldCheck size={13} className="text-[#3E8B62]" />
                 JPG, PNG or WEBP
               </div>
 
-              {/* Small shopping line */}
-              <div className="relative z-10 mt-2 hidden text-center md:block">
+              <div className="relative z-10 mt-2 text-center">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A8958C]">Shop more • Live better</p>
               </div>
             </div>
 
             {/* Form Area */}
             <div className="min-h-0 flex-1 overflow-y-auto bg-[#FFFDFC] p-4 sm:p-7 lg:p-9">
+              {/* Mobile Profile Photo Trigger */}
+              <button
+                type="button"
+                onClick={openProfilePopup}
+                className="mb-5 flex w-full items-center gap-3 rounded-2xl border border-[#E2D5CC] bg-[#FBF7F2] p-3.5 text-left transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] sm:hidden"
+              >
+                <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-sm ring-1 ring-[#DCCBC1]">
+                  {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={22} strokeWidth={1.2} className="text-[#8E181F]/70" />}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-extrabold text-[#351C18]">{preview ? 'Profile Photo Added' : 'Add Profile Photo'}</p>
+
+                  <p className="mt-0.5 text-[10px] text-[#806C63]">{preview ? 'Tap to change your profile photo' : 'Optional • Personalize your account'}</p>
+                </div>
+
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#8E181F]/10 text-[#8E181F]">
+                  <Camera size={15} />
+                </div>
+              </button>
+
               {/* Section Header */}
-              <div className="mb-5 flex items-center gap-2.5 sm:mb-6 sm:gap-3 max-sm:hidden">
+              <div className="mb-5 hidden items-center gap-2.5 sm:mb-6 sm:flex sm:gap-3">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/15 sm:h-11 sm:w-11">
                   <UserPlus size={16} className="sm:size-4.75" />
                 </div>
@@ -330,6 +351,7 @@ export default function Register() {
               {/* Success */}
               {success && <div className="mb-4 flex items-center rounded-xl border border-[#CFE4D7] bg-[#F0F8F3] px-3 py-2.5 text-xs font-medium text-[#3E8B62] shadow-sm sm:mb-5 sm:px-4 sm:py-3 sm:text-sm">{success}</div>}
 
+              {/* Inputs */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                 {/* Name */}
                 <div>
@@ -406,6 +428,7 @@ export default function Register() {
 
               {/* Buttons */}
               <div className="mt-5 flex flex-col-reverse gap-2.5 border-t border-[#E8DDD4] pt-4 sm:mt-7 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
+                {/* Clear */}
                 <button
                   type="button"
                   onClick={clearHandle}
@@ -415,6 +438,7 @@ export default function Register() {
                   Clear
                 </button>
 
+                {/* Back + Create */}
                 <div className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-row sm:gap-3">
                   <button
                     type="button"
@@ -440,6 +464,73 @@ export default function Register() {
           </form>
         </div>
       </div>
+
+      {/* Mobile Profile Photo Popup */}
+      {showProfilePopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#241210]/60 px-4 backdrop-blur-md md:hidden" onClick={closeProfilePopup}>
+          <div className="relative w-full max-w-sm overflow-hidden rounded-[24px] border border-white/30 bg-[#FFFDFC]/95 shadow-[0_25px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl" onClick={(e) => e.stopPropagation()}>
+            {/* Popup Header */}
+            <div className="relative overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A211E] to-[#8E181F] px-5 py-4 text-white">
+              <div className="absolute -right-10 -top-12 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
+
+              <div className="relative flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-extrabold">Profile Photo</h3>
+
+                  <p className="mt-0.5 text-[10px] text-white/65">Personalize your MineKart account</p>
+                </div>
+
+                <button type="button" onClick={closeProfilePopup} className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-white transition-all duration-300 hover:rotate-90 hover:bg-white/15">
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+
+            {/* Popup Body */}
+            <div className="flex flex-col items-center px-6 py-7">
+              {/* Avatar */}
+              <div className="relative">
+                <div className="relative flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-[4px] border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_12px_30px_rgba(73,54,49,0.18)] ring-1 ring-[#DCCBC1]">
+                  {preview ? <img src={preview} alt="Profile Preview" className="h-full w-full object-cover" /> : <User size={48} strokeWidth={1.1} className="text-[#8E181F]/70" />}
+
+                  <div className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/25 via-transparent to-[#351C18]/5" />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={chooseProfilePhoto}
+                  className="absolute bottom-0 right-0 flex h-10 w-10 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_5px_14px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+                >
+                  <Camera size={16} />
+                </button>
+              </div>
+
+              {/* Info */}
+              <div className="mt-4 flex items-center gap-1.5 rounded-full border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-1.5 text-[9px] font-semibold text-[#806C63]">
+                <ShieldCheck size={12} className="text-[#3E8B62]" />
+                JPG, PNG or WEBP
+              </div>
+
+              {/* Choose Button */}
+              <button
+                type="button"
+                onClick={chooseProfilePhoto}
+                className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] text-xs font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F]"
+              >
+                <ImagePlus size={16} />
+                {preview ? 'Change Photo' : 'Choose Photo'}
+              </button>
+
+              {/* Continue */}
+              <button type="button" onClick={closeProfilePopup} className="mt-2.5 h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] text-xs font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8]">
+                Done
+              </button>
+
+              <p className="mt-3 text-center text-[9px] leading-4 text-[#A8958C]">Profile photo is optional</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
