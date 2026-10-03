@@ -61,7 +61,9 @@ export default function Login({ onClose }) {
 
       console.log(status)
 
-      if (status === 401) {
+      if (status === 404) {
+        toast.error('Account not found. Please create an account first.')
+      } else if (status === 401) {
         toast.error('Email or password is incorrect')
       } else {
         toast.error(message || 'Login failed. Please try again.')
