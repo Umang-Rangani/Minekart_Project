@@ -71,8 +71,6 @@ const welcomeEmail = (name) => {
       box-shadow: 0 8px 28px rgba(73, 54, 49, 0.06);
     }
 
-    /* HEADER */
-
     .email-header {
       padding: 22px 30px;
       background: #ffffff;
@@ -112,8 +110,6 @@ const welcomeEmail = (name) => {
       letter-spacing: 0.5px;
     }
 
-    /* CONTENT */
-
     .email-content {
       padding: 34px 34px 30px;
     }
@@ -151,66 +147,51 @@ const welcomeEmail = (name) => {
       color: #7b6b64;
     }
 
-    /* ACCOUNT STATUS */
-
     .account-box {
       margin-top: 24px;
-      padding: 16px;
+      padding: 14px 16px;
       background: #fff9f7;
       border: 1px solid #eedbd7;
       border-radius: 15px;
     }
 
     .account-icon-cell {
-      width: 48px;
+      width: 25px;
       vertical-align: middle;
-      padding-right: 10px;
+      padding: 0 7px 0 0;
     }
 
     .account-icon {
-      width: 38px;
-      height: 38px;
-      line-height: 38px;
-      text-align: center;
-      border-radius: 11px;
-      background: #9d2932;
-      color: #ffffff;
-      font-size: 19px;
+      display: block;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      color: #9d2932;
+      font-size: 20px;
+      line-height: 20px;
       font-weight: 900;
+      text-align: left;
     }
 
     .account-content {
       vertical-align: middle;
+      padding: 0;
     }
 
     .account-title {
       font-size: 13px;
-      line-height: 1.35;
+      line-height: 18px;
       font-weight: 900;
       color: #8e181f;
     }
 
     .account-text {
-      margin-top: 3px;
+      margin-top: 1px;
       font-size: 11px;
-      line-height: 1.5;
+      line-height: 16px;
       color: #806c63;
     }
-
-    .account-status {
-      display: inline-block;
-      margin-top: 7px;
-      padding: 5px 8px;
-      border-radius: 7px;
-      background: #f3e4df;
-      color: #8e181f;
-      font-size: 8px;
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: 0.2px;
-    }
-
-    /* SHOPPING SECTION */
 
     .section-title {
       margin: 29px 0 7px;
@@ -226,8 +207,6 @@ const welcomeEmail = (name) => {
       line-height: 1.6;
       color: #92827a;
     }
-
-    /* BENEFIT CARDS */
 
     .benefit-column {
       width: 33.33%;
@@ -249,7 +228,7 @@ const welcomeEmail = (name) => {
 
     .benefit-icon-cell {
       width: 43px;
-      vertical-align: middle;
+      vertical-align: top;
       padding-right: 10px;
     }
 
@@ -266,7 +245,7 @@ const welcomeEmail = (name) => {
     }
 
     .benefit-content {
-      vertical-align: middle;
+      vertical-align: top;
     }
 
     .benefit-title {
@@ -282,8 +261,6 @@ const welcomeEmail = (name) => {
       line-height: 1.55;
       color: #806c63;
     }
-
-    /* CTA */
 
     .cta-wrapper {
       margin-top: 22px;
@@ -328,8 +305,6 @@ const welcomeEmail = (name) => {
       color: #a09289;
     }
 
-    /* JOURNEY */
-
     .journey-box {
       margin-top: 16px;
       padding: 15px 16px;
@@ -351,8 +326,6 @@ const welcomeEmail = (name) => {
       line-height: 1.6;
       color: #71635c;
     }
-
-    /* SECURITY */
 
     .security-box {
       margin-top: 12px;
@@ -393,8 +366,6 @@ const welcomeEmail = (name) => {
       color: #80756e;
     }
 
-    /* CLOSING */
-
     .closing-text {
       margin: 19px 0 0;
       font-size: 11px;
@@ -408,8 +379,6 @@ const welcomeEmail = (name) => {
       line-height: 1.5;
       color: #756a64;
     }
-
-    /* FOOTER */
 
     .email-footer {
       padding: 20px 28px;
@@ -445,18 +414,30 @@ const welcomeEmail = (name) => {
       color: #a09289;
     }
 
-    /* MOBILE */
-
     @media only screen and (max-width: 620px) {
 
+      html,
+      body {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+      }
+
       .email-wrapper {
-        padding: 5px 3px !important;
+        width: 100% !important;
+        padding: 0 !important;
+        background: #ffffff !important;
       }
 
       .email-container {
         width: 100% !important;
         max-width: 100% !important;
-        border-radius: 14px !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
       }
 
       .email-header {
@@ -514,30 +495,24 @@ const welcomeEmail = (name) => {
       }
 
       .account-icon-cell {
-        width: 43px !important;
-        padding-right: 8px !important;
+        width: 23px !important;
+        padding-right: 6px !important;
       }
 
       .account-icon {
-        width: 34px !important;
-        height: 34px !important;
-        line-height: 34px !important;
-        border-radius: 9px !important;
-        font-size: 16px !important;
+        font-size: 17px !important;
+        line-height: 17px !important;
       }
 
       .account-title {
         font-size: 12px !important;
+        line-height: 17px !important;
       }
 
       .account-text {
+        margin-top: 1px !important;
         font-size: 9px !important;
-      }
-
-      .account-status {
-        margin-top: 5px !important;
-        padding: 4px 6px !important;
-        font-size: 7px !important;
+        line-height: 14px !important;
       }
 
       .section-title {
@@ -549,8 +524,6 @@ const welcomeEmail = (name) => {
         margin-bottom: 10px !important;
         font-size: 9px !important;
       }
-
-      /* STACK CARDS */
 
       .benefit-column {
         display: block !important;
@@ -683,16 +656,93 @@ const welcomeEmail = (name) => {
       }
     }
 
+    @media only screen and (max-width: 380px) {
+
+      .email-header {
+        padding: 15px 11px !important;
+      }
+
+      .brand-logo {
+        font-size: 19px !important;
+      }
+
+      .brand-tagline {
+        font-size: 8px !important;
+      }
+
+      .header-badge-cell {
+        width: 92px !important;
+      }
+
+      .header-badge {
+        padding: 5px 6px !important;
+        font-size: 6px !important;
+      }
+
+      .email-content {
+        padding: 21px 11px 21px !important;
+      }
+
+      .email-title {
+        font-size: 21px !important;
+      }
+
+      .greeting {
+        font-size: 12px !important;
+      }
+
+      .intro-text {
+        font-size: 10px !important;
+      }
+
+      .account-box {
+        padding: 10px !important;
+      }
+
+      .account-icon-cell {
+        width: 22px !important;
+        padding-right: 5px !important;
+      }
+
+      .account-icon {
+        font-size: 16px !important;
+        line-height: 16px !important;
+      }
+
+      .section-title {
+        font-size: 15px !important;
+      }
+
+      .benefit-card {
+        padding: 10px !important;
+      }
+
+      .cta-wrapper {
+        padding: 14px 10px !important;
+      }
+
+      .journey-box {
+        padding: 10px !important;
+      }
+
+      .security-box {
+        padding: 9px !important;
+      }
+
+      .email-footer {
+        padding: 14px 9px !important;
+      }
+    }
+
   </style>
 
 </head>
-
 
 <body>
 
   <div
     class="email-wrapper"
-    style="padding:28px 12px;background:#f6f1ec;"
+    style="width:100%;padding:28px 12px;background:#f6f1ec;"
   >
 
     <div
@@ -717,9 +767,7 @@ const welcomeEmail = (name) => {
 
           <tr>
 
-            <td
-              style="vertical-align:middle;"
-            >
+            <td style="vertical-align:middle;">
 
               <div
                 class="brand-logo"
@@ -736,7 +784,6 @@ const welcomeEmail = (name) => {
               </div>
 
             </td>
-
 
             <td
               class="header-badge-cell"
@@ -758,7 +805,6 @@ const welcomeEmail = (name) => {
 
       </div>
 
-
       <!-- CONTENT -->
 
       <div
@@ -773,7 +819,6 @@ const welcomeEmail = (name) => {
           Welcome to MineKart
         </p>
 
-
         <h1
           class="email-title"
           style="margin:0;font-size:29px;line-height:1.22;font-weight:900;letter-spacing:-.7px;color:#35231f;"
@@ -781,14 +826,12 @@ const welcomeEmail = (name) => {
           Welcome to MineKart! 👋
         </h1>
 
-
         <p
           class="greeting"
           style="margin:17px 0 0;font-size:15px;line-height:1.55;color:#554640;"
         >
           Hi ${name || 'Customer'},
         </p>
-
 
         <p
           class="intro-text"
@@ -799,12 +842,11 @@ const welcomeEmail = (name) => {
           discover great deals and enjoy a smooth shopping experience.
         </p>
 
-
         <!-- ACCOUNT STATUS -->
 
         <div
           class="account-box"
-          style="margin-top:24px;padding:16px;background:#fff9f7;border:1px solid #eedbd7;border-radius:15px;"
+          style="margin-top:24px;padding:14px 16px;background:#fff9f7;border:1px solid #eedbd7;border-radius:15px;"
         >
 
           <table
@@ -819,43 +861,35 @@ const welcomeEmail = (name) => {
 
               <td
                 class="account-icon-cell"
-                style="width:48px;vertical-align:middle;padding-right:10px;"
+                style="width:25px;vertical-align:middle;padding:0 7px 0 0;"
               >
 
                 <div
                   class="account-icon"
-                  style="width:38px;height:38px;line-height:38px;text-align:center;border-radius:11px;background:#9d2932;color:#ffffff;font-size:19px;font-weight:900;"
+                  style="display:block;width:auto;height:auto;margin:0;padding:0;color:#9d2932;font-size:20px;line-height:20px;font-weight:900;text-align:left;"
                 >
                   ✓
                 </div>
 
               </td>
 
-
               <td
                 class="account-content"
-                style="vertical-align:middle;"
+                style="vertical-align:middle;padding:0;"
               >
 
                 <div
                   class="account-title"
-                  style="font-size:13px;line-height:1.35;font-weight:900;color:#8e181f;"
+                  style="font-size:13px;line-height:18px;font-weight:900;color:#8e181f;"
                 >
                   Your account is ready
                 </div>
 
                 <div
                   class="account-text"
-                  style="margin-top:3px;font-size:11px;line-height:1.5;color:#806c63;"
+                  style="margin-top:1px;font-size:11px;line-height:16px;color:#806c63;"
                 >
                   You can start shopping on MineKart right away.
-                </div>
-
-                <div
-                  class="account-status"
-                  style="display:inline-block;margin-top:7px;padding:5px 8px;border-radius:7px;background:#f3e4df;color:#8e181f;font-size:8px;line-height:1;font-weight:800;"
-                >
-                  ACTIVE ACCOUNT
                 </div>
 
               </td>
@@ -866,7 +900,6 @@ const welcomeEmail = (name) => {
 
         </div>
 
-
         <!-- SHOPPING BENEFITS -->
 
         <h2
@@ -876,14 +909,12 @@ const welcomeEmail = (name) => {
           Everything is ready for you
         </h2>
 
-
         <p
           class="section-subtitle"
           style="margin:0 0 15px;font-size:11px;line-height:1.6;color:#92827a;"
         >
           Start exploring, discover products and enjoy easy shopping.
         </p>
-
 
         <table
           cellpadding="0"
@@ -894,8 +925,6 @@ const welcomeEmail = (name) => {
         >
 
           <tr>
-
-            <!-- EXPLORE -->
 
             <td
               class="benefit-column"
@@ -919,7 +948,7 @@ const welcomeEmail = (name) => {
 
                     <td
                       class="benefit-icon-cell"
-                      style="width:43px;vertical-align:middle;padding-right:10px;"
+                      style="width:43px;vertical-align:top;padding-right:10px;"
                     >
 
                       <div
@@ -931,10 +960,9 @@ const welcomeEmail = (name) => {
 
                     </td>
 
-
                     <td
                       class="benefit-content"
-                      style="vertical-align:middle;"
+                      style="vertical-align:top;"
                     >
 
                       <div
@@ -961,9 +989,6 @@ const welcomeEmail = (name) => {
 
             </td>
 
-
-            <!-- CART -->
-
             <td
               class="benefit-column"
               style="width:33.33%;vertical-align:top;padding:0 4px;"
@@ -986,7 +1011,7 @@ const welcomeEmail = (name) => {
 
                     <td
                       class="benefit-icon-cell"
-                      style="width:43px;vertical-align:middle;padding-right:10px;"
+                      style="width:43px;vertical-align:top;padding-right:10px;"
                     >
 
                       <div
@@ -998,10 +1023,9 @@ const welcomeEmail = (name) => {
 
                     </td>
 
-
                     <td
                       class="benefit-content"
-                      style="vertical-align:middle;"
+                      style="vertical-align:top;"
                     >
 
                       <div
@@ -1028,9 +1052,6 @@ const welcomeEmail = (name) => {
 
             </td>
 
-
-            <!-- DEALS -->
-
             <td
               class="benefit-column"
               style="width:33.33%;vertical-align:top;padding-left:4px;"
@@ -1053,7 +1074,7 @@ const welcomeEmail = (name) => {
 
                     <td
                       class="benefit-icon-cell"
-                      style="width:43px;vertical-align:middle;padding-right:10px;"
+                      style="width:43px;vertical-align:top;padding-right:10px;"
                     >
 
                       <div
@@ -1065,10 +1086,9 @@ const welcomeEmail = (name) => {
 
                     </td>
 
-
                     <td
                       class="benefit-content"
-                      style="vertical-align:middle;"
+                      style="vertical-align:top;"
                     >
 
                       <div
@@ -1099,7 +1119,6 @@ const welcomeEmail = (name) => {
 
         </table>
 
-
         <!-- CTA -->
 
         <div
@@ -1114,14 +1133,12 @@ const welcomeEmail = (name) => {
             Ready to start shopping?
           </p>
 
-
           <p
             class="cta-text"
             style="margin:5px 0 14px;font-size:10px;line-height:1.6;color:#806c63;"
           >
             Explore MineKart and find something made for you.
           </p>
-
 
           <a
             href="https://minekart.vercel.app"
@@ -1131,7 +1148,6 @@ const welcomeEmail = (name) => {
             Start Shopping&nbsp; →
           </a>
 
-
           <p
             class="button-subtext"
             style="margin:8px 0 0;font-size:8px;line-height:1.5;color:#a09289;"
@@ -1140,7 +1156,6 @@ const welcomeEmail = (name) => {
           </p>
 
         </div>
-
 
         <!-- JOURNEY -->
 
@@ -1156,7 +1171,6 @@ const welcomeEmail = (name) => {
             Your MineKart journey starts here ✨
           </div>
 
-
           <div
             class="journey-text"
             style="margin-top:5px;font-size:10px;line-height:1.6;color:#71635c;"
@@ -1167,7 +1181,6 @@ const welcomeEmail = (name) => {
           </div>
 
         </div>
-
 
         <!-- SECURITY -->
 
@@ -1200,10 +1213,7 @@ const welcomeEmail = (name) => {
 
               </td>
 
-
-              <td
-                style="vertical-align:top;"
-              >
+              <td style="vertical-align:top;">
 
                 <div
                   class="security-title"
@@ -1211,7 +1221,6 @@ const welcomeEmail = (name) => {
                 >
                   Didn't create this account?
                 </div>
-
 
                 <div
                   class="security-text"
@@ -1230,7 +1239,6 @@ const welcomeEmail = (name) => {
 
         </div>
 
-
         <!-- CLOSING -->
 
         <p
@@ -1240,7 +1248,6 @@ const welcomeEmail = (name) => {
           We're happy to have you as part of the MineKart family.
         </p>
 
-
         <p
           class="closing-small"
           style="margin:5px 0 0;font-size:11px;line-height:1.5;color:#756a64;"
@@ -1249,7 +1256,6 @@ const welcomeEmail = (name) => {
         </p>
 
       </div>
-
 
       <!-- FOOTER -->
 
@@ -1290,14 +1296,12 @@ const welcomeEmail = (name) => {
 
         </p>
 
-
         <p
           class="copyright"
           style="margin:7px 0 0;font-size:10px;line-height:1.5;font-weight:900;color:#6b6258;"
         >
           © ${new Date().getFullYear()} MineKart
         </p>
-
 
         <p
           class="footer-brand"
@@ -1319,4 +1323,3 @@ const welcomeEmail = (name) => {
 }
 
 module.exports = { welcomeEmail }
-  
