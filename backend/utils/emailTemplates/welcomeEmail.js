@@ -1167,12 +1167,7 @@ const welcomeEmail = (name) => {
             Start Shopping&nbsp; →
           </a>
 
-          <p
-            class="button-subtext"
-            style="margin:8px 0 0;font-size:8px;line-height:1.5;color:#a09289;"
-          >
-            minekart.vercel.app
-          </p>
+        
 
         </div>
 
