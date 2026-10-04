@@ -149,33 +149,33 @@ const welcomeEmail = (name) => {
 
     .account-box {
       margin-top: 24px;
-      padding: 14px 16px;
+      padding: 14px;
       background: #fff9f7;
       border: 1px solid #eedbd7;
       border-radius: 15px;
     }
 
     .account-icon-cell {
-      width: 25px;
-      vertical-align: middle;
-      padding: 0 7px 0 0;
+      width: 44px;
+      vertical-align: top;
+      padding-right: 10px;
     }
 
     .account-icon {
-      display: block;
-      width: auto;
-      height: auto;
-      margin: 0;
-      padding: 0;
-      color: #9d2932;
-      font-size: 20px;
-      line-height: 20px;
+      width: 38px;
+      height: 38px;
+      line-height: 38px;
+      text-align: center;
+      border-radius: 10px;
+      background: #9d2932;
+      color: #ffffff;
+      font-size: 19px;
       font-weight: 900;
-      text-align: left;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .account-content {
-      vertical-align: middle;
+      vertical-align: top;
       padding: 0;
     }
 
@@ -184,13 +184,16 @@ const welcomeEmail = (name) => {
       line-height: 18px;
       font-weight: 900;
       color: #8e181f;
+      padding: 0;
+      margin: 0;
     }
 
     .account-text {
-      margin-top: 1px;
+      margin-top: 2px;
       font-size: 11px;
-      line-height: 16px;
+      line-height: 17px;
       color: #806c63;
+      padding: 0;
     }
 
     .section-title {
@@ -490,23 +493,26 @@ const welcomeEmail = (name) => {
 
       .account-box {
         margin-top: 18px !important;
-        padding: 12px !important;
+        padding: 11px !important;
         border-radius: 12px !important;
       }
 
       .account-icon-cell {
-        width: 23px !important;
-        padding-right: 6px !important;
+        width: 41px !important;
+        padding-right: 8px !important;
       }
 
       .account-icon {
-        font-size: 17px !important;
-        line-height: 17px !important;
+        width: 34px !important;
+        height: 34px !important;
+        line-height: 34px !important;
+        border-radius: 9px !important;
+        font-size: 16px !important;
       }
 
       .account-title {
         font-size: 12px !important;
-        line-height: 17px !important;
+        line-height: 16px !important;
       }
 
       .account-text {
@@ -700,13 +706,26 @@ const welcomeEmail = (name) => {
       }
 
       .account-icon-cell {
-        width: 22px !important;
-        padding-right: 5px !important;
+        width: 40px !important;
+        padding-right: 7px !important;
       }
 
       .account-icon {
-        font-size: 16px !important;
-        line-height: 16px !important;
+        width: 33px !important;
+        height: 33px !important;
+        line-height: 33px !important;
+        border-radius: 9px !important;
+        font-size: 15px !important;
+      }
+
+      .account-title {
+        font-size: 11px !important;
+        line-height: 15px !important;
+      }
+
+      .account-text {
+        font-size: 8.5px !important;
+        line-height: 13px !important;
       }
 
       .section-title {
@@ -846,7 +865,7 @@ const welcomeEmail = (name) => {
 
         <div
           class="account-box"
-          style="margin-top:24px;padding:14px 16px;background:#fff9f7;border:1px solid #eedbd7;border-radius:15px;"
+          style="margin-top:24px;padding:14px;background:#fff9f7;border:1px solid #eedbd7;border-radius:15px;"
         >
 
           <table
@@ -861,12 +880,12 @@ const welcomeEmail = (name) => {
 
               <td
                 class="account-icon-cell"
-                style="width:25px;vertical-align:middle;padding:0 7px 0 0;"
+                style="width:44px;vertical-align:top;padding-right:10px;"
               >
 
                 <div
                   class="account-icon"
-                  style="display:block;width:auto;height:auto;margin:0;padding:0;color:#9d2932;font-size:20px;line-height:20px;font-weight:900;text-align:left;"
+                  style="width:38px;height:38px;line-height:38px;text-align:center;border-radius:10px;background:#9d2932;color:#ffffff;font-size:19px;font-weight:900;font-family:Arial,Helvetica,sans-serif;"
                 >
                   ✓
                 </div>
@@ -875,19 +894,19 @@ const welcomeEmail = (name) => {
 
               <td
                 class="account-content"
-                style="vertical-align:middle;padding:0;"
+                style="vertical-align:top;padding:0;"
               >
 
                 <div
                   class="account-title"
-                  style="font-size:13px;line-height:18px;font-weight:900;color:#8e181f;"
+                  style="font-size:13px;line-height:18px;font-weight:900;color:#8e181f;padding:0;margin:0;"
                 >
                   Your account is ready
                 </div>
 
                 <div
                   class="account-text"
-                  style="margin-top:1px;font-size:11px;line-height:16px;color:#806c63;"
+                  style="margin-top:2px;font-size:11px;line-height:17px;color:#806c63;padding:0;"
                 >
                   You can start shopping on MineKart right away.
                 </div>
