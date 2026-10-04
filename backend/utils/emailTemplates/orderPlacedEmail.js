@@ -12,17 +12,23 @@ const orderPlacedEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax,
               vertical-align:middle;
             "
           >
-            <div
-              style="
-                font-size:14px;
-                font-weight:800;
-                color:#35231f;
-                line-height:1.45;
-                word-break:break-word;
-              "
-            >
-              ${item.productName || 'Product'}
-            </div>
+          <div
+  style="
+    font-size:14px;
+    font-weight:800;
+    color:#35231f;
+    line-height:1.45;
+    word-break:break-word;
+  "
+>
+  ${
+    String(item.productName || 'Product').length > 55
+      ? `${String(item.productName || 'Product')
+          .slice(0, 55)
+          .trimEnd()}...`
+      : item.productName || 'Product'
+  }
+</div>
           </td>
 
           <td
@@ -1213,13 +1219,6 @@ const orderPlacedEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax,
             Continue Shopping
           </a>
 
-          <div class="website-note">
-            Visit
-            <span style="color:#9d2932;font-weight:800;">
-              minekart.vercel.app
-            </span>
-            for more products
-          </div>
 
         </div>
 
