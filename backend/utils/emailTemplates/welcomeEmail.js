@@ -804,19 +804,7 @@ const welcomeEmail = (name) => {
 
             </td>
 
-            <td
-              class="header-badge-cell"
-              style="width:145px;text-align:right;vertical-align:middle;"
-            >
-
-              <div
-                class="header-badge"
-                style="display:inline-block;padding:7px 11px;border-radius:20px;background:#fff5f3;border:1px solid #eedbd7;color:#9d2932;font-size:8px;line-height:1;font-weight:800;letter-spacing:.5px;"
-              >
-                ACCOUNT READY
-              </div>
-
-            </td>
+       
 
           </tr>
 
