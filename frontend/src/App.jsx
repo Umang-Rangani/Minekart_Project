@@ -55,14 +55,25 @@ import Terms from './components/CustomerService/Terms.jsx'
 import Privacy from './components/CustomerService/Privacy.jsx'
 import Cookies from './components/CustomerService/Cookies.jsx'
 
+const LOGIN_POPUP_KEY = 'minekart_login_popup_closed'
+
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
 
-  // useEffect(() => {
-  //   if (!loading && !user) {
-  //     setShowLogin(true)
-  //   }
-  // }, [loading, user, setShowLogin])
+  useEffect(() => {
+    if (!loading && !user) {
+      const loginPopupClosed = localStorage.getItem(LOGIN_POPUP_KEY)
+
+      if (!loginPopupClosed) {
+        setShowLogin(true)
+      }
+    }
+  }, [loading, user, setShowLogin])
+
+  const handleLoginClose = () => {
+    localStorage.setItem(LOGIN_POPUP_KEY, 'true')
+    setShowLogin(false)
+  }
 
   if (loading) {
     return <HeroPage />
@@ -71,8 +82,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<HeroPage />} /> */}
-        {/*  USER  */}
+        {/* USER */}
 
         <Route path="/*" element={<NotFoundPage />} />
 
@@ -83,83 +93,269 @@ export default function App() {
           <Route path="/brands" element={<Brands />} />
           <Route path="/products" element={<Products />} />
 
-          <Route path="/category/:id/products" element={<CategoryProducts />} />
-          <Route path="/brand/:id/products" element={<BrandProducts />} />
+          <Route
+            path="/category/:id/products"
+            element={<CategoryProducts />}
+          />
+
+          <Route
+            path="/brand/:id/products"
+            element={<BrandProducts />}
+          />
+
           <Route path="product/:id" element={<ProductDetail />} />
 
-          <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
+          <Route
+            path="/cart"
+            element={
+              user ? <Cart /> : <Navigate to="/" replace />
+            }
+          />
+
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-success" element={<OrderSuccess />} />
+
+          <Route
+            path="/order-success"
+            element={<OrderSuccess />}
+          />
 
           <Route path="/orders" element={<MyOrders />} />
-          <Route path="orders/:id" element={<OrderDetails />} />
 
-          <Route path="/search" element={<SearchProducts />} />
+          <Route
+            path="orders/:id"
+            element={<OrderDetails />}
+          />
 
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/update" element={<ProfileUpdate />} />
+          <Route
+            path="/search"
+            element={<SearchProducts />}
+          />
 
-          <Route path="/notifications" element={<Notifications />} />
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
 
-          {/* footer */}
-          <Route path="/customer-help" element={<HelpCenter />} />
-          <Route path="/track-order" element={<TrackOrder />} />
-          <Route path="/returns" element={<ReturnsRefunds />} />
-          <Route path="/contact" element={<ContactUs />} />
+          <Route
+            path="/profile/update"
+            element={<ProfileUpdate />}
+          />
 
-          <Route path="/my-support" element={<MySupport />} />
-          <Route path="/my-support/:id" element={<MySupportDetails />} />
+          <Route
+            path="/notifications"
+            element={<Notifications />}
+          />
 
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/cookies" element={<Cookies />} />
+          {/* FOOTER */}
 
-          <Route path="/tictactoe" element={<TicTacToe />} />
+          <Route
+            path="/customer-help"
+            element={<HelpCenter />}
+          />
+
+          <Route
+            path="/track-order"
+            element={<TrackOrder />}
+          />
+
+          <Route
+            path="/returns"
+            element={<ReturnsRefunds />}
+          />
+
+          <Route
+            path="/contact"
+            element={<ContactUs />}
+          />
+
+          <Route
+            path="/my-support"
+            element={<MySupport />}
+          />
+
+          <Route
+            path="/my-support/:id"
+            element={<MySupportDetails />}
+          />
+
+          <Route
+            path="/terms"
+            element={<Terms />}
+          />
+
+          <Route
+            path="/privacy"
+            element={<Privacy />}
+          />
+
+          <Route
+            path="/cookies"
+            element={<Cookies />}
+          />
+
+          <Route
+            path="/tictactoe"
+            element={<TicTacToe />}
+          />
         </Route>
 
-        {/*  AUTH  */}
-        <Route path="/register" element={<Register />} />
+        {/* AUTH */}
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
         {/* <Route path="/login" element={<Login />} /> */}
 
-        {/*  ADMIN  */}
+        {/* ADMIN */}
+
         <Route element={<AdminProtected />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
+          <Route
+            path="/admin"
+            element={<AdminLayout />}
+          >
+            <Route
+              index
+              element={<AdminDashboard />}
+            />
 
-            <Route path="category" element={<AdminCategory />} />
-            <Route path="category/new" element={<AdminCategoryForm />} />
-            <Route path="category/:id/update" element={<AdminCategoryForm />} />
-            <Route path="category/:id" element={<AdminCategoryView />} />
+            {/* CATEGORY */}
 
-            <Route path="subcategory" element={<AdminSubCategory />} />
-            <Route path="subcategory/new" element={<AdminSubCategoryForm />} />
-            <Route path="subcategory/:id/update" element={<AdminSubCategoryForm />} />
-            <Route path="subcategory/:id" element={<AdminSubCategoryView />} />
+            <Route
+              path="category"
+              element={<AdminCategory />}
+            />
 
-            <Route path="brand" element={<AdminBrand />} />
-            <Route path="brand/new" element={<AdminBrandForm />} />
-            <Route path="brand/:id/update" element={<AdminBrandForm />} />
-            <Route path="brand/:id" element={<AdminBrandView />} />
+            <Route
+              path="category/new"
+              element={<AdminCategoryForm />}
+            />
 
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="products/new" element={<AdminProductsForm />} />
-            <Route path="products/:id/update" element={<AdminProductsForm />} />
-            <Route path="products/:id" element={<AdminProductsView />} />
+            <Route
+              path="category/:id/update"
+              element={<AdminCategoryForm />}
+            />
 
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="orders/:id" element={<AdminOrderView />} />
+            <Route
+              path="category/:id"
+              element={<AdminCategoryView />}
+            />
 
-            <Route path="users" element={<AdminUsers />} />
+            {/* SUB CATEGORY */}
 
-            <Route path="/admin/notifications" element={<AdminNotifications />} />
+            <Route
+              path="subcategory"
+              element={<AdminSubCategory />}
+            />
 
-            <Route path="contact-messages" element={<AdminContactMessages />} />
-            <Route path="contact-messages/:id" element={<AdminContactMessageView />} />
+            <Route
+              path="subcategory/new"
+              element={<AdminSubCategoryForm />}
+            />
+
+            <Route
+              path="subcategory/:id/update"
+              element={<AdminSubCategoryForm />}
+            />
+
+            <Route
+              path="subcategory/:id"
+              element={<AdminSubCategoryView />}
+            />
+
+            {/* BRAND */}
+
+            <Route
+              path="brand"
+              element={<AdminBrand />}
+            />
+
+            <Route
+              path="brand/new"
+              element={<AdminBrandForm />}
+            />
+
+            <Route
+              path="brand/:id/update"
+              element={<AdminBrandForm />}
+            />
+
+            <Route
+              path="brand/:id"
+              element={<AdminBrandView />}
+            />
+
+            {/* PRODUCTS */}
+
+            <Route
+              path="products"
+              element={<AdminProducts />}
+            />
+
+            <Route
+              path="products/new"
+              element={<AdminProductsForm />}
+            />
+
+            <Route
+              path="products/:id/update"
+              element={<AdminProductsForm />}
+            />
+
+            <Route
+              path="products/:id"
+              element={<AdminProductsView />}
+            />
+
+            {/* ORDERS */}
+
+            <Route
+              path="orders"
+              element={<AdminOrders />}
+            />
+
+            <Route
+              path="orders/:id"
+              element={<AdminOrderView />}
+            />
+
+            {/* USERS */}
+
+            <Route
+              path="users"
+              element={<AdminUsers />}
+            />
+
+            {/* NOTIFICATIONS */}
+
+            <Route
+              path="/admin/notifications"
+              element={<AdminNotifications />}
+            />
+
+            {/* CONTACT MESSAGES */}
+
+            <Route
+              path="contact-messages"
+              element={<AdminContactMessages />}
+            />
+
+            <Route
+              path="contact-messages/:id"
+              element={<AdminContactMessageView />}
+            />
           </Route>
         </Route>
       </Routes>
 
-      {showLogin && <Login onClose={() => setShowLogin(false)} />}
+      {/* LOGIN POPUP */}
+
+      {showLogin && (
+        <Login onClose={handleLoginClose} />
+      )}
+
+      <Toaster />
     </BrowserRouter>
   )
 }
