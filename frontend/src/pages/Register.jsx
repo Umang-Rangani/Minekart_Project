@@ -100,18 +100,106 @@ export default function Register() {
     }
   }
 
+  // const submitHandle = async (e) => {
+  //   e.preventDefault()
+
+  //   setError('')
+  //   setSuccess('')
+
+  //   if (!signUp.name || !signUp.email || !signUp.password) {
+  //     const message = 'Name, email and password are required'
+
+  //     setError(message)
+  //     toast.error(message)
+
+  //     return
+  //   }
+
+  //   try {
+  //     setLoading(true)
+
+  //     let avatarPath = ''
+
+  //     if (imageFile) {
+  //       try {
+  //         avatarPath = await uploadFile(imageFile.name, imageFile, 'Avatar')
+  //       } catch (uploadError) {
+  //         console.log('Upload Error:', uploadError.response?.data || uploadError.message)
+
+  //         const message = 'Profile photo upload failed'
+
+  //         setError(message)
+  //         toast.error(message)
+
+  //         return
+  //       }
+  //     }
+
+  //     const registerData = {
+  //       ...signUp,
+  //       avatar: avatarPath,
+  //     }
+
+  //     const res = await axiosInstance.post('/users/register', registerData)
+
+  //     if (res.data.success) {
+  //       setUser(res.data.user)
+  //       setShowLogin(false)
+
+  //       toast.success('Account created successfully')
+  //       navigate('/')
+  //     }
+  //   } catch (error) {
+  //     console.log('Register Error:', error.response?.data || error.message)
+
+  //     const message = error.response?.data?.message || 'Registration failed. Please try again.'
+
+  //     setError(message)
+  //     toast.error(message)
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
   const submitHandle = async (e) => {
     e.preventDefault()
+
+    if (loading) return
 
     setError('')
     setSuccess('')
 
-    if (!signUp.name || !signUp.email || !signUp.password) {
-      const message = 'Name, email and password are required'
+    const name = signUp.name.trim()
+    const email = signUp.email.trim().toLowerCase()
+    const password = signUp.password
+    const phone = signUp.phone.trim()
 
+    // Frontend validation
+    if (!name) {
+      const message = 'Please enter your full name'
       setError(message)
       toast.error(message)
+      return
+    }
 
+    if (!email) {
+      const message = 'Please enter your email address'
+      setError(message)
+      toast.error(message)
+      return
+    }
+
+    if (!password) {
+      const message = 'Please create a password'
+      setError(message)
+      toast.error(message)
+      return
+    }
+
+    if (password.length < 6) {
+      const message = 'Password must be at least 6 characters'
+      setError(message)
+      toast.error(message)
       return
     }
 
@@ -120,6 +208,7 @@ export default function Register() {
 
       let avatarPath = ''
 
+      // Upload profile image if selected
       if (imageFile) {
         try {
           avatarPath = await uploadFile(imageFile.name, imageFile, 'Avatar')
@@ -130,29 +219,41 @@ export default function Register() {
 
           setError(message)
           toast.error(message)
-
           return
         }
       }
 
       const registerData = {
-        ...signUp,
+        name,
+        email,
+        password,
+        phone,
         avatar: avatarPath,
       }
 
+      console.log('Register Data:', registerData)
+
       const res = await axiosInstance.post('/users/register', registerData)
 
-      if (res.data.success) {
+      if (res.data?.success) {
         setUser(res.data.user)
+
         setShowLogin(false)
 
         toast.success('Account created successfully')
+
         navigate('/')
+        return
       }
+
+      const message = res.data?.message || 'Registration failed. Please try again.'
+
+      setError(message)
+      toast.error(message)
     } catch (error) {
       console.log('Register Error:', error.response?.data || error.message)
 
-      const message = error.response?.data?.message || 'Registration failed. Please try again.'
+      const message = error.response?.data?.message || error.response?.data?.error || 'Registration failed. Please try again.'
 
       setError(message)
       toast.error(message)
@@ -441,6 +542,7 @@ export default function Register() {
                       name="name"
                       value={signUp.name}
                       onChange={handleChange}
+                      required
                       placeholder="Enter your name"
                       className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
@@ -459,6 +561,7 @@ export default function Register() {
                       name="email"
                       value={signUp.email}
                       onChange={handleChange}
+                      required
                       placeholder="Enter your email"
                       className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
@@ -477,6 +580,7 @@ export default function Register() {
                       name="password"
                       value={signUp.password}
                       onChange={handleChange}
+                      required
                       placeholder="Create password"
                       className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
@@ -495,6 +599,7 @@ export default function Register() {
                       name="phone"
                       value={signUp.phone}
                       onChange={handleChange}
+                       required
                       placeholder="Enter phone number"
                       className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />

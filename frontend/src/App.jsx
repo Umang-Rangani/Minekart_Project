@@ -93,267 +93,131 @@ export default function App() {
           <Route path="/brands" element={<Brands />} />
           <Route path="/products" element={<Products />} />
 
-          <Route
-            path="/category/:id/products"
-            element={<CategoryProducts />}
-          />
+          <Route path="/category/:id/products" element={<CategoryProducts />} />
 
-          <Route
-            path="/brand/:id/products"
-            element={<BrandProducts />}
-          />
+          <Route path="/brand/:id/products" element={<BrandProducts />} />
 
           <Route path="product/:id" element={<ProductDetail />} />
 
-          <Route
-            path="/cart"
-            element={
-              user ? <Cart /> : <Navigate to="/" replace />
-            }
-          />
+          <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
 
           <Route path="/checkout" element={<Checkout />} />
 
-          <Route
-            path="/order-success"
-            element={<OrderSuccess />}
-          />
+          <Route path="/order-success" element={<OrderSuccess />} />
 
           <Route path="/orders" element={<MyOrders />} />
 
-          <Route
-            path="orders/:id"
-            element={<OrderDetails />}
-          />
+          <Route path="orders/:id" element={<OrderDetails />} />
 
-          <Route
-            path="/search"
-            element={<SearchProducts />}
-          />
+          <Route path="/search" element={<SearchProducts />} />
 
-          <Route
-            path="/profile"
-            element={<Profile />}
-          />
+          <Route path="/profile" element={<Profile />} />
 
-          <Route
-            path="/profile/update"
-            element={<ProfileUpdate />}
-          />
+          <Route path="/profile/update" element={<ProfileUpdate />} />
 
-          <Route
-            path="/notifications"
-            element={<Notifications />}
-          />
+          <Route path="/notifications" element={<Notifications />} />
 
           {/* FOOTER */}
 
-          <Route
-            path="/customer-help"
-            element={<HelpCenter />}
-          />
+          <Route path="/customer-help" element={<HelpCenter />} />
 
-          <Route
-            path="/track-order"
-            element={<TrackOrder />}
-          />
+          <Route path="/track-order" element={<TrackOrder />} />
 
-          <Route
-            path="/returns"
-            element={<ReturnsRefunds />}
-          />
+          <Route path="/returns" element={<ReturnsRefunds />} />
 
-          <Route
-            path="/contact"
-            element={<ContactUs />}
-          />
+          <Route path="/contact" element={<ContactUs />} />
 
-          <Route
-            path="/my-support"
-            element={<MySupport />}
-          />
+          <Route path="/my-support" element={<MySupport />} />
 
-          <Route
-            path="/my-support/:id"
-            element={<MySupportDetails />}
-          />
+          <Route path="/my-support/:id" element={<MySupportDetails />} />
 
-          <Route
-            path="/terms"
-            element={<Terms />}
-          />
+          <Route path="/terms" element={<Terms />} />
 
-          <Route
-            path="/privacy"
-            element={<Privacy />}
-          />
+          <Route path="/privacy" element={<Privacy />} />
 
-          <Route
-            path="/cookies"
-            element={<Cookies />}
-          />
+          <Route path="/cookies" element={<Cookies />} />
 
-          <Route
-            path="/tictactoe"
-            element={<TicTacToe />}
-          />
+          <Route path="/tictactoe" element={<TicTacToe />} />
         </Route>
 
         {/* AUTH */}
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        <Route path="/register" element={<Register />} />
 
         {/* <Route path="/login" element={<Login />} /> */}
 
         {/* ADMIN */}
 
         <Route element={<AdminProtected />}>
-          <Route
-            path="/admin"
-            element={<AdminLayout />}
-          >
-            <Route
-              index
-              element={<AdminDashboard />}
-            />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
 
             {/* CATEGORY */}
 
-            <Route
-              path="category"
-              element={<AdminCategory />}
-            />
+            <Route path="category" element={<AdminCategory />} />
 
-            <Route
-              path="category/new"
-              element={<AdminCategoryForm />}
-            />
+            <Route path="category/new" element={<AdminCategoryForm />} />
 
-            <Route
-              path="category/:id/update"
-              element={<AdminCategoryForm />}
-            />
+            <Route path="category/:id/update" element={<AdminCategoryForm />} />
 
-            <Route
-              path="category/:id"
-              element={<AdminCategoryView />}
-            />
+            <Route path="category/:id" element={<AdminCategoryView />} />
 
             {/* SUB CATEGORY */}
 
-            <Route
-              path="subcategory"
-              element={<AdminSubCategory />}
-            />
+            <Route path="subcategory" element={<AdminSubCategory />} />
 
-            <Route
-              path="subcategory/new"
-              element={<AdminSubCategoryForm />}
-            />
+            <Route path="subcategory/new" element={<AdminSubCategoryForm />} />
 
-            <Route
-              path="subcategory/:id/update"
-              element={<AdminSubCategoryForm />}
-            />
+            <Route path="subcategory/:id/update" element={<AdminSubCategoryForm />} />
 
-            <Route
-              path="subcategory/:id"
-              element={<AdminSubCategoryView />}
-            />
+            <Route path="subcategory/:id" element={<AdminSubCategoryView />} />
 
             {/* BRAND */}
 
-            <Route
-              path="brand"
-              element={<AdminBrand />}
-            />
+            <Route path="brand" element={<AdminBrand />} />
 
-            <Route
-              path="brand/new"
-              element={<AdminBrandForm />}
-            />
+            <Route path="brand/new" element={<AdminBrandForm />} />
 
-            <Route
-              path="brand/:id/update"
-              element={<AdminBrandForm />}
-            />
+            <Route path="brand/:id/update" element={<AdminBrandForm />} />
 
-            <Route
-              path="brand/:id"
-              element={<AdminBrandView />}
-            />
+            <Route path="brand/:id" element={<AdminBrandView />} />
 
             {/* PRODUCTS */}
 
-            <Route
-              path="products"
-              element={<AdminProducts />}
-            />
+            <Route path="products" element={<AdminProducts />} />
 
-            <Route
-              path="products/new"
-              element={<AdminProductsForm />}
-            />
+            <Route path="products/new" element={<AdminProductsForm />} />
 
-            <Route
-              path="products/:id/update"
-              element={<AdminProductsForm />}
-            />
+            <Route path="products/:id/update" element={<AdminProductsForm />} />
 
-            <Route
-              path="products/:id"
-              element={<AdminProductsView />}
-            />
+            <Route path="products/:id" element={<AdminProductsView />} />
 
             {/* ORDERS */}
 
-            <Route
-              path="orders"
-              element={<AdminOrders />}
-            />
+            <Route path="orders" element={<AdminOrders />} />
 
-            <Route
-              path="orders/:id"
-              element={<AdminOrderView />}
-            />
+            <Route path="orders/:id" element={<AdminOrderView />} />
 
             {/* USERS */}
 
-            <Route
-              path="users"
-              element={<AdminUsers />}
-            />
+            <Route path="users" element={<AdminUsers />} />
 
             {/* NOTIFICATIONS */}
 
-            <Route
-              path="/admin/notifications"
-              element={<AdminNotifications />}
-            />
+            <Route path="/admin/notifications" element={<AdminNotifications />} />
 
             {/* CONTACT MESSAGES */}
 
-            <Route
-              path="contact-messages"
-              element={<AdminContactMessages />}
-            />
+            <Route path="contact-messages" element={<AdminContactMessages />} />
 
-            <Route
-              path="contact-messages/:id"
-              element={<AdminContactMessageView />}
-            />
+            <Route path="contact-messages/:id" element={<AdminContactMessageView />} />
           </Route>
         </Route>
       </Routes>
 
       {/* LOGIN POPUP */}
 
-      {showLogin && (
-        <Login onClose={handleLoginClose} />
-      )}
+      {showLogin && <Login onClose={handleLoginClose} />}
 
       <Toaster />
     </BrowserRouter>
