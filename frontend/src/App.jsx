@@ -58,11 +58,11 @@ import Cookies from './components/CustomerService/Cookies.jsx'
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
 
-  useEffect(() => {
-    if (!loading && !user) {
-      setShowLogin(true)
-    }
-  }, [loading, user, setShowLogin])
+  // useEffect(() => {
+  //   if (!loading && !user) {
+  //     setShowLogin(true)
+  //   }
+  // }, [loading, user, setShowLogin])
 
   if (loading) {
     return <HeroPage />
