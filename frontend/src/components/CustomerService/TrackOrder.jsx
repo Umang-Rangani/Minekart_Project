@@ -83,8 +83,8 @@ export default function TrackOrder() {
       setLoading(true)
       setOrder(null)
 
-      const response = await axiosInstance.get(`/order/${trimmedOrderId}`)
-
+      const response = await axiosInstance.get(`/order/track/${trimmedOrderId}`)
+      
       if (response.data?.success) {
         setOrder(response.data.data)
         toast.success('Order found successfully')

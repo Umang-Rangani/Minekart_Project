@@ -219,7 +219,6 @@ export default function App() {
 
       {showLogin && <Login onClose={handleLoginClose} />}
 
-      <Toaster />
     </BrowserRouter>
   )
 }

@@ -209,6 +209,37 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 })
 
+// ! PUBLIC TRACK ORDER => Login vagar order track
+router.get('/track/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const order = await Order.findOne({
+      orderId: id.trim(),
+    }).select('orderId items shippingAddress subtotal deliveryCharge tax totalAmount paymentMethod paymentStatus orderStatus cancellationReason cancelledAt cancelledBy createdAt updatedAt')
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully',
+      data: order,
+    })
+  } catch (error) {
+    console.log('Track Order Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    })
+  }
+})
+
 // ! orders path => view detail => UI OrderDetails
 router.get('/:id', authMiddleware, async (req, res) => {
   try {
