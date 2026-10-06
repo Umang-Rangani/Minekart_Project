@@ -5,15 +5,19 @@ import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import BreadCrumb from './BreadCrumb'
 import MyOrdersShimmer from '../userShimmer/MyOrdersShimmer'
+import { useUser } from '../context/userProvider'
 
 export default function MyOrders() {
   const navigate = useNavigate()
+  const { user, setShowLogin } = useUser()
 
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
 
   const getOrders = async () => {
     try {
+      document.title = 'My Orders | MineKart'
+
       setLoading(true)
 
       const res = await axiosInstance.get('/order')
@@ -21,8 +25,6 @@ export default function MyOrders() {
       if (res.data.success) {
         setOrders(res.data.data || [])
       }
-
-      document.title = 'My Orders | MineKart'
     } catch (error) {
       console.log('Get Orders Error:', error.response?.data || error.message)
     } finally {
@@ -37,7 +39,7 @@ export default function MyOrders() {
     })
 
     getOrders()
-  }, [])
+  }, [user])
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-IN', {
@@ -159,31 +161,59 @@ export default function MyOrders() {
         </div>
 
         {/* EMPTY STATE */}
+        {/* EMPTY STATE */}
         {orders.length === 0 ? (
-          <div className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_5px_20px_rgba(73,54,49,0.06)]">
-            <div className="flex min-h-105 flex-col items-center justify-center px-5 py-16 text-center">
-              <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
-                <div className="absolute inset-0 rounded-2xl border border-[#E8DDD4]" />
+          !user ? (
+            <div className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_5px_20px_rgba(73,54,49,0.06)]">
+              <div className="flex min-h-105 flex-col items-center justify-center px-5 py-16 text-center">
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+                  <div className="absolute inset-0 rounded-2xl border border-[#E8DDD4]" />
 
-                <ShoppingBag size={34} strokeWidth={1.5} />
+                  <ShieldCheck size={34} strokeWidth={1.5} />
+                </div>
+
+                <span className="mt-5 rounded-full bg-[#FBF7F2] px-3 py-1 text-[8px] font-extrabold uppercase tracking-wider text-[#9A857B]">My Orders</span>
+
+                <h2 className="mt-3 text-xl font-extrabold text-[#351C18]">Login Required</h2>
+
+                <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-[#806C63] sm:text-sm sm:leading-6">Please login to view your orders and track your purchases on MineKart.</p>
+
+                <button
+                  type="button"
+                  onClick={() => setShowLogin(true)}
+                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-3 text-xs font-bold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.24)] sm:text-sm"
+                >
+                  Login to View Orders
+                  <ChevronRight size={16} />
+                </button>
               </div>
-
-              <span className="mt-5 rounded-full bg-[#FBF7F2] px-3 py-1 text-[8px] font-extrabold uppercase tracking-wider text-[#9A857B]">Order History</span>
-
-              <h2 className="mt-3 text-xl font-extrabold text-[#351C18]">No Orders Yet</h2>
-
-              <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-[#806C63] sm:text-sm sm:leading-6">You haven't placed any orders yet. Explore MineKart and your purchases will appear here.</p>
-
-              <button
-                type="button"
-                onClick={() => navigate('/')}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-3 text-xs font-bold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.24)] sm:text-sm"
-              >
-                Start Shopping
-                <ChevronRight size={16} />
-              </button>
             </div>
-          </div>
+          ) : (
+            <div className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_5px_20px_rgba(73,54,49,0.06)]">
+              <div className="flex min-h-105 flex-col items-center justify-center px-5 py-16 text-center">
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+                  <div className="absolute inset-0 rounded-2xl border border-[#E8DDD4]" />
+
+                  <ShoppingBag size={34} strokeWidth={1.5} />
+                </div>
+
+                <span className="mt-5 rounded-full bg-[#FBF7F2] px-3 py-1 text-[8px] font-extrabold uppercase tracking-wider text-[#9A857B]">Order History</span>
+
+                <h2 className="mt-3 text-xl font-extrabold text-[#351C18]">No Orders Yet</h2>
+
+                <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-[#806C63] sm:text-sm sm:leading-6">You haven't placed any orders yet. Explore MineKart and your purchases will appear here.</p>
+
+                <button
+                  type="button"
+                  onClick={() => navigate('/')}
+                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-3 text-xs font-bold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.24)] sm:text-sm"
+                >
+                  Start Shopping
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          )
         ) : (
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             {orders.map((order) => {
@@ -249,7 +279,6 @@ export default function MyOrders() {
                       </span>
                     </div>
 
-                    {/* CANCELLED DISABLED MESSAGE */}
                     {isCancelled && (
                       <div className="mt-3 flex items-center gap-2 rounded-lg border border-[#E5E0DD] bg-white/70 px-3 py-2">
                         <XCircle size={13} className="shrink-0 text-[#A08F8A]" />
@@ -258,7 +287,6 @@ export default function MyOrders() {
                       </div>
                     )}
 
-                    {/* RETURNED MESSAGE */}
                     {isReturned && (
                       <div className="mt-3 flex items-center gap-2 rounded-lg border border-[#EBD7B7] bg-[#FFF9ED] px-3 py-2">
                         <Package size={13} className="shrink-0 text-[#A05A16]" />
@@ -267,7 +295,6 @@ export default function MyOrders() {
                       </div>
                     )}
 
-                    {/* PROGRESS */}
                     {!disabledOrder && (
                       <div className="mt-4">
                         <div className="relative h-1.5 overflow-hidden rounded-full bg-[#EDE5E0]">
@@ -305,7 +332,6 @@ export default function MyOrders() {
                             key={`${order._id}-${index}`}
                             className={`flex items-center gap-3 rounded-xl border p-2.5 transition-all duration-200 ${isCancelled ? 'border-[#E5E0DD] bg-white/70' : 'border-[#E8DDD4] bg-[#FBF7F2] hover:border-[#D8C5BA] hover:bg-[#F8F0EA]'}`}
                           >
-                            {/* IMAGE */}
                             <div className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border sm:h-17 sm:w-17 ${isCancelled ? 'border-[#E2DEDB] bg-[#F4F2F1] grayscale' : 'border-[#E2D5CC] bg-white'}`}>
                               {item.image ? (
                                 <img src={getImageUrl(item.image)} alt={item.productName} className={`h-full w-full object-contain p-1.5 ${isCancelled ? 'grayscale opacity-65' : ''}`} />
@@ -314,7 +340,6 @@ export default function MyOrders() {
                               )}
                             </div>
 
-                            {/* INFO */}
                             <div className="min-w-0 flex-1">
                               <p className={`line-clamp-2 text-[11px] font-bold leading-4 sm:text-[12px] ${isCancelled ? 'text-[#7A6B66]' : 'text-[#351C18]'}`}>{item.productName}</p>
 
@@ -333,7 +358,6 @@ export default function MyOrders() {
                               <p className={`mt-1 text-[8px] ${isCancelled ? 'text-[#AAA09C]' : 'text-[#9A857B]'}`}>₹{Number(item.discountPrice || item.price || 0).toLocaleString('en-IN')} each</p>
                             </div>
 
-                            {/* PRICE */}
                             <div className="shrink-0 text-right">
                               <p className={`text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#8F7C76]' : 'text-[#8E181F]'}`}>₹{Number(item.totalPrice || 0).toLocaleString('en-IN')}</p>
                             </div>
@@ -346,7 +370,6 @@ export default function MyOrders() {
                   {/* SUMMARY */}
                   <div className={`border-t px-4 py-4 sm:px-5 ${isCancelled ? 'border-[#E5E0DD] bg-[#F3F1F0]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
                     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
-                      {/* TOTAL */}
                       <div className={`rounded-lg border px-3 py-2.5 ${isCancelled ? 'border-[#E2DEDB] bg-white/70' : 'border-[#E8DDD4] bg-white'}`}>
                         <div className="flex items-center gap-1.5">
                           <span className={`h-1.5 w-1.5 rounded-full ${isCancelled ? 'bg-[#A08F8A]' : 'bg-[#8E181F]'}`} />
@@ -357,7 +380,6 @@ export default function MyOrders() {
                         <p className={`mt-1.5 text-sm font-extrabold ${isCancelled ? 'text-[#7A6B66]' : 'text-[#351C18]'}`}>₹{Number(order.totalAmount || 0).toLocaleString('en-IN')}</p>
                       </div>
 
-                      {/* PAYMENT */}
                       <div className={`rounded-lg border px-3 py-2.5 ${isCancelled ? 'border-[#E2DEDB] bg-white/70' : 'border-[#E8DDD4] bg-white'}`}>
                         <p className="text-[7px] font-bold uppercase tracking-wider text-[#9A857B]">Payment</p>
 
@@ -366,7 +388,6 @@ export default function MyOrders() {
                         <span className={`mt-1.5 inline-flex rounded-md border px-1.5 py-0.5 text-[7px] font-bold ${getPaymentStatusClass(order.paymentStatus)}`}>{order.paymentStatus || 'Pending'}</span>
                       </div>
 
-                      {/* ITEMS */}
                       <div className={`rounded-lg border px-3 py-2.5 ${isCancelled ? 'border-[#E2DEDB] bg-white/70' : 'border-[#E8DDD4] bg-white'}`}>
                         <p className="text-[7px] font-bold uppercase tracking-wider text-[#9A857B]">Items</p>
 
@@ -376,7 +397,6 @@ export default function MyOrders() {
                       </div>
                     </div>
 
-                    {/* VIEW DETAILS */}
                     <button
                       type="button"
                       onClick={() => navigate(`/orders/${order.orderId}`)}
