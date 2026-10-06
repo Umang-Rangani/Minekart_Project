@@ -5,11 +5,14 @@ import toast from 'react-hot-toast'
 import BreadCrumb from '../../user/BreadCrumb'
 import { axiosInstance } from '../../config/axiosConfig'
 import TrackOrderResultShimmer from '../../userShimmer/TrackOrderResultShimmer'
+import { useUser } from '../../context/userProvider'
 
 export default function TrackOrder() {
   const [orderId, setOrderId] = useState('')
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(false)
+
+  const { user, setShowLogin } = useUser()
 
   // localstorage
   const TRACK_ORDER_KEY = 'minekart_track_order_id'
@@ -84,7 +87,7 @@ export default function TrackOrder() {
       setOrder(null)
 
       const response = await axiosInstance.get(`/order/track/${trimmedOrderId}`)
-      
+
       if (response.data?.success) {
         setOrder(response.data.data)
         toast.success('Order found successfully')
@@ -391,10 +394,21 @@ export default function TrackOrder() {
 
           <p className="mx-auto mt-1 max-w-md text-[10px] leading-4 text-white/65 sm:text-xs">You can find your order ID in My Orders and use it here to track your delivery.</p>
 
-          <Link to="/orders" className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-[#351C18] transition hover:bg-[#F7EEE7]">
-            View My Orders
-            <ArrowRight size={13} />
-          </Link>
+          {user ? (
+            <Link to="/orders" className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-[#351C18] transition hover:bg-[#F7EEE7]">
+              View My Orders
+              <ArrowRight size={13} />
+            </Link>
+          ) : (
+            <>
+              <p className="mt-3 text-[10px] text-white/65 sm:text-xs">To view your orders, please login</p>
+
+              <button type="button" onClick={() => setShowLogin(true)} className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-[#351C18] transition hover:bg-[#F7EEE7]">
+                Login to View Orders
+                <ArrowRight size={13} />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
