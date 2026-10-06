@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, Mail, Phone, MapPin, MessageCircle, Clock3, Send, LoaderCircle, Package, MessagesSquare } from 'lucide-react'
+import { ArrowRight, Mail, Phone, MapPin, MessageCircle, Clock3, Send, LoaderCircle, Package, MessagesSquare, LockKeyhole } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import BreadCrumb from '../../user/BreadCrumb'
 import { axiosInstance } from '../../config/axiosConfig'
+import { useUser } from '../../context/userProvider'
 
 export default function ContactUs() {
+  const { user, setShowLogin } = useUser()
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -48,18 +51,25 @@ export default function ContactUs() {
     const email = formData.email.trim()
     const message = formData.message.trim()
 
-    if (!name) {
-      toast.error('Please enter your name')
-      return
+    if (user) {
+      if (!name) {
+        toast.error('Please enter your name')
+        return
+      }
+
+      if (!email) {
+        toast.error('Please enter your email')
+        return
+      }
+
+      if (!message) {
+        toast.error('Please enter your message')
+        return
+      }
     }
 
-    if (!email) {
-      toast.error('Please enter your email')
-      return
-    }
-
-    if (!message) {
-      toast.error('Please enter your message')
+    if (!user) {
+      setShowLogin(true)
       return
     }
 
@@ -266,6 +276,7 @@ export default function ContactUs() {
               </div>
             </div>
 
+            {/* input form */}
             <form onSubmit={handleSubmit} className="mt-5 space-y-4">
               <div>
                 <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Name</label>
@@ -309,10 +320,24 @@ export default function ContactUs() {
                 />
               </div>
 
+              {!user && (
+                <div className="flex items-center gap-2 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] px-3 py-2.5">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#A51D26]/10">
+                    <LockKeyhole size={14} className="text-[#A51D26]" />
+                  </div>
+
+                  <div>
+                    <p className="text-[10px] font-bold text-[#351C18]">Login required</p>
+
+                    <p className="text-[9px] text-[#8B7A72]">Please login before sending your message.</p>
+                  </div>
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={sending}
-                className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] text-xs font-bold text-white shadow-[0_5px_15px_rgba(125,23,28,0.18)] transition hover:from-[#681419] hover:to-[#8E181F] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] text-xs font-bold text-white shadow-[0_5px_15px_rgba(125,23,28,0.18)] transition hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {sending ? (
                   <>
@@ -322,7 +347,7 @@ export default function ContactUs() {
                 ) : (
                   <>
                     <Send size={15} strokeWidth={1.8} />
-                    Send Message
+                    {user ? 'Send Message' : <button onClick={() => setShowLogin(true)}>Login to Send Message</button>}
                   </>
                 )}
               </button>
