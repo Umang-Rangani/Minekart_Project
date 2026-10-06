@@ -403,6 +403,31 @@ export default function Header() {
 
                           <ArrowRight size={12} className="shrink-0 text-[#B6A39A] transition-colors group-hover:text-[#9D2932]" />
                         </Link>
+
+                        {/* ADMIN PANEL */}
+                        {user?.role === 'Admin' && (
+                          <Link
+                            to="/admin"
+                            onClick={() => {
+                              setAccountOpen(false)
+                              setNotificationOpen(false)
+                              setMobileSearchOpen(false)
+                            }}
+                            className="group mt-0.5 flex items-center gap-2 rounded-xl px-2 py-2 text-[10px] font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#9D2932] sm:mt-1 sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
+                          >
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#9D2932] transition-colors group-hover:bg-[#F2DDD5] sm:h-9 sm:w-9">
+                              <Settings size={14} strokeWidth={1.9} />
+                            </span>
+
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate font-bold">Admin Panel</span>
+
+                              <span className="mt-0.5 hidden truncate text-[9px] font-normal text-[#9A857B] sm:block">Manage your MineKart store</span>
+                            </span>
+
+                            <ArrowRight size={12} className="shrink-0 text-[#B6A39A] transition-colors group-hover:text-[#9D2932]" />
+                          </Link>
+                        )}
                       </div>
 
                       {/* LOGOUT */}
