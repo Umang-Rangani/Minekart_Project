@@ -380,10 +380,7 @@ export default function Register() {
         "
       >
         <div className="relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col overflow-hidden rounded-t-[28px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_-20px_60px_rgba(53,28,24,0.20)] backdrop-blur-xl sm:max-h-[calc(100dvh-48px)] sm:rounded-[28px] sm:shadow-[0_30px_90px_rgba(53,28,24,0.18)]">
-          {/* Mobile Drag Handle */}
-          <div className="flex shrink-0 justify-center bg-[#FFFDFC] pt-2.5 sm:hidden">
-            <div className="h-1 w-10 rounded-full bg-[#D8C8BF]" />
-          </div>
+        
 
           {/* Header */}
           <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#321715] via-[#64171B] to-[#A51D26] px-3.5 py-3 text-white sm:px-8 sm:py-6">
