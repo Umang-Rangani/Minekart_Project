@@ -150,7 +150,7 @@ export default function Login({ onClose }) {
               <UserPlus size={25} strokeWidth={1.8} />
             </div>
 
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#E8B7B3]">Welcomexxxxxxxxxxx Back</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#E8B7B3]">Welcome Back</p>
 
             <h2 className="mt-3 text-3xl font-extrabold leading-tight lg:text-4xl">
               Login to
