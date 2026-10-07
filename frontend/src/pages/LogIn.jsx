@@ -7,7 +7,7 @@ import { axiosInstance } from '../config/axiosConfig'
 import { useUser } from '../context/userProvider'
 import ForgotPassword from './ForgotPassword'
 
-export default function Login({ onClose }) {
+export default function LogIn({ onClose }) {
   const [logIn, setLogIn] = useState({
     email: '',
     password: '',

@@ -53,7 +53,7 @@ import TicTacToe from './game/TicTacToe.jsx'
 import Terms from './components/CustomerService/Terms.jsx'
 import Privacy from './components/CustomerService/Privacy.jsx'
 import Cookies from './components/CustomerService/Cookies.jsx'
-import Login from './pages/Login.jsx'
+import LogIn from './pages/Login.jsx'
 
 
 export default function App() {
@@ -219,7 +219,7 @@ export default function App() {
 
       {/* LOGIN POPUP */}
 
-      {showLogin && <Login onClose={handleLoginClose} />}
+      {showLogin && <LogIn onClose={handleLoginClose} />}
     </BrowserRouter>
   )
 }
