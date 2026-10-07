@@ -331,7 +331,7 @@ router.put('/:id/cancel', authMiddleware, async (req, res) => {
           const emailItems = populatedOrder.items.map((item) => ({
             productName: item.productId?.productName || 'Product',
             quantity: item.quantity || 0,
-            totalPrice: Number(item.price || item.productId?.discountPrice || item.productId?.price || 0) * Number(item.quantity || 0),
+            totalPrice: Number( item.productId?.discountPrice ||  0) * Number(item.quantity || 0),
           }))
 
           const html = orderCancelledEmail({

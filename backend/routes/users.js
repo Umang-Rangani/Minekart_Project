@@ -15,6 +15,7 @@ const { passwordResetOtpEmail } = require('../utils/emailTemplates/passwordReset
 const { passwordResetSuccessEmail } = require('../utils/emailTemplates/passwordResetSuccessEmail')
 
 const { authCookieOptions, AUTH_COOKIE_MAX_AGE } = require('../utils/cookieOptions')
+const roleMiddleware = require('../middleware/roleMiddleware')
 
 /* GET users listing. */
 
@@ -538,20 +539,25 @@ router.post('/reset-password', async (req, res) => {
       })
     }
 
+    if (user.status === 'Inactive') {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account is inactive',
+      })
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10)
 
     user.password = hashedPassword
 
     await user.save()
 
-    // Delete reset request after successful reset
     await PasswordReset.deleteOne({
       _id: resetRequest._id,
     })
 
-    // Password reset confirmation email
     const html = passwordResetSuccessEmail(user.name)
-    
+
     try {
       await sendEmail({
         to: user.email,
@@ -562,9 +568,35 @@ router.post('/reset-password', async (req, res) => {
       console.error('⚠️ Password reset success email failed:', emailError)
     }
 
+    // Automatically login user after password reset
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '7d',
+      },
+    )
+
+    res.cookie('token', token, {
+      ...authCookieOptions,
+      maxAge: AUTH_COOKIE_MAX_AGE,
+    })
+
     return res.status(200).json({
       success: true,
       message: 'Password reset successfully',
+      user: {
+        id: user._id,
+        avatar: user.avatar,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        status: user.status,
+      },
     })
   } catch (error) {
     console.error('Reset Password Error:', error)
@@ -621,7 +653,7 @@ router.put('/:id', async (req, res) => {
 })
 
 // ! Delete User - Admin
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
   try {
     const { id } = req.params
 
@@ -649,14 +681,5 @@ router.delete('/:id', async (req, res) => {
     })
   }
 })
-
-// router.delete('/', async (req, res) => {
-//   try {
-//     const data = await User.deleteMany()
-//     res.status(200).json(data)
-//   } catch (error) {
-//     res.status(500).json(error)
-//   }
-// })
 
 module.exports = router

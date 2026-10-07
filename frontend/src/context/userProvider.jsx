@@ -48,12 +48,6 @@ export const UserProvider = ({ children }) => {
       
     } catch (error) {
       toast.error(error.response?.data?.message || 'Logout failed. Please try again.')
-
-
-         toast.error(
-        error.response?.data?.message ||
-          'Logout failed. Please try again.',
-      )
     }
   }
 

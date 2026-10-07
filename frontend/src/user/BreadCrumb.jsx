@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 export default function BreadCrumb({ items, className = '' }) {
   return (
     <nav className={`w-full pt-2 ${className}`} aria-label="Breadcrumb">
-      <ol className="no-scrollbar flex items-center gap-1.5 overflow-x-auto whitespace-nowrap text-sm">
+      <ol className="no-scrollbar flex items-center gap-1.5 overflow-x-auto whitespace-nowrap text-[12px] sm:text-sm">
         {/* Home */}
         <li className="flex shrink-0 items-center">
           <Link to="/" className="group flex items-center gap-1.5 rounded-lg px-2 py-1.5 font-semibold text-[#8E181F] transition-all duration-200 hover:bg-[#F7EEE7]">

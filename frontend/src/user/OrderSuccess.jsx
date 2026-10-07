@@ -94,6 +94,7 @@ export default function OrderSuccess() {
   const orderItems = order.items || []
 
   const items = [
+    { title: 'Products', link: '/products' },
     { title: 'cart', link: '/cart' },
     { title: 'checkout', link: '/checkout' },
     { title: 'success', link: null },
@@ -474,6 +475,19 @@ export default function OrderSuccess() {
 
                   <div className={`mt-3 inline-flex rounded-md border px-2 py-1 text-[8px] font-bold ${getOrderStatusStyle()}`}>{orderStatus}</div>
                 </div>
+
+                {/* CANCEL ORDER */}
+                {!['Cancelled', 'Delivered', 'Returned', 'Shipped', 'Out for Delivery'].includes(orderStatus) && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/orders/${order.orderId || orderId}`)}
+                    className="group mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] text-[10px] font-extrabold text-white shadow-[0_4px_14px_rgba(125,23,28,0.20)] transition-all duration-300 hover:-translate-y-0.5 hover:from-[#691419] hover:to-[#8E181F] hover:shadow-[0_6px_18px_rgba(125,23,28,0.28)] active:translate-y-0"
+                  >
+                    <Package size={15} strokeWidth={2} className="transition-transform duration-300 group-hover:scale-110" />
+                    Cancel Order
+                    <ChevronRight size={15} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </button>
+                )}
 
                 {/* TOTAL */}
                 <div className="mt-4 rounded-xl bg-linear-to-r from-[#F7EEE7] to-[#FFF4EE] px-3.5 py-3.5">

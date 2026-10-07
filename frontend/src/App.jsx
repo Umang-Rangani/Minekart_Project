@@ -139,47 +139,34 @@ export default function App() {
             {/* CATEGORY */}
 
             <Route path="category" element={<AdminCategory />} />
-
             <Route path="category/new" element={<AdminCategoryForm />} />
-
             <Route path="category/:id/update" element={<AdminCategoryForm />} />
-
             <Route path="category/:id" element={<AdminCategoryView />} />
 
             {/* SUB CATEGORY */}
 
             <Route path="subcategory" element={<AdminSubCategory />} />
-
             <Route path="subcategory/new" element={<AdminSubCategoryForm />} />
-
             <Route path="subcategory/:id/update" element={<AdminSubCategoryForm />} />
-
             <Route path="subcategory/:id" element={<AdminSubCategoryView />} />
 
             {/* BRAND */}
 
             <Route path="brand" element={<AdminBrand />} />
-
             <Route path="brand/new" element={<AdminBrandForm />} />
-
             <Route path="brand/:id/update" element={<AdminBrandForm />} />
-
             <Route path="brand/:id" element={<AdminBrandView />} />
 
             {/* PRODUCTS */}
 
             <Route path="products" element={<AdminProducts />} />
-
             <Route path="products/new" element={<AdminProductsForm />} />
-
             <Route path="products/:id/update" element={<AdminProductsForm />} />
-
             <Route path="products/:id" element={<AdminProductsView />} />
 
             {/* ORDERS */}
 
             <Route path="orders" element={<AdminOrders />} />
-
             <Route path="orders/:id" element={<AdminOrderView />} />
 
             {/* USERS */}

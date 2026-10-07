@@ -4,9 +4,11 @@ import toast from 'react-hot-toast'
 
 import { axiosInstance } from '../config/axiosConfig'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from '../context/userProvider'
 
 export default function ForgotPassword({ onClose, onBackToLogin }) {
   const [step, setStep] = useState('email')
+  const { getCurrentUser } = useUser()
 
   const navigate = useNavigate()
 
@@ -211,6 +213,8 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
       })
 
       if (res.data.success) {
+        await getCurrentUser()
+
         setStep('success')
         setPassword('')
         setConfirmPassword('')
@@ -936,7 +940,7 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
 
                 <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#806C63]">Your MineKart password has been successfully updated. You can now login using your new password.</p>
 
-                <button
+                {/* <button
                   type="button"
                   onClick={backToLoginHandle}
                   className="
@@ -958,7 +962,7 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
                 >
                   Back to Login
                   <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
+                </button> */}
               </div>
             )}
 

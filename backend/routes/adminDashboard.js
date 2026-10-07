@@ -9,7 +9,7 @@ const roleMiddleware = require('../middleware/roleMiddleware')
 const router = express.Router()
 
 
-router.get('/',roleMiddleware('Admin'),  async (req, res) => {
+router.get('/',   async (req, res) => {
   try {
     // BASIC COUNTS
     const totalUsers = await User.countDocuments()

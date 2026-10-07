@@ -92,37 +92,23 @@ app.use(async (req, res, next) => {
 })
 
 app.use('/', indexRouter)
-
 app.use('/users', usersRouter)
-
 app.use('/category', categoryRouter)
-
 app.use('/subcategory', subcategoryRouter)
-
 app.use('/brand', brandRouter)
-
 app.use('/product', productRouter)
-
 app.use('/cart', cartRouter)
-
 app.use('/address', addressRouter)
-
 app.use('/payment', paymentRouter)
-
 app.use('/order', orderRouter)
-
 app.use('/uploads', uploadRouter)
-
 app.use('/contact', contactRouter)
 
 app.use('/admin/orders', adminOrderRoutes)
-
 app.use('/admin/dashboard', adminDashboard)
-
 app.use('/admin-notification', adminNotification)
 
 app.use('/notification', notification)
-
 app.use('/realtime', realtimeRouter)
 
 app.use(function (req, res, next) {

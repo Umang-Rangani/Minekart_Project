@@ -1,6 +1,6 @@
 import { getImageUrl } from '../utils/imageUrl'
-import React, { useEffect, useRef, useState } from 'react'
-import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import toast from 'react-hot-toast'
@@ -14,13 +14,11 @@ export default function AdminUsers() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // Activate / Deactivate
   const [openMenu, setOpenMenu] = useState(null)
-  const menuRef = useRef(null) //dropdown ni out click krta off thay
 
-  // delete popup
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [deleteItem, setDeleteItem] = useState(null)
+  const [deleteProcessing, setDeleteProcessing] = useState(false)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(5)
@@ -40,9 +38,23 @@ export default function AdminUsers() {
     }
   }
 
-  // Image URL
   useEffect(() => {
     getUsers()
+  }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('[data-user-menu]')) {
+        setOpenMenu(null)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
   }, [])
 
   // Update user status
@@ -100,28 +112,49 @@ export default function AdminUsers() {
     return `${user.name || ''} ${user.email || ''} ${user.phone || ''} ${user.address || ''} ${user.city || ''} ${user.pincode || ''}`.toLowerCase().includes(searchValue)
   })
 
-  // ! Open delete popup
-  const handleModalOpen = (data) => {
-    setDeleteItem(data)
+  // Open delete popup
+  const handleModalOpen = (user) => {
+    setDeleteItem(user)
     setDeleteModalOpen(true)
   }
 
-  // ! Delete user
+  // Delete user
   const deleteHandle = async () => {
-    if (!deleteItem) return
+    if (!deleteItem?._id) {
+      toast.error('User information not found')
+      return
+    }
 
     try {
-      await axiosInstance.delete(`/users/${deleteItem._id}`)
+      setDeleteProcessing(true)
 
-      toast.success('User deleted successfully')
+      const res = await axiosInstance.delete(`/users/${deleteItem._id}`)
+
+      if (res.data.success) {
+        toast.success('User deleted successfully')
+
+        setDeleteModalOpen(false)
+        setDeleteItem(null)
+
+        await getUsers()
+
+        // Fix page if last item of current page was deleted
+        setCurrentPage((prev) => {
+          const remainingUsers = filteredUsers.length - 1
+
+          if (itemsPerPage !== 'all' && remainingUsers > 0 && prev > Math.ceil(remainingUsers / itemsPerPage)) {
+            return Math.ceil(remainingUsers / itemsPerPage)
+          }
+
+          return prev
+        })
+      }
     } catch (error) {
       console.error('Delete User error:', error.response?.data || error.message)
 
       toast.error(error.response?.data?.message || 'Failed to delete user')
     } finally {
-      setDeleteModalOpen(false)
-      setDeleteItem(null)
-      await getUsers()
+      setDeleteProcessing(false)
     }
   }
 
@@ -139,7 +172,6 @@ export default function AdminUsers() {
     const newValue = value === 'all' ? 'all' : Number(value)
 
     setItemsPerPage(newValue)
-
     setCurrentPage(1)
   }
 
@@ -174,21 +206,6 @@ export default function AdminUsers() {
       icon: Phone,
     },
   ]
-
-  // dropdown ni bar click krta off thay
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setOpenMenu(null)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
 
   const items = [
     {
@@ -311,7 +328,7 @@ export default function AdminUsers() {
                         <div className="flex items-center gap-2">
                           <Phone size={13} className="shrink-0 text-[#99938B]" />
 
-                          <span className="text-xs text-[#99938B]">{user.phone}</span>
+                          <span className="text-xs text-[#99938B]">{user.phone || '-'}</span>
                         </div>
                       </div>
                     </td>
@@ -324,10 +341,9 @@ export default function AdminUsers() {
                       </span>
                     </td>
 
-                    {/* action delete */}
                     <td className="px-5 py-4">
                       {user.role !== 'Admin' && (
-                        <div ref={menuRef} className="relative flex justify-end">
+                        <div data-user-menu className="relative flex justify-end">
                           <button
                             type="button"
                             onClick={() => setOpenMenu(openMenu === user._id ? null : user._id)}
@@ -348,7 +364,6 @@ export default function AdminUsers() {
                                 onClick={() => {
                                   handleModalOpen(user)
                                   setOpenMenu(null)
-                                  console.log('hiii', user)
                                 }}
                                 className="w-full px-4 py-2.5 text-left text-sm font-medium text-[#A44A3F] transition hover:bg-[#F8F6F2]"
                               >
@@ -423,16 +438,20 @@ export default function AdminUsers() {
         </div>
       </div>
 
-      {/*  DELETE MODAL  */}
       <AdminTrashBox
         isOpen={deleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
-        type="danger"
+        onClose={() => {
+          if (!deleteProcessing) {
+            setDeleteModalOpen(false)
+            setDeleteItem(null)
+          }
+        }}
         title="Delete User?"
         message={deleteItem ? `Are you sure you want to delete this ${deleteItem.name}?` : 'Are you sure you want to delete this user?'}
         actionButtonText="Delete"
         cancelButtonText="Cancel"
         onAction={deleteHandle}
+        isProcessing={deleteProcessing}
       />
     </div>
   )

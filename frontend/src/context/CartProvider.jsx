@@ -11,10 +11,8 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState(null)
   const [cartLoading, setCartLoading] = useState(false)
 
-  // ! new user mate first time add to cart krta
   const cartRequestId = useRef(0)
 
-  // ! Get Cart
   const getCart = async () => {
     if (!user) {
       setCart(null)
@@ -28,7 +26,6 @@ export function CartProvider({ children }) {
 
       const res = await axiosInstance.get('/cart')
 
-      // Ignore old/stale request response
       if (requestId !== cartRequestId.current) {
         return
       }
@@ -41,7 +38,9 @@ export function CartProvider({ children }) {
         return
       }
 
-      toast.error(error.response?.data?.message || 'Unable to load cart')
+      console.error('Get Cart Error:', error.response?.data || error.message)
+
+      setCart(null)
     } finally {
       if (requestId === cartRequestId.current) {
         setCartLoading(false)
@@ -49,7 +48,6 @@ export function CartProvider({ children }) {
     }
   }
 
-  // ! Add Product To Cart
   const addToCart = async ({ productId, quantity = 1, size = null }) => {
     if (!user) {
       toast.error('Please login first')
@@ -61,7 +59,6 @@ export function CartProvider({ children }) {
     }
 
     try {
-      // Invalidate any previous cart GET request
       ++cartRequestId.current
 
       const res = await axiosInstance.post('/cart', {
@@ -72,25 +69,20 @@ export function CartProvider({ children }) {
 
       if (res.data.success) {
         setCart(res.data.data)
-
-        toast.success('Product added to cart')
+        toast.success('Added to cart')
       }
 
       return res.data
     } catch (error) {
-      console.log('Add To Cart Error:', error.response?.data || error.message)
-
-      const message = error.response?.data?.message || 'Something went wrong'
-
-      toast.error(message)
+      console.error('Add To Cart Error:', error.response?.data || error.message)
 
       return {
         success: false,
-        message,
+        message: error.response?.data?.message || 'Something went wrong',
       }
     }
   }
-  // ! Increase Cart Item
+
   const increaseCartItem = async ({ productId, size = null }) => {
     if (!user) {
       return {
@@ -99,7 +91,6 @@ export function CartProvider({ children }) {
       }
     }
 
-    // Instant UI Update
     const oldCart = cart
 
     if (cart) {
@@ -140,25 +131,21 @@ export function CartProvider({ children }) {
         return res.data
       }
 
-      // API fail → rollback
       setCart(oldCart)
 
       return res.data
     } catch (error) {
+      console.error('Increase Cart Item Error:', error.response?.data || error.message)
+
       setCart(oldCart)
-
-      const message = error.response?.data?.message || 'Unable to increase quantity'
-
-      toast.error(message)
 
       return {
         success: false,
-        message,
+        message: error.response?.data?.message || 'Unable to increase quantity',
       }
     }
   }
 
-  // ! Decrease Cart Item
   const decreaseCartItem = async ({ productId, size = null }) => {
     if (!user) {
       return {
@@ -167,17 +154,14 @@ export function CartProvider({ children }) {
       }
     }
 
-    // Save old cart for rollback
     const oldCart = cart
 
-    // Instant UI Update
     if (cart) {
       const currentItem = cart.items.find((item) => item.productId?._id?.toString() === productId?.toString() && item.size === size)
 
       if (currentItem) {
         let updatedItems
 
-        // Quantity 1 → item immediately remove from UI
         if (currentItem.quantity === 1) {
           updatedItems = cart.items.filter((item) => !(item.productId?._id?.toString() === productId?.toString() && item.size === size))
         } else {
@@ -220,25 +204,21 @@ export function CartProvider({ children }) {
         return res.data
       }
 
-      // API fail → rollback
       setCart(oldCart)
 
       return res.data
     } catch (error) {
+      console.error('Decrease Cart Item Error:', error.response?.data || error.message)
+
       setCart(oldCart)
-
-      const message = error.response?.data?.message || 'Unable to decrease quantity'
-
-      toast.error(message)
 
       return {
         success: false,
-        message,
+        message: error.response?.data?.message || 'Unable to decrease quantity',
       }
     }
   }
 
-  // ! Remove Cart Item
   const removeCartItem = async ({ productId, size = null }) => {
     if (!user) {
       return {
@@ -257,23 +237,20 @@ export function CartProvider({ children }) {
 
       if (res.data.success) {
         await getCart()
-
         toast.success('Product removed from cart')
       }
 
       return res.data
     } catch (error) {
-      const message = error.response?.data?.message || 'Unable to remove product'
+      console.error('Remove Cart Item Error:', error.response?.data || error.message)
 
-      toast.error(message)
       return {
         success: false,
-        message: error.response?.data?.message || 'Something went wrong',
+        message: error.response?.data?.message || 'Unable to remove product',
       }
     }
   }
 
-  // ! Clear Complete Cart
   const clearCart = async () => {
     if (!user) {
       return {
@@ -287,23 +264,20 @@ export function CartProvider({ children }) {
 
       if (res.data.success) {
         await getCart()
-
         toast.success('Cart cleared successfully')
       }
 
       return res.data
     } catch (error) {
-      const message = error.response?.data?.message || 'Unable to clear cart'
+      console.error('Clear Cart Error:', error.response?.data || error.message)
 
-      toast.error(message)
       return {
         success: false,
-        message: error.response?.data?.message || 'Something went wrong',
+        message: error.response?.data?.message || 'Unable to clear cart',
       }
     }
   }
 
-  // ! Get Cart when user changes
   useEffect(() => {
     getCart()
   }, [user])
@@ -313,7 +287,6 @@ export function CartProvider({ children }) {
       value={{
         cart,
         cartLoading,
-
         getCart,
         addToCart,
         increaseCartItem,

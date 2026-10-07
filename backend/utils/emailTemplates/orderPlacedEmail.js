@@ -1,1071 +1,608 @@
+const { emailLayout } = require('./emailLayout')
+
 const orderPlacedEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax, totalAmount, paymentMethod, shippingAddress }) => {
   const formatPrice = (price) => `₹${Number(price || 0).toLocaleString('en-IN')}`
 
   const itemRows = (items || [])
-    .map(
-      (item) => `
+    .map((item) => {
+      const productName = String(item.productName || 'Product')
+
+      const displayName = productName.length > 55 ? `${productName.slice(0, 55).trimEnd()}...` : productName
+
+      return `
         <tr>
           <td
             style="
-              padding:14px 10px;
-              border-bottom:1px solid #eadfd8;
+              width:57%;
+              padding:12px 8px;
+              border-bottom:1px solid #E8DDD4;
               vertical-align:middle;
+              font-family:Arial,Helvetica,sans-serif;
             "
           >
-          <div
-  style="
-    font-size:14px;
-    font-weight:800;
-    color:#35231f;
-    line-height:1.45;
-    word-break:break-word;
-  "
->
-  ${
-    String(item.productName || 'Product').length > 55
-      ? `${String(item.productName || 'Product')
-          .slice(0, 55)
-          .trimEnd()}...`
-      : item.productName || 'Product'
-  }
-</div>
+            <div
+              style="
+                color:#35231F;
+                font-size:12px;
+                line-height:18px;
+                font-weight:800;
+                word-break:break-word;
+                font-family:Arial,Helvetica,sans-serif;
+              "
+            >
+              ${displayName}
+            </div>
           </td>
 
           <td
+            align="center"
             style="
-              padding:14px 6px;
-              border-bottom:1px solid #eadfd8;
-              text-align:center;
+              width:16%;
+              padding:12px 4px;
+              border-bottom:1px solid #E8DDD4;
               vertical-align:middle;
-              font-size:14px;
+              color:#806C63;
+              font-size:12px;
+              line-height:18px;
               font-weight:700;
-              color:#806c63;
               white-space:nowrap;
+              font-family:Arial,Helvetica,sans-serif;
             "
           >
             ${item.quantity || 0}
           </td>
 
           <td
+            align="right"
             style="
-              padding:14px 10px;
-              border-bottom:1px solid #eadfd8;
-              text-align:right;
+              width:27%;
+              padding:12px 8px;
+              border-bottom:1px solid #E8DDD4;
               vertical-align:middle;
-              font-size:14px;
+              color:#35231F;
+              font-size:12px;
+              line-height:18px;
               font-weight:900;
-              color:#35231f;
               white-space:nowrap;
+              font-family:Arial,Helvetica,sans-serif;
             "
           >
             ${formatPrice(item.totalPrice)}
           </td>
         </tr>
-      `,
-    )
+      `
+    })
     .join('')
 
   const paymentText = paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online on Delivery'
 
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-  <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>Order Placed - MineKart</title>
-
-  <style>
-
-    * {
-      box-sizing:border-box;
-    }
-
-    html,
-    body {
-      margin:0;
-      padding:0;
-      width:100%;
-    }
-
-    body {
-      background:#f6eee9;
-      font-family:Arial,Helvetica,sans-serif;
-      color:#35231f;
-      -webkit-text-size-adjust:100%;
-      -ms-text-size-adjust:100%;
-    }
-
-    table {
-      border-spacing:0;
-      border-collapse:collapse;
-    }
-
-    img {
-      border:0;
-      display:block;
-    }
-
-    a {
-      text-decoration:none;
-    }
-
-    .email-wrapper {
-      width:100%;
-      padding:34px 12px;
-      background:#f6eee9;
-    }
-
-    .email-container {
-      width:100%;
-      max-width:700px;
-      margin:0 auto;
-      background:#ffffff;
-      border:1px solid #e8ddd4;
-      border-radius:20px;
-      overflow:hidden;
-      box-shadow:0 8px 30px rgba(73,54,49,0.07);
-    }
-
-    /* HEADER */
-
-    .email-header {
-      padding:25px 28px;
-      background:#fffaf7;
-      border-bottom:1px solid #eadfd8;
-    }
-
-    .brand-row {
-      width:100%;
-    }
-
-    .brand-logo {
-      font-size:25px;
-      line-height:1;
-      font-weight:900;
-      letter-spacing:-.7px;
-      color:#35231f;
-    }
-
-    .brand-tagline {
-      margin-top:7px;
-      font-size:10px;
-      line-height:1.5;
-      font-weight:700;
-      letter-spacing:.15em;
-      color:#967e74;
-      text-transform:uppercase;
-    }
-
-    .website-link {
-      display:inline-block;
-      padding:8px 13px;
-      border:1px solid #ead7ce;
-      border-radius:9px;
-      background:#f8eee9;
-      color:#8e181f;
-      font-size:11px;
-      font-weight:800;
-    }
-
-    /* HERO */
-
-    .email-hero {
-      padding:28px;
-      background:linear-gradient(
-        135deg,
-        #351c18 0%,
-        #4a2520 55%,
-        #7d171c 100%
-      );
-    }
-
-    .hero-badge {
-      display:inline-block;
-      padding:6px 10px;
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      color:#f8e8df;
-      font-size:9px;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .hero-title {
-      margin:14px 0 0;
-      font-size:27px;
-      line-height:1.3;
-      font-weight:900;
-      color:#ffffff;
-    }
-
-    .hero-text {
-      margin:9px 0 0;
-      max-width:530px;
-      font-size:13px;
-      line-height:1.7;
-      color:rgba(255,255,255,.72);
-    }
-
-    /* CONTENT */
-
-    .email-content {
-      padding:30px;
-    }
-
-    .email-text {
-      font-size:14px;
-      line-height:1.7;
-      color:#756c65;
-    }
-
-    /* ORDER STATUS */
-
-    .status-order-box {
-      width:100%;
-      margin-top:22px;
-      padding:15px;
-      background:#fff8f5;
-      border:1px solid #ead9d2;
-      border-radius:14px;
-    }
-
-    .status-table {
-      width:100%;
-      table-layout:fixed;
-    }
-
-    .status-cell {
-      width:60%;
-      vertical-align:middle;
-      padding-right:14px;
-    }
-
-    .order-id-cell {
-      width:40%;
-      vertical-align:middle;
-      padding-left:16px;
-      border-left:1px solid #ead9d2;
-    }
-
-    .status-icon {
-      width:34px;
-      height:34px;
-      line-height:34px;
-      text-align:center;
-      border-radius:50%;
-      background:#8e181f;
-      color:#ffffff;
-      font-size:17px;
-      font-weight:900;
-    }
-
-    .status-title {
-      font-size:14px;
-      font-weight:900;
-      color:#8e181f;
-    }
-
-    .status-subtitle {
-      margin-top:3px;
-      font-size:11px;
-      line-height:1.4;
-      color:#806c63;
-    }
-
-    .order-label {
-      font-size:9px;
-      font-weight:900;
-      letter-spacing:.9px;
-      text-transform:uppercase;
-      color:#a08d84;
-    }
-
-    .order-id {
-      margin-top:4px;
-      font-size:16px;
-      font-weight:900;
-      color:#35231f;
-      word-break:break-word;
-    }
-
-    /* SECTION */
-
-    .section {
-      margin-top:27px;
-    }
-
-    .section-title {
-      margin:0 0 12px;
-      font-size:18px;
-      line-height:1.3;
-      font-weight:900;
-      color:#35231f;
-    }
-
-    /* ITEMS */
-
-    .items-card {
-      overflow:hidden;
-      border:1px solid #e8ddd4;
-      border-radius:13px;
-      background:#ffffff;
-    }
-
-    .items-table {
-      width:100%;
-      table-layout:fixed;
-      border-collapse:collapse;
-    }
-
-    .items-table th {
-      padding:11px 9px;
-      background:#f8f1ec;
-      color:#67544d;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.02em;
-    }
-
-    .items-table th:nth-child(1) {
-      width:57%;
-      text-align:left;
-    }
-
-    .items-table th:nth-child(2) {
-      width:16%;
-      text-align:center;
-    }
-
-    .items-table th:nth-child(3) {
-      width:27%;
-      text-align:right;
-    }
-
-    /* SUMMARY */
-
-    .summary-box {
-      margin-top:22px;
-      padding:18px;
-      background:#fbf7f2;
-      border:1px solid #e8ddd4;
-      border-radius:13px;
-    }
-
-    .summary-table {
-      width:100%;
-    }
-
-    .summary-table td {
-      padding:5px 0;
-      font-size:13px;
-      color:#806c63;
-    }
-
-    .summary-price {
-      text-align:right;
-      font-weight:800;
-      color:#493631 !important;
-      white-space:nowrap;
-    }
-
-    .grand-total td {
-      padding-top:14px !important;
-      border-top:1px solid #e5d9d1;
-      font-size:17px !important;
-      font-weight:900 !important;
-      color:#35231f !important;
-    }
-
-    .grand-total .total-price {
-      text-align:right;
-      color:#9d2932 !important;
-      white-space:nowrap;
-      font-size:20px !important;
-    }
-
-    /* ADDRESS */
-
-    .address-box {
-      margin-top:20px;
-      padding:18px;
-      background:#ffffff;
-      border:1px solid #e8ddd4;
-      border-radius:13px;
-    }
-
-    .address-head {
-      margin-bottom:12px;
-    }
-
-    .address-icon {
-      width:30px;
-      height:30px;
-      line-height:30px;
-      text-align:center;
-      border-radius:9px;
-      background:#f7eee7;
-      color:#8e181f;
-      font-size:13px;
-      font-weight:900;
-    }
-
-    .address-title {
-      margin:0;
-      font-size:15px;
-      font-weight:900;
-      color:#35231f;
-    }
-
-    .address-text {
-      margin:0;
-      font-size:13px;
-      line-height:1.7;
-      color:#806c63;
-      word-break:break-word;
-    }
-
-    /* PAYMENT */
-
-    .payment-box {
-      margin-top:16px;
-      padding:15px 16px;
-      background:#f8f3ef;
-      border:1px solid #e8ddd4;
-      border-radius:11px;
-    }
-
-    .payment-icon {
-      width:30px;
-      height:30px;
-      line-height:30px;
-      text-align:center;
-      border-radius:9px;
-      background:#eee1da;
-      color:#8e181f;
-      font-size:13px;
-      font-weight:900;
-    }
-
-    .payment-label {
-      font-size:10px;
-      font-weight:700;
-      color:#9a857b;
-    }
-
-    .payment-value {
-      margin-top:3px;
-      font-size:14px;
-      font-weight:900;
-      color:#35231f;
-    }
-
-    /* NEXT */
-
-    .next-box {
-      margin-top:18px;
-      padding:16px;
-      background:#fff7f5;
-      border:1px solid #efd9d5;
-      border-left:4px solid #9d2932;
-      border-radius:10px;
-    }
-
-    .next-title {
-      font-size:13px;
-      font-weight:900;
-      color:#8e181f;
-    }
-
-    .next-text {
-      margin-top:5px;
-      font-size:12px;
-      line-height:1.7;
-      color:#806c63;
-    }
-
-    /* CTA */
-
-    .cta-box {
-      margin-top:22px;
-      text-align:center;
-    }
-
-    .cta-button {
-      display:inline-block;
-      padding:12px 22px;
-      border-radius:10px;
-      background:#9d2932;
-      color:#ffffff !important;
-      font-size:12px;
-      font-weight:900;
-      box-shadow:0 5px 15px rgba(157,41,50,.18);
-    }
-
-    .website-note {
-      margin-top:9px;
-      font-size:10px;
-      color:#a08d84;
-    }
-
-    /* FOOTER */
-
-    .email-footer {
-      padding:23px 25px;
-      text-align:center;
-      background:#faf6f2;
-      border-top:1px solid #e8ddd4;
-    }
-
-    .footer-links {
-      margin-top:10px;
-    }
-
-    .footer-link {
-      color:#9d2932 !important;
-      font-size:11px;
-      font-weight:800;
-    }
-
-    .footer-divider {
-      margin:0 7px;
-      color:#c7b7ae;
-      font-size:11px;
-    }
-
-    .footer-text {
-      margin:0;
-      font-size:11px;
-      line-height:1.6;
-      color:#9a857b;
-    }
-
-    .footer-brand {
-      margin:9px 0 0;
-      font-size:13px;
-      font-weight:900;
-      color:#35231f;
-    }
-
-    /* MOBILE */
-
-    @media only screen and (max-width:620px) {
-
-      .email-wrapper {
-        padding:10px 5px !important;
-      }
-
-      .email-container {
-        width:100% !important;
-        max-width:100% !important;
-        border-radius:13px !important;
-      }
-
-      .email-header {
-        padding:19px 14px !important;
-      }
-
-      .brand-logo {
-        font-size:22px !important;
-      }
-
-      .brand-tagline {
-        font-size:8px !important;
-        letter-spacing:.12em !important;
-      }
-
-      .website-link {
-        padding:7px 9px !important;
-        font-size:9px !important;
-      }
-
-      .email-hero {
-        padding:22px 15px !important;
-      }
-
-      .hero-title {
-        font-size:22px !important;
-      }
-
-      .hero-text {
-        font-size:12px !important;
-        line-height:1.6 !important;
-      }
-
-      .email-content {
-        padding:21px 14px !important;
-      }
-
-      .email-text {
-        font-size:13px !important;
-      }
-
-      .status-order-box {
-        margin-top:18px !important;
-        padding:11px !important;
-        border-radius:11px !important;
-      }
-
-      .status-cell {
-        width:59% !important;
-        padding-right:7px !important;
-      }
-
-      .order-id-cell {
-        width:41% !important;
-        padding-left:9px !important;
-      }
-
-      .status-icon {
-        width:29px !important;
-        height:29px !important;
-        line-height:29px !important;
-        font-size:15px !important;
-      }
-
-      .status-title {
-        font-size:11px !important;
-      }
-
-      .status-subtitle {
-        margin-top:2px !important;
-        font-size:9px !important;
-      }
-
-      .order-label {
-        font-size:8px !important;
-      }
-
-      .order-id {
-        font-size:12px !important;
-      }
-
-      .section {
-        margin-top:21px !important;
-      }
-
-      .section-title {
-        margin-bottom:9px !important;
-        font-size:16px !important;
-      }
-
-      .items-table th {
-        padding:9px 5px !important;
-        font-size:9px !important;
-      }
-
-      .items-table td {
-        padding:10px 5px !important;
-      }
-
-      .items-table td div {
-        font-size:11px !important;
-      }
-
-      .items-table td:nth-child(2),
-      .items-table td:nth-child(3) {
-        font-size:11px !important;
-      }
-
-      .summary-box {
-        margin-top:19px !important;
-        padding:14px !important;
-      }
-
-      .summary-table td {
-        padding:4px 0 !important;
-        font-size:12px !important;
-      }
-
-      .grand-total td {
-        padding-top:11px !important;
-        font-size:15px !important;
-      }
-
-      .grand-total .total-price {
-        font-size:17px !important;
-      }
-
-      .address-box {
-        margin-top:17px !important;
-        padding:14px !important;
-      }
-
-      .address-title {
-        font-size:14px !important;
-      }
-
-      .address-text {
-        font-size:11px !important;
-      }
-
-      .payment-box {
-        margin-top:13px !important;
-        padding:12px 13px !important;
-      }
-
-      .payment-value {
-        font-size:12px !important;
-      }
-
-      .next-box {
-        margin-top:15px !important;
-        padding:13px !important;
-      }
-
-      .next-title {
-        font-size:12px !important;
-      }
-
-      .next-text {
-        font-size:11px !important;
-      }
-
-      .cta-button {
-        padding:11px 18px !important;
-        font-size:11px !important;
-      }
-
-      .email-footer {
-        padding:18px 12px !important;
-      }
-
-      .footer-text {
-        font-size:10px !important;
-      }
-
-      .footer-brand {
-        font-size:12px !important;
-      }
-
-    }
-
-    @media only screen and (max-width:380px) {
-
-      .brand-row td {
-        display:block !important;
-        width:100% !important;
-        text-align:center !important;
-      }
-
-      .brand-row td:last-child {
-        padding-top:12px !important;
-      }
-
-      .hero-title {
-        font-size:20px !important;
-      }
-
-      .email-content {
-        padding:19px 11px !important;
-      }
-
-      .status-title {
-        font-size:10px !important;
-      }
-
-      .status-subtitle {
-        font-size:8px !important;
-      }
-
-      .order-id {
-        font-size:11px !important;
-      }
-
-    }
-
-  </style>
-
-</head>
-
-<body>
-
-  <div class="email-wrapper">
-
-    <div class="email-container">
-
-      <!-- HEADER -->
-
-      <div class="email-header">
-
-        <table
-          class="brand-row"
-          width="100%"
-          cellpadding="0"
-          cellspacing="0"
-          border="0"
+  const orderSuccessUrl =
+    `https://minekart.vercel.app/order-success` +
+    `?orderId=${encodeURIComponent(orderId)}` +
+    `&paymentMethod=${encodeURIComponent(paymentMethod)}` +
+    `&paymentStatus=Pending` +
+    `&orderStatus=Pending` +
+    `&totalAmount=${encodeURIComponent(totalAmount)}`
+
+  const content = `
+    <!-- Greeting -->
+
+    <p
+      style="
+        margin:0;
+        color:#35231F;
+        font-size:14px;
+        line-height:22px;
+        font-weight:800;
+        font-family:Arial,Helvetica,sans-serif;
+      "
+    >
+      Hi ${name || 'Customer'},
+    </p>
+
+    <p
+      style="
+        margin:8px 0 0;
+        color:#806C63;
+        font-size:13px;
+        line-height:21px;
+        font-family:Arial,Helvetica,sans-serif;
+      "
+    >
+      Thank you for shopping with MineKart. We have successfully received
+      your order and will keep you updated about its status.
+    </p>
+
+
+    <!-- Order Status -->
+
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="
+        width:100%;
+        margin-top:20px;
+        background:#FFF8F5;
+        border:1px solid #EAD9D2;
+        border-radius:12px;
+      "
+    >
+      <tr>
+
+        <td
+          width="58%"
+          style="
+            width:58%;
+            padding:13px 11px;
+            vertical-align:middle;
+            font-family:Arial,Helvetica,sans-serif;
+          "
         >
-
-          <tr>
-
-            <td
-              width="65%"
-              align="left"
-              valign="middle"
-            >
-
-              <a
-                href="https://minekart.vercel.app"
-                style="display:inline-block;text-decoration:none;"
-              >
-
-                <div class="brand-logo">
-                  Mine
-                  <span style="color:#9d2932;">
-                    Kart
-                  </span>
-                </div>
-
-                <div class="brand-tagline">
-                  SHOP MORE • LIVE BETTER
-                </div>
-
-              </a>
-
-            </td>
-
-            <td
-              width="35%"
-              align="right"
-              valign="middle"
-            >
-
-              <a
-                href="https://minekart.vercel.app"
-                class="website-link"
-              >
-                Visit MineKart
-              </a>
-
-            </td>
-
-          </tr>
-
-        </table>
-
-      </div>
-
-
-      <!-- HERO -->
-
-      <div class="email-hero">
-
-        <span class="hero-badge">
-          Order Received
-        </span>
-
-        <h1 class="hero-title">
-          Order Placed Successfully! 🛍️
-        </h1>
-
-        <p class="hero-text">
-          Hi ${name || 'Customer'}, thank you for shopping with MineKart.
-          We have successfully received your order and will keep you updated.
-        </p>
-
-      </div>
-
-
-      <!-- CONTENT -->
-
-      <div class="email-content">
-
-        <!-- STATUS + ORDER -->
-
-        <div class="status-order-box">
-
           <table
-            class="status-table"
+            width="100%"
             cellpadding="0"
             cellspacing="0"
             border="0"
-            width="100%"
           >
-
             <tr>
 
-              <td class="status-cell">
-
-                <table
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
+              <td
+                width="38"
+                style="
+                  width:38px;
+                  vertical-align:middle;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
+                <div
+                  style="
+                    width:30px;
+                    height:30px;
+                    line-height:30px;
+                    text-align:center;
+                    border-radius:50%;
+                    background:#8E181F;
+                    color:#FFFFFF;
+                    font-size:15px;
+                    font-weight:900;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
                 >
-
-                  <tr>
-
-                    <td
-                      style="
-                        width:39px;
-                        vertical-align:middle;
-                      "
-                    >
-
-                      <div class="status-icon">
-                        ✓
-                      </div>
-
-                    </td>
-
-                    <td
-                      style="
-                        vertical-align:middle;
-                      "
-                    >
-
-                      <div class="status-title">
-                        Order received
-                      </div>
-
-                      <div class="status-subtitle">
-                        Waiting for confirmation
-                      </div>
-
-                    </td>
-
-                  </tr>
-
-                </table>
-
+                  ✓
+                </div>
               </td>
 
+              <td style="vertical-align:middle;">
 
-              <td class="order-id-cell">
-
-                <div class="order-label">
-                  Order ID
+                <div
+                  style="
+                    color:#8E181F;
+                    font-size:12px;
+                    line-height:17px;
+                    font-weight:900;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  Order received
                 </div>
 
-                <div class="order-id">
-                  ${orderId}
+                <div
+                  style="
+                    margin-top:2px;
+                    color:#806C63;
+                    font-size:9px;
+                    line-height:14px;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  Waiting for confirmation
                 </div>
 
               </td>
 
             </tr>
-
           </table>
+        </td>
 
-        </div>
+        <td
+          width="42%"
+          style="
+            width:42%;
+            padding:13px 11px 13px 12px;
+            vertical-align:middle;
+            border-left:1px solid #EAD9D2;
+            font-family:Arial,Helvetica,sans-serif;
+          "
+        >
 
-
-        <!-- ORDER ITEMS -->
-
-        <div class="section">
-
-          <h2 class="section-title">
-            Order Items
-          </h2>
-
-          <div class="items-card">
-
-            <table
-              class="items-table"
-              cellpadding="0"
-              cellspacing="0"
-              border="0"
-              width="100%"
-            >
-
-              <thead>
-
-                <tr>
-
-                  <th>
-                    Product
-                  </th>
-
-                  <th>
-                    Qty
-                  </th>
-
-                  <th>
-                    Total
-                  </th>
-
-                </tr>
-
-              </thead>
-
-              <tbody>
-                ${itemRows}
-              </tbody>
-
-            </table>
-
+          <div
+            style="
+              color:#A08D84;
+              font-size:8px;
+              line-height:12px;
+              font-weight:900;
+              letter-spacing:.7px;
+              text-transform:uppercase;
+              font-family:Arial,Helvetica,sans-serif;
+            "
+          >
+            Order ID
           </div>
 
-        </div>
+          <div
+            style="
+              margin-top:4px;
+              color:#35231F;
+              font-size:12px;
+              line-height:17px;
+              font-weight:900;
+              word-break:break-word;
+              font-family:Arial,Helvetica,sans-serif;
+            "
+          >
+            ${orderId}
+          </div>
+
+        </td>
+
+      </tr>
+    </table>
 
 
-        <!-- ORDER SUMMARY -->
+    <!-- Order Items -->
 
-        <div class="summary-box">
+    <div style="margin-top:24px;">
 
-          <h2 class="section-title">
-            Order Summary
-          </h2>
+      <table
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        border="0"
+      >
+        <tr>
+
+          <td
+            style="
+              vertical-align:middle;
+              font-family:Arial,Helvetica,sans-serif;
+            "
+          >
+            <div
+              style="
+                color:#35231F;
+                font-size:17px;
+                line-height:22px;
+                font-weight:900;
+                font-family:Arial,Helvetica,sans-serif;
+              "
+            >
+              Order Items
+            </div>
+
+            <div
+              style="
+                margin-top:2px;
+                color:#A08D84;
+                font-size:9px;
+                line-height:14px;
+                font-family:Arial,Helvetica,sans-serif;
+              "
+            >
+              Products included in your order
+            </div>
+          </td>
+
+        </tr>
+      </table>
+
+
+      <table
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        border="0"
+        style="
+          width:100%;
+          margin-top:10px;
+          table-layout:fixed;
+          border:1px solid #E8DDD4;
+          border-radius:11px;
+          overflow:hidden;
+        "
+      >
+
+        <thead>
+          <tr>
+
+            <th
+              width="57%"
+              align="left"
+              style="
+                width:57%;
+                padding:10px 8px;
+                background:#F8F1EC;
+                color:#67544D;
+                font-size:10px;
+                line-height:14px;
+                font-weight:900;
+                font-family:Arial,Helvetica,sans-serif;
+              "
+            >
+              Product
+            </th>
+
+            <th
+              width="16%"
+              align="center"
+              style="
+                width:16%;
+                padding:10px 4px;
+                background:#F8F1EC;
+                color:#67544D;
+                font-size:10px;
+                line-height:14px;
+                font-weight:900;
+                font-family:Arial,Helvetica,sans-serif;
+              "
+            >
+              Qty
+            </th>
+
+            <th
+              width="27%"
+              align="right"
+              style="
+                width:27%;
+                padding:10px 8px;
+                background:#F8F1EC;
+                color:#67544D;
+                font-size:10px;
+                line-height:14px;
+                font-weight:900;
+                font-family:Arial,Helvetica,sans-serif;
+              "
+            >
+              Total
+            </th>
+
+          </tr>
+        </thead>
+
+        <tbody>
+          ${itemRows}
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- Order Summary -->
+
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="
+        width:100%;
+        margin-top:20px;
+        background:#FBF7F2;
+        border:1px solid #E8DDD4;
+        border-radius:11px;
+      "
+    >
+      <tr>
+
+        <td
+          style="
+            padding:15px;
+            font-family:Arial,Helvetica,sans-serif;
+          "
+        >
 
           <table
-            class="summary-table"
+            width="100%"
             cellpadding="0"
             cellspacing="0"
             border="0"
+          >
+            <tr>
+
+              <td style="vertical-align:middle;">
+
+                <div
+                  style="
+                    color:#35231F;
+                    font-size:16px;
+                    line-height:21px;
+                    font-weight:900;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  Order Summary
+                </div>
+
+                <div
+                  style="
+                    margin-top:2px;
+                    color:#A08D84;
+                    font-size:9px;
+                    line-height:14px;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  Payment breakdown
+                </div>
+
+              </td>
+
+              <td
+                align="right"
+                style="
+                  vertical-align:middle;
+                  color:#9D2932;
+                  font-size:16px;
+                  line-height:21px;
+                  font-weight:900;
+                  white-space:nowrap;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
+                ${formatPrice(totalAmount)}
+              </td>
+
+            </tr>
+          </table>
+
+
+          <div
+            style="
+              height:1px;
+              margin:12px 0 8px;
+              background:#E5D9D1;
+              line-height:1px;
+              font-size:1px;
+            "
+          >
+            &nbsp;
+          </div>
+
+
+          <table
             width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
           >
 
             <tr>
 
-              <td>
+              <td
+                style="
+                  padding:4px 0;
+                  color:#806C63;
+                  font-size:12px;
+                  line-height:18px;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
                 Subtotal
               </td>
 
-              <td class="summary-price">
+              <td
+                align="right"
+                style="
+                  padding:4px 0;
+                  color:#493631;
+                  font-size:12px;
+                  line-height:18px;
+                  font-weight:800;
+                  white-space:nowrap;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
                 ${formatPrice(subtotal)}
               </td>
 
             </tr>
 
+
             <tr>
 
-              <td>
+              <td
+                style="
+                  padding:4px 0;
+                  color:#806C63;
+                  font-size:12px;
+                  line-height:18px;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
                 Delivery
               </td>
 
-              <td class="summary-price">
-                ${Number(deliveryCharge) === 0 ? '<span style="color:#3e8b62;font-weight:900;">FREE</span>' : formatPrice(deliveryCharge)}
+              <td
+                align="right"
+                style="
+                  padding:4px 0;
+                  color:#493631;
+                  font-size:12px;
+                  line-height:18px;
+                  font-weight:800;
+                  white-space:nowrap;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
+                ${Number(deliveryCharge) === 0 ? '<span style="color:#3E8B62;font-weight:900;">FREE</span>' : formatPrice(deliveryCharge)}
               </td>
 
             </tr>
 
+
             <tr>
 
-              <td>
+              <td
+                style="
+                  padding:4px 0;
+                  color:#806C63;
+                  font-size:12px;
+                  line-height:18px;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
                 Tax
               </td>
 
-              <td class="summary-price">
+              <td
+                align="right"
+                style="
+                  padding:4px 0;
+                  color:#493631;
+                  font-size:12px;
+                  line-height:18px;
+                  font-weight:800;
+                  white-space:nowrap;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
                 ${formatPrice(tax)}
               </td>
 
             </tr>
 
-            <tr class="grand-total">
 
-              <td>
+            <tr>
+
+              <td
+                style="
+                  padding:12px 0 2px;
+                  border-top:1px solid #E5D9D1;
+                  color:#35231F;
+                  font-size:14px;
+                  line-height:20px;
+                  font-weight:900;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
                 Grand Total
               </td>
 
-              <td class="total-price">
+              <td
+                align="right"
+                style="
+                  padding:12px 0 2px;
+                  border-top:1px solid #E5D9D1;
+                  color:#9D2932;
+                  font-size:18px;
+                  line-height:22px;
+                  font-weight:900;
+                  white-space:nowrap;
+                  font-family:Arial,Helvetica,sans-serif;
+                "
+              >
                 ${formatPrice(totalAmount)}
               </td>
 
@@ -1073,242 +610,575 @@ const orderPlacedEmail = ({ name, orderId, items, subtotal, deliveryCharge, tax,
 
           </table>
 
-        </div>
+        </td>
+
+      </tr>
+    </table>
 
 
-        <!-- DELIVERY ADDRESS -->
+    <!-- Delivery Address -->
 
-        <div class="address-box">
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="
+        width:100%;
+        margin-top:18px;
+        background:#FFFFFF;
+        border:1px solid #E8DDD4;
+        border-radius:12px;
+      "
+    >
+      <tr>
+
+        <td
+          style="
+            padding:15px;
+            font-family:Arial,Helvetica,sans-serif;
+          "
+        >
+
+          <!-- Address Header -->
 
           <table
+            width="100%"
             cellpadding="0"
             cellspacing="0"
             border="0"
-            width="100%"
           >
-
             <tr>
 
               <td
+                width="42"
                 style="
-                  width:40px;
-                  vertical-align:top;
+                  width:42px;
+                  padding-right:10px;
+                  vertical-align:middle;
                 "
               >
 
-                <div class="address-icon">
-                  ●
+                <div
+                  style="
+                    width:32px;
+                    height:32px;
+                    line-height:32px;
+                    text-align:center;
+                    border-radius:9px;
+                    background:#F7EEE7;
+                    color:#8E181F;
+                    font-size:16px;
+                    font-weight:900;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  &#x1F4CD;
                 </div>
 
               </td>
 
-              <td
-                style="
-                  vertical-align:top;
-                "
-              >
+              <td style="vertical-align:middle;">
 
-                <h3 class="address-title">
+                <div
+                  style="
+                    color:#35231F;
+                    font-size:14px;
+                    line-height:19px;
+                    font-weight:900;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
                   Delivery Address
-                </h3>
+                </div>
+
+                <div
+                  style="
+                    margin-top:2px;
+                    color:#A08D84;
+                    font-size:9px;
+                    line-height:13px;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  Your order will be delivered here
+                </div>
 
               </td>
 
             </tr>
-
           </table>
 
-          <p class="address-text">
 
-            <strong style="color:#35231f;">
-              ${shippingAddress?.fullName || ''}
-            </strong>
-
-            <br />
-
-            ${shippingAddress?.addressLine || ''}
-
-            <br />
-
-            ${shippingAddress?.city || ''}
-
-            ${shippingAddress?.state ? `, ${shippingAddress.state}` : ''}
-
-            ${shippingAddress?.pincode ? ` - ${shippingAddress.pincode}` : ''}
-
-            ${shippingAddress?.phone ? `<br />Phone: ${shippingAddress.phone}` : ''}
-
-          </p>
-
-        </div>
-
-
-        <!-- PAYMENT -->
-
-        <div class="payment-box">
+          <!-- Address Details -->
 
           <table
+            width="100%"
             cellpadding="0"
             cellspacing="0"
             border="0"
-            width="100%"
+            style="
+              width:100%;
+              margin-top:13px;
+              background:#FBF7F2;
+              border:1px solid #EDE2DB;
+              border-radius:9px;
+            "
           >
-
             <tr>
 
               <td
                 style="
-                  width:40px;
-                  vertical-align:middle;
+                  padding:13px;
+                  vertical-align:top;
+                  font-family:Arial,Helvetica,sans-serif;
                 "
               >
 
-                <div class="payment-icon">
-                  ₹
+                <div
+                  style="
+                    color:#35231F;
+                    font-size:12px;
+                    line-height:18px;
+                    font-weight:900;
+                    word-break:break-word;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  ${shippingAddress?.fullName || ''}
+                </div>
+
+                <div
+                  style="
+                    margin-top:4px;
+                    color:#806C63;
+                    font-size:11px;
+                    line-height:18px;
+                    word-break:break-word;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  ${shippingAddress?.addressLine || ''}
+                </div>
+
+                <div
+                  style="
+                    margin-top:1px;
+                    color:#806C63;
+                    font-size:11px;
+                    line-height:18px;
+                    word-break:break-word;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  ${shippingAddress?.city || ''}
+                  ${shippingAddress?.state ? `, ${shippingAddress.state}` : ''}
+                  ${shippingAddress?.pincode ? ` - ${shippingAddress.pincode}` : ''}
+                </div>
+
+
+                ${
+                  shippingAddress?.phone
+                    ? `
+                      <div
+                        style="
+                          margin-top:8px;
+                          padding-top:8px;
+                          border-top:1px solid #E8DDD4;
+                          color:#806C63;
+                          font-size:10px;
+                          line-height:16px;
+                          font-family:Arial,Helvetica,sans-serif;
+                        "
+                      >
+                        <span
+                          style="
+                            display:inline-block;
+                            width:18px;
+                            color:#8E181F;
+                            font-weight:900;
+                            font-family:Arial,Helvetica,sans-serif;
+                          "
+                        >
+                          &#9742;
+                        </span>
+
+                        ${shippingAddress.phone}
+                      </div>
+                    `
+                    : ''
+                }
+
+              </td>
+
+            </tr>
+          </table>
+
+        </td>
+
+      </tr>
+    </table>
+
+
+    <!-- Payment Method -->
+
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="
+        width:100%;
+        margin-top:14px;
+        background:#F8F3EF;
+        border:1px solid #E8DDD4;
+        border-radius:10px;
+      "
+    >
+      <tr>
+
+        <td
+          width="42"
+          style="
+            width:42px;
+            padding:13px 0 13px 14px;
+            vertical-align:middle;
+          "
+        >
+
+          <div
+            style="
+              width:28px;
+              height:28px;
+              line-height:28px;
+              text-align:center;
+              border-radius:8px;
+              background:#EEE1DA;
+              color:#8E181F;
+              font-size:12px;
+              font-weight:900;
+              font-family:Arial,Helvetica,sans-serif;
+            "
+          >
+            ₹
+          </div>
+
+        </td>
+
+        <td
+          style="
+            padding:13px 14px 13px 7px;
+            vertical-align:middle;
+            font-family:Arial,Helvetica,sans-serif;
+          "
+        >
+
+          <div
+            style="
+              color:#9A857B;
+              font-size:9px;
+              line-height:13px;
+              font-weight:700;
+              font-family:Arial,Helvetica,sans-serif;
+            "
+          >
+            Payment Method
+          </div>
+
+          <div
+            style="
+              margin-top:2px;
+              color:#35231F;
+              font-size:12px;
+              line-height:17px;
+              font-weight:900;
+              font-family:Arial,Helvetica,sans-serif;
+            "
+          >
+            ${paymentText}
+          </div>
+
+        </td>
+
+      </tr>
+    </table>
+
+
+    <!-- What's Next -->
+
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="
+        width:100%;
+        margin-top:15px;
+        background:#FFF7F5;
+        border:1px solid #EFD9D5;
+        border-left:4px solid #9D2932;
+        border-radius:9px;
+      "
+    >
+      <tr>
+
+        <td
+          style="
+            padding:13px;
+            font-family:Arial,Helvetica,sans-serif;
+          "
+        >
+
+          <table
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+          >
+            <tr>
+
+              <td
+                width="27"
+                style="
+                  width:27px;
+                  vertical-align:top;
+                  padding-top:1px;
+                "
+              >
+
+                <div
+                  style="
+                    width:20px;
+                    height:20px;
+                    line-height:20px;
+                    text-align:center;
+                    border-radius:50%;
+                    background:#F2D9D6;
+                    color:#9D2932;
+                    font-size:11px;
+                    font-weight:900;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  !
                 </div>
 
               </td>
 
-              <td
-                style="
-                  vertical-align:middle;
-                "
-              >
+              <td style="vertical-align:top;">
 
-                <div class="payment-label">
-                  Payment Method
+                <div
+                  style="
+                    color:#8E181F;
+                    font-size:12px;
+                    line-height:17px;
+                    font-weight:900;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  What's next?
                 </div>
 
-                <div class="payment-value">
-                  ${paymentText}
+                <div
+                  style="
+                    margin-top:4px;
+                    color:#806C63;
+                    font-size:11px;
+                    line-height:18px;
+                    font-family:Arial,Helvetica,sans-serif;
+                  "
+                >
+                  Our team will review and confirm your order.
+                  You will receive another email once your order is confirmed.
                 </div>
 
               </td>
 
             </tr>
-
           </table>
 
-        </div>
+        </td>
+
+      </tr>
+    </table>
 
 
-        <!-- NEXT STEP -->
+ <!-- CTA -->
 
-        <div class="next-box">
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="
+    width:100%;
+    margin-top:20px;
+  "
+>
+  <tr>
 
-          <div class="next-title">
-            What's next?
-          </div>
+    <td
+      align="center"
+      style="
+        padding:0;
+        font-family:Arial,Helvetica,sans-serif;
+      "
+    >
 
-          <div class="next-text">
-            Our team will review and confirm your order.
-            You will receive another email once your order is confirmed.
-          </div>
+      <table
+        cellpadding="0"
+        cellspacing="0"
+        border="0"
+        style="
+          margin:0 auto;
+        "
+      >
+        <tr>
 
-        </div>
+          <!-- View Order -->
 
-
-        <!-- CTA -->
-
-        <div class="cta-box">
-
-          <a
-            href="https://minekart.vercel.app"
-            class="cta-button"
+          <td
+            align="center"
+            style="
+              padding:0 5px;
+            "
           >
-            Continue Shopping
-          </a>
+            <a
+              href="${orderSuccessUrl}"
+              style="
+                display:block;
+                width:130px;
+                padding:12px 0;
+                border-radius:9px;
+                background:#9D2932;
+                color:#FFFFFF;
+                font-size:11px;
+                line-height:16px;
+                font-weight:900;
+                text-align:center;
+                text-decoration:none;
+                font-family:Arial,Helvetica,sans-serif;
+                white-space:nowrap;
+              "
+            >
+              View Order&nbsp;&nbsp;→
+            </a>
+          </td>
 
 
-        </div>
+          <!-- Continue Shopping -->
+
+          <td
+            align="center"
+            style="
+              padding:0 5px;
+            "
+          >
+            <a
+              href="https://minekart.vercel.app"
+              style="
+                display:block;
+                width:130px;
+                padding:12px 0;
+                border-radius:9px;
+                background:#F7EEE7;
+                border:1px solid #DCCBC2;
+                color:#8E181F;
+                font-size:11px;
+                line-height:16px;
+                font-weight:900;
+                text-align:center;
+                text-decoration:none;
+                font-family:Arial,Helvetica,sans-serif;
+                white-space:nowrap;
+              "
+            >
+              Continue Shopping&nbsp;&nbsp;→
+            </a>
+          </td>
+
+        </tr>
+      </table>
+
+    </td>
+
+  </tr>
+</table>
 
 
-        <!-- CLOSING -->
+    <!-- Trust Row -->
 
-        <p
-          class="email-text"
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="
+        width:100%;
+        margin-top:20px;
+      "
+    >
+      <tr>
+
+        <td
+          align="center"
           style="
-            margin:22px 0 0;
-            font-size:13px;
+            padding:10px 5px;
+            background:#FBF7F2;
+            border:1px solid #E8DDD4;
+            border-radius:9px;
+            color:#806C63;
+            font-size:9px;
+            line-height:14px;
+            font-weight:700;
+            font-family:Arial,Helvetica,sans-serif;
           "
         >
-          We will keep you updated about your order status.
-        </p>
+          ✓ Genuine Products
+          &nbsp;&nbsp;•&nbsp;&nbsp;
+          ✓ Secure Shopping
+          &nbsp;&nbsp;•&nbsp;&nbsp;
+          ✓ Easy Returns
+        </td>
 
-        <p
-          class="email-text"
-          style="
-            margin:9px 0 0;
-            font-size:13px;
-          "
-        >
-          Happy Shopping! 🛍️
-        </p>
-
-      </div>
+      </tr>
+    </table>
 
 
-      <!-- FOOTER -->
+    <!-- Closing -->
 
-      <div class="email-footer">
+    <p
+      style="
+        margin:20px 0 0;
+        color:#806C63;
+        font-size:12px;
+        line-height:19px;
+        font-family:Arial,Helvetica,sans-serif;
+      "
+    >
+      We will keep you updated about your order status.
+    </p>
 
-        <p class="footer-text">
-          This is an automated email from MineKart.
-          Please do not reply directly.
-        </p>
+    <p
+      style="
+        margin:7px 0 0;
+        color:#806C63;
+        font-size:12px;
+        line-height:19px;
+        font-family:Arial,Helvetica,sans-serif;
+      "
+    >
+      Happy Shopping! 🛍️
+    </p>
+  `
 
-        <div class="footer-links">
-
-          <a
-            href="https://minekart.vercel.app"
-            class="footer-link"
-          >
-            MineKart
-          </a>
-
-          <span class="footer-divider">
-            •
-          </span>
-
-          <a
-            href="https://minekart.vercel.app/terms"
-            class="footer-link"
-          >
-            Terms
-          </a>
-
-          <span class="footer-divider">
-            •
-          </span>
-
-          <a
-            href="https://minekart.vercel.app/privacy"
-            class="footer-link"
-          >
-            Privacy
-          </a>
-
-        </div>
-
-        <p class="footer-brand">
-          <span style="color:#35231f;">
-            Mine
-          </span>
-          <span style="color:#9d2932;">
-            Kart
-          </span>
-          © ${new Date().getFullYear()}
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</body>
-</html>
-`
+  return emailLayout({
+    preheader: `Your MineKart order ${orderId} has been received.`,
+    eyebrow: 'Order Update',
+    title: 'Order placed successfully',
+    children: content,
+    footerNote: 'Thank you for shopping with MineKart.',
+  })
 }
 
 module.exports = { orderPlacedEmail }
