@@ -55,14 +55,14 @@ import Terms from './components/CustomerService/Terms.jsx'
 import Privacy from './components/CustomerService/Privacy.jsx'
 import Cookies from './components/CustomerService/Cookies.jsx'
 
-const LOGIN_POPUP_KEY = 'minekart_login_popup_closed'
 
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
 
+
   useEffect(() => {
     if (!loading && !user) {
-      const loginPopupClosed = localStorage.getItem(LOGIN_POPUP_KEY)
+      const loginPopupClosed = sessionStorage.getItem('minekart_login_popup_closed')
 
       if (!loginPopupClosed) {
         setShowLogin(true)
@@ -70,8 +70,10 @@ export default function App() {
     }
   }, [loading, user, setShowLogin])
 
+
+
   const handleLoginClose = () => {
-    localStorage.setItem(LOGIN_POPUP_KEY, 'true')
+    sessionStorage.setItem('minekart_login_popup_closed', 'true')
     setShowLogin(false)
   }
 
@@ -218,7 +220,6 @@ export default function App() {
       {/* LOGIN POPUP */}
 
       {showLogin && <Login onClose={handleLoginClose} />}
-
     </BrowserRouter>
   )
 }

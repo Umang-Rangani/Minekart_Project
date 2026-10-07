@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ArrowRight, Lock, Mail, ShieldCheck, UserPlus, X } from 'lucide-react'
+import toast from 'react-hot-toast'
+
 import { axiosInstance } from '../config/axiosConfig'
 import { useUser } from '../context/userProvider'
-import { X, ArrowRight, UserPlus, Mail, Lock, ShieldCheck } from 'lucide-react'
-import toast from 'react-hot-toast'
+import ForgotPassword from './ForgotPassword'
 
 export default function Login({ onClose }) {
   const [logIn, setLogIn] = useState({
     email: '',
     password: '',
   })
+
+  const [loading, setLoading] = useState(false)
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -22,8 +27,6 @@ export default function Login({ onClose }) {
   const { setUser, setShowLogin } = useUser()
   const navigate = useNavigate()
 
-  const [loading, setLoading] = useState(false)
-
   const changeHandle = (e) => {
     const { name, value } = e.target
 
@@ -34,11 +37,32 @@ export default function Login({ onClose }) {
   }
 
   const closeHandle = () => {
+    if (loading) {
+      return
+    }
+
     setShowLogin(false)
+    setShowForgotPassword(false)
 
     if (onClose) {
       onClose()
     }
+  }
+
+  const openForgotPasswordHandle = () => {
+    if (loading) {
+      return
+    }
+
+    setShowForgotPassword(true)
+  }
+
+  const closeForgotPasswordHandle = () => {
+    setShowForgotPassword(false)
+  }
+
+  const backToLoginHandle = () => {
+    setShowForgotPassword(false)
   }
 
   const submitHandle = async (e) => {
@@ -52,6 +76,7 @@ export default function Login({ onClose }) {
       if (res.data.success) {
         setUser(res.data.user)
         setShowLogin(false)
+        setShowForgotPassword(false)
 
         toast.success('Login successful')
       }
@@ -63,8 +88,9 @@ export default function Login({ onClose }) {
 
       if (status === 404) {
         toast.error('Account not found. Please create an account first.')
+
         setShowLogin(false)
-        navigate("/register")
+        navigate('/register')
       } else if (status === 401) {
         toast.error('Email or password is incorrect')
       } else {
@@ -75,6 +101,10 @@ export default function Login({ onClose }) {
     }
   }
 
+  if (showForgotPassword) {
+    return <ForgotPassword onClose={closeHandle} onBackToLogin={backToLoginHandle} />
+  }
+
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-[#351C18]/50 px-4 py-5 backdrop-blur-sm" onClick={closeHandle}>
       <div onClick={(e) => e.stopPropagation()} className="relative flex max-h-[calc(100vh-40px)] w-full max-w-4xl overflow-hidden rounded-[28px] border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_30px_90px_rgba(53,28,24,0.32)]">
@@ -82,7 +112,8 @@ export default function Login({ onClose }) {
         <button
           type="button"
           onClick={closeHandle}
-          className="absolute right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-xl border border-[#E8DDD4] bg-[#FFFDFC]/95 text-[#806C63] shadow-md backdrop-blur-sm transition-all duration-300 hover:rotate-90 hover:bg-[#F8EEE8] hover:text-[#8E181F]"
+          disabled={loading}
+          className="absolute right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-xl border border-[#E8DDD4] bg-[#FFFDFC]/95 text-[#806C63] shadow-md backdrop-blur-sm transition-all duration-300 hover:rotate-90 hover:bg-[#F8EEE8] hover:text-[#8E181F] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <X size={19} />
         </button>
@@ -91,7 +122,9 @@ export default function Login({ onClose }) {
         <div className="relative hidden w-[43%] overflow-hidden bg-linear-to-br from-[#2B1210] via-[#571519] to-[#A51D26] p-8 text-white sm:flex sm:flex-col sm:justify-between lg:p-10">
           {/* Background glow */}
           <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-white/6 blur-2xl" />
+
           <div className="absolute -bottom-28 -left-20 h-60 w-60 rounded-full bg-[#D4A373]/12 blur-2xl" />
+
           <div className="absolute right-12 top-[42%] h-24 w-24 rounded-full bg-[#B5262D]/20 blur-xl" />
 
           {/* Subtle grid */}
@@ -99,15 +132,16 @@ export default function Login({ onClose }) {
             className="absolute inset-0 opacity-[0.05]"
             style={{
               backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
-          `,
+                linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
+              `,
               backgroundSize: '34px 34px',
             }}
           />
 
           {/* Decorative shopping cards */}
           <div className="absolute -right-7 top-[28%] h-24 w-32 rotate-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm" />
+
           <div className="absolute bottom-[27%] -left-7 h-20 w-28 -rotate-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm" />
 
           {/* Brand */}
@@ -178,7 +212,8 @@ export default function Login({ onClose }) {
                 placeholder="Enter your email"
                 required
                 autoComplete="email"
-                className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
+                disabled={loading}
+                className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
           </div>
@@ -198,8 +233,16 @@ export default function Login({ onClose }) {
                 placeholder="Enter your password"
                 required
                 autoComplete="current-password"
-                className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5"
+                disabled={loading}
+                className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 disabled:cursor-not-allowed disabled:opacity-60"
               />
+            </div>
+
+            {/* Forgot Password */}
+            <div className="mt-2 flex justify-end">
+              <button type="button" onClick={openForgotPasswordHandle} disabled={loading} className="text-xs font-bold text-[#8E181F] transition-colors hover:text-[#A51D26] hover:underline disabled:cursor-not-allowed disabled:opacity-50">
+                Forgot Password?
+              </button>
             </div>
           </div>
 
@@ -229,10 +272,15 @@ export default function Login({ onClose }) {
             <button
               type="button"
               onClick={() => {
+                if (loading) {
+                  return
+                }
+
                 setShowLogin(false)
                 navigate('/register')
               }}
-              className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-[#8E181F] transition-all duration-300 hover:gap-2.5 hover:text-[#A51D26]"
+              disabled={loading}
+              className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-[#8E181F] transition-all duration-300 hover:gap-2.5 hover:text-[#A51D26] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <UserPlus size={16} />
               Create Account
