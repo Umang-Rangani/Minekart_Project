@@ -66,6 +66,14 @@ export default function Register() {
     }
   }, [showProfilePopup, showImageViewer])
 
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview)
+      }
+    }
+  }, [preview])
+
   const handleChange = (e) => {
     const { name, value } = e.target
 
@@ -91,6 +99,10 @@ export default function Register() {
       return
     }
 
+    if (preview) {
+      URL.revokeObjectURL(preview)
+    }
+
     setImageFile(file)
     setPreview(URL.createObjectURL(file))
     setError('')
@@ -109,6 +121,11 @@ export default function Register() {
     })
 
     setImageFile(null)
+
+    if (preview) {
+      URL.revokeObjectURL(preview)
+    }
+
     setPreview('')
     setError('')
     setSuccess('')
@@ -119,67 +136,6 @@ export default function Register() {
       fileInputRef.current.value = ''
     }
   }
-
-  // const submitHandle = async (e) => {
-  //   e.preventDefault()
-
-  //   setError('')
-  //   setSuccess('')
-
-  //   if (!signUp.name || !signUp.email || !signUp.password) {
-  //     const message = 'Name, email and password are required'
-
-  //     setError(message)
-  //     toast.error(message)
-
-  //     return
-  //   }
-
-  //   try {
-  //     setLoading(true)
-
-  //     let avatarPath = ''
-
-  //     if (imageFile) {
-  //       try {
-  //         avatarPath = await uploadFile(imageFile.name, imageFile, 'Avatar')
-  //       } catch (uploadError) {
-  //         console.log('Upload Error:', uploadError.response?.data || uploadError.message)
-
-  //         const message = 'Profile photo upload failed'
-
-  //         setError(message)
-  //         toast.error(message)
-
-  //         return
-  //       }
-  //     }
-
-  //     const registerData = {
-  //       ...signUp,
-  //       avatar: avatarPath,
-  //     }
-
-  //     const res = await axiosInstance.post('/users/register', registerData)
-
-  //     if (res.data.success) {
-  //       setUser(res.data.user)
-  //       setShowLogin(false)
-
-  //       toast.success('Account created successfully')
-  //       navigate('/')
-  //     }
-  //   } catch (error) {
-  //     console.log('Register Error:', error.response?.data || error.message)
-
-  //     const message = error.response?.data?.message || 'Registration failed. Please try again.'
-
-  //     setError(message)
-  //     toast.error(message)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
 
   const submitHandle = async (e) => {
     e.preventDefault()
@@ -194,7 +150,6 @@ export default function Register() {
     const password = signUp.password
     const phone = signUp.phone.trim()
 
-    // Frontend validation
     if (!name) {
       const message = 'Please enter your full name'
       setError(message)
@@ -228,7 +183,6 @@ export default function Register() {
 
       let avatarPath = ''
 
-      // Upload profile image if selected
       if (imageFile) {
         try {
           avatarPath = await uploadFile(imageFile.name, imageFile, 'Avatar')
@@ -239,6 +193,7 @@ export default function Register() {
 
           setError(message)
           toast.error(message)
+
           return
         }
       }
@@ -257,7 +212,6 @@ export default function Register() {
 
       if (res.data?.success) {
         setUser(res.data.user)
-
         setShowLogin(false)
 
         toast.success('Account created successfully')
@@ -305,8 +259,37 @@ export default function Register() {
   }
 
   return (
-    // <div className="relative flex h-screen min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-3 py-3 sm:px-5 sm:py-6 lg:px-8">
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-0 py-0 sm:px-5 sm:py-6 lg:px-8">
+    <div className="relative flex min-h-dvh w-full items-end justify-center overflow-hidden bg-[#241210] px-0 py-0 sm:items-center sm:px-5 sm:py-6 lg:px-8">
+      <style>{`
+        @keyframes registerSheetUp {
+          from {
+            transform: translateY(100%);
+            opacity: 0.92;
+          }
+
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+
+        .register-sheet {
+          animation: registerSheetUp 380ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @media (min-width: 640px) {
+          .register-sheet {
+            animation: none;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .register-sheet {
+            animation: none;
+          }
+        }
+      `}</style>
+
       {/* Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-[#241210] via-[#4B171A] to-[#8E181F]" />
@@ -378,11 +361,30 @@ export default function Register() {
         <div className="absolute inset-0 bg-[#1F0D0B]/20" />
       </div>
 
-      {/* Main Card */}
-      {/* <div className="relative z-10 flex h-[calc(100vh-24px)] max-h-[calc(100vh-24px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px] border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:max-h-[calc(100vh-48px)] sm:rounded-[30px]"> */}
-      <div className="relative z-10 flex h-screen min-h-screen w-full max-w-6xl flex-col overflow-hidden rounded-none border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:min-h-0 sm:max-h-[calc(100vh-48px)] sm:rounded-[30px]">
-        {/* <div className="relative z-10 flex h-full max-h-[calc(100vh-24px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:max-h-[calc(100vh-48px)] sm:rounded-[28px]"> */}
-        <div className="relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col overflow-hidden rounded-none border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:max-h-[calc(100vh-48px)] sm:rounded-[28px]">
+      {/* Main Card / Mobile Bottom Sheet */}
+      <div
+        className="
+          register-sheet
+          relative z-10
+          flex h-[92dvh] w-full max-w-6xl
+          flex-col overflow-hidden
+          rounded-t-[28px]
+          border border-white/20
+          bg-[#FFFDFC]
+          shadow-[0_-20px_70px_rgba(0,0,0,0.35)]
+          sm:h-auto
+          sm:min-h-0
+          sm:max-h-[calc(100dvh-48px)]
+          sm:rounded-[30px]
+          sm:shadow-[0_35px_100px_rgba(0,0,0,0.35)]
+        "
+      >
+        <div className="relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col overflow-hidden rounded-t-[28px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_-20px_60px_rgba(53,28,24,0.20)] backdrop-blur-xl sm:max-h-[calc(100dvh-48px)] sm:rounded-[28px] sm:shadow-[0_30px_90px_rgba(53,28,24,0.18)]">
+          {/* Mobile Drag Handle */}
+          <div className="flex shrink-0 justify-center bg-[#FFFDFC] pt-2.5 sm:hidden">
+            <div className="h-1 w-10 rounded-full bg-[#D8C8BF]" />
+          </div>
+
           {/* Header */}
           <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#321715] via-[#64171B] to-[#A51D26] px-3.5 py-3 text-white sm:px-8 sm:py-6">
             <div className="absolute -right-16 -top-24 h-40 w-40 rounded-full bg-white/7 blur-sm sm:h-56 sm:w-56" />
@@ -405,21 +407,12 @@ export default function Register() {
                   </div>
                 </div>
               </div>
-
-              {/* <button
-                type="button"
-                onClick={() => navigate('/')}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition-all duration-300 hover:rotate-90 hover:bg-white/15 sm:h-9 sm:w-9 sm:rounded-xl"
-              >
-                <X size={16} className="sm:size-4.75" />
-              </button> */}
             </div>
 
             <div className="absolute bottom-0 left-0 h-px w-full bg-linear-to-r from-transparent via-[#D4A373]/40 to-transparent" />
           </div>
 
           {/* Main Form */}
-          {/* <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[280px_1fr] lg:grid-cols-[310px_1fr]"> */}
           <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[280px_1fr] lg:grid-cols-[310px_1fr]">
             {/* Desktop Profile Section */}
             <div className="relative hidden min-h-0 shrink-0 flex-col items-center justify-center overflow-hidden border-b border-[#E8DDD4] bg-linear-to-br from-[#FBF7F2] via-[#F8EFE9] to-[#F3E6DE] px-8 md:flex md:border-b-0 md:border-r">
@@ -427,18 +420,6 @@ export default function Register() {
 
               <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-[#D4A373]/15 blur-3xl" />
 
-              {/* Profile Heading */}
-              {/* <div className="relative z-10 mb-5 text-center">
-                <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#8E181F]/10 text-[#8E181F]">
-                  <User size={17} />
-                </div>
-
-                <h2 className="text-sm font-extrabold text-[#351C18]">Profile Photo</h2>
-
-                <p className="mt-1 text-[10px] text-[#806C63]">Click image to preview</p>
-              </div> */}
-
-              {/* Square Profile Image */}
               <div className="relative z-10">
                 <button
                   type="button"
@@ -464,7 +445,6 @@ export default function Register() {
                   )}
                 </button>
 
-                {/* Camera - Edit Only */}
                 <button
                   type="button"
                   onClick={chooseProfilePhoto}
@@ -475,10 +455,8 @@ export default function Register() {
                 </button>
               </div>
 
-              {/* Hidden Input */}
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
 
-              {/* Upload Info */}
               <div className="relative z-10 mt-5 flex items-center gap-2 rounded-full border border-[#E2D5CC] bg-white/80 px-3.5 py-1.5 text-[10px] font-semibold text-[#806C63] shadow-sm backdrop-blur-sm">
                 <ShieldCheck size={13} className="text-[#3E8B62]" />
                 JPG, PNG or WEBP
@@ -490,11 +468,9 @@ export default function Register() {
             </div>
 
             {/* Form Area */}
-            {/* <div className="min-h-0 flex-1 overflow-y-auto bg-[#FFFDFC] p-4 sm:p-7 lg:p-9"> */}
-            <div className="min-h-0 flex-1 overflow-y-auto bg-[#FFFDFC] p-4 pb-6 sm:p-7 lg:p-9">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#FFFDFC] px-4 pb-6 pt-4 sm:p-7 lg:p-9">
               {/* Mobile Profile Section */}
-              <div className="mb-5 flex items-center gap-3 rounded-2xl border border-[#E2D5CC] bg-[#FBF7F2] p-3 shadow-[0_4px_14px_rgba(73,54,49,0.04)] sm:hidden">
-                {/* Image Only = Preview */}
+              <div className="mb-4 flex items-center gap-3 rounded-2xl border border-[#E2D5CC] bg-[#FBF7F2] p-3 shadow-[0_4px_14px_rgba(73,54,49,0.04)] sm:hidden">
                 <button
                   type="button"
                   onClick={openImageViewer}
@@ -516,14 +492,12 @@ export default function Register() {
                   )}
                 </button>
 
-                {/* Text */}
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-extrabold text-[#351C18]">{preview ? 'Profile Photo Added' : 'Profile Photo'}</p>
 
                   <p className="mt-0.5 text-[10px] leading-4 text-[#806C63]">{preview ? 'Tap image to preview' : 'Add a photo to your account'}</p>
                 </div>
 
-                {/* ImagePlus = Popup */}
                 <button
                   type="button"
                   onClick={openProfilePopup}
@@ -554,7 +528,7 @@ export default function Register() {
               {success && <div className="mb-4 flex items-center rounded-xl border border-[#CFE4D7] bg-[#F0F8F3] px-3 py-2.5 text-xs font-medium text-[#3E8B62] shadow-sm sm:mb-5 sm:px-4 sm:py-3 sm:text-sm">{success}</div>}
 
               {/* Inputs */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-5">
                 {/* Name */}
                 <div>
                   <label className="mb-1.5 block text-[11px] font-bold text-[#493631] sm:mb-2 sm:text-sm">Full Name</label>
@@ -634,7 +608,6 @@ export default function Register() {
 
               {/* Buttons */}
               <div className="mt-5 flex flex-col-reverse gap-2.5 border-t border-[#E8DDD4] pt-4 sm:mt-7 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
-                {/* Clear */}
                 <button
                   type="button"
                   onClick={clearHandle}
@@ -645,7 +618,6 @@ export default function Register() {
                   Clear
                 </button>
 
-                {/* Back + Create */}
                 <div className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-row sm:gap-3">
                   <button
                     type="button"
@@ -696,7 +668,6 @@ export default function Register() {
 
             {/* Popup Body */}
             <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-6 py-6">
-              {/* Square Image */}
               <div className="relative shrink-0">
                 <button
                   type="button"
@@ -722,7 +693,6 @@ export default function Register() {
                   )}
                 </button>
 
-                {/* Camera = Edit */}
                 <button
                   type="button"
                   onClick={chooseProfilePhoto}
@@ -733,13 +703,11 @@ export default function Register() {
                 </button>
               </div>
 
-              {/* Info */}
               <div className="mt-5 flex shrink-0 items-center gap-1.5 rounded-full border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-1.5 text-[9px] font-semibold text-[#806C63]">
                 <ShieldCheck size={12} className="text-[#3E8B62]" />
                 JPG, PNG or WEBP
               </div>
 
-              {/* Change Photo */}
               <button
                 type="button"
                 onClick={chooseProfilePhoto}
@@ -749,7 +717,6 @@ export default function Register() {
                 {preview ? 'Change Photo' : 'Choose Photo'}
               </button>
 
-              {/* Done */}
               <button
                 type="button"
                 onClick={closeProfilePopup}
@@ -782,7 +749,7 @@ export default function Register() {
             <img
               src={preview}
               alt="Profile Preview Large"
-              className=" max-h-[72vh] max-w-[84vw] rounded-xl object-contain shadow-[0_30px_100px_rgba(0,0,0,0.5)] sm:max-h-[74vh] sm:max-w-[84vw] sm:rounded-2xl md:max-h-[76vh] md:max-w-[78vw] lg:max-h-[68vh] lg:max-w-[62vw] xl:max-h-[64vh] xl:max-w-[52vw] "
+              className="max-h-[72vh] max-w-[84vw] rounded-xl object-contain shadow-[0_30px_100px_rgba(0,0,0,0.5)] sm:max-h-[74vh] sm:max-w-[84vw] sm:rounded-2xl md:max-h-[76vh] md:max-w-[78vw] lg:max-h-[68vh] lg:max-w-[62vw] xl:max-h-[64vh] xl:max-w-[52vw]"
             />
 
             <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-[9px] font-semibold text-white/75 backdrop-blur-md sm:bottom-4 sm:px-4 sm:py-2 sm:text-[10px]">
