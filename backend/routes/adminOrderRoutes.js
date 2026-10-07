@@ -16,7 +16,7 @@ const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirm
 const roleMiddleware = require('../middleware/roleMiddleware')
 
 // GET ALL ORDERS
-router.get('/', authMiddleware, roleMiddleware('Admin') , async (req, res) => {
+router.get('/', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
   try {
     const orders = await Order.find()
       .populate({
@@ -59,7 +59,7 @@ router.get('/', authMiddleware, roleMiddleware('Admin') , async (req, res) => {
 })
 
 // GET CANCELLATION STATISTICS
-router.get('/cancellation-stats', authMiddleware, async (req, res) => {
+router.get('/cancellation-stats', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
   try {
     const [userCancelled, adminCancelled, totalCancelled] = await Promise.all([
       Order.countDocuments({
@@ -98,7 +98,7 @@ router.get('/cancellation-stats', authMiddleware, async (req, res) => {
 })
 
 // GET SINGLE ORDER
-router.get('/:id', authMiddleware, async (req, res) => {
+router.get('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
   try {
     const { id } = req.params
 
@@ -145,7 +145,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
 })
 
 // UPDATE ORDER STATUS
-router.put('/:id/status', authMiddleware, async (req, res) => {
+router.put('/:id/status', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
   try {
     const { id } = req.params
     const { orderStatus, cancellationReason = '' } = req.body

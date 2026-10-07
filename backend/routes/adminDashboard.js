@@ -4,11 +4,12 @@ const express = require('express')
 const User = require('../model/users')
 const Product = require('../model/product')
 const Order = require('../model/order')
+const roleMiddleware = require('../middleware/roleMiddleware')
 
 const router = express.Router()
 
 
-router.get('/',  async (req, res) => {
+router.get('/',roleMiddleware('Admin'),  async (req, res) => {
   try {
     // BASIC COUNTS
     const totalUsers = await User.countDocuments()
