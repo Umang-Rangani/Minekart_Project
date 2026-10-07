@@ -33,7 +33,6 @@ import AdminSubCategoryView from './admin/AdminSubCategoryView.jsx'
 import AdminBrandView from './admin/AdminBrandView.jsx'
 import AdminBrandForm from './admin/AdminBrandForm.jsx'
 import AdminProtected from './admin/AdminProtected.jsx'
-import { Toaster } from 'react-hot-toast'
 import ProfileUpdate from './user/ProfileUpdate.jsx'
 import HelpCenter from './components/CustomerService/HelpCenter.jsx'
 import TrackOrder from './components/CustomerService/TrackOrder.jsx'
@@ -53,7 +52,7 @@ import TicTacToe from './game/TicTacToe.jsx'
 import Terms from './components/CustomerService/Terms.jsx'
 import Privacy from './components/CustomerService/Privacy.jsx'
 import Cookies from './components/CustomerService/Cookies.jsx'
-import LogIn from './pages/Login.jsx'
+import LogIn from './pages/LogIn.jsx'
 
 
 export default function App() {
