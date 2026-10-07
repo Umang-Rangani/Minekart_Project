@@ -90,7 +90,7 @@ export default function LogIn({ onClose }) {
       } else if (status === 401) {
         toast.error('Email or password is incorrect')
       } else {
-        toast.error(message || 'Login failed. Please try again.')
+        toast.error('Login failed. Please try again.')
       }
     } finally {
       setLoading(false)

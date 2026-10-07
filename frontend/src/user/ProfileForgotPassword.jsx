@@ -276,24 +276,77 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
         </div>
 
         <div className="mt-3">
-          <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Verification Code</label>
+          <label className="mb-1.5 block text-[10px] font-bold text-[#67544D] ">Verification Code</label>
 
-          <input
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            maxLength={6}
-            value={otp}
-            onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            placeholder="Enter 6-digit OTP"
-            className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] px-3 text-center text-sm font-extrabold tracking-[0.35em] text-[#351C18] outline-none transition placeholder:text-[#B7A49B] placeholder:tracking-normal focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
-          />
+          <div className="flex justify-between gap-2 sm:gap-3 xl:px-20">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <input
+                key={index}
+                type="text"
+                inputMode="numeric"
+                autoComplete={index === 0 ? 'one-time-code' : 'off'}
+                maxLength={1}
+                value={otp[index] || ''}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, '')
+
+                  if (!value) return
+
+                  const otpArray = otp.split('')
+                  otpArray[index] = value
+
+                  const newOtp = otpArray.join('').slice(0, 6)
+                  setOtp(newOtp)
+
+                  const nextInput = e.target.parentElement?.children[index + 1]
+
+                  if (nextInput) {
+                    nextInput.focus()
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Backspace' && !otp[index] && index > 0) {
+                    const otpArray = otp.split('')
+                    otpArray[index - 1] = ''
+
+                    setOtp(otpArray.join(''))
+
+                    const previousInput = e.target.parentElement?.children[index - 1]
+
+                    if (previousInput) {
+                      previousInput.focus()
+                    }
+                  }
+                }}
+                onPaste={(e) => {
+                  e.preventDefault()
+
+                  const pastedOtp = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+
+                  if (!pastedOtp) return
+
+                  setOtp(pastedOtp)
+
+                  const targetIndex = Math.min(pastedOtp.length, 6) - 1
+                  const targetInput = e.target.parentElement?.children[targetIndex]
+
+                  if (targetInput) {
+                    targetInput.focus()
+                  }
+                }}
+                className="h-11 w-full min-w-0 rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] text-center text-base font-extrabold text-[#351C18] outline-none transition focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6] sm:h-12"
+              />
+            ))}
+          </div>
+
+          <p className="mt-2 text-center text-[9px] text-[#9A857B]">Enter the 6-digit OTP received on your email</p>
         </div>
 
         <div className="mt-3 flex items-center justify-between gap-2">
           <button
             type="button"
             onClick={resendOtp}
+            tabIndex={-1}
             disabled={resendTimer > 0 || resendLoading}
             className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#8E181F] transition hover:text-[#A51D26] disabled:cursor-not-allowed disabled:text-[#B7A49B]"
           >
