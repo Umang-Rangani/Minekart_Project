@@ -13,9 +13,10 @@ const { orderCancelledEmail } = require('../utils/emailTemplates/orderCancelledE
 const createNotification = require('../utils/createNotification')
 const NOTIFICATION_TYPES = require('../constants/notificationTypes')
 const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirmationEmail')
+const roleMiddleware = require('../middleware/roleMiddleware')
 
 // GET ALL ORDERS
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/', authMiddleware, roleMiddleware('Admin') , async (req, res) => {
   try {
     const orders = await Order.find()
       .populate({
