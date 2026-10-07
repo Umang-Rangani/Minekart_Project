@@ -328,7 +328,7 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
         {/* RIGHT CONTENT */}
         <div className="w-full overflow-y-auto bg-[#FFFDFC] px-6 py-8 sm:w-[57%] sm:px-9 sm:py-10 lg:px-11">
           {/* Back */}
-          {step !== 'success' && (
+          {/* {step !== 'success' && (
             <button
               type="button"
               onClick={backToLoginHandle}
@@ -338,7 +338,7 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
               <ArrowLeft size={15} />
               Back to Login
             </button>
-          )}
+          )} */}
 
           {/* Icon */}
           <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/15">
@@ -377,7 +377,19 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
           {step === 'email' && (
             <form onSubmit={sendOtpHandle}>
               <div className="mb-6">
-                <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Email Address</label>
+                <div className="mb-2 flex items-center justify-between">
+                  <label className="text-xs font-bold text-[#493631] sm:text-sm">Email Address</label>
+
+                  <button
+                    type="button"
+                    onClick={backToLoginHandle}
+                    disabled={loading || resendLoading}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[#806C63] transition-colors hover:text-[#8E181F] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <ArrowLeft size={14} />
+                    Back to Login
+                  </button>
+                </div>
 
                 <div className="group relative">
                   <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors group-focus-within:text-[#8E181F]" />

@@ -240,7 +240,7 @@ export default function Login({ onClose }) {
 
             {/* Forgot Password */}
             <div className="mt-2 flex justify-end">
-              <button type="button" onClick={openForgotPasswordHandle} disabled={loading} className="text-xs font-bold text-[#8E181F] transition-colors hover:text-[#A51D26] hover:underline disabled:cursor-not-allowed disabled:opacity-50">
+              <button tabIndex={-1}  type="button" onClick={openForgotPasswordHandle} disabled={loading} className="text-xs font-bold text-[#8E181F] transition-colors hover:text-[#A51D26] hover:underline disabled:cursor-not-allowed disabled:opacity-50">
                 Forgot Password?
               </button>
             </div>
