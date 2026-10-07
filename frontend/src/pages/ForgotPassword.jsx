@@ -3,9 +3,12 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Eye, EyeOff, KeyRound, Lock, Mail,
 import toast from 'react-hot-toast'
 
 import { axiosInstance } from '../config/axiosConfig'
+import { useNavigate } from 'react-router-dom'
 
 export default function ForgotPassword({ onClose, onBackToLogin }) {
   const [step, setStep] = useState('email')
+
+  const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState('')
@@ -70,10 +73,43 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
     }
   }
 
+  // const sendOtpHandle = async (e) => {
+  //   e.preventDefault()
+
+  //   if (!email.trim()) {
+  //     toast.error('Please enter your email address')
+  //     return
+  //   }
+
+  //   try {
+  //     setLoading(true)
+
+  //     const res = await axiosInstance.post('/users/forgot-password', {
+  //       email: email.trim().toLowerCase(),
+  //     })
+
+  //     if (res.data.success) {
+  //       setStep('otp')
+  //       setOtp('')
+  //       setResendTimer(60)
+
+  //       toast.success('OTP sent to your email')
+  //     }
+  //   } catch (error) {
+  //     const message = error.response?.data?.message || 'Unable to send OTP. Please try again.'
+
+  //     toast.error(message)
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
   const sendOtpHandle = async (e) => {
     e.preventDefault()
 
-    if (!email.trim()) {
+    const normalizedEmail = email.trim().toLowerCase()
+
+    if (!normalizedEmail) {
       toast.error('Please enter your email address')
       return
     }
@@ -82,7 +118,7 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
       setLoading(true)
 
       const res = await axiosInstance.post('/users/forgot-password', {
-        email: email.trim().toLowerCase(),
+        email: normalizedEmail,
       })
 
       if (res.data.success) {
@@ -93,7 +129,26 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
         toast.success('OTP sent to your email')
       }
     } catch (error) {
-      const message = error.response?.data?.message || 'Unable to send OTP. Please try again.'
+      console.log('Forgot Password Error:', error.response?.data || error.message)
+
+      const errorData = error.response?.data
+
+      if (errorData?.code === 'USER_NOT_FOUND') {
+        if (onClose) {
+          onClose()
+        }
+
+        navigate('/register', {
+          state: {
+            email: normalizedEmail,
+          },
+        })
+
+        toast.error('No account found. Please create an account first.')
+        return
+      }
+
+      const message = errorData?.message || 'Unable to send OTP. Please try again.'
 
       toast.error(message)
     } finally {
@@ -380,7 +435,7 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
                 <div className="mb-2 flex items-center justify-between">
                   <label className="text-xs font-bold text-[#493631] sm:text-sm">Email Address</label>
 
-                  <button
+                  {/* <button
                     type="button"
                     onClick={backToLoginHandle}
                     disabled={loading || resendLoading}
@@ -388,7 +443,7 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
                   >
                     <ArrowLeft size={14} />
                     Back to Login
-                  </button>
+                  </button> */}
                 </div>
 
                 <div className="group relative">
@@ -405,6 +460,19 @@ export default function ForgotPassword({ onClose, onBackToLogin }) {
                     autoFocus
                     className="h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 disabled:cursor-not-allowed disabled:opacity-60"
                   />
+                </div>
+
+                {/* Forgot Password */}
+                <div className="mt-2 flex justify-end">
+                  <button
+                    tabIndex={-1}
+                    type="button"
+                    onClick={backToLoginHandle}
+                    disabled={loading || resendLoading}
+                    className="text-xs font-bold text-[#8E181F] transition-colors hover:text-[#A51D26] hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Back to Login ?
+                  </button>
                 </div>
               </div>
 

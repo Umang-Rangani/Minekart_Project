@@ -1,6 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Home from './user/Home'
-import Login from './pages/LogIn'
 import Register from './pages/Register'
 import AdminLayout from './admin/AdminLayout'
 import AdminDashboard from './admin/AdminDashboard'
@@ -54,6 +53,7 @@ import TicTacToe from './game/TicTacToe.jsx'
 import Terms from './components/CustomerService/Terms.jsx'
 import Privacy from './components/CustomerService/Privacy.jsx'
 import Cookies from './components/CustomerService/Cookies.jsx'
+import Login from './pages/Login.jsx'
 
 
 export default function App() {

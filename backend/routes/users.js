@@ -329,9 +329,10 @@ router.post('/forgot-password', async (req, res) => {
     // Same response whether account exists or not
     // to prevent email/account enumeration.
     if (!user) {
-      return res.status(200).json({
-        success: true,
-        message: 'If an account exists with this email, an OTP has been sent.',
+      return res.status(404).json({
+        success: false,
+        code: 'USER_NOT_FOUND',
+        message: 'No account found with this email. Please create an account first.',
       })
     }
 

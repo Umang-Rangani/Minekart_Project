@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Camera, Mail, Lock, User, Phone, X, UserPlus, ArrowLeft, ShieldCheck, ImagePlus, Maximize2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile } from '../utils/uploadFile'
 import { useUser } from '../context/userProvider'
@@ -8,6 +8,8 @@ import toast from 'react-hot-toast'
 
 export default function Register() {
   const navigate = useNavigate()
+  const location = useLocation()
+
   const { setShowLogin, setUser } = useUser()
 
   const fileInputRef = useRef(null)
@@ -28,6 +30,24 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  useEffect(() => {
+    const prefilledEmail = location.state?.email
+
+    if (!prefilledEmail) {
+      return
+    }
+
+    setSignUp((prev) => ({
+      ...prev,
+      email: prefilledEmail,
+    }))
+
+    navigate(location.pathname, {
+      replace: true,
+      state: {},
+    })
+  }, [location.state, location.pathname, navigate])
 
   useEffect(() => {
     const isOverlayOpen = showProfilePopup || showImageViewer
@@ -285,7 +305,8 @@ export default function Register() {
   }
 
   return (
-    <div className="relative flex h-screen min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-3 py-3 sm:px-5 sm:py-6 lg:px-8">
+    // <div className="relative flex h-screen min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-3 py-3 sm:px-5 sm:py-6 lg:px-8">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#241210] px-0 py-0 sm:px-5 sm:py-6 lg:px-8">
       {/* Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-[#241210] via-[#4B171A] to-[#8E181F]" />
@@ -358,8 +379,10 @@ export default function Register() {
       </div>
 
       {/* Main Card */}
-      <div className="relative z-10 flex h-[calc(100vh-24px)] max-h-[calc(100vh-24px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px] border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:max-h-[calc(100vh-48px)] sm:rounded-[30px]">
-        <div className="relative z-10 flex h-full max-h-[calc(100vh-24px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:max-h-[calc(100vh-48px)] sm:rounded-[28px]">
+      {/* <div className="relative z-10 flex h-[calc(100vh-24px)] max-h-[calc(100vh-24px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px] border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:max-h-[calc(100vh-48px)] sm:rounded-[30px]"> */}
+      <div className="relative z-10 flex h-screen min-h-screen w-full max-w-6xl flex-col overflow-hidden rounded-none border border-white/20 bg-[#FFFDFC] shadow-[0_35px_100px_rgba(0,0,0,0.35)] sm:h-auto sm:min-h-0 sm:max-h-[calc(100vh-48px)] sm:rounded-[30px]">
+        {/* <div className="relative z-10 flex h-full max-h-[calc(100vh-24px)] w-full max-w-6xl flex-col overflow-hidden rounded-[20px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:max-h-[calc(100vh-48px)] sm:rounded-[28px]"> */}
+        <div className="relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col overflow-hidden rounded-none border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_30px_90px_rgba(53,28,24,0.18)] backdrop-blur-xl sm:max-h-[calc(100vh-48px)] sm:rounded-[28px]">
           {/* Header */}
           <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#321715] via-[#64171B] to-[#A51D26] px-3.5 py-3 text-white sm:px-8 sm:py-6">
             <div className="absolute -right-16 -top-24 h-40 w-40 rounded-full bg-white/7 blur-sm sm:h-56 sm:w-56" />
@@ -383,19 +406,20 @@ export default function Register() {
                 </div>
               </div>
 
-              <button
+              {/* <button
                 type="button"
                 onClick={() => navigate('/')}
                 className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition-all duration-300 hover:rotate-90 hover:bg-white/15 sm:h-9 sm:w-9 sm:rounded-xl"
               >
                 <X size={16} className="sm:size-4.75" />
-              </button>
+              </button> */}
             </div>
 
             <div className="absolute bottom-0 left-0 h-px w-full bg-linear-to-r from-transparent via-[#D4A373]/40 to-transparent" />
           </div>
 
           {/* Main Form */}
+          {/* <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[280px_1fr] lg:grid-cols-[310px_1fr]"> */}
           <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[280px_1fr] lg:grid-cols-[310px_1fr]">
             {/* Desktop Profile Section */}
             <div className="relative hidden min-h-0 shrink-0 flex-col items-center justify-center overflow-hidden border-b border-[#E8DDD4] bg-linear-to-br from-[#FBF7F2] via-[#F8EFE9] to-[#F3E6DE] px-8 md:flex md:border-b-0 md:border-r">
@@ -404,15 +428,15 @@ export default function Register() {
               <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-[#D4A373]/15 blur-3xl" />
 
               {/* Profile Heading */}
-              <div className="relative z-10 mb-5 text-center">
+              {/* <div className="relative z-10 mb-5 text-center">
                 <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#8E181F]/10 text-[#8E181F]">
                   <User size={17} />
                 </div>
 
                 <h2 className="text-sm font-extrabold text-[#351C18]">Profile Photo</h2>
 
-                {/* <p className="mt-1 text-[10px] text-[#806C63]">Click image to preview</p> */}
-              </div>
+                <p className="mt-1 text-[10px] text-[#806C63]">Click image to preview</p>
+              </div> */}
 
               {/* Square Profile Image */}
               <div className="relative z-10">
@@ -466,7 +490,8 @@ export default function Register() {
             </div>
 
             {/* Form Area */}
-            <div className="min-h-0 flex-1 overflow-y-auto bg-[#FFFDFC] p-4 sm:p-7 lg:p-9">
+            {/* <div className="min-h-0 flex-1 overflow-y-auto bg-[#FFFDFC] p-4 sm:p-7 lg:p-9"> */}
+            <div className="min-h-0 flex-1 overflow-y-auto bg-[#FFFDFC] p-4 pb-6 sm:p-7 lg:p-9">
               {/* Mobile Profile Section */}
               <div className="mb-5 flex items-center gap-3 rounded-2xl border border-[#E2D5CC] bg-[#FBF7F2] p-3 shadow-[0_4px_14px_rgba(73,54,49,0.04)] sm:hidden">
                 {/* Image Only = Preview */}
@@ -599,7 +624,7 @@ export default function Register() {
                       name="phone"
                       value={signUp.phone}
                       onChange={handleChange}
-                       required
+                      required
                       placeholder="Enter phone number"
                       className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
@@ -613,6 +638,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={clearHandle}
+                  tabIndex={-1}
                   className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-4 text-xs font-semibold text-[#806C63] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] hover:text-[#493631] sm:h-11 sm:px-5 sm:text-sm"
                 >
                   <X size={15} className="sm:size-4.25" />
@@ -623,7 +649,8 @@ export default function Register() {
                 <div className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-row sm:gap-3">
                   <button
                     type="button"
-                    onClick={() => navigate('/')}
+                    tabIndex={-1}
+                    onClick={() => navigate(-1)}
                     className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-3 text-xs font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] sm:h-11 sm:gap-2 sm:px-5 sm:text-sm"
                   >
                     <ArrowLeft size={15} className="sm:size-4.25" />
