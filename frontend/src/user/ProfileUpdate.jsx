@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import { axiosInstance } from '../config/axiosConfig'
 import { useUser } from '../context/userProvider'
 import BreadCrumb from './BreadCrumb'
+import ProfileForgotPassword from './ProfileForgotPassword'
 
 export default function ProfileUpdate() {
   const navigate = useNavigate()
@@ -19,14 +20,14 @@ export default function ProfileUpdate() {
   const [avatarFile, setAvatarFile] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState('')
 
-  const [showPassword, setShowPassword] = useState(false)
   const [showAvatarViewer, setShowAvatarViewer] = useState(false)
+
+  const [passwordFlowBusy, setPasswordFlowBusy] = useState(false)
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    password: '',
   })
 
   useEffect(() => {
@@ -39,7 +40,6 @@ export default function ProfileUpdate() {
       name: user.name || '',
       email: user.email || '',
       phone: user.phone || '',
-      password: '',
     })
 
     setAvatarPreview(user.avatar || '')
@@ -164,10 +164,6 @@ export default function ProfileUpdate() {
         email: formData.email.trim().toLowerCase(),
         phone: formData.phone.trim(),
         avatar,
-      }
-
-      if (formData.password.trim()) {
-        payload.password = formData.password.trim()
       }
 
       const response = await axiosInstance.put('/users/profile', payload)
@@ -436,6 +432,7 @@ export default function ProfileUpdate() {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
+                      disabled={passwordFlowBusy}
                       aria-label="Change profile photo"
                       className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-4 border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md transition hover:scale-105"
                     >
@@ -455,6 +452,7 @@ export default function ProfileUpdate() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
+                  disabled={passwordFlowBusy}
                   className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-2.5 text-[10px] font-bold text-[#67544D] transition hover:border-[#CDAFA4] hover:bg-[#F7EEE7] hover:text-[#8E181F]"
                 >
                   <Camera size={13} />
@@ -481,124 +479,102 @@ export default function ProfileUpdate() {
 
             {/* FORM CONTENT */}
             <main className="min-w-0 space-y-4">
-              {/* PERSONAL INFORMATION */}
-              <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-                <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
-                    <UserRound size={17} />
-                  </div>
+              <div className="grid  sm:grid-cols-2 gap-5">
+                {/* PERSONAL INFORMATION */}
+                <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
+                  <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
+                      <UserRound size={17} />
+                    </div>
 
-                  <div className="min-w-0">
-                    <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Personal Information</h2>
+                    <div className="min-w-0">
+                      <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Personal Information</h2>
 
-                    <p className="mt-0.5 truncate text-[9px] text-[#9A857B] sm:text-[10px]">Keep your account details up to date</p>
-                  </div>
-                </div>
-
-                <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
-                  {/* NAME */}
-                  <div>
-                    <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Full Name</label>
-
-                    <div className="relative">
-                      <UserRound size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
-
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Enter your name"
-                        className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
-                      />
+                      <p className="mt-0.5 truncate text-[9px] text-[#9A857B] sm:text-[10px]">Keep your account details up to date</p>
                     </div>
                   </div>
 
-                  {/* PHONE */}
-                  <div>
-                    <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Phone Number</label>
+                  <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
+                    {/* NAME */}
+                    <div>
+                      <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Full Name</label>
 
-                    <div className="relative">
-                      <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
+                      <div className="relative">
+                        <UserRound size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
 
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="Enter phone number"
-                        className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
-                      />
+                        <input
+                          type="text"
+                          name="name"
+                          value={formData.name}
+                          disabled={passwordFlowBusy}
+                          onChange={handleChange}
+                          placeholder="Enter your name"
+                          className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* PHONE */}
+                    <div>
+                      <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Phone Number</label>
+
+                      <div className="relative">
+                        <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
+
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          disabled={passwordFlowBusy}
+                          onChange={handleChange}
+                          placeholder="Enter phone number"
+                          className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* EMAIL */}
+                    <div className="sm:col-span-2">
+                      <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Email Address</label>
+
+                      <div className="relative">
+                        <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
+
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          disabled={passwordFlowBusy}
+                          onChange={handleChange}
+                          placeholder="Enter email address"
+                          className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                        />
+                      </div>
+
+                      <p className="mt-1.5 text-[9px] text-[#9A857B]">Your email is used for account communication and login.</p>
+                    </div>
+                  </div>
+                </section>
+
+                {/* PASSWORD */}
+                <section className={`overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)] transition ${passwordFlowBusy ? 'ring-2 ring-[#F2D9D6]' : ''}`}>
+                  <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
+                      <LockKeyhole size={17} />
+                    </div>
+
+                    <div className="min-w-0">
+                      <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Change Password</h2>
+
+                      <p className="mt-0.5 truncate text-[9px] text-[#9A857B] sm:text-[10px]">Securely update your password using OTP</p>
                     </div>
                   </div>
 
-                  {/* EMAIL */}
-                  <div className="sm:col-span-2">
-                    <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Email Address</label>
-
-                    <div className="relative">
-                      <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
-
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Enter email address"
-                        className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
-                      />
-                    </div>
-
-                    <p className="mt-1.5 text-[9px] text-[#9A857B]">Your email is used for account communication and login.</p>
+                  <div className="p-4 sm:p-5">
+                    <ProfileForgotPassword email={user.email} onBusyChange={setPasswordFlowBusy} />
                   </div>
-                </div>
-              </section>
-
-              {/* PASSWORD */}
-              <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-                <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
-                    <LockKeyhole size={17} />
-                  </div>
-
-                  <div className="min-w-0">
-                    <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Change Password</h2>
-
-                    <p className="mt-0.5 truncate text-[9px] text-[#9A857B] sm:text-[10px]">Leave blank if you don't want to change it</p>
-                  </div>
-                </div>
-
-                <div className="p-4 sm:p-5">
-                  <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">New Password</label>
-
-                  <div className="relative">
-                    <LockKeyhole size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
-
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="Enter new password"
-                      className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-11 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#806C63] transition hover:bg-[#F7EEE7] hover:text-[#8E181F]"
-                    >
-                      {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                    </button>
-                  </div>
-
-                  <div className="mt-3 flex items-start gap-2 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] px-3 py-2.5">
-                    <ShieldCheck size={14} className="mt-0.5 shrink-0 text-[#3E8B62]" />
-
-                    <p className="text-[9px] leading-4 text-[#806C63]">Your password is securely encrypted before it is stored.</p>
-                  </div>
-                </div>
-              </section>
+                </section>
+              </div>
 
               {/* ACCOUNT STATUS */}
               <section className="relative overflow-hidden rounded-2xl border border-[#E6D5C5] bg-linear-to-r from-[#FFF9F2] to-[#F7EEE7] p-4 sm:p-5">
@@ -624,7 +600,7 @@ export default function ProfileUpdate() {
                 <button
                   type="button"
                   onClick={() => navigate('/profile')}
-                  disabled={saving}
+                  disabled={saving || passwordFlowBusy}
                   className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                 >
                   <ArrowLeft size={15} />
@@ -633,7 +609,7 @@ export default function ProfileUpdate() {
 
                 <button
                   type="submit"
-                  disabled={saving}
+                  disabled={saving || passwordFlowBusy}
                   className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-6 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.22)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                 >
                   {saving ? (

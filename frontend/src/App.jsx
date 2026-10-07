@@ -95,49 +95,32 @@ export default function App() {
           <Route path="/products" element={<Products />} />
 
           <Route path="/category/:id/products" element={<CategoryProducts />} />
-
           <Route path="/brand/:id/products" element={<BrandProducts />} />
-
           <Route path="product/:id" element={<ProductDetail />} />
 
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/" replace />} />
-
           <Route path="/checkout" element={<Checkout />} />
-
           <Route path="/order-success" element={<OrderSuccess />} />
-
           <Route path="/orders" element={<MyOrders />} />
-
           <Route path="orders/:id" element={<OrderDetails />} />
 
           <Route path="/search" element={<SearchProducts />} />
 
           <Route path="/profile" element={<Profile />} />
-
           <Route path="/profile/update" element={<ProfileUpdate />} />
-
           <Route path="/notifications" element={<Notifications />} />
 
           {/* FOOTER */}
-
           <Route path="/customer-help" element={<HelpCenter />} />
-
           <Route path="/track-order" element={<TrackOrder />} />
-
           <Route path="/returns" element={<ReturnsRefunds />} />
 
-          <Route path="/contact" element={<ContactUs />} />
-
           <Route path="/my-support" element={<MySupport />} />
-
           <Route path="/my-support/:id" element={<MySupportDetails />} />
 
           <Route path="/terms" element={<Terms />} />
-
           <Route path="/privacy" element={<Privacy />} />
-
           <Route path="/cookies" element={<Cookies />} />
-
           <Route path="/tictactoe" element={<TicTacToe />} />
         </Route>
 

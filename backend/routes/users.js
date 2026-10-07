@@ -238,9 +238,8 @@ router.get('/profile', authMiddleware, async (req, res) => {
 // ! Update Profile
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
-    const { name, email, phone, avatar, password } = req.body
+    const { name, email, phone, avatar } = req.body
 
-    // Required fields
     if (!name || !email) {
       return res.status(400).json({
         success: false,
@@ -248,7 +247,6 @@ router.put('/profile', authMiddleware, async (req, res) => {
       })
     }
 
-    // Find logged-in user
     const user = await User.findById(req.user.userId)
 
     if (!user) {
@@ -258,7 +256,6 @@ router.put('/profile', authMiddleware, async (req, res) => {
       })
     }
 
-    // Check email already used by another user
     const existingUser = await User.findOne({
       email: email.toLowerCase(),
       _id: { $ne: req.user.userId },
@@ -271,20 +268,13 @@ router.put('/profile', authMiddleware, async (req, res) => {
       })
     }
 
-    // Update basic profile details
     user.name = name.trim()
     user.email = email.toLowerCase().trim()
     user.phone = phone?.trim() || ''
     user.avatar = avatar || ''
 
-    // Update password only if provided
-    if (password && password.trim()) {
-      user.password = await bcrypt.hash(password.trim(), 10)
-    }
-
     await user.save()
 
-    // Return user without password
     const updatedUser = await User.findById(user._id).select('-password')
 
     return res.status(200).json({
@@ -293,19 +283,11 @@ router.put('/profile', authMiddleware, async (req, res) => {
       user: updatedUser,
     })
   } catch (error) {
-    console.error('Update Profile Error:', error)
-
-    // Duplicate email safety
-    if (error.code === 11000) {
-      return res.status(409).json({
-        success: false,
-        message: 'User with this email already exists',
-      })
-    }
+    console.error('Profile Update Error:', error)
 
     return res.status(500).json({
       success: false,
-      message: 'Failed to update profile',
+      message: 'Unable to update profile',
     })
   }
 })
