@@ -4,9 +4,9 @@ import './index.css'
 import App from './App.jsx'
 import { UserProvider } from './context/userProvider.jsx'
 import { CartProvider } from './context/CartProvider.jsx'
-import { Toaster } from 'react-hot-toast'
 import { NotificationProvider } from './context/NotificationProvider.jsx'
 import { AdminNotificationProvider } from './context/AdminNotificationProvider.jsx'
+import MineKartToaster from './common/MineKartToaster.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -16,19 +16,7 @@ createRoot(document.getElementById('root')).render(
           <AdminNotificationProvider>
             <App />
 
-            <Toaster
-              position="top-right"
-              reverseOrder={false}
-              containerStyle={{
-                zIndex: 999999,
-              }}
-              toastOptions={{
-                duration: 3000,
-                style: {
-                  zIndex: 999999,
-                },
-              }}
-            />
+            <MineKartToaster />
           </AdminNotificationProvider>
         </NotificationProvider>
       </CartProvider>

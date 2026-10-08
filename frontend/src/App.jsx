@@ -180,7 +180,6 @@ export default function App() {
             {/* CONTACT MESSAGES */}
 
             <Route path="contact-messages" element={<AdminContactMessages />} />
-
             <Route path="contact-messages/:id" element={<AdminContactMessageView />} />
           </Route>
         </Route>

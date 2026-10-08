@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, Package, ShoppingBag, CircleDollarSign, AlertTriangle, Eye, X } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, Package, ShoppingBag, CircleDollarSign, AlertTriangle, Eye, X, ArrowUpDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import BreadCrumb from '../user/BreadCrumb'
@@ -13,6 +13,11 @@ export default function AdminProducts() {
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminProductsSearch') || ''
   })
+
+  const [sortOrder, setSortOrder] = useState(() => {
+    return localStorage.getItem('adminProductsSort') || 'newest'
+  })
+
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -62,7 +67,14 @@ export default function AdminProducts() {
   }
 
   // ! Search
-  const filteredProducts = products.filter((product) => product.productName?.toLowerCase().includes(search.toLowerCase()))
+  const filteredProducts = products
+    .filter((product) => product.productName?.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime()
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime()
+
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
+    })
 
   // ! pagination 2.
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredProducts.length / itemsPerPage)
@@ -83,8 +95,6 @@ export default function AdminProducts() {
   useEffect(() => {
     getProducts()
   }, [])
-
-
 
   // ! Product statistics
   const totalProducts = products.length
@@ -150,8 +160,10 @@ export default function AdminProducts() {
       {/*  PRODUCT TABLE  */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
         {/* Toolbar */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xl">
+        {/* Toolbar */}
+        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+          {/* Search */}
+          <div className="relative w-full lg:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
@@ -162,7 +174,6 @@ export default function AdminProducts() {
 
                 setSearch(value)
                 localStorage.setItem('adminProductsSearch', value)
-
                 setCurrentPage(1)
               }}
               placeholder="Search products..."
@@ -185,10 +196,34 @@ export default function AdminProducts() {
             )}
           </div>
 
-          <button type="button" onClick={() => navigate('/admin/products/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
-            <Plus size={18} />
-            Add Product
-          </button>
+          {/* Actions */}
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+            {/* Sort */}
+            <div className="relative">
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  setSortOrder(value)
+                  localStorage.setItem('adminProductsSort', value)
+                  setCurrentPage(1)
+                }}
+                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            {/* Add Product */}
+            <button type="button" onClick={() => navigate('/admin/products/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+              <Plus size={18} />
+              Add Product
+            </button>
+          </div>
         </div>
 
         {/* Table */}
@@ -226,7 +261,7 @@ export default function AdminProducts() {
                   <tr key={product._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
                     {/* Index */}
                     <td className="px-5 py-4">
-                      <span className="text-sm text-[#6F6A64]">{index + 1}</span>
+                      <span className="text-sm text-[#6F6A64]">{startIndex + index + 1}</span>
                     </td>
 
                     {/* Product */}
@@ -382,8 +417,8 @@ export default function AdminProducts() {
           isOpen={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
           type="danger"
-          title="Delete User?"
-          message={`Are you sure you want to delete this ${deleteItem.productName}`}
+          title="Delete Product?"
+          message={`Are you sure you want to delete this ${deleteItem.productName}?`}
           actionButtonText="Delete"
           cancelButtonText="Cancel"
           onAction={deleteHandle}

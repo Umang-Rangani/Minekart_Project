@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, Tag, Image as ImageIcon, Eye, X, CircleDollarSign, CheckCircle2, AlertTriangle } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, Tag, Image as ImageIcon, Eye, X, CircleDollarSign, CheckCircle2, AlertTriangle, ArrowUpDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { deleteFile } from '../utils/uploadFile'
@@ -13,6 +13,10 @@ export default function AdminBrand() {
 
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminBrandsSearch') || ''
+  })
+
+  const [sortOrder, setSortOrder] = useState(() => {
+    return localStorage.getItem('adminBrandsSort') || 'newest'
   })
 
   const [brands, setBrands] = useState([])
@@ -72,8 +76,15 @@ export default function AdminBrand() {
     }
   }
 
-  // ! Search
-  const filteredBrands = brands.filter((brand) => brand.brandName?.toLowerCase().includes(search.toLowerCase()))
+  // !sort & Search
+  const filteredBrands = brands
+    .filter((brand) => brand.brandName?.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime()
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime()
+
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
+    })
 
   // ! Pagination
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredBrands.length / itemsPerPage)
@@ -159,8 +170,10 @@ export default function AdminBrand() {
       {/* BRAND TABLE */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
         {/* TOOLBAR */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xl">
+        {/* TOOLBAR */}
+        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+          {/* Search */}
+          <div className="relative w-full lg:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
@@ -170,9 +183,7 @@ export default function AdminBrand() {
                 const value = e.target.value
 
                 setSearch(value)
-
                 localStorage.setItem('adminBrandsSearch', value)
-
                 setCurrentPage(1)
               }}
               placeholder="Search brands..."
@@ -195,10 +206,34 @@ export default function AdminBrand() {
             )}
           </div>
 
-          <button type="button" onClick={() => navigate('/admin/brand/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
-            <Plus size={18} />
-            Add Brand
-          </button>
+          {/* Actions */}
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+            {/* Sort */}
+            <div className="relative">
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  setSortOrder(value)
+                  localStorage.setItem('adminBrandsSort', value)
+                  setCurrentPage(1)
+                }}
+                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            {/* Add Brand */}
+            <button type="button" onClick={() => navigate('/admin/brand/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+              <Plus size={18} />
+              Add Brand
+            </button>
+          </div>
         </div>
 
         {/* TABLE */}
@@ -377,8 +412,8 @@ export default function AdminBrand() {
           isOpen={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
           type="danger"
-          title="Delete User?"
-          message={`Are you sure you want to delete this ${deleteItem.brandName}`}
+          title="Delete Brand?"
+          message={`Are you sure you want to delete this ${deleteItem.brandName}?`}
           actionButtonText="Delete"
           cancelButtonText="Cancel"
           onAction={deleteHandle}

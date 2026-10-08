@@ -385,4 +385,49 @@ router.put('/:id/status', authMiddleware, roleMiddleware('Admin'), async (req, r
   }
 })
 
+// DELETE CANCELLED ORDER
+router.delete('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const order = await Order.findById(id)
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      })
+    }
+
+    // Only cancelled orders can be permanently deleted
+    if (order.orderStatus !== 'Cancelled') {
+      return res.status(400).json({
+        success: false,
+        message: 'Only cancelled orders can be deleted',
+      })
+    }
+
+    // Delete related payment record
+    await Payment.deleteMany({
+      orderId: order._id,
+    })
+
+    // Delete order
+    await Order.findByIdAndDelete(order._id)
+
+    res.status(200).json({
+      success: true,
+      message: 'Cancelled order deleted successfully',
+    })
+  } catch (error) {
+    console.log('Delete Admin Order Error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message,
+    })
+  }
+})
+
 module.exports = router

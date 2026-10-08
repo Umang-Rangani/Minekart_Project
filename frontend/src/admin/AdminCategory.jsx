@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, LayoutGrid, X, CheckCircle2, CircleOff, Image, Eye } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, LayoutGrid, X, CheckCircle2, CircleOff, Image, Eye, ArrowUpDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { getImageUrl } from '../utils/imageUrl'
@@ -22,6 +22,11 @@ export default function AdminCategory() {
 
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(5)
+
+  // ! switch filter
+  const [sortOrder, setSortOrder] = useState(() => {
+    return localStorage.getItem('adminCategoriesSort') || 'newest'
+  })
 
   const getCategories = async () => {
     try {
@@ -57,7 +62,15 @@ export default function AdminCategory() {
     }
   }
 
-  const filteredCategories = categories.filter((category) => category.categoryName?.toLowerCase().includes(search.toLowerCase()))
+  // ! switch filter & search
+  const filteredCategories = categories
+    .filter((category) => category.categoryName?.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime()
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime()
+
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
+    })
 
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredCategories.length / itemsPerPage)
 
@@ -139,8 +152,9 @@ export default function AdminCategory() {
       {/* CATEGORY TABLE */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
         {/* Toolbar */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xl">
+        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+          {/* Search */}
+          <div className="relative w-full lg:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
@@ -151,7 +165,6 @@ export default function AdminCategory() {
 
                 setSearch(value)
                 localStorage.setItem('adminCategoriesSearch', value)
-
                 setCurrentPage(1)
               }}
               placeholder="Search categories..."
@@ -174,11 +187,34 @@ export default function AdminCategory() {
             )}
           </div>
 
-          {/* Add Category */}
-          <button type="button" onClick={() => navigate('/admin/category/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
-            <Plus size={18} />
-            Add Category
-          </button>
+          {/* Actions */}
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+            {/* Sort */}
+            <div className="relative">
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  setSortOrder(value)
+                  localStorage.setItem('adminCategoriesSort', value)
+                  setCurrentPage(1)
+                }}
+                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            {/* Add Category */}
+            <button type="button" onClick={() => navigate('/admin/category/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+              <Plus size={18} />
+              Add Category
+            </button>
+          </div>
         </div>
 
         {/* Table */}

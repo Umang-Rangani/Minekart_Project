@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Search, Eye, MessageSquare, Clock3, CircleCheck, CircleDot, ChevronDown, ChevronLeft, ChevronRight, X, Send, Trash2, User, Mail, Phone, LoaderCircle, ShieldCheck } from 'lucide-react'
+import { Search, Eye, MessageSquare, Clock3, CircleCheck, CircleDot, ChevronDown, ChevronLeft, ChevronRight, X, Send, Trash2, User, Mail, Phone, LoaderCircle, ShieldCheck, ArrowUpDown } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import toast from 'react-hot-toast'
@@ -14,6 +14,10 @@ export default function AdminContactMessages() {
 
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminContactMessagesSearch') || ''
+  })
+
+  const [sortOrder, setSortOrder] = useState(() => {
+    return localStorage.getItem('adminContactMessagesSort') || 'newest'
   })
 
   const [statusFilter, setStatusFilter] = useState('All')
@@ -136,23 +140,30 @@ export default function AdminContactMessages() {
     setCurrentPage(1)
   }
 
-  /* Filter contacts */
-  const filteredContacts = contacts.filter((contact) => {
-    const searchValue = search.toLowerCase().trim()
+  // ! Filter contacts
+  const filteredContacts = contacts
+    .filter((contact) => {
+      const searchValue = search.toLowerCase().trim()
 
-    const latestMessage = contact.messages?.[contact.messages.length - 1]?.message || ''
+      const latestMessage = contact.messages?.[contact.messages.length - 1]?.message || ''
 
-    const matchesSearch =
-      contact._id?.toLowerCase().includes(searchValue) ||
-      contact.name?.toLowerCase().includes(searchValue) ||
-      contact.email?.toLowerCase().includes(searchValue) ||
-      contact.subject?.toLowerCase().includes(searchValue) ||
-      latestMessage.toLowerCase().includes(searchValue)
+      const matchesSearch =
+        contact._id?.toLowerCase().includes(searchValue) ||
+        contact.name?.toLowerCase().includes(searchValue) ||
+        contact.email?.toLowerCase().includes(searchValue) ||
+        contact.subject?.toLowerCase().includes(searchValue) ||
+        latestMessage.toLowerCase().includes(searchValue)
 
-    const matchesStatus = statusFilter === 'All' || contact.status === statusFilter
+      const matchesStatus = statusFilter === 'All' || contact.status === statusFilter
 
-    return matchesSearch && matchesStatus
-  })
+      return matchesSearch && matchesStatus
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime()
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime()
+
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
+    })
 
   /* Pagination */
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredContacts.length / itemsPerPage)
@@ -341,9 +352,9 @@ export default function AdminContactMessages() {
 
       {/* Messages Table */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
-        {/* Search + Filter */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xl">
+        {/* Search + Sort + Filter */}
+        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="relative w-full lg:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
@@ -361,12 +372,33 @@ export default function AdminContactMessages() {
             )}
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+            {/* Sort */}
+            <div className="relative">
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  setSortOrder(value)
+                  localStorage.setItem('adminContactMessagesSort', value)
+                  setCurrentPage(1)
+                }}
+                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            {/* Status */}
             <div className="relative">
               <select
                 value={statusFilter}
                 onChange={(e) => handleStatusFilter(e.target.value)}
-                className="h-10 min-w-45 appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 pr-10 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 pr-10 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-40"
               >
                 <option value="All">All Status</option>
                 <option value="Pending">Pending</option>
@@ -377,10 +409,11 @@ export default function AdminContactMessages() {
               <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#6F6A64]" />
             </div>
 
-            <div className="flex h-10 items-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4">
+            {/* Message Count */}
+            <div className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 sm:w-auto">
               <MessageSquare size={17} className="text-[#6B6258]" />
 
-              <span className="text-sm font-semibold text-[#292725]">{filteredContacts.length} Messages</span>
+              <span className="whitespace-nowrap text-sm font-semibold text-[#292725]">{filteredContacts.length} Messages</span>
             </div>
           </div>
         </div>

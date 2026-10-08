@@ -1,6 +1,6 @@
 import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
-import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, X, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import toast from 'react-hot-toast'
@@ -9,6 +9,10 @@ import AdminTrashBox from './AdminTrashBox'
 export default function AdminUsers() {
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminUsersSearch') || ''
+  })
+
+  const [sortOrder, setSortOrder] = useState(() => {
+    return localStorage.getItem('adminUsersSort') || 'newest'
   })
 
   const [users, setUsers] = useState([])
@@ -105,12 +109,19 @@ export default function AdminUsers() {
     setCurrentPage(1)
   }
 
-  // Filter users
-  const filteredUsers = users.filter((user) => {
-    const searchValue = search.toLowerCase().trim()
+  // ! Filter users
+  const filteredUsers = users
+    .filter((user) => {
+      const searchValue = search.toLowerCase().trim()
 
-    return `${user.name || ''} ${user.email || ''} ${user.phone || ''} ${user.address || ''} ${user.city || ''} ${user.pincode || ''}`.toLowerCase().includes(searchValue)
-  })
+      return `${user.name || ''} ${user.email || ''} ${user.phone || ''} ${user.address || ''} ${user.city || ''} ${user.pincode || ''}`.toLowerCase().includes(searchValue)
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime()
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime()
+
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
+    })
 
   // Open delete popup
   const handleModalOpen = (user) => {
@@ -241,8 +252,8 @@ export default function AdminUsers() {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xl">
+        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="relative w-full lg:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
@@ -260,8 +271,31 @@ export default function AdminUsers() {
             )}
           </div>
 
-          <div className="flex h-10 items-center rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4">
-            <span className="text-sm font-semibold text-[#6F6A64]">{filteredUsers.length} Users</span>
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+            <div className="relative">
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  setSortOrder(value)
+                  localStorage.setItem('adminUsersSort', value)
+                  setCurrentPage(1)
+                }}
+                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            <div className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 sm:w-auto">
+              <Users size={17} className="text-[#6B6258]" />
+
+              <span className="whitespace-nowrap text-sm font-semibold text-[#292725]">{filteredUsers.length} Users</span>
+            </div>
           </div>
         </div>
 
@@ -277,6 +311,8 @@ export default function AdminUsers() {
 
                 <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Phone</th>
 
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Registered</th>
+
                 <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
 
                 <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
@@ -286,7 +322,7 @@ export default function AdminUsers() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                  <td colSpan="7" className="px-5 py-12 text-center text-sm text-[#99938B]">
                     Loading users...
                   </td>
                 </tr>
@@ -330,6 +366,30 @@ export default function AdminUsers() {
 
                           <span className="text-xs text-[#99938B]">{user.phone || '-'}</span>
                         </div>
+                      </div>
+                    </td>
+
+                    <td className="px-5 py-4">
+                      <div className="min-w-32">
+                        <p className="text-sm font-semibold text-[#6F6A64]">
+                          {user.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString('en-IN', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                              })
+                            : '-'}
+                        </p>
+
+                        <p className="mt-1 text-xs text-[#99938B]">
+                          {user.createdAt
+                            ? new Date(user.createdAt).toLocaleTimeString('en-IN', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true,
+                              })
+                            : '-'}
+                        </p>
                       </div>
                     </td>
 
@@ -378,7 +438,7 @@ export default function AdminUsers() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                  <td colSpan="7" className="px-5 py-12 text-center text-sm text-[#99938B]">
                     No users found
                   </td>
                 </tr>

@@ -1,9 +1,10 @@
 import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
-import { Search, Eye, Package, ShoppingBag, Clock3, CheckCircle2, XCircle, UserRound, ShieldCheck, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { Search, Eye, Package, ShoppingBag, Clock3, CheckCircle2, XCircle, UserRound, ShieldCheck, ChevronDown, ChevronLeft, ChevronRight, X, ArrowUpDown, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
+import AdminTrashBox from './AdminTrashBox'
 import toast from 'react-hot-toast'
 
 export default function AdminOrders() {
@@ -22,6 +23,10 @@ export default function AdminOrders() {
     return localStorage.getItem('adminOrdersSearch') || ''
   })
 
+  const [sortOrder, setSortOrder] = useState(() => {
+    return localStorage.getItem('adminOrdersSort') || 'newest'
+  })
+
   const [statusFilter, setStatusFilter] = useState('All')
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -29,6 +34,10 @@ export default function AdminOrders() {
 
   const [updatingOrderId, setUpdatingOrderId] = useState(null)
   const [confirmingPaymentId, setConfirmingPaymentId] = useState(null)
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteItem, setDeleteItem] = useState(null)
+  const [deletingOrderId, setDeletingOrderId] = useState(null)
 
   // Get all orders
   const getOrders = async () => {
@@ -146,6 +155,50 @@ export default function AdminOrders() {
     }
   }
 
+  // Open delete popup
+  const handleDeleteOpen = (order) => {
+    if (order.orderStatus !== 'Cancelled') {
+      return
+    }
+
+    setDeleteItem(order)
+    setDeleteModalOpen(true)
+  }
+
+  // Delete user-cancelled order
+  const deleteHandle = async () => {
+    if (!deleteItem) return
+
+    const shouldGoPreviousPage = currentOrders.length === 1 && currentPage > 1
+
+    try {
+      setDeletingOrderId(deleteItem._id)
+
+      const res = await axiosInstance.delete(`/admin/orders/${deleteItem._id}`)
+
+      if (res.data.success) {
+        setOrders((prev) => prev.filter((order) => order._id !== deleteItem._id))
+
+        toast.success('Order deleted successfully')
+
+        setDeleteModalOpen(false)
+        setDeleteItem(null)
+
+        await getCancellationStats()
+
+        if (shouldGoPreviousPage) {
+          setCurrentPage((prev) => prev - 1)
+        }
+      }
+    } catch (error) {
+      console.log('Delete Admin Order Error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || 'Failed to delete order')
+    } finally {
+      setDeletingOrderId(null)
+    }
+  }
+
   // Format date
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-IN', {
@@ -240,16 +293,23 @@ export default function AdminOrders() {
   }
 
   // Filter orders
-  const filteredOrders = orders.filter((order) => {
-    const searchValue = search.toLowerCase().trim()
+  const filteredOrders = orders
+    .filter((order) => {
+      const searchValue = search.toLowerCase().trim()
 
-    const matchesSearch =
-      order._id?.toLowerCase().includes(searchValue) || order.orderId?.toLowerCase().includes(searchValue) || order.shippingAddress?.fullName?.toLowerCase().includes(searchValue) || order.shippingAddress?.phone?.toLowerCase().includes(searchValue)
+      const matchesSearch =
+        order._id?.toLowerCase().includes(searchValue) || order.orderId?.toLowerCase().includes(searchValue) || order.shippingAddress?.fullName?.toLowerCase().includes(searchValue) || order.shippingAddress?.phone?.toLowerCase().includes(searchValue)
 
-    const matchesStatus = statusFilter === 'All' || order.orderStatus === statusFilter
+      const matchesStatus = statusFilter === 'All' || order.orderStatus === statusFilter
 
-    return matchesSearch && matchesStatus
-  })
+      return matchesSearch && matchesStatus
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime()
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime()
+
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
+    })
 
   // Pagination
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredOrders.length / itemsPerPage)
@@ -338,8 +398,9 @@ export default function AdminOrders() {
       {/* Orders */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
         {/* Search / Filter */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xl">
+        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+          {/* Search */}
+          <div className="relative w-full lg:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
@@ -357,12 +418,34 @@ export default function AdminOrders() {
             )}
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
+          {/* Actions */}
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+            {/* Sort */}
+            <div className="relative">
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  setSortOrder(value)
+                  localStorage.setItem('adminOrdersSort', value)
+                  setCurrentPage(1)
+                }}
+                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            {/* Status */}
             <div className="relative">
               <select
                 value={statusFilter}
                 onChange={(e) => handleStatusFilter(e.target.value)}
-                className="h-10 min-w-45 appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 pr-10 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+                className="h-10 w-full min-w-45 appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 pr-10 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-45"
               >
                 <option value="All">All Status</option>
                 <option value="Pending">Pending</option>
@@ -378,10 +461,11 @@ export default function AdminOrders() {
               <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#6F6A64]" />
             </div>
 
-            <div className="flex h-10 items-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4">
+            {/* Count */}
+            <div className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 sm:w-auto">
               <Package size={17} className="text-[#6B6258]" />
 
-              <span className="text-sm font-semibold text-[#292725]">{filteredOrders.length} Orders</span>
+              <span className="whitespace-nowrap text-sm font-semibold text-[#292725]">{filteredOrders.length} Orders</span>
             </div>
           </div>
         </div>
@@ -425,6 +509,7 @@ export default function AdminOrders() {
                   const isReturned = order.orderStatus === 'Returned'
 
                   const isCancelled = order.orderStatus === 'Cancelled'
+                  const canDeleteOrder = isCancelled
 
                   const isLocked = isReturned || isCancelled
 
@@ -554,8 +639,21 @@ export default function AdminOrders() {
                         <span className="text-xs font-medium text-[#6F6A64]">{formatDate(order.createdAt)}</span>
                       </td>
 
+                      {/* Action */}
                       <td className="px-5 py-4">
                         <div className="flex justify-end gap-1">
+                          {canDeleteOrder && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteOpen(order)}
+                              disabled={deletingOrderId === order._id}
+                              className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F] disabled:cursor-not-allowed disabled:opacity-50"
+                              title="Delete Cancelled Order"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          )}
+
                           <button
                             type="button"
                             onClick={() => navigate(`/admin/orders/${order.orderId}`)}
@@ -648,6 +746,25 @@ export default function AdminOrders() {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation */}
+      {deleteModalOpen && (
+        <AdminTrashBox
+          isOpen={deleteModalOpen}
+          onClose={() => {
+            if (deletingOrderId) return
+
+            setDeleteModalOpen(false)
+            setDeleteItem(null)
+          }}
+          title="Delete Cancelled Order?"
+          message={`Are you sure you want to permanently delete order #${deleteItem?.orderId}?`}
+          actionButtonText="Delete Order"
+          cancelButtonText="Cancel"
+          onAction={deleteHandle}
+          isProcessing={Boolean(deletingOrderId)}
+        />
+      )}
     </div>
   )
 }

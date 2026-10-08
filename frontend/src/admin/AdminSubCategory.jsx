@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Plus, Search, Pencil, Trash2, X, Layers, Eye, CheckCircle2, CircleOff, Tags } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, X, Layers, Eye, CheckCircle2, CircleOff, Tags, ArrowUpDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
@@ -11,6 +11,10 @@ export default function AdminSubCategory() {
 
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminSubCategoriesSearch') || ''
+  })
+
+  const [sortOrder, setSortOrder] = useState(() => {
+    return localStorage.getItem('adminSubCategoriesSort') || 'newest'
   })
 
   const [subCategories, setSubCategories] = useState([])
@@ -63,15 +67,22 @@ export default function AdminSubCategory() {
   }
 
   // ! Search
-  const filteredSubCategories = subCategories.filter((subCategory) => {
-    const searchText = search.toLowerCase()
+  const filteredSubCategories = subCategories
+    .filter((subCategory) => {
+      const searchText = search.toLowerCase()
 
-    const subCategoryName = subCategory.subCategoryName?.toLowerCase() || ''
+      const subCategoryName = subCategory.subCategoryName?.toLowerCase() || ''
 
-    const categoryName = subCategory.category?.categoryName?.toLowerCase() || ''
+      const categoryName = subCategory.category?.categoryName?.toLowerCase() || ''
 
-    return subCategoryName.includes(searchText) || categoryName.includes(searchText)
-  })
+      return subCategoryName.includes(searchText) || categoryName.includes(searchText)
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime()
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime()
+
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
+    })
 
   // ! Pagination
   const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredSubCategories.length / itemsPerPage)
@@ -162,8 +173,9 @@ export default function AdminSubCategory() {
       {/*  SUBCATEGORY TABLE  */}
       <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
         {/* Toolbar */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xl">
+        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+          {/* Search */}
+          <div className="relative w-full lg:max-w-xl">
             <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
 
             <input
@@ -174,7 +186,6 @@ export default function AdminSubCategory() {
 
                 setSearch(value)
                 localStorage.setItem('adminSubCategoriesSearch', value)
-
                 setCurrentPage(1)
               }}
               placeholder="Search subcategories..."
@@ -197,11 +208,34 @@ export default function AdminSubCategory() {
             )}
           </div>
 
-          {/* Add SubCategory */}
-          <button type="button" onClick={() => navigate('/admin/subcategory/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
-            <Plus size={18} />
-            Add SubCategory
-          </button>
+          {/* Actions */}
+          <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
+            {/* Sort */}
+            <div className="relative">
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  const value = e.target.value
+
+                  setSortOrder(value)
+                  localStorage.setItem('adminSubCategoriesSort', value)
+                  setCurrentPage(1)
+                }}
+                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            {/* Add SubCategory */}
+            <button type="button" onClick={() => navigate('/admin/subcategory/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+              <Plus size={18} />
+              Add SubCategory
+            </button>
+          </div>
         </div>
 
         {/* Table */}
@@ -290,12 +324,7 @@ export default function AdminSubCategory() {
                         </button>
 
                         {/* Delete */}
-                        <button
-                          type="button"
-                          onClick={() => handleModalOpen(subCategory)}
-                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]"
-                          title="Delete SubCategory"
-                        >
+                        <button type="button" onClick={() => handleModalOpen(subCategory)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete SubCategory">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -378,7 +407,7 @@ export default function AdminSubCategory() {
           isOpen={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
           type="danger"
-          title="Delete User?"
+          title="Delete SubCategory?"
           message={`Are you sure you want to delete this ${deleteItem.subCategoryName}`}
           actionButtonText="Delete"
           cancelButtonText="Cancel"
