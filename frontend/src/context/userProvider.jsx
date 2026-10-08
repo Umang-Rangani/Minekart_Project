@@ -23,8 +23,6 @@ export const UserProvider = ({ children }) => {
         return
       }
 
-      toast.error(error.response?.data?.message || 'Unable to fetch user profile')
-
       setUser(null)
     } finally {
       setLoading(false)
