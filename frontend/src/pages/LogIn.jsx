@@ -64,6 +64,24 @@ export default function LogIn({ onClose }) {
   const submitHandle = async (e) => {
     e.preventDefault()
 
+    const email = logIn.email.trim()
+    const password = logIn.password.trim()
+
+    if (!email && !password) {
+      toast.error('Please enter your email and password')
+      return
+    }
+
+    if (!email) {
+      toast.error('Please enter your email')
+      return
+    }
+
+    if (!password) {
+      toast.error('Please enter your password')
+      return
+    }
+
     try {
       setLoading(true)
 
@@ -286,7 +304,6 @@ export default function LogIn({ onClose }) {
                   type="email"
                   name="email"
                   placeholder="Enter your email"
-                  required
                   autoComplete="email"
                   disabled={loading}
                   className="
@@ -332,7 +349,6 @@ export default function LogIn({ onClose }) {
                   type="password"
                   name="password"
                   placeholder="Enter your password"
-                  required
                   autoComplete="current-password"
                   disabled={loading}
                   className="
