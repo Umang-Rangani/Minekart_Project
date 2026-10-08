@@ -104,7 +104,11 @@ export default function LogIn({ onClose }) {
         toast.error('Account not found. Please create an account first.')
 
         setShowLogin(false)
-        navigate('/register')
+        navigate('/register', {
+          state: {
+            email: email,
+          },
+        })
       } else if (status === 401) {
         toast.error('Email or password is incorrect')
       } else {
