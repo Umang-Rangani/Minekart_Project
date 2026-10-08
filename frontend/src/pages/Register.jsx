@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Camera, Mail, Lock, User, Phone, X, UserPlus, ArrowLeft, ShieldCheck, ImagePlus, Maximize2 } from 'lucide-react'
+import { Camera, Mail, Lock, User, Phone, X, UserPlus, ArrowLeft, ShieldCheck, ImagePlus, Maximize2, EyeOff, Eye } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import { uploadFile } from '../utils/uploadFile'
@@ -19,6 +19,8 @@ export default function Register() {
 
   const [showProfilePopup, setShowProfilePopup] = useState(false)
   const [showImageViewer, setShowImageViewer] = useState(false)
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const [signUp, setSignUp] = useState({
     name: '',
@@ -380,8 +382,6 @@ export default function Register() {
         "
       >
         <div className="relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col overflow-hidden rounded-t-[28px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_-20px_60px_rgba(53,28,24,0.20)] backdrop-blur-xl sm:max-h-[calc(100dvh-48px)] sm:rounded-[28px] sm:shadow-[0_30px_90px_rgba(53,28,24,0.18)]">
-        
-
           {/* Header */}
           <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#321715] via-[#64171B] to-[#A51D26] px-3.5 py-3 text-white sm:px-8 sm:py-6">
             <div className="absolute -right-16 -top-24 h-40 w-40 rounded-full bg-white/7 blur-sm sm:h-56 sm:w-56" />
@@ -572,14 +572,23 @@ export default function Register() {
                     <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F] sm:left-3.5 sm:size-4.5" />
 
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       value={signUp.password}
                       onChange={handleChange}
                       required
                       placeholder="Create password"
-                      className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
+                      className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-11 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center text-[#9A857B] transition-colors duration-200 hover:text-[#8E181F] sm:right-3.5"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                    </button>
                   </div>
                 </div>
 

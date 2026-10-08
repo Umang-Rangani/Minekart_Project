@@ -22,7 +22,9 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
 
   const [resendTimer, setResendTimer] = useState(0)
 
-  const isBusy = step !== 'start' || otpLoading || verifyLoading || resetLoading || resendLoading
+  // const isBusy = otpLoading || verifyLoading || resetLoading || resendLoading
+
+  const isBusy = (step !== 'start' && step !== 'success') || otpLoading || verifyLoading || resetLoading || resendLoading
 
   useEffect(() => {
     onBusyChange?.(isBusy)
@@ -288,33 +290,41 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
                 maxLength={1}
                 value={otp[index] || ''}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '')
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 1)
 
-                  if (!value) return
-
-                  const otpArray = otp.split('')
+                  const otpArray = Array.from({ length: 6 }, (_, i) => otp[i] || '')
                   otpArray[index] = value
 
-                  const newOtp = otpArray.join('').slice(0, 6)
-                  setOtp(newOtp)
+                  setOtp(otpArray.join(''))
 
-                  const nextInput = e.target.parentElement?.children[index + 1]
+                  if (value) {
+                    const nextInput = e.target.parentElement?.children[index + 1]
 
-                  if (nextInput) {
-                    nextInput.focus()
+                    if (nextInput) {
+                      nextInput.focus()
+                    }
                   }
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Backspace' && !otp[index] && index > 0) {
-                    const otpArray = otp.split('')
-                    otpArray[index - 1] = ''
+                  if (e.key === 'Backspace') {
+                    if (otp[index]) {
+                      const otpArray = Array.from({ length: 6 }, (_, i) => otp[i] || '')
+                      otpArray[index] = ''
+                      setOtp(otpArray.join(''))
+                      return
+                    }
 
-                    setOtp(otpArray.join(''))
+                    if (index > 0) {
+                      const otpArray = Array.from({ length: 6 }, (_, i) => otp[i] || '')
+                      otpArray[index - 1] = ''
 
-                    const previousInput = e.target.parentElement?.children[index - 1]
+                      setOtp(otpArray.join(''))
 
-                    if (previousInput) {
-                      previousInput.focus()
+                      const previousInput = e.target.parentElement?.children[index - 1]
+
+                      if (previousInput) {
+                        previousInput.focus()
+                      }
                     }
                   }
                 }}

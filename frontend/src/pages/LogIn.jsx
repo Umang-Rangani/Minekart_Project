@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Lock, Mail, ShieldCheck, UserPlus, X } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, Lock, Mail, ShieldCheck, UserPlus, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 import { axiosInstance } from '../config/axiosConfig'
@@ -15,6 +15,7 @@ export default function LogIn({ onClose }) {
 
   const [loading, setLoading] = useState(false)
   const [showForgotPassword, setShowForgotPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -310,24 +311,7 @@ export default function LogIn({ onClose }) {
                   placeholder="Enter your email"
                   autoComplete="email"
                   disabled={loading}
-                  className="
-                    h-12 w-full
-                    rounded-xl
-                    border border-[#E2D5CC]
-                    bg-[#FFFDFC]
-                    pl-11 pr-4
-                    text-sm text-[#351C18]
-                    outline-none
-                    transition-all duration-200
-                    placeholder:text-[#B09E95]
-                    hover:border-[#D5C2B8]
-                    focus:border-[#A51D26]
-                    focus:bg-white
-                    focus:ring-4
-                    focus:ring-[#A51D26]/5
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
-                  "
+                  className=" h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 disabled:cursor-not-allowed disabled:opacity-60 "
                 />
               </div>
             </div>
@@ -336,44 +320,28 @@ export default function LogIn({ onClose }) {
               <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Password</label>
 
               <div className="group relative">
-                <Lock
-                  size={18}
-                  className="
-                    absolute left-3.5 top-1/2
-                    -translate-y-1/2
-                    text-[#9A857B]
-                    transition-colors duration-200
-                    group-focus-within:text-[#8E181F]
-                  "
-                />
+                <Lock size={18} className=" absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F] " />
 
                 <input
                   onChange={changeHandle}
                   value={logIn.password}
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   placeholder="Enter your password"
                   autoComplete="current-password"
                   disabled={loading}
-                  className="
-                    h-12 w-full
-                    rounded-xl
-                    border border-[#E2D5CC]
-                    bg-[#FFFDFC]
-                    pl-11 pr-4
-                    text-sm text-[#351C18]
-                    outline-none
-                    transition-all duration-200
-                    placeholder:text-[#B09E95]
-                    hover:border-[#D5C2B8]
-                    focus:border-[#A51D26]
-                    focus:bg-white
-                    focus:ring-4
-                    focus:ring-[#A51D26]/5
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
-                  "
+                  className=" h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-12 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 disabled:cursor-not-allowed disabled:opacity-60 "
                 />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  disabled={loading}
+                  className=" absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center justify-center text-[#9A857B] transition-colors duration-200 hover:text-[#8E181F] disabled:cursor-not-allowed disabled:opacity-50 "
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
 
               <div className="mt-2 flex justify-end">
