@@ -397,7 +397,7 @@ const emailLayout = ({ preheader = '', eyebrow = '', title, children, footerNote
                               style="display:block;text-decoration:none;"
                             >
                               <img
-                                src="https://minekart.vercel.app/cart_image.jpg"
+                                src="https://minekart.vercel.app/email_cart_image.jpg"
                                 width="42"
                                 height="42"
                                 class="logo"
