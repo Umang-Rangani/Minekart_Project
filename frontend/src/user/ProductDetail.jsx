@@ -390,11 +390,12 @@ export default function ProductDetail() {
         {/* MAIN PRODUCTS */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[53%_47%]">
           {/* LEFT - IMAGES */}
-          <div className={`self-start overflow-hidden rounded-2xl border shadow-[0_5px_20px_rgba(73,54,49,0.06)] lg:sticky lg:top-28 ${isDisabled ? 'border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#E8DDD4] bg-white'}`}>
-            <div className="p-3 sm:p-4">
-              <div className="flex flex-col gap-4 sm:flex-row">
+
+          <div className={`self-start overflow-hidden rounded-2xl border shadow-[0_5px_20px_rgba(73,54,49,0.06)] max-sm:h-140 lg:sticky lg:top-28 ${isDisabled ? 'border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#E8DDD4] bg-white'}`}>
+            <div className="p-3 sm:p-4 max-sm:h-full">
+              <div className="flex flex-col gap-4 sm:flex-row max-sm:h-full max-sm:gap-3">
                 {/* THUMBNAILS */}
-                <div className="order-2 flex gap-3 overflow-x-auto px-1 pb-1 sm:order-1 sm:w-19 sm:flex-col sm:overflow-visible sm:px-0 sm:pb-0">
+                <div className="relative z-40 order-2 flex shrink-0 gap-3 overflow-x-auto px-1 pb-1 touch-pan-x overscroll-x-contain scrollbar-thin scrollbar-thumb-[#CDAFA4] scrollbar-track-[#F7EEE7] hover:scrollbar-thumb-[#A51D26] sm:order-1 sm:w-19 sm:flex-col sm:overflow-visible sm:px-0 sm:pb-0 max-sm:shrink-0 max-sm:[&::-webkit-scrollbar]:h-1.5 max-sm:[&::-webkit-scrollbar-track]:rounded-full max-sm:[&::-webkit-scrollbar-track]:bg-[#F7EEE7] max-sm:[&::-webkit-scrollbar-thumb]:rounded-full max-sm:[&::-webkit-scrollbar-thumb]:bg-[#CDAFA4] max-sm:hover:[&::-webkit-scrollbar-thumb]:bg-[#A51D26]">
                   {product.images?.map((image, index) => {
                     const selected = selectedImage === image
 
@@ -403,27 +404,37 @@ export default function ProductDetail() {
                         key={index}
                         type="button"
                         onMouseEnter={() => setSelectedImage(image)}
+                        onPointerDown={() => setSelectedImage(image)}
                         onClick={() => setSelectedImage(image)}
-                        className={`group relative flex h-17 w-17 shrink-0 items-center justify-center overflow-hidden rounded-xl border p-2.5 transition-all duration-200 ${
+                        className={`group relative flex h-17 w-17 shrink-0 touch-manipulation select-none items-center justify-center overflow-hidden rounded-xl border p-2.5 transition-all duration-200 ${
                           isDisabled ? 'cursor-not-allowed border-[#D9D9D9] bg-[#F3F3F3]' : selected ? 'border-[#A51D26] bg-[#FFF8F5] shadow-sm ring-1 ring-[#A51D26]/20' : 'border-[#E8DDD4] bg-white hover:border-[#CDAFA4] hover:shadow-sm'
                         }`}
                       >
-                        <img src={getImageUrl(image)} alt={`${product.productName} ${index + 1}`} className={`h-full w-full object-contain transition-transform duration-300 ${isDisabled ? 'grayscale opacity-50' : 'group-hover:scale-105'}`} />
+                        <img
+                          src={getImageUrl(image)}
+                          alt={`${product.productName} ${index + 1}`}
+                          draggable="false"
+                          className={`pointer-events-none h-full w-full object-contain transition-transform duration-300 ${isDisabled ? 'grayscale opacity-50' : 'group-hover:scale-105'}`}
+                        />
 
-                        {!isDisabled && selected && <span className="absolute bottom-0.5 left-1/2 h-0.5 w-7 -translate-x-1/2 rounded-full bg-[#A51D26]" />}
+                        {!isDisabled && selected && <span className="pointer-events-none absolute bottom-0.5 left-1/2 h-0.5 w-7 -translate-x-1/2 rounded-full bg-[#A51D26]" />}
                       </button>
                     )
                   })}
                 </div>
 
                 {/* MAIN IMAGE */}
-                <div className={`relative order-1 flex min-h-95 flex-1 items-center justify-center overflow-hidden rounded-xl p-5 sm:min-h-127 sm:p-8 ${isDisabled ? 'bg-[#EEEEEE]' : 'bg-white'}`}>
+                <div className={`relative order-1 flex min-h-95 flex-1 items-center justify-center overflow-hidden rounded-xl p-5 sm:min-h-127 sm:p-8 max-sm:min-h-0 max-sm:flex-1 ${isDisabled ? 'bg-[#EEEEEE]' : 'bg-white'}`}>
                   <div className={`pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full ${isDisabled ? 'bg-[#D9D9D9]' : 'bg-[#A51D26]/3'}`} />
 
                   <div className={`pointer-events-none absolute -bottom-24 -left-20 h-56 w-56 rounded-full ${isDisabled ? 'bg-[#E2E2E2]' : 'bg-[#D4A373]/[0.035]'}`} />
 
                   {selectedImage ? (
-                    <img src={getImageUrl(selectedImage)} alt={product.productName} className={`relative z-10 max-h-118 w-full object-contain transition-transform duration-500 ${isDisabled ? 'grayscale opacity-50' : 'hover:scale-[1.035]'}`} />
+                    <img
+                      src={getImageUrl(selectedImage)}
+                      alt={product.productName}
+                      className={`relative z-10 max-h-118 w-full object-contain transition-transform duration-500 max-sm:max-h-full ${isDisabled ? 'grayscale opacity-50' : 'hover:scale-[1.035]'}`}
+                    />
                   ) : (
                     <div className="flex flex-col items-center justify-center text-[#888888]">
                       <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E5E5E5]">
