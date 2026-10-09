@@ -1,15 +1,298 @@
-// 
-  
+         {/* DELIVERY ADDRESSES */}
+            <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
+              {/* ADDRESS HEADER */}
+              <div className="flex items-center justify-between gap-2 border-b border-[#EEE5DF] px-3.5 py-3 sm:px-5 sm:py-3.5">
+                <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-sm sm:h-9 sm:w-9">
+                    <MapPin size={16} />
+                  </div>
 
-// 620
+                  <div className="min-w-0">
+                    <h3 className="truncate text-sm font-extrabold text-[#351C18] sm:text-base">Delivery Addresses</h3>
+                    <p className="mt-0.5 truncate text-[9px] text-[#806C63] sm:text-xs">{addresses.length > 0 ? `${addresses.length} saved address${addresses.length > 1 ? 'es' : ''}` : 'Manage your saved delivery addresses'}</p>
+                  </div>
+                </div>
 
+                {!showAddressForm && (
+                  <button
+                    type="button"
+                    onClick={openAddAddress}
+                    className="inline-flex h-8 shrink-0 items-center gap-1 rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] px-2.5 text-[9px] font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:h-9 sm:gap-1.5 sm:px-3 sm:text-[10px]"
+                  >
+                    <Plus size={13} />
+                    <span className="hidden sm:inline">Add New Address</span>
+                    <span className="sm:hidden">Add</span>
+                  </button>
+                )}
+              </div>
 
-// 380
-   .section-title {
-          font-size: 15px !important;
-        }
+              {/* ADDRESS LIST */}
+              {!showAddressForm && (
+                <div className="space-y-3 p-3 sm:p-5">
+                  {addressLoading ? (
+                    <div className="animate-pulse rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-4 sm:p-5">
+                      <div className="flex gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-[#E2D5CC]" />
+                        <div className="flex-1">
+                          <div className="h-3 w-32 rounded bg-[#E2D5CC]" />
+                          <div className="mt-2 h-3 w-48 max-w-full rounded bg-[#E8DDD4]" />
+                          <div className="mt-4 h-8 rounded bg-[#E8DDD4]" />
+                        </div>
+                      </div>
+                    </div>
+                  ) : addresses.length === 0 ? (
+                    <div className="rounded-xl border border-dashed border-[#D8C8BF] bg-[#FBF7F2] p-6 text-center sm:p-8">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#F7EEE7] text-[#8E181F]">
+                        <MapPin size={22} />
+                      </div>
 
+                      <p className="mt-3 text-sm font-extrabold text-[#351C18]">No saved addresses</p>
+                      <p className="mt-1 text-xs text-[#806C63]">Add an address for faster checkout.</p>
 
-          .benefit-card {
-          padding: 10px !important;
-        }
+                      <button type="button" onClick={openAddAddress} className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[#7D171C] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#A51D26]">
+                        <Plus size={14} />
+                        Add Address
+                      </button>
+                    </div>
+                  ) : (
+                    addresses.map((address) => {
+                      const isDefault = address.isDefault
+
+                      return (
+                        <div
+                          key={address._id}
+                          className={`rounded-xl border p-3 transition-all duration-300 sm:p-4 ${
+                            isDefault ? 'border-[#D9B7AF] bg-[#FFF8F6] shadow-[0_3px_12px_rgba(125,23,28,0.05)]' : 'border-[#E8DDD4] bg-white hover:border-[#D8C8BF] hover:bg-[#FBF7F2]'
+                          }`}
+                        >
+                          <div className="flex items-start gap-2.5 sm:gap-3">
+                            <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 ${isDefault ? 'bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
+                              <MapPin size={16} />
+                            </div>
+
+                            <div className="min-w-0 flex-1">
+                              {/* ADDRESS NAME */}
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <p className="text-xs font-extrabold text-[#351C18] sm:text-sm">{address.fullName}</p>
+
+                                <span className="rounded-md bg-[#F7EEE7] px-2 py-0.5 text-[8px] font-bold text-[#8E181F] sm:text-[9px]">{address.addressType}</span>
+
+                                {isDefault && (
+                                  <span className="inline-flex items-center gap-1 rounded-md bg-[#EAF6EF] px-2 py-0.5 text-[8px] font-bold text-[#3E8B62] sm:text-[9px]">
+                                    <CheckCircle2 size={10} />
+                                    Default
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* PHONE */}
+                              <div className="mt-2 flex items-center gap-1.5 text-[10px] font-semibold text-[#806C63]">
+                                <Phone size={11} />
+                                {address.phone}
+                              </div>
+
+                              {/* ADDRESS TEXT */}
+                              <p className="mt-2 text-[11px] leading-5 text-[#67544D] sm:text-xs">
+                                {address.addressLine}, {address.city}, {address.state} - {address.pincode}
+                              </p>
+
+                              {/* LANDMARK */}
+                              {address.landmark && (
+                                <div className="mt-1.5 flex items-center gap-1 text-[9px] text-[#9A857B] sm:text-[10px]">
+                                  <Navigation size={10} />
+                                  <span>Near {address.landmark}</span>
+                                </div>
+                              )}
+
+                              {/* ADDRESS ACTIONS */}
+                              <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#EEE5DF] pt-3">
+                                <button
+                                  type="button"
+                                  onClick={() => startEditAddress(address)}
+                                  className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-[#E2D5CC] bg-white px-3 py-1.5 text-[10px] font-bold text-[#67544D] transition-all hover:border-[#BFA49A] hover:bg-[#F7EEE7] hover:text-[#8E181F]"
+                                >
+                                  <Pencil size={12} />
+                                  Edit
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteAddress(address._id)}
+                                  disabled={addressDeleting}
+                                  className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-[#E7C8C8] bg-white px-3 py-1.5 text-[10px] font-bold text-[#A51D26] transition hover:bg-[#FCEBEC] disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                  <X size={12} />
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              )}
+
+              {/* ADDRESS FORM */}
+              {showAddressForm && (
+                <form onSubmit={editingAddressId ? handleEditAddress : handleAddAddress} className="space-y-4 p-3 sm:p-5">
+                  {/* FORM HEADER */}
+                  <div className="flex items-center justify-between border-b border-[#EEE5DF] pb-3 sm:pb-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="h-4 w-1 rounded-full bg-[#8E181F]" />
+                        <h3 className="text-sm font-extrabold text-[#351C18]">{editingAddressId ? 'Edit Address' : 'Add New Address'}</h3>
+                      </div>
+
+                      <p className="mt-1 ml-3 text-[9px] text-[#806C63] sm:text-[10px]">{editingAddressId ? 'Update your delivery details' : 'Add a new delivery address'}</p>
+                    </div>
+
+                    <button type="button" onClick={closeAddressForm} aria-label="Close address form" className="flex h-8 w-8 items-center justify-center rounded-lg text-[#806C63] transition hover:bg-[#F7EEE7] hover:text-[#8E181F]">
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  {/* FORM FIELDS */}
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {formFields.slice(0, 2).map((field) => {
+                      const Icon = field.icon
+
+                      return (
+                        <div key={field.name}>
+                          <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">{field.label}</label>
+
+                          <div className="relative">
+                            <Icon size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+                            <input
+                              type={field.type || 'text'}
+                              name={field.name}
+                              value={addressForm[field.name]}
+                              onChange={handleAddressChange}
+                              placeholder={field.placeholder}
+                              required={field.required}
+                              className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] pl-9 pr-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                            />
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* ADDRESS */}
+                  <div>
+                    <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">Address</label>
+
+                    <div className="relative">
+                      <MapPin size={15} className="absolute left-3 top-3 text-[#A89890]" />
+                      <textarea
+                        name="addressLine"
+                        value={addressForm.addressLine}
+                        onChange={handleAddressChange}
+                        placeholder="House no., building, street, area"
+                        rows={2}
+                        required
+                        className="w-full resize-none rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] py-2.5 pl-9 pr-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* CITY / STATE / PINCODE */}
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    {formFields.slice(2, 5).map((field) => {
+                      const Icon = field.icon
+
+                      return (
+                        <div key={field.name}>
+                          <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">{field.label}</label>
+
+                          <div className="relative">
+                            <Icon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+                            <input
+                              type="text"
+                              name={field.name}
+                              value={addressForm[field.name]}
+                              onChange={handleAddressChange}
+                              placeholder={field.placeholder}
+                              required={field.required}
+                              className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] pl-9 pr-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                            />
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* LANDMARK */}
+                  <div>
+                    <label className="mb-1.5 block text-[11px] font-bold text-[#67544D]">
+                      Landmark
+                      <span className="ml-1 font-normal text-[#A89890]">(Optional)</span>
+                    </label>
+
+                    <div className="relative">
+                      <Navigation size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89890]" />
+                      <input
+                        type="text"
+                        name="landmark"
+                        value={addressForm.landmark}
+                        onChange={handleAddressChange}
+                        placeholder="Nearby landmark"
+                        className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] pl-9 pr-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* ADDRESS TYPE */}
+                  <div>
+                    <label className="mb-2 block text-[11px] font-bold text-[#67544D]">Address Type</label>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      {addressTypeData.map(({ name, icon: Icon }) => {
+                        const isActive = addressForm.addressType === name
+
+                        return (
+                          <button
+                            key={name}
+                            type="button"
+                            onClick={() =>
+                              setAddressForm((prev) => ({
+                                ...prev,
+                                addressType: name,
+                              }))
+                            }
+                            className={`inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border px-2 py-2 text-[10px] font-bold transition-all duration-200 sm:px-3.5 sm:text-[11px] ${
+                              isActive ? 'border-[#8E181F] bg-[#F7EEE7] text-[#8E181F] shadow-sm' : 'border-[#E2D5CC] bg-white text-[#806C63] hover:border-[#CDAFA4] hover:bg-[#FBF7F2]'
+                            }`}
+                          >
+                            <Icon size={14} />
+                            {name}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* FORM BUTTONS */}
+                  <div className="flex flex-col-reverse gap-2 border-t border-[#EEE5DF] pt-3 sm:flex-row sm:justify-end sm:pt-4">
+                    <button
+                      type="button"
+                      onClick={closeAddressForm}
+                      className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-[11px] font-bold text-[#67544D] transition hover:bg-[#F7EEE7] sm:min-h-0"
+                    >
+                      <X size={14} />
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={addressSaving}
+                      className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-[11px] font-bold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 sm:min-h-0"
+                    >
+                      <Save size={14} />
+                      {addressSaving ? 'Saving...' : editingAddressId ? 'Update Address' : 'Save Address'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </section>
