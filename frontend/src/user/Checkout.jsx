@@ -369,7 +369,7 @@ export default function Checkout() {
 
                     <p className="mt-2 text-[11px] font-semibold text-[#67544D]">No delivery address found</p>
 
-                    <Link to="/profile" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-[#F7EEE7] px-3 py-2 text-[10px] font-bold text-[#8E181F]">
+                    <Link to="/profile?fromcheckout=true" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-[#F7EEE7] px-3 py-2 text-[10px] font-bold text-[#8E181F]">
                       <Plus size={13} />
                       Add Address
                     </Link>
@@ -603,6 +603,16 @@ export default function Checkout() {
                 )}
 
                 {/* PLACE ORDER */}
+
+                {(!selectedAddress || addresses.length === 0) && (
+                  <p className="mt-3 text-center text-sm text-red-600">
+                    Please add an address to proceed.{' '}
+                    <Link to="/profile?fromcheckout=true" className="font-semibold text-[#7D171C] underline underline-offset-2 hover:text-[#A51D26]">
+                      Add Address
+                    </Link>
+                  </p>
+                )}
+
                 <button
                   type="button"
                   onClick={handlePlaceOrder}

@@ -6,13 +6,13 @@ import { axiosInstance } from '../config/axiosConfig'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/userProvider'
 
-export default function ForgotPassword({ onClose, onBackToLogin }) {
+export default function ForgotPassword({email: initialEmail = '', onClose, onBackToLogin }) {
   const [step, setStep] = useState('email')
   const { getCurrentUser } = useUser()
 
   const navigate = useNavigate()
 
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(initialEmail)
   const [otp, setOtp] = useState('')
   const [resetToken, setResetToken] = useState('')
 

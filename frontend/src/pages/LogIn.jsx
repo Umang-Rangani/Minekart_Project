@@ -121,7 +121,7 @@ export default function LogIn({ onClose }) {
   }
 
   if (showForgotPassword) {
-    return <ForgotPassword onClose={closeHandle} onBackToLogin={backToLoginHandle} />
+    return <ForgotPassword email={logIn.email} onClose={closeHandle} onBackToLogin={backToLoginHandle} />
   }
 
   return (

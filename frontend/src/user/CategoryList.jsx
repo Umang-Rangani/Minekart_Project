@@ -13,7 +13,7 @@ export default function CategoryList() {
     try {
       setLoading(true)
 
-      const res = await axiosInstance.get('/category')
+      const res = await axiosInstance.get('/category/with-products')
       setCategories(res.data)
     } catch (error) {
       console.log('Get Categories Error:', error.response?.data || error.message)
@@ -105,20 +105,6 @@ export default function CategoryList() {
                   </>
                 )
 
-                {
-                  /* DISABLED CATEGORY */
-                }
-                if (isDisabled) {
-                  return (
-                    <div key={category._id} aria-disabled="true" className="group relative flex min-w-18 shrink-0 cursor-not-allowed flex-col items-center justify-center gap-1 px-2 text-[#888888] sm:min-w-24 sm:gap-1.5 sm:px-4">
-                      {categoryContent}
-                    </div>
-                  )
-                }
-
-                {
-                  /* ACTIVE CATEGORY */
-                }
                 return (
                   <Link
                     key={category._id}

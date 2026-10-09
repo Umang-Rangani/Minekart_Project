@@ -389,24 +389,6 @@ const emailLayout = ({ preheader = '', eyebrow = '', title, children, footerNote
                       >
                         <tr>
 
-                          <td width="46" valign="middle">
-
-                            <a
-                              href="https://minekart.vercel.app/"
-                              target="_blank"
-                              style="display:block;text-decoration:none;"
-                            >
-                              <img
-                                src="https://minekart.vercel.app/email_cart_image.jpg"
-                                width="42"
-                                height="42"
-                                class="logo"
-                                style="width:42px;height:42px;border-radius:11px;object-fit:contain;"
-                              >
-                            </a>
-
-                          </td>
-
                           <td
                             valign="middle"
                             style="padding-left:10px;"

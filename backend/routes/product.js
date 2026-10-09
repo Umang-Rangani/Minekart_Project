@@ -2,6 +2,7 @@ const express = require('express')
 const Product = require('../model/product')
 const SubCategory = require('../model/subcategory')
 const { default: mongoose } = require('mongoose')
+const Category = require('../model/category')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -470,26 +471,41 @@ router.get('/category/:categoryId', async (req, res) => {
   try {
     const { categoryId } = req.params
 
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid category ID',
+      })
+    }
+
+    const category = await Category.findById(categoryId).select('categoryName categoryImage status')
+
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: 'Category not found',
+      })
+    }
+
+    // Inactive category na badha products batavva
     const products = await Product.find({
       category: categoryId,
-      status: 'Active',
     })
-      .populate('category', 'categoryName')
+      .populate('category', 'categoryName categoryImage status')
       .populate('subCategory', 'subCategoryName')
       .populate('brand', 'brandName brandLogo')
-      .sort({
-        createdAt: -1,
-      })
+      .sort({ createdAt: -1 })
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
+      categoryStatus: category.status,
       count: products.length,
       data: products,
     })
   } catch (error) {
-    console.log('GET Category Products Error:', error)
+    console.error('GET Category Products Error:', error)
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to get category products',
       error: error.message,
@@ -502,11 +518,28 @@ router.get('/category/:categoryId/subcategory/:subCategoryName', async (req, res
   try {
     const { categoryId, subCategoryName } = req.params
 
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid category ID',
+      })
+    }
+
+    const category = await Category.findById(categoryId).select('status')
+
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: 'Category not found',
+      })
+    }
+
     const decodedName = decodeURIComponent(subCategoryName)
+    const escapedName = decodedName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
     const subCategory = await SubCategory.findOne({
       subCategoryName: {
-        $regex: `^${decodedName}$`,
+        $regex: `^${escapedName}$`,
         $options: 'i',
       },
     })
@@ -514,6 +547,7 @@ router.get('/category/:categoryId/subcategory/:subCategoryName', async (req, res
     if (!subCategory) {
       return res.status(200).json({
         success: true,
+        categoryStatus: category.status,
         count: 0,
         data: [],
       })
@@ -522,22 +556,22 @@ router.get('/category/:categoryId/subcategory/:subCategoryName', async (req, res
     const products = await Product.find({
       category: categoryId,
       subCategory: subCategory._id,
-      status: 'Active',
     })
-      .populate('category', 'categoryName')
+      .populate('category', 'categoryName categoryImage status')
       .populate('subCategory', 'subCategoryName')
       .populate('brand', 'brandName brandLogo')
       .sort({ createdAt: -1 })
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
+      categoryStatus: category.status,
       count: products.length,
       data: products,
     })
   } catch (error) {
-    console.log('GET SubCategory Products Error:', error)
+    console.error('GET SubCategory Products Error:', error)
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Failed to get subcategory products',
       error: error.message,
@@ -580,6 +614,7 @@ router.get('/offers', async (req, res) => {
   try {
     const products = await Product.find({
       isOffer: true,
+      stock: { $gt: 0 },
     })
       .populate('category', 'categoryName')
       .populate('subCategory', 'subCategoryName')
@@ -661,7 +696,16 @@ router.get('/related/:subCategoryId/:productId', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const data = await Product.findById(req.params.id).populate('category', 'categoryName').populate('subCategory', 'subCategoryName').populate('brand', 'brandName')
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid product ID',
+      })
+    }
+
+    const data = await Product.findById(id).populate('category', 'categoryName categoryImage status').populate('subCategory', 'subCategoryName').populate('brand', 'brandName')
 
     if (!data) {
       return res.status(404).json({
@@ -670,12 +714,22 @@ router.get('/:id', async (req, res) => {
       })
     }
 
-    res.status(200).json({
+    // Inactive product athva inactive category hoy to detail block karo
+    if (data.status !== 'Active' || data.category?.status === 'Inactive') {
+      return res.status(404).json({
+        success: false,
+        message: 'This product is currently unavailable',
+      })
+    }
+
+    return res.status(200).json({
       success: true,
       data,
     })
   } catch (error) {
-    res.status(500).json({
+    console.error('GET Product Error:', error)
+
+    return res.status(500).json({
       success: false,
       message: 'Failed to get product',
       error: error.message,

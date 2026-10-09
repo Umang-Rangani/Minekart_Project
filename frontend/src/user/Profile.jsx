@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { MapPin, Mail, Plus, CheckCircle2, User, Phone, Building2, ShieldCheck, Navigation, Home, Pencil, BriefcaseBusiness, MapPinned, X, Save, ShoppingCart, ChevronRight, Package, Camera, ArrowRight } from 'lucide-react'
 import { useUser } from '../context/userProvider'
 import { axiosInstance } from '../config/axiosConfig'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
 
@@ -30,6 +30,10 @@ export default function Profile() {
   const [editingAddressId, setEditingAddressId] = useState(null)
   const [addressDeleting, setAddressDeleting] = useState(false)
   const [showProfileImageViewer, setShowProfileImageViewer] = useState(false)
+
+  const location = useLocation()
+
+  const fromCheckout = new URLSearchParams(location.search).get('fromcheckout') === 'true'
 
   const cartCount = cart?.totalQuantity || cart?.items?.length || 0
   const items = [{ title: 'Profile', link: null }]
@@ -121,12 +125,16 @@ export default function Profile() {
     try {
       setAddressSaving(true)
       const res = await axiosInstance.post('/address', addressForm)
-
       if (res.data.success) {
         const newAddress = res.data.data
+
         setAddresses((prev) => [newAddress, ...prev])
         resetAddressForm()
         setShowAddressForm(false)
+
+        if (fromCheckout) {
+          navigate('/checkout')
+        }
       }
     } catch (error) {
       console.log('Add Address Error:', error.response?.data || error.message)

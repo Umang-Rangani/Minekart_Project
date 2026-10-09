@@ -53,13 +53,43 @@ router.get('/', authMiddleware, async (req, res) => {
 })
 
 // ! Add Product To Cart
+
+const populateCart = async (cart) => {
+  await cart.populate({
+    path: 'items.productId',
+    select: 'productName images price discountPrice brand stock',
+    populate: {
+      path: 'brand',
+      select: 'brandName',
+    },
+  })
+
+  return cart
+}
+
+const calculateCartTotals = (cart) => {
+  cart.totalQuantity = cart.items.reduce(
+    (total, item) => total + item.quantity,
+    0,
+  )
+
+  cart.subtotal = cart.items.reduce(
+    (total, item) => total + item.totalPrice,
+    0,
+  )
+
+  cart.tax = 0
+  cart.totalAmount = cart.subtotal + cart.tax
+}
+
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.user
+    
+    const { productId, size = null } = req.body
 
-    const { productId, size = null, quantity = 1 } = req.body
+    const quantity = Number(req.body.quantity ?? 1)
 
-    // Validation
     if (!productId) {
       return res.status(400).json({
         success: false,
@@ -67,15 +97,28 @@ router.post('/', authMiddleware, async (req, res) => {
       })
     }
 
-    if (quantity < 1) {
+    if (
+      typeof productId !== 'string' ||
+      !/^[a-f\d]{24}$/i.test(productId)
+    ) {
       return res.status(400).json({
         success: false,
-        message: 'Quantity must be at least 1',
+        message: 'Invalid product ID',
       })
     }
 
-    // Get Product
+    if (
+      !Number.isSafeInteger(quantity) ||
+      quantity < 1
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity must be a positive integer',
+      })
+    }
+
     const product = await Product.findById(productId)
+      .select('productName price discountPrice stock brand images')
 
     if (!product) {
       return res.status(404).json({
@@ -84,7 +127,16 @@ router.post('/', authMiddleware, async (req, res) => {
       })
     }
 
-    // Check Stock
+    if (
+      !Number.isFinite(product.stock) ||
+      product.stock < 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Product stock is unavailable',
+      })
+    }
+
     if (quantity > product.stock) {
       return res.status(400).json({
         success: false,
@@ -92,55 +144,43 @@ router.post('/', authMiddleware, async (req, res) => {
       })
     }
 
-    // Product Price
     const price = product.price
+    const discountPrice = product.discountPrice ?? product.price
 
-    const discountPrice = product.discountPrice || product.price
-
-    // Find User Cart
-    let cart = await Cart.findOne({
-      userId,
-    })
-
-    // If Cart doesn't exist
-    if (!cart) {
-      const totalPrice = discountPrice * quantity
-
-      cart = await Cart.create({
-        userId,
-
-        items: [
-          {
-            productId,
-            size,
-            price,
-            discountPrice,
-            quantity,
-            totalPrice,
-          },
-        ],
-
-        totalQuantity: quantity,
-        subtotal: totalPrice,
-        tax: 0,
-        totalAmount: totalPrice,
-      })
-
-      return res.status(201).json({
-        success: true,
-        message: 'Product added to cart',
-        data: cart,
+    if (
+      !Number.isFinite(price) ||
+      !Number.isFinite(discountPrice) ||
+      price < 0 ||
+      discountPrice < 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid product price',
       })
     }
 
-    // Check Existing Product + Size
-    const existingItem = cart.items.find((item) => item.productId.toString() === productId.toString() && item.size === size)
+    let cart = await Cart.findOne({ userId })
 
-    // Existing Item
+    if (!cart) {
+      cart = new Cart({
+        userId,
+        items: [],
+        totalQuantity: 0,
+        subtotal: 0,
+        tax: 0,
+        totalAmount: 0,
+      })
+    }
+
+    const existingItem = cart.items.find(
+      (item) =>
+        item.productId.toString() === productId &&
+        (item.size ?? null) === size,
+    )
+
     if (existingItem) {
       const newQuantity = existingItem.quantity + quantity
 
-      // Check Stock
       if (newQuantity > product.stock) {
         return res.status(400).json({
           success: false,
@@ -149,59 +189,36 @@ router.post('/', authMiddleware, async (req, res) => {
       }
 
       existingItem.quantity = newQuantity
-
       existingItem.price = price
       existingItem.discountPrice = discountPrice
-
       existingItem.totalPrice = discountPrice * newQuantity
-    }
-
-    // New Item
-    else {
-      const totalPrice = discountPrice * quantity
-
+    } else {
       cart.items.push({
         productId,
         size,
         price,
         discountPrice,
         quantity,
-        totalPrice,
+        totalPrice: discountPrice * quantity,
       })
     }
 
-    // Calculate Cart Summary
-    cart.totalQuantity = cart.items.reduce((total, item) => total + item.quantity, 0)
-
-    cart.subtotal = cart.items.reduce((total, item) => total + item.totalPrice, 0)
-
-    cart.tax = 0
-
-    cart.totalAmount = cart.subtotal + cart.tax
+    calculateCartTotals(cart)
 
     await cart.save()
+    await populateCart(cart)
 
-    await cart.populate({
-      path: 'items.productId',
-      select: 'productName images price discountPrice brand stock',
-      populate: {
-        path: 'brand',
-        select: 'brandName',
-      },
-    })
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Product added to cart',
       data: cart,
     })
   } catch (error) {
-    console.log('Add To Cart Error:', error)
+    console.error('Add To Cart Error:', error)
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Internal server error',
-      error: error.message,
     })
   }
 })

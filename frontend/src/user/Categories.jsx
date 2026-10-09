@@ -14,7 +14,7 @@ export default function Categories() {
     try {
       setLoading(true)
 
-      const res = await axiosInstance.get('/category')
+      const res = await axiosInstance.get('/category/with-products')
       setCategories(res.data)
     } catch (error) {
       console.log('Get Categories Error:', error.response?.data || error.message)
@@ -118,7 +118,7 @@ export default function Categories() {
                   /* CARD */
                 }
                 const cardClass = isDisabled
-                  ? 'group relative min-h-62 cursor-not-allowed overflow-hidden rounded-xl border border-[#D9D9D9] bg-[#F3F3F3] p-3.5 text-[#888888] shadow-[0_3px_12px_rgba(0,0,0,0.04)] sm:min-h-65 sm:p-4'
+                  ? 'group relative min-h-62  overflow-hidden rounded-xl border border-[#D9D9D9] bg-[#F3F3F3] p-3.5 text-[#888888] shadow-[0_3px_12px_rgba(0,0,0,0.04)] sm:min-h-65 sm:p-4'
                   : 'group relative min-h-62 overflow-hidden rounded-xl border border-[#E8DDD4] bg-[#FFFDFC] p-3.5 shadow-[0_3px_12px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:bg-white hover:shadow-[0_10px_24px_rgba(73,54,49,0.11)] sm:min-h-65 sm:p-4'
 
                 {
@@ -145,54 +145,28 @@ export default function Categories() {
                   ? 'mt-4 flex items-center gap-1 text-[10px] font-bold text-[#999999] sm:text-[11px]'
                   : 'mt-4 flex items-center gap-1 text-[10px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-2 sm:text-[11px]'
 
-                return isDisabled ? (
-                  /*  INACTIVE CATEGORY  */
-                  <div key={category._id} className={cardClass} aria-disabled="true">
-                    {/* INACTIVE BADGE */}
-                    <div className="absolute right-3 top-3 rounded-md bg-[#E5E5E5] px-2 py-1 text-[8px] font-extrabold uppercase tracking-wide text-[#888888]">Inactive</div>
+                return (
+                  <Link key={category._id} to={`/category/${category._id}/products`} className={cardClass}>
+                    {isDisabled && <div className="absolute right-3 top-3 rounded-md bg-[#E5E5E5] px-2 py-1 text-[8px] font-extrabold uppercase tracking-wide text-[#888888] ">Inactive</div>}
 
-                    {/* CATEGORY IMAGE */}
                     <div className={iconClass}>
-                      {category.categoryImage ? <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className="h-full w-full object-contain p-1 grayscale opacity-40" /> : <Image size={32} strokeWidth={1.8} />}
+                      {category.categoryImage ? (
+                        <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className={`h-full w-full object-contain p-1 ${isDisabled ? 'grayscale opacity-40' : ''}`} />
+                      ) : (
+                        <Image size={32} strokeWidth={1.8} />
+                      )}
                     </div>
 
-                    {/* NAME */}
                     <h2 className={nameClass}>{category.categoryName}</h2>
 
-                    {/* DESCRIPTION */}
                     <p className={descriptionClass}>{category.description || 'Explore products in this category'}</p>
 
-                    {/* DISABLED ACTION */}
                     <div className={actionClass}>
-                      <span>Currently Unavailable</span>
-
+                      <span>{isDisabled ? 'View Unavailable Products' : 'View Products'}</span>
                       <ArrowRight size={13} strokeWidth={2.3} />
                     </div>
 
-                    {/* DECORATIVE ICON */}
-                    <Image size={80} strokeWidth={1} className="absolute -bottom-5 -right-5 text-[#999999]/10" />
-                  </div>
-                ) : (
-                  /*  ACTIVE CATEGORY  */
-                  <Link key={category._id} to={`/category/${category._id}/products`} className={cardClass}>
-                    {/* CATEGORY IMAGE */}
-                    <div className={iconClass}>{category.categoryImage ? <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className="h-full w-full object-contain p-1" /> : <Image size={32} strokeWidth={1.8} />}</div>
-
-                    {/* NAME */}
-                    <h2 className={nameClass}>{category.categoryName}</h2>
-
-                    {/* DESCRIPTION */}
-                    <p className={descriptionClass}>{category.description || 'Explore products in this category'}</p>
-
-                    {/* VIEW PRODUCTS */}
-                    <div className={actionClass}>
-                      <span>View Products</span>
-
-                      <ArrowRight size={13} strokeWidth={2.3} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-                    </div>
-
-                    {/* DECORATIVE ICON */}
-                    <Image size={80} strokeWidth={1} className="absolute -bottom-5 -right-5 text-[#A51D26]/5 transition-transform duration-500 group-hover:scale-110 group-hover:text-[#A51D26]/10" />
+                    <Image size={80} strokeWidth={1} className={`absolute -bottom-5 -right-5 ${isDisabled ? 'text-[#999999]/10' : 'text-[#A51D26]/5 transition-transform duration-500 group-hover:scale-110 group-hover:text-[#A51D26]/10'}`} />
                   </Link>
                 )
               })}

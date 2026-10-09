@@ -34,15 +34,17 @@ var app = express()
 // Vercel terminates TLS in front of the function, needed for secure cookies
 app.set('trust proxy', 1)
 
-app.use(logger(process.env.NODE_ENV === 'production' ? 'tiny' : 'dev'))
+app.use(
+  logger(process.env.NODE_ENV === 'production' ? 'tiny' : 'dev', {
+    skip: (req) => req.method === 'OPTIONS',
+  }),
+)
 
 app.use(
   express.json({
     limit: '10mb',
   }),
 )
-
-
 
 // ${import.meta.env.VITE_API_URL}
 
@@ -57,9 +59,7 @@ app.use(cookieParser())
 
 const defaultOrigins = ['http://localhost:5173', 'https://minekart.vercel.app']
 
-const allowedOrigins = process.env.ALLOWED_ORIGIN
-  ? process.env.ALLOWED_ORIGIN.split(',').map((origin) => origin.trim().replace(/\/$/, ''))
-  : defaultOrigins
+const allowedOrigins = process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN.split(',').map((origin) => origin.trim().replace(/\/$/, '')) : defaultOrigins
 
 app.use(
   cors({

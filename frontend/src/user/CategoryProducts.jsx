@@ -311,7 +311,9 @@ export default function CategoryProducts() {
           //  PRODUCTS
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
             {products.map((product) => {
-              const isInactive = product.status === 'Inactive'
+              const isCategoryInactive = category?.status === 'Inactive'
+
+              const isInactive = product.status === 'Inactive' || isCategoryInactive
 
               const isOutOfStock = product.stock <= 0
 
@@ -332,11 +334,11 @@ export default function CategoryProducts() {
                     )}
 
                     {/* STATUS */}
-                    {isInactive ? (
+                    {isCategoryInactive  ? (
                       <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#E5E5E5] px-2 py-1 text-[8px] font-bold text-[#888888] sm:text-[9px]">Inactive</span>
-                    ) : isOutOfStock ? (
+                    ) : isInactive  ? (
                       <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#E5E5E5] px-2 py-1 text-[8px] font-bold text-[#888888] sm:text-[9px]">Out of Stock</span>
-                    ) : isLowStock ? (
+                    ) : isOutOfStock  ? (
                       <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[8px] font-bold text-[#B87935] sm:text-[9px]">Only {product.stock} left</span>
                     ) : null}
 

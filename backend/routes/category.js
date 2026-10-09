@@ -1,6 +1,7 @@
 var express = require('express')
 const mongoose = require('mongoose')
 const Category = require('../model/category')
+const Product = require('../model/product')
 var router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -22,6 +23,38 @@ router.get('/', async (req, res) => {
     })
   }
 })
+
+// active & inactive
+
+router.get('/with-products', async (req, res) => {
+  try {
+    const availableCategoryIds = await Product.distinct('category', {
+      stock: { $gt: 0 },
+    })
+
+    const categories = await Category.find({
+      _id: { $in: availableCategoryIds },
+    })
+      .select('categoryName categoryImage status createdAt')
+      .sort({ createdAt: 1 })
+      .lean()
+
+    return res.status(200).json({
+      success: true,
+      count: categories.length,
+      data: categories,
+    })
+  } catch (error) {
+    console.log('GET Categories With Products Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to get categories',
+      error: error.message,
+    })
+  }
+})
+
 
 router.get('/:id', async (req, res) => {
   try {
