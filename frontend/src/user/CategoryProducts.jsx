@@ -51,10 +51,8 @@ export default function CategoryProducts() {
     getCategoryProducts()
   }, [id])
 
-  /* SUBCATEGORY NAMES */
   const uniqueNames = [...new Set(allProducts.map((product) => product.subCategory?.subCategoryName).filter(Boolean))]
 
-  /* FILTER BY SUBCATEGORY API */
   const filterBySubCategory = async (subCategoryName) => {
     try {
       setSelectedSubCategory(subCategoryName)
@@ -89,26 +87,22 @@ export default function CategoryProducts() {
     <div className="pb-10">
       <BreadCrumb items={items} />
 
-      <div className="mx-auto w-full pt-5">
-        {/* CATEGORY HEADER */}
+      <div className="mx-auto w-full pt-4 sm:pt-5">
         {!loading && category && (
-          <div className="mb-4 flex min-h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:min-h-17 sm:px-4">
-            <div className="flex min-w-0 items-center gap-2.5">
-              {/* CATEGORY IMAGE */}
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#F7EEE7] text-[#8E181F] shadow-[0_3px_10px_rgba(73,54,49,0.06)] sm:h-10 sm:w-10">
-                {category.categoryImage ? <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className="h-full w-full object-contain " /> : <Package size={18} strokeWidth={1.8} />}
+          <div className="mb-4 flex min-h-14 items-center justify-between gap-2 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-2.5 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:min-h-17 sm:gap-3 sm:px-4">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#F7EEE7] text-[#8E181F] shadow-[0_3px_10px_rgba(73,54,49,0.06)] sm:h-10 sm:w-10">
+                {category.categoryImage ? <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className="h-full w-full object-contain" /> : <Package size={18} strokeWidth={1.8} />}
               </div>
 
-              {/* CATEGORY TEXT */}
               <div className="min-w-0">
-                <h1 className="truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-sm">{category.categoryName} Products</h1>
+                <h1 className="truncate text-[11px] font-extrabold tracking-tight text-[#351C18] sm:text-sm">{category.categoryName} Products</h1>
 
                 <p className="mt-0.5 truncate text-[9px] text-[#806C63] sm:text-[10px]">Explore products in this category</p>
               </div>
             </div>
 
-            {/* PRODUCT COUNT */}
-            <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-2 text-[8px] font-bold text-[#67544D] sm:px-2.5 sm:text-[9px]">
+            <div className="flex h-7 shrink-0 items-center gap-1 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-1.5 text-[8px] font-bold text-[#67544D] sm:h-8 sm:gap-1.5 sm:px-2.5 sm:text-[9px]">
               <ShoppingBag size={12} strokeWidth={2} className="text-[#8E181F]" />
 
               <span>
@@ -118,24 +112,20 @@ export default function CategoryProducts() {
           </div>
         )}
 
-        {/* SUBCATEGORY FILTER */}
         {!loading && uniqueNames.length > 0 && (
-          <div className="mb-5">
-            {/* FILTER LABEL */}
+          <div className="mb-4 sm:mb-5">
             <div className="mb-2 flex items-center gap-1.5">
               <SlidersHorizontal size={13} strokeWidth={2} className="text-[#8E181F]" />
 
               <span className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Shop By</span>
             </div>
 
-            {/* FILTER LIST */}
             <div className="no-scrollbar overflow-x-auto pb-1">
-              <div className="flex min-w-max items-center gap-2">
-                {/* ALL */}
+              <div className="flex min-w-max items-center gap-1.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={() => filterBySubCategory('')}
-                  className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[10px] font-bold transition-all duration-200 active:scale-95 sm:text-[11px] ${
+                  className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-[10px] font-bold transition-all duration-200 active:scale-95 sm:h-9 sm:rounded-xl sm:px-3 sm:text-[11px] ${
                     selectedSubCategory === ''
                       ? 'bg-linear-to-r from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.18)]'
                       : 'border border-[#E2D5CC] bg-white text-[#67544D] hover:border-[#CDAFA4] hover:bg-[#FBF5F1] hover:text-[#8E181F]'
@@ -148,7 +138,6 @@ export default function CategoryProducts() {
                   <span className={`rounded-md px-1.5 py-0.5 text-[8px] ${selectedSubCategory === '' ? 'bg-white/15' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>{allProducts.length}</span>
                 </button>
 
-                {/* SUBCATEGORIES */}
                 {uniqueNames.map((name) => {
                   const active = selectedSubCategory === name
 
@@ -161,7 +150,7 @@ export default function CategoryProducts() {
                       key={name}
                       type="button"
                       onClick={() => filterBySubCategory(name)}
-                      className={`group flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[10px] font-semibold transition-all duration-200 active:scale-95 sm:text-[11px] ${
+                      className={`group flex h-8 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-[10px] font-semibold transition-all duration-200 active:scale-95 sm:h-9 sm:rounded-xl sm:px-3 sm:text-[11px] ${
                         active ? 'bg-[#8E181F] text-white shadow-[0_4px_12px_rgba(142,24,31,0.16)]' : 'border border-[#E2D5CC] bg-white text-[#67544D] hover:border-[#CDAFA4] hover:bg-[#FBF5F1] hover:text-[#8E181F]'
                       }`}
                     >
@@ -178,63 +167,48 @@ export default function CategoryProducts() {
           </div>
         )}
 
-        {/* LOADING SHIMMER */}
         {loading ? (
-          <div className="space-y-5 animate-pulse">
-            {/* CATEGORY HEADER SHIMMER */}
-            <div className="flex min-h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:min-h-17 sm:px-4">
-              <div className="flex min-w-0 items-center gap-2.5">
-                {/* IMAGE SHIMMER */}
-                <div className="h-9 w-9 shrink-0 rounded-lg bg-[#F0E5DE] sm:h-10 sm:w-10" />
+          <div className="animate-pulse space-y-5">
+            <div className="flex min-h-14 items-center justify-between gap-2 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-2.5 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:min-h-17 sm:gap-3 sm:px-4">
+              <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
+                <div className="h-8 w-8 shrink-0 rounded-lg bg-[#F0E5DE] sm:h-10 sm:w-10" />
 
-                {/* TEXT SHIMMER */}
                 <div className="min-w-0 space-y-2">
-                  <div className="h-3.5 w-32 rounded-md bg-[#E3D8D1] sm:h-4 sm:w-36" />
-
-                  <div className="h-2.5 w-48 rounded-md bg-[#EEE5DF] sm:w-52" />
+                  <div className="h-3.5 w-32 rounded-md bg-[#E3D8D1] sm:w-36" />
+                  <div className="h-2.5 w-40 rounded-md bg-[#EEE5DF] sm:w-52" />
                 </div>
               </div>
 
-              {/* COUNT SHIMMER */}
-              <div className="flex h-8 w-20 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] sm:w-22">
+              <div className="flex h-7 w-16 shrink-0 items-center justify-center gap-1 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] sm:h-8 sm:w-22 sm:gap-1.5">
                 <div className="h-3 w-3 rounded-full bg-[#DCCDC5]" />
-
                 <div className="h-2.5 w-8 rounded bg-[#E3D8D1]" />
               </div>
             </div>
 
-            {/* SHOP BY SHIMMER */}
             <div className="mb-5">
-              {/* LABEL */}
               <div className="mb-2 flex items-center gap-1.5">
                 <div className="h-3.5 w-3.5 rounded bg-[#E3D8D1]" />
-
                 <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
               </div>
 
-              {/* PILLS */}
               <div className="no-scrollbar overflow-hidden pb-1">
-                <div className="flex min-w-max items-center gap-2">
-                  {/* ALL */}
-                  <div className="flex h-9 w-20 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#F0E7E1] px-3">
+                <div className="flex min-w-max items-center gap-1.5 sm:gap-2">
+                  <div className="flex h-8 w-20 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-[#F0E7E1] px-2.5 sm:h-9 sm:rounded-xl sm:px-3">
                     <div className="h-2.5 w-7 rounded bg-[#DCCDC5]" />
                     <div className="h-4 w-5 rounded-md bg-[#E3D8D1]" />
                   </div>
 
-                  {/* FILTER 1 */}
-                  <div className="flex h-9 w-32 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
+                  <div className="flex h-8 w-32 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#E2D5CC] bg-white px-2.5 sm:h-9 sm:rounded-xl sm:px-3">
                     <div className="h-2.5 w-16 rounded bg-[#E3D8D1]" />
                     <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
                   </div>
 
-                  {/* FILTER 2 */}
-                  <div className="flex h-9 w-36 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
+                  <div className="flex h-8 w-36 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#E2D5CC] bg-white px-2.5 sm:h-9 sm:rounded-xl sm:px-3">
                     <div className="h-2.5 w-20 rounded bg-[#E3D8D1]" />
                     <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
                   </div>
 
-                  {/* FILTER 3 */}
-                  <div className="flex h-9 w-28 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-white px-3">
+                  <div className="flex h-8 w-28 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#E2D5CC] bg-white px-2.5 sm:h-9 sm:rounded-xl sm:px-3">
                     <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
                     <div className="h-4 w-5 rounded-md bg-[#F0E7E1]" />
                   </div>
@@ -242,37 +216,29 @@ export default function CategoryProducts() {
               </div>
             </div>
 
-            {/* PRODUCTS SHIMMER */}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
               {Array.from({ length: 12 }).map((_, index) => (
-                <div key={index} className="flex min-h-88 flex-col overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.04)] sm:min-h-90">
-                  {/* IMAGE */}
+                <div key={index} className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.04)] sm:min-h-90 sm:rounded-2xl">
                   <div className="aspect-square shrink-0 bg-[#F3EAE4]" />
 
-                  {/* DETAILS */}
-                  <div className="flex flex-1 flex-col space-y-3 border-t border-[#EEE5DF] bg-[#FFFCFA] p-3">
-                    {/* CATEGORY */}
+                  <div className="flex flex-1 flex-col space-y-3 border-t border-[#EEE5DF] bg-[#FFFCFA] p-2.5 sm:p-3">
                     <div className="h-2.5 w-14 rounded bg-[#E3D8D1]" />
 
-                    {/* TITLE */}
                     <div className="space-y-1.5">
                       <div className="h-3.5 w-full rounded bg-[#E5DDD7]" />
                       <div className="h-3.5 w-4/5 rounded bg-[#E5DDD7]" />
                     </div>
 
-                    {/* RATING */}
                     <div className="flex items-center gap-2">
                       <div className="h-5 w-9 rounded bg-[#DDE8DF]" />
                       <div className="h-3 w-12 rounded bg-[#E8DDD4]" />
                     </div>
 
-                    {/* PRICE */}
                     <div className="flex items-center gap-2">
                       <div className="h-5 w-20 rounded bg-[#E5D3CD]" />
                       <div className="h-3 w-12 rounded bg-[#E8DDD4]" />
                     </div>
 
-                    {/* BOTTOM */}
                     <div className="mt-auto flex items-center justify-between border-t border-[#EEE5DF] pt-2.5">
                       <div className="h-3 w-16 rounded bg-[#E8DDD4]" />
                       <div className="h-3 w-10 rounded bg-[#E5D3CD]" />
@@ -283,7 +249,6 @@ export default function CategoryProducts() {
             </div>
           </div>
         ) : products.length === 0 ? (
-          // EMPTY
           <div className="flex min-h-90 flex-col items-center justify-center rounded-2xl border border-dashed border-[#D8C9C0] bg-white px-5 text-center shadow-[0_2px_10px_rgba(73,54,49,0.03)]">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
               <Package size={28} strokeWidth={1.6} />
@@ -308,99 +273,84 @@ export default function CategoryProducts() {
             )}
           </div>
         ) : (
-          //  PRODUCTS
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
             {products.map((product) => {
               const isCategoryInactive = category?.status === 'Inactive'
-
               const isInactive = product.status === 'Inactive' || isCategoryInactive
-
               const isOutOfStock = product.stock <= 0
-
               const isDisabled = isInactive || isOutOfStock
-
               const isLowStock = !isDisabled && product.stock > 0 && product.stock <= 5
 
               const productCard = (
                 <>
-                  {/* IMAGE */}
-                  <div className={`relative flex aspect-square shrink-0 items-center justify-center overflow-hidden p-3 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
-                    {/* BACKGROUND GLOW */}
+                  <div className={`relative flex aspect-square shrink-0 items-center justify-center overflow-hidden p-2 sm:p-3 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
                     {!isDisabled && <div className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#F7EEE7] opacity-70 transition-transform duration-500 group-hover:scale-150" />}
 
-                    {/* DISCOUNT */}
                     {!isDisabled && product.discount > 0 && (
-                      <span className="absolute left-2.5 top-2.5 z-20 rounded-md bg-linear-to-r from-[#7D171C] to-[#A51D26] px-2 py-1 text-[8px] font-extrabold text-white shadow-sm sm:text-[9px]">{product.discount}% OFF</span>
+                      <span className="absolute left-2 top-2 z-20 rounded-md bg-linear-to-r from-[#7D171C] to-[#A51D26] px-1.5 py-1 text-[7px] font-extrabold text-white shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">
+                        {product.discount}% OFF
+                      </span>
                     )}
 
-                    {/* STATUS */}
-                    {isCategoryInactive  ? (
-                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#E5E5E5] px-2 py-1 text-[8px] font-bold text-[#888888] sm:text-[9px]">Inactive</span>
-                    ) : isInactive  ? (
-                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#E5E5E5] px-2 py-1 text-[8px] font-bold text-[#888888] sm:text-[9px]">Out of Stock</span>
-                    ) : isOutOfStock  ? (
-                      <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[8px] font-bold text-[#B87935] sm:text-[9px]">Only {product.stock} left</span>
+                    {isCategoryInactive ? (
+                      <span className="absolute right-2 top-2 z-20 rounded-md bg-[#E5E5E5] px-1.5 py-1 text-[7px] font-bold text-[#888888] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">Inactive</span>
+                    ) : isInactive ? (
+                      <span className="absolute right-2 top-2 z-20 rounded-md bg-[#E5E5E5] px-1.5 py-1 text-[7px] font-bold text-[#888888] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">Inactive</span>
+                    ) : isOutOfStock ? (
+                      <span className="absolute right-2 top-2 z-20 rounded-md bg-[#FFF7EA] px-1.5 py-1 text-[7px] font-bold text-[#B87935] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">Out of Stock</span>
                     ) : null}
 
-                    {/* PRODUCT IMAGE */}
                     {product.images?.length > 0 ? (
                       <img src={getImageUrl(product.images[0])} alt={product.productName} className={`relative z-10 h-full w-full object-contain ${isDisabled ? 'grayscale opacity-40' : 'transition-transform duration-500 group-hover:scale-105'}`} />
                     ) : (
                       <div className={`relative z-10 flex flex-col items-center gap-1.5 ${isDisabled ? 'text-[#999999]' : 'text-[#A28E85]'}`}>
                         <ShoppingBag size={26} strokeWidth={1.5} />
-
                         <span className="text-[9px]">No Image</span>
                       </div>
                     )}
 
-                    {/* BOTTOM GLOW */}
                     {!isDisabled && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-linear-to-t from-[#351C18]/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />}
                   </div>
 
-                  {/* DETAILS */}
-                  <div className={`flex flex-1 flex-col border-t px-3 py-3 ${isDisabled ? 'border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#EEE5DF] bg-[#FFFCFA] transition-colors duration-300 group-hover:bg-[#FBF5F1]'}`}>
-                    {/* CATEGORY */}
-                    <p className={`truncate text-[8px] font-bold uppercase tracking-wider sm:text-[9px] ${isDisabled ? 'text-[#999999]' : 'text-[#9A857B]'}`}>{product.category?.categoryName || 'Product'}</p>
+                  <div className={`flex flex-1 flex-col border-t px-2 py-2.5 sm:px-3 sm:py-3 ${isDisabled ? 'border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#EEE5DF] bg-[#FFFCFA] transition-colors duration-300 group-hover:bg-[#FBF5F1]'}`}>
+                    <p className={`truncate text-[7px] font-bold uppercase tracking-wider sm:text-[9px] ${isDisabled ? 'text-[#999999]' : 'text-[#9A857B]'}`}>{product.category?.categoryName || 'Product'}</p>
 
-                    {/* NAME */}
-                    <h3 className={`mt-1 line-clamp-2 min-h-9 text-[12px] font-bold leading-4.5 sm:text-[13px] ${isDisabled ? 'text-[#777777]' : 'text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F]'}`}>{product.productName}</h3>
+                    <h3 className={`mt-1 line-clamp-2 min-h-8 text-[11px] font-bold leading-4 sm:min-h-9 sm:text-[13px] sm:leading-4.5 ${isDisabled ? 'text-[#777777]' : 'text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F]'}`}>
+                      {product.productName}
+                    </h3>
 
-                    {/* RATING */}
-                    <div className="mt-2 flex min-h-5 items-center gap-1.5">
-                      <span className={`flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[8px] font-bold ${isDisabled ? 'bg-[#E5E5E5] text-[#888888]' : 'bg-[#3E8B62] text-white'}`}>
+                    <div className="mt-1.5 flex min-h-5 items-center gap-1 sm:mt-2 sm:gap-1.5">
+                      <span className={`flex items-center gap-0.5 rounded px-1 py-0.5 text-[8px] font-bold sm:px-1.5 ${isDisabled ? 'bg-[#E5E5E5] text-[#888888]' : 'bg-[#3E8B62] text-white'}`}>
                         {product.rating || '0.0'}
-
                         <Star size={8} fill="currentColor" strokeWidth={2.5} />
                       </span>
 
-                      {product.soldCount > 0 && <span className={`truncate text-[9px] ${isDisabled ? 'text-[#999999]' : 'text-[#806C63]'}`}>{product.soldCount}+ sold</span>}
+                      {product.soldCount > 0 && <span className={`truncate text-[8px] sm:text-[9px] ${isDisabled ? 'text-[#999999]' : 'text-[#806C63]'}`}>{product.soldCount}+ sold</span>}
                     </div>
 
-                    {/* PRICE */}
-                    <div className="mt-2.5 flex min-h-6 flex-wrap items-baseline gap-1.5">
-                      <span className={`text-base font-extrabold ${isDisabled ? 'text-[#777777]' : 'text-[#351C18]'}`}>₹{product.discountPrice?.toLocaleString('en-IN')}</span>
+                    <div className="mt-2 flex min-h-6 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:mt-2.5">
+                      <span className={`text-sm font-extrabold sm:text-base ${isDisabled ? 'text-[#777777]' : 'text-[#351C18]'}`}>₹{product.discountPrice?.toLocaleString('en-IN')}</span>
 
                       {product.price > product.discountPrice && (
                         <>
-                          <span className={`text-[9px] line-through ${isDisabled ? 'text-[#AAAAAA]' : 'text-[#9A857B]'}`}>₹{product.price?.toLocaleString('en-IN')}</span>
+                          <span className={`text-[8px] line-through sm:text-[9px] ${isDisabled ? 'text-[#AAAAAA]' : 'text-[#9A857B]'}`}>₹{product.price?.toLocaleString('en-IN')}</span>
 
-                          {!isDisabled && <span className="text-[9px] font-bold text-[#3E8B62]">{product.discount}% off</span>}
+                          {!isDisabled && <span className="text-[8px] font-bold text-[#3E8B62] sm:text-[9px]">{product.discount}% off</span>}
                         </>
                       )}
                     </div>
 
-                    {/* BOTTOM */}
-                    <div className={`mt-auto flex min-h-7 items-center justify-between border-t pt-2.5 ${isDisabled ? 'border-[#D9D9D9]' : 'border-[#EEE5DF]'}`}>
-                      <div className="flex items-center gap-1">
-                        <span className={`h-1.5 w-1.5 rounded-full ${isDisabled ? 'bg-[#999999]' : isLowStock ? 'bg-[#B87935]' : 'bg-[#3E8B62]'}`} />
+                    <div className={`mt-auto flex min-h-7 items-center justify-between gap-1 border-t pt-2 sm:pt-2.5 ${isDisabled ? 'border-[#D9D9D9]' : 'border-[#EEE5DF]'}`}>
+                      <div className="flex min-w-0 items-center gap-1">
+                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${isDisabled ? 'bg-[#999999]' : isLowStock ? 'bg-[#B87935]' : 'bg-[#3E8B62]'}`} />
 
-                        <span className={`text-[8px] font-semibold sm:text-[9px] ${isDisabled ? 'text-[#888888]' : isLowStock ? 'text-[#B87935]' : 'text-[#3E8B62]'}`}>
+                        <span className={`truncate text-[7px] font-semibold sm:text-[9px] ${isDisabled ? 'text-[#888888]' : isLowStock ? 'text-[#B87935]' : 'text-[#3E8B62]'}`}>
                           {isInactive ? 'Unavailable' : isOutOfStock ? 'Out of Stock' : isLowStock ? 'Limited Stock' : 'In Stock'}
                         </span>
                       </div>
 
                       {!isDisabled && (
-                        <span className="flex items-center gap-0.5 text-[9px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1">
+                        <span className="flex shrink-0 items-center gap-0.5 text-[8px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1 sm:text-[9px]">
                           View
                           <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                         </span>
@@ -411,14 +361,14 @@ export default function CategoryProducts() {
               )
 
               return isDisabled ? (
-                <div key={product._id} aria-disabled="true" className="group flex min-h-88 cursor-not-allowed flex-col overflow-hidden rounded-2xl border border-[#D9D9D9] bg-[#F3F3F3] shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:min-h-90">
+                <div key={product._id} aria-disabled="true" className="group flex min-h-0 cursor-not-allowed flex-col overflow-hidden rounded-xl border border-[#D9D9D9] bg-[#F3F3F3] shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:min-h-90 sm:rounded-2xl">
                   {productCard}
                 </div>
               ) : (
                 <Link
                   key={product._id}
                   to={`/product/${product._id}`}
-                  className="group flex min-h-88 flex-col overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)] sm:min-h-90"
+                  className="group flex min-h-0 flex-col overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)] sm:min-h-90 sm:rounded-2xl"
                 >
                   {productCard}
                 </Link>
