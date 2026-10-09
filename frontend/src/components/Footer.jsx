@@ -53,7 +53,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="!block !w-full !overflow-hidden !bg-[#351C18] !text-white"
+      className="block! w-full! overflow-hidden! bg-[#351C18]! text-white!"
       style={{
         backgroundColor: '#351C18',
         color: '#FFFFFF',
@@ -62,7 +62,7 @@ export default function Footer() {
     >
       <div className="h-px w-full bg-linear-to-r from-transparent via-[#D65A5F]/70 to-transparent" />
 
-      <div className="!bg-[#351C18] px-4 py-8 sm:px-7 sm:py-12 lg:py-14">
+      <div className="bg-[#351C18]! px-4 py-8 sm:px-7 sm:py-12 lg:py-14">
         <div className="mx-auto grid max-w-[1600px] grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4 lg:gap-14">
           <div className="col-span-2 text-center sm:text-left lg:col-span-1">
             <Link to="/" className="group inline-flex items-center gap-2.5 sm:gap-3">
@@ -137,7 +137,7 @@ export default function Footer() {
             </h3>
 
             <div className="mx-auto mt-4 grid max-w-md grid-cols-1 gap-3 sm:mx-0 sm:mt-5 sm:gap-4">
-              <div className="flex min-w-0 items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] p-2.5 transition-colors duration-300 hover:bg-white/[0.06] sm:border-0 sm:bg-transparent sm:p-0 sm:hover:bg-transparent">
+              <div className="flex min-w-0 items-center gap-3 rounded-xl border border-white/5 bg-white/3 p-2.5 transition-colors duration-300 hover:bg-white/6 sm:border-0 sm:bg-transparent sm:p-0 sm:hover:bg-transparent">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#D65A5F]/15 bg-[#8E181F]/20 text-[#E17B7F] sm:h-10 sm:w-10">
                   <MapPin size={17} />
                 </span>
@@ -150,7 +150,7 @@ export default function Footer() {
 
               <a
                 href="tel:+919408209662"
-                className="group flex min-w-0 items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] p-2.5 transition-colors duration-300 hover:bg-white/[0.06] sm:border-0 sm:bg-transparent sm:p-0 sm:hover:bg-transparent"
+                className="group flex min-w-0 items-center gap-3 rounded-xl border border-white/5 bg-white/3 p-2.5 transition-colors duration-300 hover:bg-white/6 sm:border-0 sm:bg-transparent sm:p-0 sm:hover:bg-transparent"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#D65A5F]/15 bg-[#8E181F]/20 text-[#E17B7F] transition-all duration-300 group-hover:bg-[#8E181F] group-hover:text-white sm:h-10 sm:w-10">
                   <Phone size={16} />
@@ -160,7 +160,7 @@ export default function Footer() {
 
               <a
                 href="mailto:mansi@minekart.com"
-                className="group flex min-w-0 items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] p-2.5 transition-colors duration-300 hover:bg-white/[0.06] sm:border-0 sm:bg-transparent sm:p-0 sm:hover:bg-transparent"
+                className="group flex min-w-0 items-center gap-3 rounded-xl border border-white/5 bg-white/3 p-2.5 transition-colors duration-300 hover:bg-white/6 sm:border-0 sm:bg-transparent sm:p-0 sm:hover:bg-transparent"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#D65A5F]/15 bg-[#8E181F]/20 text-[#E17B7F] transition-all duration-300 group-hover:bg-[#8E181F] group-hover:text-white sm:h-10 sm:w-10">
                   <Mail size={16} />
@@ -172,7 +172,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-y border-white/10 !bg-[#2C1714]">
+      <div className="border-y border-white/10 bg-[#2C1714]!">
         <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-2.5 px-4 py-4 text-center sm:flex-row sm:gap-4 sm:px-7 sm:py-4 sm:text-left">
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[9px] leading-5 text-[#BFAEA6] sm:justify-start sm:gap-x-3 sm:text-xs">
             <span className="inline-flex items-center gap-1.5">
@@ -196,7 +196,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/5 !bg-[#351C18]">
+      <div className="border-t border-white/5 bg-[#351C18]!">
         <div className="mx-auto flex max-w-[1600px] flex-col items-center gap-4 px-4 py-5 sm:px-7 sm:py-5 lg:flex-row lg:justify-between">
           <p className="text-center text-[10px] text-[#AFA09A] sm:text-xs">© {new Date().getFullYear()} MineKart. All rights reserved.</p>
 
@@ -209,7 +209,7 @@ export default function Footer() {
           </div>
 
           <div className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-[#D65A5F]/25 bg-linear-to-r from-[#4A2420] via-[#3D201C] to-[#4A2420] px-3.5 py-2 shadow-[0_3px_14px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E17B7F]/60 hover:shadow-[0_5px_20px_rgba(214,90,95,0.12)] sm:px-4">
-            <span className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/[0.06] to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+            <span className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/6 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
             <span className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#E17B7F]/30 bg-[#8E181F] text-[#FFD8D0]">
               <Heart size={12} fill="currentColor" />
