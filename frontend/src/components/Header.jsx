@@ -212,6 +212,10 @@ export default function Header() {
             <>
               <div className="min-w-0 flex-1">
                 <div className="flex h-10 w-full items-center overflow-hidden rounded-xl border border-[#CFA8A0] bg-white shadow-[0_0_0_3px_rgba(157,41,50,0.05)] sm:h-11">
+
+                    <button type="button" onClick={handleSearch} className="mr-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#9D2932] transition-colors duration-200 hover:bg-[#F7EEE7]" aria-label="Search">
+                    <Search size={17} strokeWidth={2.2} />
+                  </button>
                   <input
                     ref={mobileSearchInputRef}
                     type="text"
@@ -230,9 +234,7 @@ export default function Header() {
                     className="h-full min-w-0 flex-1 bg-transparent px-3 text-[11px] text-[#35231F] outline-none placeholder:text-[#9D8980] sm:text-sm"
                   />
 
-                  <button type="button" onClick={handleSearch} className="mr-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#9D2932] transition-colors duration-200 hover:bg-[#F7EEE7]" aria-label="Search">
-                    <Search size={17} strokeWidth={2.2} />
-                  </button>
+                
 
                   <button
                     type="button"

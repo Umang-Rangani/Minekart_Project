@@ -285,23 +285,38 @@ export default function CategoryProducts() {
                 <>
                   <div className={`relative flex aspect-square shrink-0 items-center justify-center overflow-hidden p-2 sm:p-3 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
                     {!isDisabled && <div className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#F7EEE7] opacity-70 transition-transform duration-500 group-hover:scale-150" />}
+                    {/* {Number(product.discount) > 0 && (
+                      <span
+                        className={`absolute left-2 top-2 z-20 rounded-md border px-1.5 py-1 text-[7px] font-extrabold shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:text-[9px] ${
+                          isDisabled ? 'border-[#D6CCC6] bg-[#E9E2DD] text-[#796B64]' : 'border-[#E8DDD4] bg-linear-to-r from-[#7D171C] to-[#A51D26] text-white'
+                        }`}
+                      >
+                        {product.discount}% OFF
+                      </span>
+                    )} */}
 
-                    {!isDisabled && product.discount > 0 && (
-                      <span className="absolute left-2 top-2 z-20 rounded-md bg-linear-to-r from-[#7D171C] to-[#A51D26] px-1.5 py-1 text-[7px] font-extrabold text-white shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">
+                    {product.discount > 0 && (
+                      <span
+                        className={`absolute left-1.5 top-1.5 z-20 rounded-md px-1.5 py-0.5 text-[6.5px] font-extrabold text-white shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px] ${
+                          isDisabled ? 'bg-linear-to-r from-[#737373] to-[#A3A3A3]' : 'bg-linear-to-r from-[#7D171C] to-[#A51D26]'
+                        }`}
+                      >
                         {product.discount}% OFF
                       </span>
                     )}
 
-                    {isCategoryInactive ? (
-                      <span className="absolute right-2 top-2 z-20 rounded-md bg-[#E5E5E5] px-1.5 py-1 text-[7px] font-bold text-[#888888] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">Inactive</span>
-                    ) : isInactive ? (
-                      <span className="absolute right-2 top-2 z-20 rounded-md bg-[#E5E5E5] px-1.5 py-1 text-[7px] font-bold text-[#888888] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">Inactive</span>
-                    ) : isOutOfStock ? (
-                      <span className="absolute right-2 top-2 z-20 rounded-md bg-[#FFF7EA] px-1.5 py-1 text-[7px] font-bold text-[#B87935] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">Out of Stock</span>
-                    ) : null}
+                    {isDisabled && (
+                      <span className="absolute right-2 top-2 z-20 max-w-[65%] rounded-md border border-[#DED3CD] bg-[#E9E2DD] px-1.5 py-1 text-right text-[7px] font-extrabold leading-3 text-[#695750] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[9px]">
+                        {isInactive ? 'Currently Unavailable' : 'Out of Stock'}
+                      </span>
+                    )}
 
                     {product.images?.length > 0 ? (
-                      <img src={getImageUrl(product.images[0])} alt={product.productName} className={`relative z-10 h-full w-full object-contain bg-white ${isDisabled ? 'grayscale opacity-40' : 'transition-transform duration-500 group-hover:scale-105'}`} />
+                      <img
+                        src={getImageUrl(product.images[0])}
+                        alt={product.productName}
+                        className={`relative z-10 h-full w-full bg-white object-contain transition-all duration-300 ${isDisabled ? 'scale-95 opacity-50 grayscale' : 'group-hover:scale-105'}`}
+                      />
                     ) : (
                       <div className={`relative z-10 flex flex-col items-center gap-1.5 ${isDisabled ? 'text-[#999999]' : 'text-[#A28E85]'}`}>
                         <ShoppingBag size={26} strokeWidth={1.5} />
@@ -327,31 +342,30 @@ export default function CategoryProducts() {
 
                       {product.soldCount > 0 && <span className={`truncate text-[8px] sm:text-[9px] ${isDisabled ? 'text-[#999999]' : 'text-[#806C63]'}`}>{product.soldCount}+ sold</span>}
                     </div>
-
                     <div className="mt-2 flex min-h-6 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:mt-2.5">
-                      <span className={`text-sm font-extrabold sm:text-base ${isDisabled ? 'text-[#777777]' : 'text-[#351C18]'}`}>₹{product.discountPrice?.toLocaleString('en-IN')}</span>
+                      <span className={`text-sm font-extrabold sm:text-base ${isDisabled ? 'text-[#8D817A]' : 'text-[#351C18]'}`}>₹{Number(product.discountPrice ?? product.price ?? 0).toLocaleString('en-IN')}</span>
 
-                      {product.price > product.discountPrice && (
+                      {Number(product.price) > Number(product.discountPrice) && (
                         <>
-                          <span className={`text-[8px] line-through sm:text-[9px] ${isDisabled ? 'text-[#AAAAAA]' : 'text-[#9A857B]'}`}>₹{product.price?.toLocaleString('en-IN')}</span>
+                          <span className={`text-[8px] line-through sm:text-[9px] ${isDisabled ? 'text-[#B2A7A0]' : 'text-[#9A857B]'}`}>₹{Number(product.price).toLocaleString('en-IN')}</span>
 
-                          {!isDisabled && <span className="text-[8px] font-bold text-[#3E8B62] sm:text-[9px]">{product.discount}% off</span>}
+                          {Number(product.discount) > 0 && <span className={`text-[8px] font-bold sm:text-[9px] ${isDisabled ? 'text-[#A69A93]' : 'text-[#3E8B62]'}`}>{product.discount}% off</span>}
                         </>
                       )}
                     </div>
 
-                    <div className={`mt-auto flex min-h-7 items-center justify-between gap-1 border-t pt-2 sm:pt-2.5 ${isDisabled ? 'border-[#D9D9D9]' : 'border-[#EEE5DF]'}`}>
+                    <div className={`mt-auto flex min-h-7 items-center justify-between gap-1 border-t pt-2 sm:pt-2.5 ${isDisabled ? 'border-[#E6DDD7]' : 'border-[#EEE5DF]'}`}>
                       <div className="flex min-w-0 items-center gap-1">
-                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${isDisabled ? 'bg-[#999999]' : isLowStock ? 'bg-[#B87935]' : 'bg-[#3E8B62]'}`} />
+                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${isDisabled ? 'bg-[#999]' : isLowStock ? 'bg-[#B87935]' : 'bg-[#3E8B62]'}`} />
 
-                        <span className={`truncate text-[7px] font-semibold sm:text-[9px] ${isDisabled ? 'text-[#888888]' : isLowStock ? 'text-[#B87935]' : 'text-[#3E8B62]'}`}>
+                        <span className={`truncate text-[7px] font-semibold sm:text-[9px] ${isDisabled ? 'text-[#888]' : isLowStock ? 'text-[#B87935]' : 'text-[#3E8B62]'}`}>
                           {isInactive ? 'Unavailable' : isOutOfStock ? 'Out of Stock' : isLowStock ? 'Limited Stock' : 'In Stock'}
                         </span>
                       </div>
 
-                      <span className={`flex shrink-0 items-center gap-0.5 text-[8px] font-bold transition-all duration-300 group-hover:gap-1 sm:text-[9px] ${isDisabled ? 'text-[#888888]' : 'text-[#8E181F]'}`}>
+                      <span className={`flex shrink-0 items-center gap-0.5 text-[8px] font-bold transition-all duration-300 sm:text-[9px] ${isDisabled ? 'text-[#999]' : 'text-[#8E181F] group-hover:gap-1'}`}>
                         View
-                        <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                        <ChevronRight size={11} strokeWidth={2.5} className={`transition-transform duration-300 ${isDisabled ? '' : 'group-hover:translate-x-0.5'}`} />
                       </span>
                     </div>
                   </div>
@@ -363,9 +377,7 @@ export default function CategoryProducts() {
                   key={product._id}
                   to={`/product/${product._id}`}
                   className={`group flex min-h-0 flex-col overflow-hidden rounded-xl shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 sm:min-h-90 sm:rounded-2xl ${
-                    isDisabled
-                      ? 'border border-[#D9D9D9] bg-[#F3F3F3] hover:border-[#BDBDBD] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]'
-                      : 'border border-[#E8DDD4] bg-white hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)]'
+                    isDisabled ? 'border border-[#E6DDD7] bg-[#F8F5F2] shadow-[0_2px_8px_rgba(73,54,49,0.03)]' : 'border border-[#E8DDD4] bg-white hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)]'
                   }`}
                 >
                   {productCard}

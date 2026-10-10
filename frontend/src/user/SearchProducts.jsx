@@ -152,19 +152,24 @@ export default function SearchProducts() {
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-5">
             {products.map((product) => {
-              const isProductInactive = product.status === 'Inactive'
-              const isCategoryInactive = product.category?.status === 'Inactive'
+              // / variable logic
+              const isProductInactive = product.status?.toLowerCase() === 'inactive'
+
+              const isCategoryInactive = product.category?.status?.toLowerCase() === 'inactive'
+
+              const stock = Number(product.stock ?? 0)
+              const isOutOfStock = stock <= 0
 
               const isInactive = isProductInactive || isCategoryInactive
-
-              const isOutOfStock = Number(product.stock) <= 0
               const isDisabled = isInactive || isOutOfStock
+              const isLowStock = !isDisabled && stock <= 5
 
-              const disabledMessage = isInactive ? 'Currently Unavailable' : 'Out of Stock'
+              const price = Number(product.price || 0)
+              const discountPrice = Number(product.discountPrice || 0)
 
-              const sellingPrice = Number(product.discountPrice > 0 ? product.discountPrice : product.price || 0)
+              const displayPrice = discountPrice > 0 && discountPrice < price ? discountPrice : price
 
-              const hasDiscount = Number(product.discount) > 0 && Number(product.price) > Number(product.discountPrice)
+              const hasDiscount = Number(product.discount) > 0 && discountPrice > 0 && discountPrice < price
 
               return (
                 <div
@@ -178,7 +183,7 @@ export default function SearchProducts() {
                       navigate(`/product/${product._id}`)
                     }
                   }}
-                  aria-label={`${product.productName}, ${isDisabled ? disabledMessage : 'View product'}`}
+                  aria-label={`${product.productName}, ${isInactive ? 'Currently Unavailable' : isOutOfStock ? 'Out of Stock' : 'View product'}`}
                   className={`group relative flex min-h-88 cursor-pointer flex-col overflow-hidden rounded-xl border transition-all duration-300 ${
                     isDisabled
                       ? 'border-[#E6DDD7] bg-[#F8F5F2] shadow-[0_2px_8px_rgba(73,54,49,0.03)]'
@@ -186,23 +191,43 @@ export default function SearchProducts() {
                   }`}
                 >
                   <div className={`relative flex h-44 shrink-0 items-center justify-center overflow-hidden p-3 sm:h-48 lg:h-52 ${isDisabled ? 'bg-[#F2EFEC]' : 'bg-white'}`}>
-                    {hasDiscount && (
+                    {/* {hasDiscount && (
                       <span className={`absolute left-2.5 top-2.5 z-20 rounded-md px-2 py-1 text-[8px] font-extrabold shadow-sm sm:text-[9px] ${isDisabled ? 'bg-[#D8CECA] text-[#6E625D]' : 'bg-[#A51D26] text-white'}`}>{product.discount}% OFF</span>
+                    )} */}
+
+                    {product.discount > 0 && (
+                      <span
+                        className={`absolute left-1.5 top-1.5 z-20 rounded-md px-1.5 py-0.5 text-[6.5px] font-extrabold text-white shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px] ${
+                          isDisabled ? 'bg-linear-to-r from-[#737373] to-[#A3A3A3]' : 'bg-linear-to-r from-[#7D171C] to-[#A51D26]'
+                        }`}
+                      >
+                        {product.discount}% OFF
+                      </span>
                     )}
 
-                    {isDisabled ? (
+                    {/* {isDisabled ? (
                       <span className="absolute right-2.5 top-2.5 z-20 max-w-[65%] rounded-md border border-[#DED3CD] bg-[#E9E2DD] px-2 py-1 text-right text-[8px] font-extrabold leading-3 text-[#695750] sm:text-[9px]">{disabledMessage}</span>
                     ) : product.stock <= 5 ? (
                       <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[8px] font-bold text-[#B87935] sm:text-[9px]">Only {product.stock} left</span>
+                    ) : null} */}
+
+                    {isInactive || isCategoryInactive ? (
+                      <span className="absolute right-1.5 top-1.5 z-20 rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#8E181F] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">
+                        Currently Unavailable
+                      </span>
+                    ) : isOutOfStock ? (
+                      <span className="absolute right-1.5 top-1.5 z-20 rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#8E181F] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">Out of Stock</span>
+                    ) : isLowStock ? (
+                      <span className="absolute right-1.5 top-1.5 z-20 rounded-md bg-[#FFF5E7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#B87935] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">Only {stock} left</span>
                     ) : null}
 
-                    <div className={`pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full transition-transform duration-500 ${isDisabled ? 'bg-[#E5DDD8] opacity-50' : 'bg-[#F7EEE7] opacity-70 group-hover:scale-150'}`} />
+                    <div className={`pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full transition-transform duration-500 ${isDisabled ? 'bg-white opacity-50' : 'bg-[#F7EEE7]   opacity-70 group-hover:scale-150'}`} />
 
                     {product.images?.[0] ? (
                       <img
                         src={getImageUrl(product.images[0])}
                         alt={product.productName}
-                        className={`relative z-10 h-full w-full object-contain p-2 transition-all duration-300 ${isDisabled ? 'scale-95 opacity-50 grayscale-35' : 'group-hover:scale-105'}`}
+                        className={`relative z-10 h-full w-full object-contain p-2 transition-all duration-300 bg-white ${isDisabled ? 'scale-95 opacity-50 grayscale-35' : 'group-hover:scale-105'}`}
                       />
                     ) : (
                       <div className={`relative z-10 flex flex-col items-center gap-1.5 ${isDisabled ? 'text-[#B7ACA6]' : 'text-[#B7A49B]'}`}>
@@ -235,7 +260,7 @@ export default function SearchProducts() {
                     </div>
 
                     <div className="mt-2.5 flex min-h-6 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-                      <span className={`text-base font-extrabold ${isDisabled ? 'text-[#8D817A]' : 'text-[#351C18]'}`}>₹{sellingPrice.toLocaleString('en-IN')}</span>
+                      <span className={`text-base font-extrabold ${isDisabled ? 'text-[#8D817A]' : 'text-[#351C18]'}`}>₹{displayPrice.toLocaleString('en-IN')}</span>
 
                       {hasDiscount && (
                         <>
@@ -248,16 +273,14 @@ export default function SearchProducts() {
 
                     <div className={`mt-auto flex min-h-8 items-center justify-between border-t pt-2.5 ${isDisabled ? 'border-[#E6DDD7]' : 'border-[#EEE5DF]'}`}>
                       <div className="flex min-w-0 items-center gap-1">
-                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${isDisabled ? 'bg-[#A69A93]' : 'bg-[#3E8B62]'}`} />
+                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${isDisabled ? 'bg-[#999]' : 'bg-[#3E8B62]'}`} />
 
-                        <span className={`truncate text-[9px] font-semibold ${isDisabled ? 'text-[#8D817A]' : 'text-[#3E8B62]'}`}>
-                          {isInactive ? 'Unavailable' : isOutOfStock ? 'Out of Stock' : product.stock <= 5 ? `Only ${product.stock} left` : 'In Stock'}
-                        </span>
+                        <span className={`truncate text-[9px] font-semibold ${isDisabled ? 'text-[#888]' : 'text-[#3E8B62]'}`}>{isInactive ? 'Unavailable' : isOutOfStock ? 'Out of Stock' : isLowStock ? 'Limited Stock' : 'In Stock'}</span>
                       </div>
 
-                      <span className={`flex shrink-0 items-center gap-0.5 text-[9px] font-bold transition-all duration-300 ${isDisabled ? 'text-[#948780]' : 'text-[#8E181F] group-hover:gap-1'}`}>
+                      <span className={`flex shrink-0 items-center gap-0.5 text-[9px] font-bold transition-all duration-300 ${isDisabled ? 'text-[#999]' : 'text-[#8E181F] group-hover:gap-1'}`}>
                         View
-                        <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                        <ChevronRight size={11} strokeWidth={2.5} className={`transition-transform duration-300 ${isDisabled ? '' : 'group-hover:translate-x-0.5'}`} />
                       </span>
                     </div>
                   </div>

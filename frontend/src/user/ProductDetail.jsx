@@ -1,7 +1,7 @@
 import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ShoppingCart, Star, Minus, Plus, Trash2, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, ChevronRight, Tag, AlertCircle, PackageCheck, XCircle, PackageOpen } from 'lucide-react'
+import { ShoppingCart, Star, Minus, Plus, Trash2, Truck, ShieldCheck, RotateCcw, BadgeCheck, Info, ChevronRight, Tag, AlertCircle, PackageCheck, XCircle, PackageOpen, Sparkles } from 'lucide-react'
 import { useUser } from '../context/userProvider'
 import { useCart } from '../context/CartProvider'
 import { axiosInstance } from '../config/axiosConfig'
@@ -36,10 +36,8 @@ export default function ProductDetail() {
   const isDisabled = isInactive || isOutOfStock
   const disabledMessage = isInactive ? 'Currently Unavailable' : 'Out of Stock'
 
-
   const hasDiscount = product && product.discount > 0 && product.price > product.discountPrice
   const displayPrice = product?.discountPrice > 0 ? product.discountPrice : product?.price || 0
-
 
   // Toast
   const showToast = (message) => {
@@ -835,104 +833,147 @@ export default function ProductDetail() {
         {/* Related Products Data */}
         {!relatedLoading && relatedProducts.length > 0 && (
           <section className="mt-10 border-t border-[#E8DDD4] pt-8 sm:mt-12 sm:pt-10">
-            <div className="mb-5 flex items-end justify-between gap-4">
-              <div>
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="h-1.5 w-8 rounded-full bg-linear-to-r from-[#7D171C] to-[#B5262D]" />
+            <div className="mb-4 flex items-end justify-between gap-2 sm:mb-6 sm:gap-4">
+              <div className="min-w-0">
+                <div className="mb-1 flex items-center gap-1.5 sm:mb-2 sm:gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#F7EEE7] text-[#8E181F] sm:h-8 sm:w-8 sm:rounded-lg">
+                    <Sparkles size={13} strokeWidth={2} className="sm:h-4 sm:w-4" />
+                  </span>
 
-                  <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#9A857B]">You may also like</span>
+                  <span className="text-[8px] font-bold uppercase tracking-[0.12em] text-[#9A857B] sm:text-xs sm:tracking-[0.16em]">You may also like</span>
                 </div>
 
-                <h2 className="text-lg font-extrabold tracking-tight text-[#351C18] sm:text-xl">More from {product.subCategory?.subCategoryName}</h2>
+                <h2 className="truncate text-lg font-extrabold tracking-tight text-[#351C18] sm:text-2xl">More from {product.subCategory?.subCategoryName || 'Similar Products'}</h2>
 
-                <p className="mt-1 text-[10px] text-[#806C63] sm:text-xs">Explore similar products you may like</p>
+                <p className="mt-0.5 text-[10px] text-[#806C63] sm:mt-1 sm:text-sm">Explore similar products you may like</p>
               </div>
 
-              <span className="shrink-0 rounded-md border border-[#E8DDD4] bg-[#FFFDFC] px-2.5 py-1.5 text-[9px] font-bold text-[#67544D] sm:text-[10px]">{relatedProducts.length} Products</span>
+              <span className="shrink-0 rounded-md border border-[#E2D5CC] bg-[#FFFDFC] px-2 py-1.5 text-[8px] font-bold text-[#67544D] sm:rounded-lg sm:px-3 sm:text-xs">{relatedProducts.length} Products</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-4">
               {relatedProducts.map((item) => {
-                const itemInactive = item.status === 'Inactive' || item.category?.status === 'Inactive'
+                const itemStock = Number(item.stock ?? 0)
 
-                const itemOutOfStock = item.stock <= 0
+                const itemInactive = item.status?.toLowerCase() === 'inactive' || item.category?.status?.toLowerCase() === 'inactive'
+
+                const itemOutOfStock = itemStock <= 0
                 const itemDisabled = itemInactive || itemOutOfStock
+                const itemLowStock = !itemDisabled && itemStock <= 5
 
-                const itemDiscount = item.discount > 0 && item.price > item.discountPrice
+                const itemPrice = Number(item.price || 0)
+                const itemDiscountPrice = Number(item.discountPrice || 0)
 
-                const itemPrice = item.discountPrice > 0 ? item.discountPrice : item.price
+                const itemHasDiscount = Number(item.discount || 0) > 0 && itemPrice > itemDiscountPrice && itemDiscountPrice > 0
+
+                const itemDisplayPrice = itemHasDiscount ? itemDiscountPrice : itemPrice
 
                 const card = (
                   <>
-                    {/* IMAGE */}
-                    <div className={`relative flex h-44 shrink-0 items-center justify-center overflow-hidden p-3 sm:h-48 lg:h-52 ${itemDisabled ? 'bg-[#E9E9E9]' : 'bg-white'}`}>
-                      {itemDiscount && (
-                        <span className={`absolute left-2.5 top-2.5 z-20 rounded-md px-2 py-1 text-[9px] font-extrabold shadow-sm ${itemDisabled ? 'bg-[#D9D9D9] text-[#888888]' : 'bg-[#A51D26] text-white'}`}>{item.discount}% OFF</span>
+                    {/* Image */}
+                    <div className={`relative flex aspect-square items-center justify-center overflow-hidden p-2 sm:p-3 ${itemDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
+                      {!itemDisabled && <div className="absolute -right-7 -top-7 h-20 w-20 rounded-full bg-[#A51D26]/5 transition-transform duration-500 group-hover:scale-150 sm:-right-8 sm:-top-8 sm:h-24 sm:w-24" />}
+
+                      {/* Discount */}
+                      {itemHasDiscount && (
+                        <span
+                          className={`absolute left-1.5 top-1.5 z-20 rounded-md px-1.5 py-0.5 text-[6.5px] font-extrabold shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:text-[8px] ${
+                            itemDisabled ? 'bg-linear-to-r from-[#737373] to-[#A3A3A3] text-white' : 'bg-linear-to-r from-[#7D171C] to-[#A51D26] text-white'
+                          }`}
+                        >
+                          {item.discount}% OFF
+                        </span>
                       )}
 
-                      {itemDisabled && <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#D9D9D9] px-2 py-1 text-[9px] font-bold text-[#888888]">{itemInactive ? 'Inactive' : 'Out of Stock'}</span>}
+                      {/* Status */}
+                      {itemInactive ? (
+                        <span className="absolute right-1.5 top-1.5 z-20 max-w-[65%] rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#8E181F] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[8px]">
+                          Currently Unavailable
+                        </span>
+                      ) : itemOutOfStock ? (
+                        <span className="absolute right-1.5 top-1.5 z-20 rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#8E181F] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[8px]">Out of Stock</span>
+                      ) : itemLowStock ? (
+                        <span className="absolute right-1.5 top-1.5 z-20 rounded-md bg-[#FFF5E7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#B87935] sm:right-2.5 sm:top-2.5 sm:px-2 sm:text-[8px]">Only {itemStock} left</span>
+                      ) : null}
 
-                      {!itemDisabled && item.stock > 0 && item.stock <= 5 && <span className="absolute right-2.5 top-2.5 z-20 rounded-md bg-[#FFF7EA] px-2 py-1 text-[9px] font-bold text-[#B87935]">Only {item.stock} left</span>}
+                      {/* Product Image */}
+                      {item.images?.length > 0 ? (
+                        <img src={getImageUrl(item.images[0])} alt={item.productName} className={`relative z-10 h-full w-full object-contain ${itemDisabled ? 'grayscale opacity-45' : 'transition-transform duration-500 group-hover:scale-105'}`} />
+                      ) : (
+                        <div className={`relative z-10 flex flex-col items-center gap-1 ${itemDisabled ? 'text-[#999999]' : 'text-[#9A857B]'}`}>
+                          <ShoppingCart size={22} strokeWidth={1.5} className="sm:h-6 sm:w-6" />
+                          <span className="text-[7px] sm:text-[8px]">No Image</span>
+                        </div>
+                      )}
 
+                      {/* Bottom Glow */}
+                      {!itemDisabled && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-10 bg-linear-to-t from-[#351C18]/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:h-14" />}
+
+                      {/* Offer */}
                       {item.isOffer && (
-                        <span className={`absolute bottom-2.5 left-2.5 z-20 flex items-center gap-1 rounded-md px-2 py-1 text-[8px] font-bold ${itemDisabled ? 'bg-[#D9D9D9] text-[#888888]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
+                        <span
+                          className={`absolute bottom-2 left-2 z-20 flex items-center gap-1 rounded-md px-1.5 py-1 text-[7px] font-bold sm:bottom-2.5 sm:left-2.5 sm:px-2 sm:text-[8px] ${
+                            itemDisabled ? 'bg-[#D9D9D9] text-[#888888]' : 'bg-[#F7EEE7] text-[#8E181F]'
+                          }`}
+                        >
                           <Tag size={9} />
                           Offer
                         </span>
                       )}
-
-                      {item.images?.length > 0 ? (
-                        <img src={getImageUrl(item.images[0])} alt={item.productName} className={`h-full w-full object-contain transition-transform duration-500 ${itemDisabled ? 'grayscale opacity-45' : 'group-hover:scale-105'}`} />
-                      ) : (
-                        <div className={`flex flex-col items-center gap-1.5 ${itemDisabled ? 'text-[#999999]' : 'text-[#A28E85]'}`}>
-                          <Info size={25} strokeWidth={1.5} />
-
-                          <span className="text-[9px] font-medium">No Image</span>
-                        </div>
-                      )}
                     </div>
 
-                    {/* INFO */}
-                    <div className={`border-t px-3 py-3 ${itemDisabled ? 'border-[#D9D9D9] bg-[#E9E9E9]' : 'border-[#EEE5DF] bg-[#FFFCFA]'}`}>
-                      <p className={`truncate text-[9px] font-bold uppercase tracking-wider ${itemDisabled ? 'text-[#999999]' : 'text-[#9A857B]'}`}>{item.category?.categoryName || 'Product'}</p>
+                    {/* Product Info */}
+                    <div className={`border-t px-1.5 py-1.5 sm:px-2.5 sm:py-2.5 ${itemDisabled ? 'border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#EEE5DF] bg-[#FFFCFA] transition-colors duration-300 group-hover:bg-[#FBF5F1]'}`}>
+                      <p className={`truncate text-[6.5px] font-bold uppercase tracking-wider sm:text-[8px] ${itemDisabled ? 'text-[#999999]' : 'text-[#9A857B]'}`}>{item.category?.categoryName || 'Product'}</p>
 
-                      <h3 className={`mt-1 line-clamp-2 min-h-9 text-[12px] font-bold leading-4.5 sm:text-[13px] ${itemDisabled ? 'text-[#888888]' : 'text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F]'}`}>{item.productName}</h3>
+                      <h3 className={`mt-1 line-clamp-2 min-h-8 text-[10px] font-bold leading-4 sm:min-h-10 sm:text-[12px] sm:leading-5 ${itemDisabled ? 'text-[#777777]' : 'text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F]'}`}>
+                        {item.productName}
+                      </h3>
 
-                      <div className="mt-2 flex items-center gap-1.5">
-                        <span className={`flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[8px] font-bold ${itemDisabled ? 'bg-[#D9D9D9] text-[#888888]' : 'bg-[#3E8B62] text-white'}`}>
-                          {item.rating || '0.0'}
-
-                          <Star size={8} fill="currentColor" strokeWidth={2.5} />
+                      {/* Rating */}
+                      <div className="mt-1 flex items-center gap-1 sm:mt-1.5">
+                        <span className={`flex items-center gap-0.5 rounded px-1 py-0.5 text-[7px] font-bold sm:px-1.5 sm:text-[8px] ${itemDisabled ? 'bg-[#E5E5E5] text-[#888888]' : 'bg-[#3E8B62] text-white'}`}>
+                          {Number(item.rating || 0).toFixed(1)}
+                          <Star size={6} fill="currentColor" strokeWidth={2} className="sm:h-1.75 sm:w-1.75" />
                         </span>
 
-                        {item.soldCount > 0 && <span className={`truncate text-[9px] ${itemDisabled ? 'text-[#999999]' : 'text-[#806C63]'}`}>{item.soldCount}+ sold</span>}
-                      </div>
-
-                      <div className="mt-2.5 flex flex-wrap items-baseline gap-1.5">
-                        <span className={`text-base font-extrabold ${itemDisabled ? 'text-[#777777]' : 'text-[#351C18]'}`}>₹{itemPrice?.toLocaleString('en-IN')}</span>
-
-                        {itemDiscount && (
+                        {Number(item.soldCount || 0) > 0 && (
                           <>
-                            <span className={`text-[9px] line-through ${itemDisabled ? 'text-[#999999]' : 'text-[#9A857B]'}`}>₹{item.price?.toLocaleString('en-IN')}</span>
-
-                            <span className={`text-[9px] font-bold ${itemDisabled ? 'text-[#999999]' : 'text-[#3E8B62]'}`}>{item.discount}% off</span>
+                            <span className={`h-0.5 w-0.5 rounded-full ${itemDisabled ? 'bg-[#BDBDBD]' : 'bg-[#C9B8AF]'}`} />
+                            <span className={`truncate text-[6.5px] font-medium sm:text-[8px] ${itemDisabled ? 'text-[#999999]' : 'text-[#806C63]'}`}>{item.soldCount}+ sold</span>
                           </>
                         )}
                       </div>
 
-                      <div className={`mt-2.5 flex items-center justify-between border-t pt-2.5 ${itemDisabled ? 'border-[#D9D9D9]' : 'border-[#EEE5DF]'}`}>
-                        <div className="flex items-center gap-1">
-                          <span className={`h-1.5 w-1.5 rounded-full ${itemDisabled ? 'bg-[#999999]' : item.stock <= 5 ? 'bg-[#B87935]' : 'bg-[#3E8B62]'}`} />
+                      {/* Price */}
+                      <div className="mt-1 flex flex-wrap items-baseline gap-x-1 gap-y-0.5 sm:mt-1.5">
+                        <span className={`text-[12px] font-extrabold tracking-tight sm:text-[14px] ${itemDisabled ? 'text-[#777777]' : 'text-[#351C18]'}`}>₹{itemDisplayPrice.toLocaleString('en-IN')}</span>
 
-                          <span className={`text-[9px] font-semibold ${itemDisabled ? 'text-[#999999]' : item.stock <= 5 ? 'text-[#B87935]' : 'text-[#3E8B62]'}`}>
-                            {itemInactive ? 'Inactive' : item.stock <= 0 ? 'Unavailable' : item.stock <= 5 ? 'Low Stock' : 'In Stock'}
+                        {itemHasDiscount && (
+                          <>
+                            <span className={`text-[7px] line-through sm:text-[9px] ${itemDisabled ? 'text-[#AAAAAA]' : 'text-[#9A857B]'}`}>₹{itemPrice.toLocaleString('en-IN')}</span>
+
+                            {!itemDisabled && <span className="text-[6.5px] font-bold text-[#3E8B62] sm:text-[8px]">{item.discount}% off</span>}
+                          </>
+                        )}
+                      </div>
+
+                      {/* Availability */}
+                      <div className={`mt-1 flex items-center justify-between gap-1 border-t pt-1 sm:mt-1.5 sm:pt-1.5 ${itemDisabled ? 'border-[#D9D9D9]' : 'border-[#EFE5DF]'}`}>
+                        <div className="flex min-w-0 items-center gap-0.5 sm:gap-1">
+                          <span className={`h-1 w-1 shrink-0 rounded-full sm:h-1.5 sm:w-1.5 ${itemDisabled ? 'bg-[#999999]' : itemLowStock ? 'bg-[#B87935]' : 'bg-[#3E8B62]'}`} />
+
+                          <span className={`truncate text-[6.5px] font-bold sm:text-[8px] ${itemDisabled ? 'text-[#888888]' : itemLowStock ? 'text-[#B87935]' : 'text-[#3E8B62]'}`}>
+                            {itemInactive ? 'Unavailable' : itemOutOfStock ? 'Out of Stock' : itemLowStock ? 'Limited Stock' : 'In Stock'}
                           </span>
                         </div>
 
-                        <span className={`flex items-center gap-0.5 text-[9px] font-bold transition-all duration-300 group-hover:gap-1 ${itemDisabled ? 'text-[#888888]' : 'text-[#8E181F]'}`}>
-                          View
-                          <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-                        </span>
+                        {!itemDisabled && (
+                          <span className="flex shrink-0 items-center gap-0.5 text-[7px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1 sm:text-[9px]">
+                            View
+                            <ChevronRight size={9} className="transition-transform duration-300 group-hover:translate-x-0.5 sm:h-2.5 sm:w-2.5" />
+                          </span>
+                        )}
                       </div>
                     </div>
                   </>
@@ -942,10 +983,10 @@ export default function ProductDetail() {
                   <Link
                     key={item._id}
                     to={`/product/${item._id}`}
-                    className={`group overflow-hidden rounded-xl shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 ${
+                    className={`group relative overflow-hidden rounded-lg border transition-all duration-300 sm:rounded-xl ${
                       itemDisabled
-                        ? 'border border-[#D9D9D9] bg-[#E9E9E9] hover:border-[#BDBDBD] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]'
-                        : 'border border-[#E8DDD4] bg-white hover:-translate-y-1 hover:border-[#D4BDB2] hover:shadow-[0_10px_24px_rgba(73,54,49,0.11)]'
+                        ? 'border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_2px_8px_rgba(73,54,49,0.04)] hover:border-[#CDAFA4] hover:shadow-[0_8px_20px_rgba(73,54,49,0.08)]'
+                        : 'border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_2px_8px_rgba(73,54,49,0.05)] hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_14px_30px_rgba(73,54,49,0.13)]'
                     }`}
                   >
                     {card}

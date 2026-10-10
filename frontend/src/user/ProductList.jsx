@@ -73,7 +73,6 @@ export default function ProductList() {
       </div>
 
       {/* Empty State */}
-
       {products.length === 0 ? (
         <div className="flex min-h-48 flex-col items-center justify-center rounded-xl border border-dashed border-[#D8C9C0] bg-[#FFFDFC] px-4 text-center sm:min-h-60 sm:rounded-2xl sm:px-5">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F] sm:h-14 sm:w-14 sm:rounded-2xl">
@@ -116,7 +115,6 @@ export default function ProductList() {
                   {!isDisabled && <div className="absolute -right-7 -top-7 h-20 w-20 rounded-full bg-[#A51D26]/5 transition-transform duration-500 group-hover:scale-150 sm:-right-8 sm:-top-8 sm:h-24 sm:w-24" />}
 
                   {/* Discount */}
-
                   {product.discount > 0 && (
                     <span
                       className={`absolute left-1.5 top-1.5 z-20 rounded-md px-1.5 py-0.5 text-[6.5px] font-extrabold text-white shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px] ${
@@ -128,7 +126,6 @@ export default function ProductList() {
                   )}
 
                   {/* Status */}
-
                   {isInactive || isCategoryInactive ? (
                     <span className="absolute right-1.5 top-1.5 z-20 rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#8E181F] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">
                       {isInactive ? 'Inactive' : 'Currently Unavailable'}
@@ -140,7 +137,6 @@ export default function ProductList() {
                   ) : null}
 
                   {/* Product Image */}
-
                   {product.images?.length > 0 ? (
                     <img src={getImageUrl(product.images[0])} alt={product.productName} className={`relative z-10 h-full w-full object-contain ${isDisabled ? 'grayscale opacity-45' : 'transition-transform duration-500 group-hover:scale-105'}`} />
                   ) : (
