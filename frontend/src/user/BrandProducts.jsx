@@ -182,7 +182,7 @@ export default function BrandProducts() {
           /* PRODUCT GRID */
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6 xl:gap-5">
             {products.map((product) => {
-              const isDisabled = product.status === 'Inactive' || product.stock <= 0
+              const isDisabled = product.status === 'Inactive' || product.category?.status === 'Inactive' || Number(product.stock) <= 0
 
               const cardClass = isDisabled
                 ? 'group relative overflow-hidden rounded-xl border border-[#D9D9D9] bg-[#F3F3F3] shadow-[0_2px_10px_rgba(0,0,0,0.04)]'
@@ -195,9 +195,9 @@ export default function BrandProducts() {
                 : 'mt-0.5 line-clamp-2 min-h-8 text-[11px] font-bold leading-4 text-[#351C18] transition-colors duration-200 group-hover:text-[#8E181F] sm:mt-1 sm:min-h-9 sm:text-[13px] sm:leading-4.5'
 
               return isDisabled ? (
-                <div key={product._id} className={cardClass} aria-disabled="true">
+                <Link key={product._id} to={`/product/${product._id}`} className={cardClass}>
                   {/* IMAGE */}
-                  <div className="relative flex h-36 items-center justify-center overflow-hidden bg-[#F3F3F3] p-2.5 sm:h-48 sm:p-3 lg:h-52">
+                  <div className="relative flex h-36 items-center justify-center overflow-hidden bg-white  p-2.5 sm:h-48 sm:p-3 lg:h-52">
                     {/* Disabled Badge */}
                     <span className="absolute right-2 top-2 z-20 rounded-md bg-[#E5E5E5] px-1.5 py-0.5 text-[7px] font-bold text-[#888888] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-1 sm:text-[9px]">
                       {product.status === 'Inactive' ? 'Inactive' : 'Out of Stock'}
@@ -269,7 +269,7 @@ export default function BrandProducts() {
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ) : (
                 <Link key={product._id} to={`/product/${product._id}`} className={cardClass}>
                   {/* IMAGE */}

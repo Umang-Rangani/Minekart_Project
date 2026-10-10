@@ -89,13 +89,12 @@ export default function ProductList() {
         <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-4">
           {products.map((product) => {
             const isInactive = product.status === 'Inactive'
+            const isCategoryInactive = product.category?.status === 'Inactive'
 
             const stock = Number(product.stock || 0)
-
             const isOutOfStock = stock <= 0
 
-            const isDisabled = isInactive || isOutOfStock
-
+            const isDisabled = isInactive || isCategoryInactive || isOutOfStock
             const isLowStock = !isDisabled && stock > 0 && stock <= 5
 
             const price = Number(product.price || 0)
@@ -110,25 +109,32 @@ export default function ProductList() {
               <>
                 {/* Image */}
 
-                <div className={`relative flex aspect-square items-center justify-center overflow-hidden p-2 sm:p-3 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}>
+                {/* <div className={`relative flex aspect-square items-center justify-center overflow-hidden p-2 sm:p-3 ${isDisabled ? 'bg-[#F3F3F3]' : 'bg-white'}`}> */}
+                <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-white p-2 sm:p-3">
                   {/* Decorative Circle */}
 
                   {!isDisabled && <div className="absolute -right-7 -top-7 h-20 w-20 rounded-full bg-[#A51D26]/5 transition-transform duration-500 group-hover:scale-150 sm:-right-8 sm:-top-8 sm:h-24 sm:w-24" />}
 
                   {/* Discount */}
 
-                  {!isDisabled && product.discount > 0 && (
-                    <span className="absolute left-1.5 top-1.5 z-20 rounded-md bg-linear-to-r from-[#7D171C] to-[#A51D26] px-1.5 py-0.5 text-[6.5px] font-extrabold text-white shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">
+                  {product.discount > 0 && (
+                    <span
+                      className={`absolute left-1.5 top-1.5 z-20 rounded-md px-1.5 py-0.5 text-[6.5px] font-extrabold text-white shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px] ${
+                        isDisabled ? 'bg-linear-to-r from-[#737373] to-[#A3A3A3]' : 'bg-linear-to-r from-[#7D171C] to-[#A51D26]'
+                      }`}
+                    >
                       {product.discount}% OFF
                     </span>
                   )}
 
                   {/* Status */}
 
-                  {isInactive ? (
-                    <span className="absolute right-1.5 top-1.5 z-20 rounded-md bg-[#E5E5E5] px-1.5 py-0.5 text-[6.5px] font-bold text-[#888888] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">Inactive</span>
+                  {isInactive || isCategoryInactive ? (
+                    <span className="absolute right-1.5 top-1.5 z-20 rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#8E181F] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">
+                      {isInactive ? 'Inactive' : 'Currently Unavailable'}
+                    </span>
                   ) : isOutOfStock ? (
-                    <span className="absolute right-1.5 top-1.5 z-20 rounded-md bg-[#E5E5E5] px-1.5 py-0.5 text-[6.5px] font-bold text-[#888888] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">Out of Stock</span>
+                    <span className="absolute right-1.5 top-1.5 z-20 rounded-md border border-[#E8DDD4] bg-[#F7EEE7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#8E181F] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">Out of Stock</span>
                   ) : isLowStock ? (
                     <span className="absolute right-1.5 top-1.5 z-20 rounded-md bg-[#FFF5E7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#B87935] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">Only {stock} left</span>
                   ) : null}
@@ -151,7 +157,6 @@ export default function ProductList() {
                 </div>
 
                 {/* Product Info */}
-
                 <div className={`border-t px-1.5 py-1.5 sm:px-2.5 sm:py-2.5 ${isDisabled ? 'border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#EEE5DF] bg-[#FFFCFA] transition-colors duration-300 group-hover:bg-[#FBF5F1]'}`}>
                   {/* Category */}
 
@@ -204,7 +209,7 @@ export default function ProductList() {
                       <span className={`h-1 w-1 rounded-full sm:h-1.5 sm:w-1.5 ${isDisabled ? 'bg-[#999999]' : isLowStock ? 'bg-[#B87935]' : 'bg-[#3E8B62]'}`} />
 
                       <span className={`text-[6.5px] font-bold sm:text-[8px] ${isDisabled ? 'text-[#888888]' : isLowStock ? 'text-[#B87935]' : 'text-[#3E8B62]'}`}>
-                        {isInactive ? 'Unavailable' : isOutOfStock ? 'Out of Stock' : isLowStock ? 'Limited Stock' : 'In Stock'}
+                        {isInactive || isCategoryInactive ? 'Unavailable' : isOutOfStock ? 'Out of Stock' : isLowStock ? 'Limited Stock' : 'In Stock'}
                       </span>
                     </div>
 
@@ -225,13 +230,13 @@ export default function ProductList() {
 
             if (isDisabled) {
               return (
-                <div
+                <Link
                   key={product._id}
-                  aria-disabled="true"
-                  className="group relative cursor-not-allowed overflow-hidden rounded-lg border border-[#D9D9D9] bg-[#F3F3F3] shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:rounded-xl sm:shadow-[0_3px_10px_rgba(0,0,0,0.04)]"
+                  to={`/product/${product._id}`}
+                  className="group relative overflow-hidden rounded-lg border border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_2px_8px_rgba(73,54,49,0.04)] transition-all duration-300 hover:border-[#CDAFA4] hover:shadow-[0_8px_20px_rgba(73,54,49,0.08)] sm:rounded-xl sm:shadow-[0_3px_10px_rgba(73,54,49,0.04)]"
                 >
                   {productContent}
-                </div>
+                </Link>
               )
             }
 

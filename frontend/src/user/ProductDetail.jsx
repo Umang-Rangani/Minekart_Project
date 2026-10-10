@@ -28,14 +28,18 @@ export default function ProductDetail() {
 
   const [toast, setToast] = useState('')
 
-  // Product status
-  const isInactive = product?.status === 'Inactive'
+  // Product Status
+  const isProductInactive = product?.status === 'Inactive'
+  const isCategoryInactive = product?.category?.status === 'Inactive'
+  const isInactive = isProductInactive || isCategoryInactive
   const isOutOfStock = product?.stock <= 0
   const isDisabled = isInactive || isOutOfStock
+  const disabledMessage = isInactive ? 'Currently Unavailable' : 'Out of Stock'
+
 
   const hasDiscount = product && product.discount > 0 && product.price > product.discountPrice
-
   const displayPrice = product?.discountPrice > 0 ? product.discountPrice : product?.price || 0
+
 
   // Toast
   const showToast = (message) => {
@@ -451,7 +455,7 @@ export default function ProductDetail() {
                       <div className="flex items-center gap-2 rounded-xl border border-[#D1D1D1] bg-[#F3F3F3]/95 px-4 py-2.5 shadow-sm">
                         {isInactive ? <XCircle size={17} className="text-[#888888]" /> : <PackageCheck size={17} className="text-[#888888]" />}
 
-                        <span className="text-xs font-extrabold text-[#777777]">{isInactive ? 'Currently Unavailable' : 'Out of Stock'}</span>
+                        <span className="text-xs font-extrabold text-[#777777]">{disabledMessage}</span>
                       </div>
                     </div>
                   )}
@@ -472,12 +476,14 @@ export default function ProductDetail() {
             {/* STATUS */}
             {isDisabled && (
               <div className="mb-4 flex items-center gap-2 rounded-xl border border-[#D9D9D9] bg-[#E8E8E8] px-3.5 py-3">
-                <AlertCircle size={17} className="text-[#888888]" />
+                <AlertCircle size={17} className="shrink-0 text-[#888888]" />
 
                 <div>
                   <p className="text-xs font-extrabold text-[#666666]">{isInactive ? 'Product currently unavailable' : 'Product out of stock'}</p>
 
-                  <p className="mt-0.5 text-[10px] text-[#888888]">{isInactive ? 'This product is not available for purchase right now.' : 'This product is temporarily out of stock.'}</p>
+                  <p className="mt-0.5 text-[10px] text-[#888888]">
+                    {isCategoryInactive ? 'This product belongs to an inactive category and cannot be purchased.' : isProductInactive ? 'This product is currently unavailable for purchase.' : 'This product is temporarily out of stock.'}
+                  </p>
                 </div>
               </div>
             )}
@@ -847,7 +853,8 @@ export default function ProductDetail() {
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {relatedProducts.map((item) => {
-                const itemInactive = item.status === 'Inactive'
+                const itemInactive = item.status === 'Inactive' || item.category?.status === 'Inactive'
+
                 const itemOutOfStock = item.stock <= 0
                 const itemDisabled = itemInactive || itemOutOfStock
 
@@ -922,26 +929,24 @@ export default function ProductDetail() {
                           </span>
                         </div>
 
-                        {!itemDisabled && (
-                          <span className="flex items-center gap-0.5 text-[9px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1">
-                            View
-                            <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-                          </span>
-                        )}
+                        <span className={`flex items-center gap-0.5 text-[9px] font-bold transition-all duration-300 group-hover:gap-1 ${itemDisabled ? 'text-[#888888]' : 'text-[#8E181F]'}`}>
+                          View
+                          <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                        </span>
                       </div>
                     </div>
                   </>
                 )
 
-                return itemDisabled ? (
-                  <div key={item._id} aria-disabled="true" className="overflow-hidden rounded-xl border border-[#D9D9D9] bg-[#E9E9E9] shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-                    {card}
-                  </div>
-                ) : (
+                return (
                   <Link
                     key={item._id}
                     to={`/product/${item._id}`}
-                    className="group overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#D4BDB2] hover:shadow-[0_10px_24px_rgba(73,54,49,0.11)]"
+                    className={`group overflow-hidden rounded-xl shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 ${
+                      itemDisabled
+                        ? 'border border-[#D9D9D9] bg-[#E9E9E9] hover:border-[#BDBDBD] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]'
+                        : 'border border-[#E8DDD4] bg-white hover:-translate-y-1 hover:border-[#D4BDB2] hover:shadow-[0_10px_24px_rgba(73,54,49,0.11)]'
+                    }`}
                   >
                     {card}
                   </Link>

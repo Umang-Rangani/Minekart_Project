@@ -92,7 +92,6 @@ router.get('/search', async (req, res) => {
       // Search
       {
         $match: {
-          status: 'Active',
           $or: [
             {
               productName: {
@@ -161,7 +160,7 @@ router.get('/filter', async (req, res) => {
       status: 'Active',
     }
 
-    // Search => Product Name Only
+    // Search: Product Name Only
     if (search?.trim()) {
       const escapedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -171,7 +170,7 @@ router.get('/filter', async (req, res) => {
       }
     }
 
-    // Category
+    // Category Filter
     if (category && category !== 'All') {
       if (!mongoose.Types.ObjectId.isValid(category)) {
         return res.status(400).json({
@@ -183,7 +182,7 @@ router.get('/filter', async (req, res) => {
       matchStage.category = new mongoose.Types.ObjectId(category)
     }
 
-    // Brand
+    // Brand Filter
     if (brand && brand !== 'All') {
       if (!mongoose.Types.ObjectId.isValid(brand)) {
         return res.status(400).json({
@@ -195,7 +194,7 @@ router.get('/filter', async (req, res) => {
       matchStage.brand = new mongoose.Types.ObjectId(brand)
     }
 
-    // Rating => Minimum rating
+    // Rating Filter
     if (rating && rating !== 'All') {
       const ratingValue = Number(rating)
 
@@ -206,28 +205,26 @@ router.get('/filter', async (req, res) => {
       }
     }
 
-    // Stock => Only products having stock
+    // Stock Filter
     if (stock === 'true') {
       matchStage.stock = {
         $gt: 0,
       }
     }
 
-    // Aggregation
+    // Aggregation Pipeline
     const pipeline = [
       {
         $match: matchStage,
       },
 
       // Effective Selling Price
-      // discountPrice > 0 => discountPrice
-      // otherwise => price
       {
         $addFields: {
           effectivePrice: {
             $cond: [
               {
-                $gt: ['$discountPrice', 0],
+                $gt: [{ $ifNull: ['$discountPrice', 0] }, 0],
               },
               '$discountPrice',
               '$price',
@@ -264,7 +261,7 @@ router.get('/filter', async (req, res) => {
       })
     }
 
-    // Sort
+    // Sorting
     switch (sort) {
       case 'priceLow':
         pipeline.push({
@@ -312,7 +309,7 @@ router.get('/filter', async (req, res) => {
         break
     }
 
-    // Category
+    // Category Lookup
     pipeline.push({
       $lookup: {
         from: 'categoryminekarts',
@@ -330,6 +327,7 @@ router.get('/filter', async (req, res) => {
           {
             $project: {
               categoryName: 1,
+              status: 1,
             },
           },
         ],
@@ -337,7 +335,7 @@ router.get('/filter', async (req, res) => {
       },
     })
 
-    // SubCategory
+    // SubCategory Lookup
     pipeline.push({
       $lookup: {
         from: 'subcategoryminekarts',
@@ -355,6 +353,7 @@ router.get('/filter', async (req, res) => {
           {
             $project: {
               subCategoryName: 1,
+              status: 1,
             },
           },
         ],
@@ -362,7 +361,7 @@ router.get('/filter', async (req, res) => {
       },
     })
 
-    // Brand
+    // Brand Lookup
     pipeline.push({
       $lookup: {
         from: 'brandminekarts',
@@ -381,6 +380,7 @@ router.get('/filter', async (req, res) => {
             $project: {
               brandName: 1,
               brandLogo: 1,
+              status: 1,
             },
           },
         ],
@@ -388,7 +388,7 @@ router.get('/filter', async (req, res) => {
       },
     })
 
-    // Convert arrays to objects
+    // Convert Lookup Arrays to Objects
     pipeline.push(
       {
         $unwind: {
@@ -410,7 +410,21 @@ router.get('/filter', async (req, res) => {
       },
     )
 
-    // Remove effectivePrice from response
+    // In Stock Only:
+    // Active Product + Active Category + Stock > 0
+    if (stock === 'true') {
+      pipeline.push({
+        $match: {
+          status: 'Active',
+          'category.status': 'Active',
+          stock: {
+            $gt: 0,
+          },
+        },
+      })
+    }
+
+    // Remove effectivePrice from Response
     pipeline.push({
       $project: {
         productName: 1,
@@ -447,7 +461,7 @@ router.get('/filter', async (req, res) => {
       },
     })
 
-    // Execute
+    // Execute Query
     const products = await Product.aggregate(pipeline)
 
     return res.status(200).json({
@@ -584,11 +598,17 @@ router.get('/brand/:brandId', async (req, res) => {
   try {
     const { brandId } = req.params
 
+    if (!mongoose.Types.ObjectId.isValid(brandId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid brand ID',
+      })
+    }
+
     const products = await Product.find({
       brand: brandId,
-      status: 'Active',
     })
-      .populate('category', 'categoryName')
+      .populate('category', 'categoryName status')
       .populate('subCategory', 'subCategoryName')
       .populate('brand', 'brandName brandLogo description')
       .sort({ createdAt: -1 })
@@ -643,7 +663,7 @@ router.get('/normal', async (req, res) => {
     const products = await Product.find({
       isOffer: false,
     })
-      .populate('category', 'categoryName')
+      .populate('category', 'categoryName status')
       .populate('subCategory', 'subCategoryName')
       .populate('brand', 'brandName brandLogo')
       .sort({ createdAt: -1 })
@@ -711,14 +731,6 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({
         success: false,
         message: 'Product not found',
-      })
-    }
-
-    // Inactive product athva inactive category hoy to detail block karo
-    if (data.status !== 'Active' || data.category?.status === 'Inactive') {
-      return res.status(404).json({
-        success: false,
-        message: 'This product is currently unavailable',
       })
     }
 

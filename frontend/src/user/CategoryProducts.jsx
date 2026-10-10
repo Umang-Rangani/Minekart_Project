@@ -301,7 +301,7 @@ export default function CategoryProducts() {
                     ) : null}
 
                     {product.images?.length > 0 ? (
-                      <img src={getImageUrl(product.images[0])} alt={product.productName} className={`relative z-10 h-full w-full object-contain ${isDisabled ? 'grayscale opacity-40' : 'transition-transform duration-500 group-hover:scale-105'}`} />
+                      <img src={getImageUrl(product.images[0])} alt={product.productName} className={`relative z-10 h-full w-full object-contain bg-white ${isDisabled ? 'grayscale opacity-40' : 'transition-transform duration-500 group-hover:scale-105'}`} />
                     ) : (
                       <div className={`relative z-10 flex flex-col items-center gap-1.5 ${isDisabled ? 'text-[#999999]' : 'text-[#A28E85]'}`}>
                         <ShoppingBag size={26} strokeWidth={1.5} />
@@ -349,26 +349,24 @@ export default function CategoryProducts() {
                         </span>
                       </div>
 
-                      {!isDisabled && (
-                        <span className="flex shrink-0 items-center gap-0.5 text-[8px] font-bold text-[#8E181F] transition-all duration-300 group-hover:gap-1 sm:text-[9px]">
-                          View
-                          <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-                        </span>
-                      )}
+                      <span className={`flex shrink-0 items-center gap-0.5 text-[8px] font-bold transition-all duration-300 group-hover:gap-1 sm:text-[9px] ${isDisabled ? 'text-[#888888]' : 'text-[#8E181F]'}`}>
+                        View
+                        <ChevronRight size={11} strokeWidth={2.5} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                      </span>
                     </div>
                   </div>
                 </>
               )
 
-              return isDisabled ? (
-                <div key={product._id} aria-disabled="true" className="group flex min-h-0 cursor-not-allowed flex-col overflow-hidden rounded-xl border border-[#D9D9D9] bg-[#F3F3F3] shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:min-h-90 sm:rounded-2xl">
-                  {productCard}
-                </div>
-              ) : (
+              return (
                 <Link
                   key={product._id}
                   to={`/product/${product._id}`}
-                  className="group flex min-h-0 flex-col overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)] sm:min-h-90 sm:rounded-2xl"
+                  className={`group flex min-h-0 flex-col overflow-hidden rounded-xl shadow-[0_2px_8px_rgba(73,54,49,0.05)] transition-all duration-300 sm:min-h-90 sm:rounded-2xl ${
+                    isDisabled
+                      ? 'border border-[#D9D9D9] bg-[#F3F3F3] hover:border-[#BDBDBD] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]'
+                      : 'border border-[#E8DDD4] bg-white hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_12px_28px_rgba(73,54,49,0.12)]'
+                  }`}
                 >
                   {productCard}
                 </Link>
