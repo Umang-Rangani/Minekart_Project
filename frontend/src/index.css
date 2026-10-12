@@ -31,3 +31,28 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* MineKart Horizontal Scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #A51D26 #F7EEE7;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #F7EEE7;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #A51D26;
+  border-radius: 10px;
+  border: 1px solid #F7EEE7;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #7D171C;
+}

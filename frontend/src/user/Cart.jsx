@@ -1,7 +1,7 @@
 import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { ShoppingBag, ChevronRight, ChevronLeft, Trash2, Minus, Plus, Truck, ShieldCheck, Tag, ExternalLink, AlertCircle, CircleCheck, PackageCheck, BadgeIndianRupee, CreditCard } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartProvider'
 import BreadCrumb from './BreadCrumb'
 import toast from 'react-hot-toast'
@@ -179,13 +179,13 @@ export default function Cart() {
               </div>
 
               {/* CHECKOUT */}
-              <div className="flex shrink-0 items-center gap-1.5">
+              <Link to={"/checkout"} className="flex shrink-0 items-center gap-1.5">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] sm:h-9 sm:w-9">
                   <CreditCard size={12} strokeWidth={1.8} />
                 </div>
 
                 <span className="hidden text-[9px] font-bold text-[#9A857B] sm:block">Checkout</span>
-              </div>
+              </Link>
 
               <div className="mx-1.5 h-0.5 flex-1 bg-[#D8C9C1] sm:mx-3" />
 
