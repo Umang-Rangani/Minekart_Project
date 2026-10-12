@@ -257,7 +257,7 @@ export default function Checkout() {
 
                   <div className="min-w-0">
                     <h2 className="text-lg font-black leading-tight tracking-tight text-[#351C18] sm:text-2xl">MineKart</h2>
-                    <p className="mt-1 text-[8px] font-extrabold tracking-[0.1em] text-[#8E181F] sm:text-[10px]">SHOP MORE • LIVE BETTER</p>
+                    <p className="mt-1 text-[8px] font-extrabold tracking-widest text-[#8E181F] sm:text-[10px]">SHOP MORE • LIVE BETTER</p>
                   </div>
                 </div>
 
@@ -292,7 +292,7 @@ export default function Checkout() {
               </div>
 
               <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-[#A51D26] scrollbar-track-[#F7EEE7] rounded-lg border border-[#E8DDD4]">
-                <table className="w-full min-w-[390px] table-fixed border-collapse text-left">
+                <table className="w-full min-w-97.5 table-fixed border-collapse text-left">
                   <colgroup>
                     <col className="w-[8%]" />
                     <col className="w-[40%]" />
@@ -364,11 +364,11 @@ export default function Checkout() {
                     <div className="mt-3 border-t border-dashed border-[#E8DDD4] pt-2.5">
                       <p className="text-xs font-extrabold text-[#351C18]">{selectedAddressData.fullName}</p>
 
-                      <p className="mt-1 break-words text-[10px] leading-4.5 text-[#67544D]">
+                      <p className="mt-1 wrap-break-word text-[10px] leading-4.5 text-[#67544D]">
                         {selectedAddressData.addressLine}, {selectedAddressData.city}, {selectedAddressData.state} - {selectedAddressData.pincode}
                       </p>
 
-                      {selectedAddressData.landmark && <p className="mt-1 break-words text-[9px] text-[#806C63]">Landmark: {selectedAddressData.landmark}</p>}
+                      {selectedAddressData.landmark && <p className="mt-1 wrap-break-word text-[9px] text-[#806C63]">Landmark: {selectedAddressData.landmark}</p>}
 
                       <div className="mt-2 flex items-center gap-1.5 text-[10px] font-semibold text-[#67544D]">
                         <Phone size={11} className="shrink-0 text-[#8E181F]" />
@@ -495,7 +495,7 @@ export default function Checkout() {
                               {address.isDefault && <span className="rounded bg-[#F0F8F3] px-1.5 py-0.5 text-[8px] font-bold text-[#34704F]">Default</span>}
                             </div>
 
-                            <p className="mt-1.5 break-words text-[10px] leading-4.5 text-[#67544D]">
+                            <p className="mt-1.5 wrap-break-word text-[10px] leading-4.5 text-[#67544D]">
                               {address.addressLine}, {address.city}, {address.state} - {address.pincode}
                             </p>
 
