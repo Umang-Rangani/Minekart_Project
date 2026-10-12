@@ -83,7 +83,6 @@ export default function Products() {
   const [sortOpen, setSortOpen] = useState(false)
 
   const initialFetchStartedRef = useRef(false)
-  const firstFilterEffectRef = useRef(true)
   const skipFilterRef = useRef(false)
   const initialFetchDoneRef = useRef(false)
 
@@ -360,55 +359,83 @@ export default function Products() {
   }, [selectedCategory])
 
   // INITIAL PRODUCTS API
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: 'smooth',
+  //   })
 
+  //   if (initialFetchStartedRef.current) {
+  //     return
+  //   }
+
+  //   initialFetchStartedRef.current = true
+
+  //   const loadInitialProducts = async () => {
+  //     await fetchProducts(true)
+
+  //     initialFetchDoneRef.current = true
+  //   }
+
+  //   loadInitialProducts()
+  // }, [])
+
+  // INITIAL PRODUCTS API
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
+    document.title = 'Products | MineKart'
 
-    if (initialFetchStartedRef.current) {
-      return
-    }
+    if (initialFetchStartedRef.current) return
 
     initialFetchStartedRef.current = true
 
     const loadInitialProducts = async () => {
-      await fetchProducts(true)
-
-      initialFetchDoneRef.current = true
+      try {
+        await fetchProducts(true)
+      } finally {
+        initialFetchDoneRef.current = true
+      }
     }
 
     loadInitialProducts()
   }, [])
 
   // Every search/filter/sort change backend API par jase.
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: 'smooth',
+  //   })
 
+  //   if (firstFilterEffectRef.current) {
+  //     firstFilterEffectRef.current = false
+
+  //     return
+  //   }
+
+  //   if (!initialFetchDoneRef.current) {
+  //     return
+  //   }
+
+  //   if (skipFilterRef.current) {
+  //     skipFilterRef.current = false
+
+  //     return
+  //   }
+
+  //   const timer = setTimeout(() => {
+  //     fetchProducts(false)
+  //   }, 300)
+
+  //   return () => clearTimeout(timer)
+  // }, [search, selectedCategory, selectedBrand, selectedRating, stockOnly, priceLimit, sortBy])
+
+  // FETCH PRODUCTS WHEN FILTERS CHANGE
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
-
-    if (firstFilterEffectRef.current) {
-      firstFilterEffectRef.current = false
-
-      return
-    }
-
-    if (!initialFetchDoneRef.current) {
-      return
-    }
-
-    if (skipFilterRef.current) {
-      skipFilterRef.current = false
-
-      return
-    }
+    if (!initialFetchDoneRef.current) return
 
     const timer = setTimeout(() => {
       fetchProducts(false)
-    }, 300)
+    }, 0)
 
     return () => clearTimeout(timer)
   }, [search, selectedCategory, selectedBrand, selectedRating, stockOnly, priceLimit, sortBy])
@@ -696,32 +723,8 @@ export default function Products() {
                 )}
               </div>
 
-              {/* Price */}
-
-              <div className="mt-3 border-t border-[#EEE5DF] pt-3">
-                {maxPrice <= 0 ? (
-                  <PriceFilterShimmer />
-                ) : (
-                  <>
-                    <div className="mb-2 flex items-center justify-between">
-                      <p className="text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Max Price</p>
-
-                      <span className="text-[9px] font-bold text-[#8E181F]">₹{priceLimit.toLocaleString('en-IN')}</span>
-                    </div>
-
-                    <input type="range" min="0" max={maxPrice || 1} value={priceLimit} onChange={(e) => setPriceLimit(Number(e.target.value))} className="h-1.5 w-full accent-[#8E181F]" />
-
-                    <div className="mt-1 flex justify-between text-[8px] text-[#9A857B]">
-                      <span>₹0</span>
-
-                      <span>₹{maxPrice.toLocaleString('en-IN')}</span>
-                    </div>
-                  </>
-                )}
-              </div>
 
               {/* Rating */}
-
               <div className="mt-3 border-t border-[#EEE5DF] pt-3">
                 <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Rating</p>
 

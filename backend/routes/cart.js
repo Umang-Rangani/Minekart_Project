@@ -53,7 +53,6 @@ router.get('/', authMiddleware, async (req, res) => {
 })
 
 // ! Add Product To Cart
-
 const populateCart = async (cart) => {
   await cart.populate({
     path: 'items.productId',
@@ -222,6 +221,8 @@ router.post('/', authMiddleware, async (req, res) => {
     })
   }
 })
+
+
 
 // ! Increase Cart Item Quantity
 router.patch('/item/increase', authMiddleware, async (req, res) => {

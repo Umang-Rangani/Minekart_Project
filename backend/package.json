@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "nodemon ./bin/www",
-    "serve": "node ./bin/www"
+    "serve": "node ./bin/www" ,
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.0",
@@ -27,5 +28,9 @@
     "multer": "^2.3.0",
     "nodemailer": "^10.0.10",
     "pusher": "^5.3.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.3.1"
   }
 }

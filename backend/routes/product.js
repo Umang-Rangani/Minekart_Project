@@ -666,6 +666,7 @@ router.get('/normal', async (req, res) => {
       .populate('category', 'categoryName status')
       .populate('subCategory', 'subCategoryName')
       .populate('brand', 'brandName brandLogo')
+      .select('images price discount discountPrice productName category rating status stock')
       .sort({ createdAt: -1 })
 
     res.status(200).json({
