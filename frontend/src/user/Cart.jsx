@@ -179,24 +179,24 @@ export default function Cart() {
               </div>
 
               {/* CHECKOUT */}
-              <Link to={"/checkout"} className="flex shrink-0 items-center gap-1.5">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] sm:h-9 sm:w-9">
-                  <CreditCard size={12} strokeWidth={1.8} />
+              <Link to="/checkout" className="group flex shrink-0 items-center gap-1.5">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] transition-all duration-200 group-hover:border-[#A51D26] group-hover:bg-[#A51D26] group-hover:text-white group-hover:shadow-[0_3px_9px_rgba(165,29,38,0.25)] group-hover:ring-2 group-hover:ring-[#F1E3DC] sm:h-9 sm:w-9 sm:group-hover:ring-3">
+                  <CreditCard size={12} strokeWidth={2} />
                 </div>
 
-                <span className="hidden text-[9px] font-bold text-[#9A857B] sm:block">Checkout</span>
+                <span className="hidden text-[9px] font-bold text-[#9A857B] transition-colors duration-200 group-hover:font-extrabold group-hover:text-[#7D171C] sm:block">Checkout</span>
               </Link>
 
               <div className="mx-1.5 h-0.5 flex-1 bg-[#D8C9C1] sm:mx-3" />
 
               {/* CONFIRM */}
-              <div className="flex shrink-0 items-center gap-1.5">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] sm:h-9 sm:w-9">
+              <button type="button" onClick={() => toast.error('Please complete checkout first!')} className="flex shrink-0 items-center gap-1.5 cursor-pointer">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] transition-colors hover:border-[#A51D26] hover:text-[#A51D26] sm:h-9 sm:w-9">
                   <CircleCheck size={12} strokeWidth={1.8} />
                 </div>
 
                 <span className="hidden text-[9px] font-bold text-[#9A857B] sm:block">Confirm</span>
-              </div>
+              </button>
             </div>
           </div>
         </div>

@@ -160,7 +160,7 @@ export default function Checkout() {
   if (cartItems.length === 0) {
     return (
       <div className="min-h-[65vh] bg-[#FBF7F2] px-4 py-12">
-        <div className="mx-auto max-w-lg rounded-2xl border border-[#E8DDD4] bg-white px-6 py-12 text-center shadow-sm">
+        <div className="mx-auto  rounded-2xl border border-[#E8DDD4] bg-white px-6 py-12 text-center shadow-sm">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
             <ShoppingBag size={30} />
           </div>
@@ -233,13 +233,13 @@ export default function Checkout() {
               <div className="mx-2 h-0.5 flex-1 rounded-full bg-[#D8C9C1] sm:mx-3" />
 
               {/* Confirm - Upcoming */}
-              <div className="flex shrink-0 items-center gap-1.5">
+              <button type="button" onClick={handlePlaceOrder} disabled={placingOrder || !selectedAddress || addresses.length === 0 || addressLoading} className="flex shrink-0 items-center gap-1.5">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D8CCC5] bg-[#F7F3F0] text-[#9A857B] sm:h-9 sm:w-9">
-                  <CircleCheck size={14} strokeWidth={1.8} />
+                  {placingOrder ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#D8CCC5] border-t-[#A51D26]" /> : <CircleCheck size={14} strokeWidth={1.8} />}
                 </div>
 
-                <span className="hidden text-[9px] font-bold text-[#9A857B] sm:block">Confirm</span>
-              </div>
+                <span className="hidden text-[9px] font-bold text-[#9A857B] sm:block">{placingOrder ? 'Processing...' : 'Confirm'}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -256,7 +256,11 @@ export default function Checkout() {
                   </div>
 
                   <div className="min-w-0">
-                    <h2 className="text-lg font-black leading-tight tracking-tight text-[#351C18] sm:text-2xl">MineKart</h2>
+                    {/* <h2 className="text-lg font-black leading-tight tracking-tight text-[#351C18] sm:text-2xl">MineKart</h2> */}
+                    <h1 className="text-lg font-black leading-tight tracking-tight  sm:text-2xl text-[#35231F] ">
+                      Mine
+                      <span className="text-[#9D2932]">Kart</span>
+                    </h1>
                     <p className="mt-1 text-[8px] font-extrabold tracking-widest text-[#8E181F] sm:text-[10px]">SHOP MORE • LIVE BETTER</p>
                   </div>
                 </div>

@@ -14,6 +14,7 @@ const { orderCancelledEmail } = require('../utils/emailTemplates/orderCancelledE
 // Admin notification
 const createAdminNotification = require('../utils/createAdminNotification')
 const ADMIN_NOTIFICATION_TYPES = require('../constants/adminNotificationTypes')
+const { generateInvoicePdf } = require('../utils/generateInvoicePdf')
 
 // ! <order className="js"></order>
 
@@ -112,9 +113,7 @@ router.post('/', authMiddleware, async (req, res) => {
       },
     })
 
-    // --------------------------------
     // Background tasks
-    // --------------------------------
 
     const runBackgroundTasks = async () => {
       // Admin notification
@@ -137,13 +136,18 @@ router.post('/', authMiddleware, async (req, res) => {
         console.error('⚠️ Admin notification failed:', notificationError.message)
       }
 
-      // Order email
+      // Order email with HTML PDF invoice
       try {
         const populatedOrder = await Order.findById(order._id).populate({
           path: 'items.productId',
           select: 'productName images price discountPrice',
         })
 
+        if (!populatedOrder) {
+          throw new Error('Order not found while generating invoice')
+        }
+
+        // Existing order confirmation email HTML
         const html = orderPlacedEmail({
           name: user.name,
           orderId: populatedOrder.orderId,
@@ -156,15 +160,36 @@ router.post('/', authMiddleware, async (req, res) => {
           shippingAddress: populatedOrder.shippingAddress,
         })
 
+        // Generate PDF from invoice HTML template
+        let attachments = []
+
+        try {
+          const invoicePdf = await generateInvoicePdf(populatedOrder, user.name)
+
+          attachments = [
+            {
+              filename: `MineKart-Invoice-${populatedOrder.orderId}.pdf`,
+              content: invoicePdf,
+              contentType: 'application/pdf',
+            },
+          ]
+
+          console.log('✅ Invoice PDF generated')
+        } catch (pdfError) {
+          console.error('⚠️ Invoice PDF generation failed:', pdfError.message)
+        }
+
+        // Send the email even if PDF generation fails
         await sendEmail({
           to: user.email,
           subject: `Order Placed - ${populatedOrder.orderId} 🛍️`,
           html,
+          attachments,
         })
 
-        console.log('✅ Order placed email sent')
+        console.log('✅ Order confirmation email sent')
       } catch (emailError) {
-        console.error('⚠️ Order placed email failed:', emailError.message)
+        console.error('⚠️ Order confirmation email failed:', emailError.message)
       }
     }
 
@@ -331,7 +356,7 @@ router.put('/:id/cancel', authMiddleware, async (req, res) => {
           const emailItems = populatedOrder.items.map((item) => ({
             productName: item.productId?.productName || 'Product',
             quantity: item.quantity || 0,
-            totalPrice: Number( item.productId?.discountPrice ||  0) * Number(item.quantity || 0),
+            totalPrice: Number(item.productId?.discountPrice || 0) * Number(item.quantity || 0),
           }))
 
           const html = orderCancelledEmail({

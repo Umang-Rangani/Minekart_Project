@@ -1,25 +1,24 @@
 import { Toaster } from 'react-hot-toast'
 import { CheckCircle2, XCircle, AlertTriangle, Info } from 'lucide-react'
 
+const toastClass =
+  'font-[Poppins,sans-serif] !rounded-xl !border !border-[#E8DDD4] !bg-[#FFFCFA] !px-4 !py-3 !text-sm !text-[#351C18] !shadow-[0_12px_35px_rgba(53,28,24,0.18)] max-sm:!max-w-[calc(100vw-24px)] max-sm:!rounded-lg max-sm:!px-3 max-sm:!py-2 max-sm:!text-xs'
+
 const toastConfig = {
   success: {
-    icon: <CheckCircle2 size={20} strokeWidth={2.4} />,
+    icon: <CheckCircle2 size={18} strokeWidth={2.4} />,
   },
-
   error: {
-    icon: <XCircle size={20} strokeWidth={2.4} />,
+    icon: <XCircle size={18} strokeWidth={2.4} />,
   },
-
   loading: {
-    icon: <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#E8DDD4] border-t-[#A51D26]" />,
+    icon: <span className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-[#E8DDD4] border-t-[#A51D26] sm:h-5 sm:w-5" />,
   },
-
   blank: {
-    icon: <Info size={20} strokeWidth={2.4} />,
+    icon: <Info size={18} strokeWidth={2.4} />,
   },
-
   custom: {
-    icon: <AlertTriangle size={20} strokeWidth={2.4} />,
+    icon: <AlertTriangle size={18} strokeWidth={2.4} />,
   },
 }
 
@@ -28,31 +27,38 @@ export default function MineKartToaster() {
     <Toaster
       position="top-right"
       reverseOrder={false}
-      gutter={10}
+      gutter={8}
+      containerStyle={{
+        top: 12,
+        right: 12,
+        left: 12,
+      }}
       toastOptions={{
-        duration: 3000,
-
-        className: 'font-[Poppins,sans-serif] !rounded-xl !border !border-[#E8DDD4] !bg-[#FFFCFA] !px-4 !py-3 !text-[#351C18] !shadow-[0_12px_35px_rgba(53,28,24,0.18)]',
+        duration: 2000,
+        style: {
+          maxWidth: '100%',
+        },
+        className: toastClass,
 
         success: {
           icon: toastConfig.success.icon,
-          className: 'font-[Poppins,sans-serif] !rounded-xl !border !border-[#E8DDD4] !bg-[#FFFCFA] !px-4 !py-3 !text-[#351C18] !shadow-[0_12px_35px_rgba(53,28,24,0.18)]',
+          className: toastClass,
         },
 
         error: {
           icon: toastConfig.error.icon,
-          duration: 4000,
-          className: 'font-[Poppins,sans-serif] !rounded-xl !border !border-[#E8DDD4] !bg-[#FFFCFA] !px-4 !py-3 !text-[#351C18] !shadow-[0_12px_35px_rgba(53,28,24,0.18)]',
+          duration: 3000,
+          className: toastClass,
         },
 
         loading: {
           icon: toastConfig.loading.icon,
-          className: 'font-[Poppins,sans-serif] !rounded-xl !border !border-[#E8DDD4] !bg-[#FFFCFA] !px-4 !py-3 !text-[#351C18] !shadow-[0_12px_35px_rgba(53,28,24,0.18)]',
+          className: toastClass,
         },
 
         blank: {
           icon: toastConfig.blank.icon,
-          className: 'font-[Poppins,sans-serif] !rounded-xl !border !border-[#E8DDD4] !bg-[#FFFCFA] !px-4 !py-3 !text-[#351C18] !shadow-[0_12px_35px_rgba(53,28,24,0.18)]',
+          className: toastClass,
         },
       }}
     />

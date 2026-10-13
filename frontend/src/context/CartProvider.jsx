@@ -264,7 +264,7 @@ export function CartProvider({ children }) {
 
       if (res.data.success) {
         await getCart()
-        toast.success('Cart cleared successfully')
+        // toast.success('Cart cleared successfully')
       }
 
       return res.data
