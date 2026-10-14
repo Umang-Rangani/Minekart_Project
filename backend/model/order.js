@@ -58,7 +58,7 @@ const orderItemSchema = new mongoose.Schema(
 const orderSchema = new mongoose.Schema(
   {
     orderId: {
-      type: 'String',
+      type: String,
       unique: true,
     },
 
@@ -154,9 +154,10 @@ const orderSchema = new mongoose.Schema(
     },
 
     // Payment
+
     paymentMethod: {
       type: String,
-      enum: ['COD', 'ONLINE_ON_DELIVERY'],
+      enum: ['COD', 'ONLINE_ON_DELIVERY', 'RAZORPAY'],
       required: true,
     },
 
@@ -164,6 +165,22 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
       default: 'Pending',
+    },
+
+    razorpayOrderId: {
+      type: String,
+      default: '',
+    },
+
+    razorpayPaymentId: {
+      type: String,
+      default: '',
+    },
+
+    razorpaySignature: {
+      type: String,
+      default: '',
+      select: false,
     },
 
     // Order Status
@@ -193,6 +210,16 @@ const orderSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+  },
+)
+
+orderSchema.index(
+  { razorpayOrderId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      razorpayOrderId: { $type: 'string', $gt: '' },
+    },
   },
 )
 

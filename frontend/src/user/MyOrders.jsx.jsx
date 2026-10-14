@@ -38,6 +38,12 @@ export default function MyOrders() {
       behavior: 'smooth',
     })
 
+    if (!user) {
+      setOrders([])
+      setLoading(false)
+      return
+    }
+
     getOrders()
   }, [user])
 

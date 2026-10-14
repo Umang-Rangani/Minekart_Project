@@ -73,7 +73,6 @@ app.use(
     credentials: true,
   }),
 )
-
 // Locally serves /uploads/*; on Vercel the public/ folder is served by the CDN instead
 app.use(express.static(path.join(__dirname, 'public')))
 

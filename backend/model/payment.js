@@ -8,15 +8,16 @@ const paymentSchema = new mongoose.Schema(
       required: true,
     },
 
+    // Razorpay verification પહેલાં null રહી શકે
     orderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'OrderMineKart',
-      required: true,
+      default: null,
     },
 
     paymentMethod: {
       type: String,
-      enum: ['COD', 'ONLINE_ON_DELIVERY'],
+      enum: ['COD', 'RAZORPAY', 'ONLINE_ON_DELIVERY'],
       required: true,
     },
 
@@ -42,8 +43,34 @@ const paymentSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+
+    // Razorpay order reference
+    razorpayOrderId: {
+      type: String,
+      default: '',
+    },
+
+    // Checkout snapshot; hidden by default
+    checkoutSnapshot: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+      select: false,
+    },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  },
+)
+
+// Prevent duplicate non-empty Razorpay order IDs.
+paymentSchema.index(
+  { razorpayOrderId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      razorpayOrderId: { $type: 'string', $gt: '' },
+    },
+  },
 )
 
 const Payment = mongoose.models.PaymentMineKart || mongoose.model('PaymentMineKart', paymentSchema)

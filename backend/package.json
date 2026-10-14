@@ -31,7 +31,8 @@
     "pdfkit": "^0.20.2",
     "puppeteer": "^25.13.0",
     "puppeteer-core": "^25.13.0",
-    "pusher": "^5.3.4"
+    "pusher": "^5.3.4",
+    "razorpay": "^2.9.8"
   },
   "devDependencies": {
     "jest": "^29.7.0",

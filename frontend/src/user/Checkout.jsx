@@ -8,6 +8,23 @@ import { axiosInstance } from '../config/axiosConfig'
 import toast from 'react-hot-toast'
 import CheckoutShimmer from '../userShimmer/CheckoutShimmer'
 
+// ! 1. razorpay helper
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true)
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+    script.onload = () => resolve(true)
+    script.onerror = () => resolve(false)
+
+    document.body.appendChild(script)
+  })
+}
+
 export default function Checkout() {
   const navigate = useNavigate()
   const { cart, cartLoading, clearCart } = useCart()
@@ -80,6 +97,123 @@ export default function Checkout() {
     localStorage.setItem('minekart_payment_method', method)
   }
 
+  // ! 2. razorpay
+  const handleRazorpayPayment = async () => {
+    if (placingOrder) return
+
+    try {
+      setPlacingOrder(true)
+
+      // Load Razorpay Checkout
+      const loaded = await loadRazorpayScript()
+
+      if (!loaded) {
+        toast.error('Unable to load Razorpay. Please try again.')
+        setPlacingOrder(false)
+        return
+      }
+
+      // Create Razorpay order on backend
+      const createResponse = await axiosInstance.post('/payment/razorpay/create-order', {
+        addressId: selectedAddress,
+      })
+
+      if (!createResponse.data?.success) {
+        throw new Error(createResponse.data?.message || 'Unable to initiate payment')
+      }
+
+      const paymentData = createResponse.data.data
+
+      if (!paymentData?.keyId || !paymentData?.razorpayOrderId) {
+        throw new Error('Invalid payment details received from server')
+      }
+
+      const options = {
+        key: paymentData.keyId,
+        amount: paymentData.amount,
+        currency: paymentData.currency || 'INR',
+        name: 'MineKart',
+        description: 'Secure online payment',
+        order_id: paymentData.razorpayOrderId,
+
+        prefill: {
+          name: selectedAddressData?.fullName || '',
+          contact: selectedAddressData?.phone || '',
+        },
+
+        theme: {
+          color: '#8E181F',
+        },
+
+        modal: {
+          ondismiss: () => {
+            setPlacingOrder(false)
+            toast('Payment window closed', { icon: 'ℹ️' })
+          },
+        },
+
+        handler: async (response) => {
+          try {
+            // Verify payment signature on backend
+            const verifyResponse = await axiosInstance.post('/payment/razorpay/verify', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            })
+
+            if (!verifyResponse.data?.success) {
+              throw new Error(verifyResponse.data?.message || 'Payment verification failed')
+            }
+
+            const verifiedOrder = verifyResponse.data?.data?.order || verifyResponse.data?.data
+
+            if (!verifiedOrder?.orderId) {
+              throw new Error('Payment verification response did not include the order')
+            }
+
+            toast.success('Payment successful!')
+
+          
+
+            const params = new URLSearchParams({
+              orderId: verifiedOrder.orderId,
+              paymentMethod: verifiedOrder.paymentMethod || 'RAZORPAY',
+              paymentStatus: verifiedOrder.paymentStatus || 'Paid',
+              orderStatus: verifiedOrder.orderStatus || 'Pending',
+              totalAmount: String(verifiedOrder.totalAmount ?? paymentData.amount / 100),
+            })
+
+            navigate(`/order-success?${params.toString()}`)
+          } catch (error) {
+            console.error('Razorpay Verification Error:', error.response?.data || error.message)
+
+            toast.error(error.response?.data?.message || error.message || 'Unable to verify payment. Please check your order before retrying.')
+          } finally {
+            setPlacingOrder(false)
+          }
+        },
+      }
+
+      const razorpay = new window.Razorpay(options)
+
+      razorpay.on('payment.failed', (response) => {
+        console.error('Razorpay Payment Failed:', response.error)
+
+        toast.error(response.error?.description || 'Payment failed. Please try again.')
+
+        setPlacingOrder(false)
+      })
+
+      razorpay.open()
+    } catch (error) {
+      console.error('Razorpay Checkout Error:', error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || error.message || 'Unable to start online payment')
+
+      setPlacingOrder(false)
+    }
+  }
+
   const handlePlaceOrder = async () => {
     if (placingOrder) return
 
@@ -98,9 +232,16 @@ export default function Checkout() {
       return
     }
 
+    // Razorpay has its own secure payment flow
+    if (selectedPayment === 'RAZORPAY') {
+      await handleRazorpayPayment()
+      return
+    }
+
     try {
       setPlacingOrder(true)
 
+      // Existing COD / Online on Delivery flow
       const orderData = {
         items: cartItems.map((item) => ({
           productId: item.productId._id,
@@ -141,11 +282,11 @@ export default function Checkout() {
 
       clearCart().then((response) => {
         if (!response?.success) {
-          console.log('Cart Clear Error:', response?.message)
+          console.warn('Cart Clear Error:', response?.message)
         }
       })
     } catch (error) {
-      console.log('Place Order Error:', error.response?.data || error.message)
+      console.error('Place Order Error:', error.response?.data || error.message)
 
       toast.error(error.response?.data?.message || 'Something went wrong while placing order')
     } finally {
@@ -527,6 +668,7 @@ export default function Checkout() {
               </div>
 
               <div className="space-y-2.5 p-3.5">
+                {/* COD */}
                 <button
                   type="button"
                   onClick={() => handlePaymentChange('COD')}
@@ -544,6 +686,7 @@ export default function Checkout() {
                   {selectedPayment === 'COD' && <CircleCheck size={18} className="shrink-0 text-[#8E181F]" />}
                 </button>
 
+                {/* ONLINE_ON_DELIVERY */}
                 <button
                   type="button"
                   onClick={() => handlePaymentChange('ONLINE_ON_DELIVERY')}
@@ -561,9 +704,27 @@ export default function Checkout() {
                   {selectedPayment === 'ONLINE_ON_DELIVERY' && <CircleCheck size={18} className="shrink-0 text-[#8E181F]" />}
                 </button>
 
+                {/* Razorpay */}
+                <button
+                  type="button"
+                  onClick={() => handlePaymentChange('RAZORPAY')}
+                  className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all ${selectedPayment === 'RAZORPAY' ? 'border-[#A51D26] bg-[#FFF7F5]' : 'border-[#E8DDD4] hover:bg-[#FBF7F2]'}`}
+                >
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${selectedPayment === 'RAZORPAY' ? 'bg-[#8E181F] text-white' : 'bg-[#F7EEE7] text-[#806C63]'}`}>
+                    <CreditCard size={19} />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-extrabold text-[#351C18]">Pay Online</p>
+                    <p className="mt-1 text-[9px] text-[#806C63]">UPI, Cards, Net Banking & more</p>
+                  </div>
+
+                  {selectedPayment === 'RAZORPAY' && <CircleCheck size={18} className="shrink-0 text-[#8E181F]" />}
+                </button>
+
                 <div className="flex items-start gap-2 rounded-lg bg-[#FBF7F2] p-3">
                   <ShieldCheck size={15} className="mt-0.5 shrink-0 text-[#3E8B62]" />
-                  <p className="text-[9px] leading-4 text-[#806C63]">Payment will be collected at the time of delivery.</p>
+                  <p className="text-[9px] leading-4 text-[#806C63]">{selectedPayment === 'RAZORPAY' ? 'Your payment will be securely processed by Razorpay.' : 'Payment will be collected at the time of delivery.'}</p>
                 </div>
               </div>
             </section>
@@ -597,9 +758,19 @@ export default function Checkout() {
                   </>
                 ) : (
                   <>
-                    <ShoppingBag size={16} />
-                    Place Order
-                    <ChevronRight size={17} className="transition-transform group-hover:translate-x-1" />
+                    {selectedPayment === 'RAZORPAY' ? (
+                      <>
+                        <CreditCard size={16} />
+                        Pay ₹{formatPrice(grandTotal)}
+                        <ChevronRight size={17} />
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag size={16} />
+                        Place Order
+                        <ChevronRight size={17} />
+                      </>
+                    )}
                   </>
                 )}
               </button>

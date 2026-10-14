@@ -90,6 +90,9 @@ export default function OrderSuccess() {
 
   const isCOD = order.paymentMethod === 'COD'
   const isOnlineOnDelivery = order.paymentMethod === 'ONLINE_ON_DELIVERY'
+  const isRazorpay = order.paymentMethod === 'RAZORPAY'
+
+  const paymentMethodLabel = isCOD ? 'Cash on Delivery' : isOnlineOnDelivery ? 'Online on Delivery' : isRazorpay ? 'Razorpay' : order.paymentMethod || 'Payment'
 
   const orderItems = order.items || []
 
@@ -103,6 +106,20 @@ export default function OrderSuccess() {
   const totalQuantity = orderItems.reduce((total, item) => total + (item.quantity || 0), 0)
 
   const paymentStatus = order.paymentStatus || 'Pending'
+
+  const isPaymentPaid = paymentStatus === 'Paid'
+  const isPaymentFailed = ['Failed', 'Cancelled'].includes(paymentStatus)
+
+  const successTitle = isPaymentPaid ? 'Order Placed Successfully!' : isPaymentFailed ? 'Payment Not Completed' : isCOD ? 'Order Placed Successfully!' : 'Order Received!'
+
+  const successDescription = isPaymentPaid
+    ? 'Your payment is confirmed. Thank you for shopping with MineKart!'
+    : isPaymentFailed
+      ? 'Your payment is not completed. Please check your order details before trying again.'
+      : isCOD
+        ? 'Your order has been placed. Please pay when your order is delivered.'
+        : 'Your order has been received. Your payment status is pending confirmation.'
+
   const orderStatus = order.orderStatus || 'Pending'
 
   const getPaymentStatusStyle = () => {
@@ -198,13 +215,19 @@ export default function OrderSuccess() {
           <div className="relative flex flex-col items-center text-center">
             <div className="flex h-18 w-18 items-center justify-center rounded-full border border-white/20 bg-white/10 shadow-xl backdrop-blur-sm sm:h-20 sm:w-20">
               <div className="flex h-13 w-13 items-center justify-center rounded-full bg-white sm:h-14 sm:w-14">
-                <Check size={30} strokeWidth={2.8} className="text-[#7D171C]" />
+                {isPaymentPaid || isCOD ? (
+                  <Check size={30} strokeWidth={2.8} className="text-[#34704F]" />
+                ) : isPaymentFailed ? (
+                  <span className="text-3xl font-bold text-[#A44A3F]">!</span>
+                ) : (
+                  <Clock3 size={28} strokeWidth={2.2} className="text-[#A05A16]" />
+                )}
               </div>
             </div>
 
-            <h2 className="mt-5 text-xl font-extrabold tracking-tight text-white sm:text-3xl">Order Placed Successfully!</h2>
+            <h2 className="mt-5 text-xl font-extrabold tracking-tight text-white sm:text-3xl">{successTitle}</h2>
 
-            <p className="mx-auto mt-2 max-w-xl text-[11px] leading-5 text-white/70 sm:text-sm sm:leading-6">Thank you for shopping with MineKart. Your order has been successfully placed and is now being processed.</p>
+            <p className="mx-auto mt-2 max-w-xl text-[11px] leading-5 text-white/70 sm:text-sm sm:leading-6">{successDescription}</p>
 
             {/* ORDER ID */}
             <div className="mt-5 flex max-w-full items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 py-2 backdrop-blur-sm">
@@ -452,7 +475,7 @@ export default function OrderSuccess() {
                     <div className="min-w-0">
                       <p className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Payment</p>
 
-                      <p className="mt-0.5 truncate text-[10px] font-extrabold text-[#351C18]">{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
+                      <p className="mt-0.5 truncate text-[10px] font-extrabold text-[#351C18]">{paymentMethodLabel}</p>
                     </div>
                   </div>
 
