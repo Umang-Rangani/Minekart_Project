@@ -62,6 +62,10 @@ export default function MyOrders() {
       return 'Online on Delivery'
     }
 
+    if (method === 'RAZORPAY') {
+      return 'Razorpay'
+    }
+
     return method || 'Payment'
   }
 
@@ -70,17 +74,28 @@ export default function MyOrders() {
   }
 
   const getPaymentStatusClass = (status) => {
-    if (status === 'Paid') {
+    const normalizedStatus = String(status || 'Pending')
+      .trim()
+      .toLowerCase()
+
+    if (normalizedStatus === 'paid') {
       return 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]'
     }
 
-    if (status === 'Failed' || status === 'Cancelled') {
+    if (['failed', 'cancelled'].includes(normalizedStatus)) {
       return 'border-[#E7D2CF] bg-[#FFF5F3] text-[#A44A3F]'
+    }
+
+    if (['refunded', 'partially refunded'].includes(normalizedStatus)) {
+      return 'border-[#D8D0E8] bg-[#F6F2FC] text-[#70529B]'
+    }
+
+    if (['processing', 'initiated'].includes(normalizedStatus)) {
+      return 'border-[#D7E4F0] bg-[#F2F7FC] text-[#416A91]'
     }
 
     return 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]'
   }
-
   const getOrderStatusClass = (status) => {
     if (status === 'Delivered') {
       return 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]'
@@ -336,9 +351,15 @@ export default function MyOrders() {
                         {order.items?.map((item, index) => (
                           <div
                             key={`${order._id}-${index}`}
-                            className={`flex items-center gap-3 rounded-xl border p-2.5 transition-all duration-200 ${isCancelled ? 'border-[#E5E0DD] bg-white/70' : 'border-[#E8DDD4] bg-[#FBF7F2] hover:border-[#D8C5BA] hover:bg-[#F8F0EA]'}`}
+                            className={`flex items-center gap-3 rounded-xl border p-2.5 transition-all duration-200 ${
+                              isCancelled ? 'border-[#E5E0DD] bg-white/70' : isReturned ? 'border-[#EBD7B7] bg-[#FFFDF8]' : 'border-[#E8DDD4] bg-[#FBF7F2] hover:border-[#D8C5BA] hover:bg-[#F8F0EA]'
+                            }`}
                           >
-                            <div className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border sm:h-17 sm:w-17 ${isCancelled ? 'border-[#E2DEDB] bg-[#F4F2F1] grayscale' : 'border-[#E2D5CC] bg-white'}`}>
+                            <div
+                              className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border sm:h-17 sm:w-17 ${
+                                isCancelled ? 'border-[#E2DEDB] bg-[#F4F2F1] grayscale' : isReturned ? 'border-[#EBD7B7] bg-[#FFF9ED]' : 'border-[#E2D5CC] bg-white'
+                              }`}
+                            >
                               {item.image ? (
                                 <img src={getImageUrl(item.image)} alt={item.productName} className={`h-full w-full object-contain p-1.5 ${isCancelled ? 'grayscale opacity-65' : ''}`} />
                               ) : (
@@ -387,7 +408,7 @@ export default function MyOrders() {
                       </div>
 
                       <div className={`rounded-lg border px-3 py-2.5 ${isCancelled ? 'border-[#E2DEDB] bg-white/70' : 'border-[#E8DDD4] bg-white'}`}>
-                        <p className="text-[7px] font-bold uppercase tracking-wider text-[#9A857B]">Payment</p>
+                        <p className="text-[7px] font-bold uppercase tracking-wider text-[#9A857B]">Payment Method</p>
 
                         <p className={`mt-1.5 truncate text-[9px] font-bold ${isCancelled ? 'text-[#81736E]' : 'text-[#351C18]'}`}>{formatPaymentMethod(order.paymentMethod)}</p>
 
@@ -407,16 +428,14 @@ export default function MyOrders() {
                       type="button"
                       onClick={() => navigate(`/orders/${order.orderId}`)}
                       className={`group mt-3 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-[10px] font-extrabold transition-all duration-300 sm:text-[11px] ${
-                        isCancelled
-                          ? 'cursor-default border border-[#DDD8D5] bg-[#EDEAE8] text-[#8F7C76]'
-                          : isReturned
-                            ? 'border border-[#EBD7B7] bg-[#FFF4DD] text-[#A05A16] hover:bg-[#FFECC4]'
-                            : 'bg-linear-to-r from-[#7D171C] to-[#A51D26] text-white shadow-[0_5px_14px_rgba(125,23,28,0.14)] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(125,23,28,0.22)]'
+                        disabledOrder
+                          ? 'border border-[#DDD8D5] bg-[#EDEAE8] text-[#8F7C76] hover:bg-[#E6E2DF]'
+                          : 'bg-linear-to-r from-[#7D171C] to-[#A51D26] text-white shadow-[0_5px_14px_rgba(125,23,28,0.14)] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(125,23,28,0.22)]'
                       }`}
                     >
-                      {isCancelled ? 'Order Cancelled' : 'View Order Details'}
+                      {isCancelled ? 'View Cancelled Order' : isReturned ? 'View Returned Order' : 'View Order Details'}
 
-                      {!isCancelled && <ChevronRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5" />}
+                      <ChevronRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                     </button>
                   </div>
                 </div>

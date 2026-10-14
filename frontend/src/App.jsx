@@ -54,10 +54,8 @@ import Privacy from './components/CustomerService/Privacy.jsx'
 import Cookies from './components/CustomerService/Cookies.jsx'
 import LogIn from './pages/LogIn.jsx'
 
-
 export default function App() {
   const { user, loading, showLogin, setShowLogin } = useUser()
-
 
   useEffect(() => {
     if (!loading && !user) {
@@ -68,8 +66,6 @@ export default function App() {
       }
     }
   }, [loading, user, setShowLogin])
-
-
 
   const handleLoginClose = () => {
     sessionStorage.setItem('minekart_login_popup_closed', 'true')
@@ -125,60 +121,49 @@ export default function App() {
         </Route>
 
         {/* AUTH */}
-
         <Route path="/register" element={<Register />} />
-
         {/* <Route path="/login" element={<Login />} /> */}
 
         {/* ADMIN */}
-
         <Route element={<AdminProtected />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
 
             {/* CATEGORY */}
-
             <Route path="category" element={<AdminCategory />} />
             <Route path="category/new" element={<AdminCategoryForm />} />
             <Route path="category/:id/update" element={<AdminCategoryForm />} />
             <Route path="category/:id" element={<AdminCategoryView />} />
 
             {/* SUB CATEGORY */}
-
             <Route path="subcategory" element={<AdminSubCategory />} />
             <Route path="subcategory/new" element={<AdminSubCategoryForm />} />
             <Route path="subcategory/:id/update" element={<AdminSubCategoryForm />} />
             <Route path="subcategory/:id" element={<AdminSubCategoryView />} />
 
             {/* BRAND */}
-
             <Route path="brand" element={<AdminBrand />} />
             <Route path="brand/new" element={<AdminBrandForm />} />
             <Route path="brand/:id/update" element={<AdminBrandForm />} />
             <Route path="brand/:id" element={<AdminBrandView />} />
 
             {/* PRODUCTS */}
-
             <Route path="products" element={<AdminProducts />} />
             <Route path="products/new" element={<AdminProductsForm />} />
             <Route path="products/:id/update" element={<AdminProductsForm />} />
             <Route path="products/:id" element={<AdminProductsView />} />
 
             {/* ORDERS */}
-
             <Route path="orders" element={<AdminOrders />} />
             <Route path="orders/:id" element={<AdminOrderView />} />
 
             {/* USERS */}
-
             <Route path="users" element={<AdminUsers />} />
 
             {/* NOTIFICATIONS */}
-
             <Route path="/admin/notifications" element={<AdminNotifications />} />
 
             {/* CONTACT MESSAGES */}
-
             <Route path="contact-messages" element={<AdminContactMessages />} />
             <Route path="contact-messages/:id" element={<AdminContactMessageView />} />
           </Route>

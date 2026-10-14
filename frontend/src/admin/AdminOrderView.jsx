@@ -100,17 +100,24 @@ const AdminOrderView = () => {
 
   // PAYMENT STATUS STYLE
   const getPaymentStatusStyle = (status) => {
-    switch (status) {
-      case 'Paid':
+    switch (
+      String(status || 'Pending')
+        .trim()
+        .toLowerCase()
+    ) {
+      case 'paid':
         return 'bg-[#ECFDF5] text-[#15803D] border-[#BBF7D0]'
 
-      case 'Pending':
+      case 'pending':
+      case 'initiated':
+      case 'processing':
         return 'bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]'
 
-      case 'Failed':
+      case 'failed':
         return 'bg-[#FEF2F2] text-[#B91C1C] border-[#FECACA]'
 
-      case 'Refunded':
+      case 'refunded':
+      case 'partially refunded':
         return 'bg-[#F5F3FF] text-[#7C3AED] border-[#DDD6FE]'
 
       default:
@@ -281,7 +288,7 @@ const AdminOrderView = () => {
               <div className="flex items-center justify-between gap-4">
                 <span className="text-sm text-[#6F6A64]">Payment Method</span>
 
-                <span className="text-sm font-semibold text-[#292725]">{paymentMethod === 'ONLINE_ON_DELIVERY' ? 'Online on Delivery' : 'Cash on Delivery'}</span>
+                <span className="text-sm font-semibold text-[#292725]">{paymentMethod === 'RAZORPAY' ? 'Razorpay' : paymentMethod === 'ONLINE_ON_DELIVERY' ? 'Online on Delivery' : paymentMethod === 'COD' ? 'Cash on Delivery' : paymentMethod}</span>
               </div>
 
               <div className="flex items-center justify-between gap-4">

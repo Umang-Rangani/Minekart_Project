@@ -267,6 +267,40 @@ export default function AdminOrders() {
     }
   }
 
+  // Payment method label
+  const getPaymentMethodLabel = (method) => {
+    switch (method) {
+      case 'COD':
+        return 'Cash on Delivery'
+      case 'ONLINE_ON_DELIVERY':
+        return 'Online on Delivery'
+      case 'RAZORPAY':
+        return 'Razorpay'
+      default:
+        return method || 'Not specified'
+    }
+  }
+
+  // Payment status style
+  const getPaymentStatusStyle = (status) => {
+    switch (status) {
+      case 'Paid':
+        return 'bg-[#EAEDE7] text-[#5E6C55]'
+
+      case 'Pending':
+        return 'bg-[#F1EEE8] text-[#8A6A3D]'
+
+      case 'Failed':
+        return 'bg-[#F1E7E5] text-[#A44A3F]'
+
+      case 'Refunded':
+        return 'bg-[#ECE9F5] text-[#6D5A91]'
+
+      default:
+        return 'bg-[#F8F6F2] text-[#6F6A64]'
+    }
+  }
+
   // Search
   const handleSearch = (value) => {
     setSearch(value)
@@ -559,10 +593,10 @@ export default function AdminOrders() {
                       </td>
 
                       <td className="px-5 py-4">
-                        <p className="text-xs font-semibold text-[#292725]">{order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online on Delivery'}</p>
+                        <p className="text-xs font-semibold text-[#292725]">{getPaymentMethodLabel(order.paymentMethod || order.payment?.paymentMethod)}</p>
+                        <span className={`mt-1 inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold ${getPaymentStatusStyle(paymentStatus)}`}>{paymentStatus}</span>
 
-                        <p className={`mt-1 text-[11px] font-semibold ${paymentStatus === 'Paid' ? 'text-[#5E6C55]' : paymentStatus === 'Failed' ? 'text-[#A44A3F]' : 'text-[#8A6A3D]'}`}>{paymentStatus}</p>
-
+                        
                         {canConfirmPayment && (
                           <button
                             type="button"

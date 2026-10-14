@@ -110,13 +110,52 @@ export default function OrderDetails() {
 
   const isCancelled = order?.orderStatus === 'Cancelled'
   const isReturned = order?.orderStatus === 'Returned'
+  const isTrackingDisabled = isCancelled || isReturned
+
   const isCOD = order?.paymentMethod === 'COD'
+  const getPaymentMethodLabel = (method) => {
+    switch (method) {
+      case 'COD':
+        return 'Cash on Delivery'
+      case 'ONLINE_ON_DELIVERY':
+        return 'Online on Delivery'
+      case 'RAZORPAY':
+        return 'Razorpay'
+      default:
+        return method || 'Not specified'
+    }
+  }
+
   const isDelivered = order?.orderStatus === 'Delivered'
 
   // ! User can cancel only these statuses
   const canCancelOrder = ['Pending', 'Confirmed', 'Processing'].includes(order?.orderStatus)
 
-  const paymentStatusClass = order?.paymentStatus === 'Paid' ? 'bg-[#EAF6EF] text-[#3E8B62]' : order?.paymentStatus === 'Failed' ? 'bg-[#FCEBEC] text-[#A51D26]' : 'bg-[#FFF4DD] text-[#A05A16]'
+  const getPaymentStatusClass = (status) => {
+    switch (
+      String(status || 'Pending')
+        .trim()
+        .toLowerCase()
+    ) {
+      case 'paid':
+        return 'bg-[#EAF6EF] text-[#3E8B62]'
+
+      case 'failed':
+        return 'bg-[#FCEBEC] text-[#A51D26]'
+
+      case 'refunded':
+      case 'partially refunded':
+        return 'bg-[#F6F2FC] text-[#70529B]'
+
+      case 'pending':
+      case 'initiated':
+      case 'processing':
+        return 'bg-[#FFF4DD] text-[#A05A16]'
+
+      default:
+        return 'bg-[#F1EFED] text-[#786E69]'
+    }
+  }
 
   // ! Cancel Order
   const handleCancelOrder = async () => {
@@ -294,7 +333,7 @@ export default function OrderDetails() {
               <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Payment</span>
             </div>
 
-            <p className={`mt-2 truncate text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
+            <p className={`mt-2 truncate text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{getPaymentMethodLabel(order.paymentMethod)}</p>
           </div>
         </div>
 
@@ -307,10 +346,14 @@ export default function OrderDetails() {
                 <div>
                   <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Order Tracking</h2>
 
-                  <p className="mt-1 text-[10px] leading-4 text-[#918681]">{isCancelled ? 'Tracking is disabled because this order is cancelled.' : 'Track your order progress.'}</p>
+                  <p className="mt-1 text-[10px] leading-4 text-[#918681]">
+                    {isCancelled ? 'Tracking is disabled because this order is cancelled.' : isReturned ? 'Tracking is closed because this order has been returned.' : 'Track your order progress.'}
+                  </p>
                 </div>
 
-                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${isCancelled ? 'bg-[#EAE7E5] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>{isCancelled ? <XCircle size={17} /> : <Truck size={17} />}</div>
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${isTrackingDisabled ? 'bg-[#EAE7E5] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
+                  {isTrackingDisabled ? <XCircle size={17} /> : <Truck size={17} />}
+                </div>
               </div>
             </div>
 
@@ -318,19 +361,18 @@ export default function OrderDetails() {
               {orderStatuses.map((item, index) => {
                 const Icon = item.icon
 
-                const isCompleted = !isCancelled && index <= currentStatusIndex
-
-                const isCurrent = !isCancelled && index === currentStatusIndex
+                const isCompleted = !isTrackingDisabled && index <= currentStatusIndex
+                const isCurrent = !isTrackingDisabled && index === currentStatusIndex
 
                 const isLast = index === orderStatuses.length - 1
 
                 return (
                   <div key={item.status} className="relative flex gap-3">
-                    {!isLast && <div className={`absolute left-4.5 top-9 h-[calc(100%-8px)] w-0.5 ${isCancelled ? 'bg-[#D8D2CE]' : index < currentStatusIndex ? 'bg-[#A51D26]' : 'bg-[#E8DDD4]'}`} />}
+                    {!isLast && <div className={`absolute left-4.5 top-9 h-[calc(100%-8px)] w-0.5 ${isTrackingDisabled ? 'bg-[#D8D2CE]' : index < currentStatusIndex ? 'bg-[#A51D26]' : 'bg-[#E8DDD4]'}`} />}
 
                     <div
                       className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 ${
-                        isCancelled ? 'border-[#D8D2CE] bg-[#F1EFED] text-[#A39A95]' : isCompleted ? 'border-[#8E181F] bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white' : 'border-[#E2D5CC] bg-white text-[#B7A49B]'
+                        isTrackingDisabled ? 'border-[#D8D2CE] bg-[#F1EFED] text-[#A39A95]' : isCompleted ? 'border-[#8E181F] bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white' : 'border-[#E2D5CC] bg-white text-[#B7A49B]'
                       } ${isCurrent ? 'ring-4 ring-[#F7EEE7]' : ''}`}
                     >
                       <Icon size={15} strokeWidth={2.3} />
@@ -338,12 +380,12 @@ export default function OrderDetails() {
 
                     <div className={`${isLast ? 'pb-0' : 'pb-6'} min-w-0`}>
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <h3 className={`text-xs font-extrabold ${isCancelled ? 'text-[#8A817C]' : isCompleted ? 'text-[#351C18]' : 'text-[#B7A49B]'}`}>{item.label}</h3>
+                        <h3 className={`text-xs font-extrabold ${isTrackingDisabled ? 'text-[#8A817C]' : isCompleted ? 'text-[#351C18]' : 'text-[#B7A49B]'}`}>{item.label}</h3>
 
                         {isCurrent && <span className="rounded-md bg-[#F7EEE7] px-1.5 py-0.5 text-[8px] font-extrabold text-[#8E181F]">Current</span>}
                       </div>
 
-                      <p className={`mt-1 text-[10px] leading-4 ${isCancelled ? 'text-[#AAA19C]' : isCompleted ? 'text-[#806C63]' : 'text-[#B7A49B]'}`}>{item.description}</p>
+                      <p className={`mt-1 text-[10px] leading-4 ${isTrackingDisabled ? 'text-[#AAA19C]' : isCompleted ? 'text-[#806C63]' : 'text-[#B7A49B]'}`}>{item.description}</p>
                     </div>
                   </div>
                 )
@@ -387,7 +429,7 @@ export default function OrderDetails() {
 
                       <p className="mt-1 text-[10px] leading-4 text-[#A05A16]">Your return request has been submitted successfully.</p>
 
-                      {order.cancellationReason && <p className="mt-1.5 text-[10px] font-semibold text-[#79521F]">Reason: {order.cancellationReason}</p>}
+                      {(order.returnReason || order.cancellationReason) && <p className="mt-1.5 text-[10px] font-semibold text-[#79521F]">Reason: {order.returnReason || order.cancellationReason}</p>}
                     </div>
                   </div>
                 </div>
@@ -505,13 +547,13 @@ export default function OrderDetails() {
                 <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
                   <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Payment Method</p>
 
-                  <p className={`mt-1.5 text-xs font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{isCOD ? 'Cash on Delivery' : 'Online on Delivery'}</p>
+                  <p className={`mt-1.5 text-xs font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{getPaymentMethodLabel(order.paymentMethod)}</p>
                 </div>
 
                 <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
                   <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Payment Status</p>
 
-                  <span className={`mt-1.5 inline-flex rounded-md px-2 py-1 text-[9px] font-extrabold ${isCancelled ? 'bg-[#E7E3E0] text-[#918681]' : paymentStatusClass}`}>{order.paymentStatus || 'Pending'}</span>
+                  <span className={`mt-1.5 inline-flex rounded-md px-2 py-1 text-[9px] font-extrabold ${getPaymentStatusClass(order.paymentStatus)}`}>{order.paymentStatus || 'Pending'}</span>
                 </div>
               </div>
 
@@ -519,9 +561,17 @@ export default function OrderDetails() {
                 <div className={`flex items-start gap-2.5 rounded-xl p-3.5 ${isCancelled ? 'bg-[#F1EFED]' : 'bg-[#F7EEE7]'}`}>
                   <ShieldCheck size={16} className={`mt-0.5 shrink-0 ${isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'}`} />
 
-                  <p className={`text-[10px] font-semibold leading-5 ${isCancelled ? 'text-[#8C827D]' : 'text-[#67544D]'}`}>
-                    {isCOD ? 'Payment will be collected in cash when your order is delivered.' : 'Payment will be collected online when your order is delivered.'}
-                  </p>
+                  {isCOD
+                    ? 'Payment will be collected in cash when your order is delivered.'
+                    : order.paymentStatus === 'Paid'
+                      ? 'Your online payment has been completed successfully.'
+                      : order.paymentStatus === 'Failed'
+                        ? 'Your online payment failed. Please contact support if any amount was deducted.'
+                        : order.paymentStatus === 'Refunded'
+                          ? 'Your payment has been refunded.'
+                          : order.paymentStatus === 'Partially Refunded'
+                            ? 'A partial refund has been issued for your payment.'
+                            : 'Your online payment is awaiting confirmation.'}
                 </div>
               </div>
             </div>
@@ -723,21 +773,44 @@ export default function OrderDetails() {
 
                 {/* FINAL TOTAL */}
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-extrabold text-[#67544D]">Total Paid</span>
+                  <span className="text-xs font-extrabold text-[#67544D]">Total Amount</span>
 
                   <span className={`text-lg font-extrabold ${isCancelled ? 'text-[#786E69]' : 'text-[#8E181F]'}`}>₹{formatPrice(order.totalAmount)}</span>
                 </div>
 
                 {/* PAYMENT STATUS */}
-                <div className={`mt-4 rounded-xl px-3 py-3 ${isCancelled ? 'bg-[#F1EFED]' : order.paymentStatus === 'Paid' ? 'bg-[#EAF6EF]' : order.paymentStatus === 'Failed' ? 'bg-[#FCEBEC]' : 'bg-[#FFF9ED]'}`}>
+                <div
+                  className={`mt-4 rounded-xl px-3 py-3 ${
+                    isCancelled
+                      ? 'bg-[#F1EFED]'
+                      : order.paymentStatus === 'Paid'
+                        ? 'bg-[#EAF6EF]'
+                        : order.paymentStatus === 'Failed'
+                          ? 'bg-[#FCEBEC]'
+                          : ['Refunded', 'Partially Refunded'].includes(order.paymentStatus)
+                            ? 'bg-[#F6F2FC]'
+                            : 'bg-[#FFF9ED]'
+                  }`}
+                >
                   <div className="flex items-center gap-2">
-                    <CreditCard size={14} className={isCancelled ? 'text-[#918681]' : order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#B87935]'} />
+                    <CreditCard
+                      size={14}
+                      className={
+                        isCancelled
+                          ? 'text-[#918681]'
+                          : order.paymentStatus === 'Paid'
+                            ? 'text-[#3E8B62]'
+                            : order.paymentStatus === 'Failed'
+                              ? 'text-[#A51D26]'
+                              : ['Refunded', 'Partially Refunded'].includes(order.paymentStatus)
+                                ? 'text-[#70529B]'
+                                : 'text-[#B87935]'
+                      }
+                    />
 
                     <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#67544D]">Payment</span>
 
-                    <span className={`ml-auto text-[9px] font-extrabold ${isCancelled ? 'text-[#918681]' : order.paymentStatus === 'Paid' ? 'text-[#3E8B62]' : order.paymentStatus === 'Failed' ? 'text-[#A51D26]' : 'text-[#A05A16]'}`}>
-                      {order.paymentStatus || 'Pending'}
-                    </span>
+                    <span className={`ml-auto text-[9px] font-extrabold ${isCancelled ? 'text-[#918681]' : getPaymentStatusClass(order.paymentStatus)}`}>{order.paymentStatus || 'Pending'}</span>
                   </div>
                 </div>
 
