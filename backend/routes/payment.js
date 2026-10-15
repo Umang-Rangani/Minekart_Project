@@ -142,7 +142,6 @@ const runOrderBackgroundTasks = async (orderId, userId) => {
 
 // ! 1. CREATE RAZORPAY ORDER
 // POST /payment/razorpay/create-order
-// Body: { addressId }
 router.post('/razorpay/create-order', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.user
@@ -339,13 +338,6 @@ router.post('/razorpay/create-order', authMiddleware, async (req, res) => {
 })
 
 // ! 2. VERIFY RAZORPAY PAYMENT
-// POST /payment/razorpay/verify
-// Body:
-// {
-//   razorpay_order_id,
-//   razorpay_payment_id,
-//   razorpay_signature
-// }
 router.post('/razorpay/verify', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.user
@@ -609,9 +601,352 @@ router.post('/razorpay/verify', authMiddleware, async (req, res) => {
   }
 })
 
+// START RAZORPAY REFUND
+router.post('/admin/:id/refund', authMiddleware, adminMiddleware, async (req, res) => {
+  let lockedOrderId = null
+
+  try {
+    const { id } = req.params
+
+    const order = await Order.findById(id)
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      })
+    }
+
+    if (order.paymentMethod !== 'RAZORPAY' || order.paymentStatus !== 'Paid') {
+      return res.status(400).json({
+        success: false,
+        message: 'Only paid Razorpay orders can be refunded through this endpoint',
+      })
+    }
+
+    if (order.orderStatus !== 'Delivered' || order.returnStatus !== 'Item Received') {
+      return res.status(400).json({
+        success: false,
+        message: 'Order must be delivered and the returned item must be received first',
+      })
+    }
+
+    if (order.refundId || order.refundedAt) {
+      return res.status(409).json({
+        success: false,
+        message: 'A refund already exists for this order',
+      })
+    }
+
+    if (!order.razorpayPaymentId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Razorpay payment ID is missing',
+      })
+    }
+
+    const payment = await Payment.findOne({
+      orderId: order._id,
+      paymentMethod: 'RAZORPAY',
+      paymentStatus: 'Paid',
+      transactionId: order.razorpayPaymentId,
+    })
+
+    if (!payment) {
+      return res.status(400).json({
+        success: false,
+        message: 'Matching paid payment record not found',
+      })
+    }
+
+    if (!Number.isFinite(payment.amount) || payment.amount <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid payment amount',
+      })
+    }
+
+    // Lock the order before contacting Razorpay.
+    // Never automatically retry if the provider call has an uncertain outcome.
+    const lockedOrder = await Order.findOneAndUpdate(
+      {
+        _id: order._id,
+        orderStatus: 'Delivered',
+        paymentStatus: 'Paid',
+        returnStatus: 'Item Received',
+        refundId: '',
+        refundedAt: null,
+      },
+      {
+        $set: {
+          returnStatus: 'Refund Processing',
+          refundAmount: payment.amount,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    )
+
+    if (!lockedOrder) {
+      return res.status(409).json({
+        success: false,
+        message: 'Refund is already processing or the order state has changed',
+      })
+    }
+
+    lockedOrderId = lockedOrder._id
+
+    const razorpay = getRazorpay()
+
+    const refund = await razorpay.payments.refund(order.razorpayPaymentId, {
+      amount: Math.round(payment.amount * 100),
+      speed: 'normal',
+      notes: {
+        orderId: String(order._id),
+        orderNumber: order.orderId,
+        reason: 'Customer return',
+      },
+    })
+
+    // Save provider reference; do not mark Refunded yet.
+    await Promise.all([
+      Order.updateOne(
+        { _id: lockedOrder._id },
+        {
+          $set: {
+            refundId: refund.id,
+            refundAmount: payment.amount,
+            returnStatus: 'Refund Processing',
+          },
+        },
+      ),
+      Payment.updateOne(
+        { _id: payment._id },
+        {
+          $set: {
+            refundId: refund.id,
+            refundAmount: payment.amount,
+            refundStatus: 'Pending',
+          },
+        },
+      ),
+    ])
+
+    return res.status(202).json({
+      success: true,
+      message: 'Refund request submitted. Check Razorpay status before marking it complete.',
+      data: {
+        orderId: order._id,
+        refundId: refund.id,
+        refundStatus: refund.status,
+        refundAmount: payment.amount,
+      },
+    })
+  } catch (error) {
+    console.error('Start Razorpay Refund Error:', error)
+
+    // Keep the order locked if the provider outcome is uncertain.
+    // Verify the payment/refund in Razorpay before attempting any retry.
+    return res.status(502).json({
+      success: false,
+      message: 'Refund outcome could not be confirmed. Check Razorpay Dashboard before retrying.',
+    })
+  }
+})
+
+// VERIFY RAZORPAY REFUND STATUS
+router.put('/admin/:id/refund/verify', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const order = await Order.findById(id)
+
+    console.log('Refund Verification Debug:', {
+      orderId: order._id,
+      paymentMethod: order.paymentMethod,
+      refundId: order.refundId,
+      returnStatus: order.returnStatus,
+      paymentStatus: order.paymentStatus,
+    })
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      })
+    }
+
+    if (order.paymentMethod !== 'RAZORPAY' || !order.refundId || order.returnStatus !== 'Refund Processing') {
+      return res.status(400).json({
+        success: false,
+        message: 'No verifiable Razorpay refund was found for this order',
+      })
+    }
+
+    const payment = await Payment.findOne({
+      orderId: order._id,
+      paymentMethod: 'RAZORPAY',
+      refundId: order.refundId,
+    })
+
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Matching refund payment record not found',
+      })
+    }
+
+    const razorpay = getRazorpay()
+
+    // Fetch the actual refund status from Razorpay.
+    const refund = await razorpay.refunds.fetch(order.refundId)
+
+    // Verify that the provider refund amount matches the recorded amount.
+    const expectedAmountPaise = Math.round(Number(order.refundAmount) * 100)
+
+    if (!Number.isFinite(expectedAmountPaise) || expectedAmountPaise <= 0 || Number(refund.amount) !== expectedAmountPaise || refund.payment_id !== order.razorpayPaymentId) {
+      return res.status(409).json({
+        success: false,
+        message: 'Refund details do not match the order. Please investigate in Razorpay Dashboard.',
+      })
+    }
+
+    // Refund is still in progress.
+    if (refund.status === 'pending') {
+      await Payment.updateOne({ _id: payment._id, refundId: refund.id }, { $set: { refundStatus: 'Pending' } })
+
+      return res.status(200).json({
+        success: true,
+        message: 'Refund is still processing',
+        data: {
+          refundId: refund.id,
+          refundStatus: refund.status,
+          refundAmount: order.refundAmount,
+        },
+      })
+    }
+
+    // Provider confirmed the refund failed.
+    if (refund.status === 'failed') {
+      await Payment.updateOne({ _id: payment._id, refundId: refund.id }, { $set: { refundStatus: 'Failed' } })
+
+      // Allow a later, manually reviewed retry only after failure is confirmed.
+      await Order.updateOne(
+        {
+          _id: order._id,
+          refundId: refund.id,
+          returnStatus: 'Refund Processing',
+          orderStatus: 'Delivered',
+        },
+        {
+          $set: {
+            returnStatus: 'Item Received',
+            refundId: '',
+          },
+        },
+      )
+
+      return res.status(200).json({
+        success: false,
+        message: 'Razorpay reports that the refund failed. Verify the provider record before retrying.',
+        data: {
+          refundId: refund.id,
+          refundStatus: refund.status,
+        },
+      })
+    }
+
+    // Do not assume unknown provider statuses mean success.
+    if (refund.status !== 'processed') {
+      return res.status(409).json({
+        success: false,
+        message: `Refund has an unrecognized status: ${refund.status}. Please review it in Razorpay Dashboard.`,
+      })
+    }
+
+    // Finalize only when Razorpay confirms "processed".
+    const finalizedOrder = await Order.findOneAndUpdate(
+      {
+        _id: order._id,
+        refundId: refund.id,
+        returnStatus: 'Refund Processing',
+        orderStatus: 'Delivered',
+        paymentStatus: 'Paid',
+      },
+      {
+        $set: {
+          returnStatus: 'Refunded',
+          orderStatus: 'Returned',
+          paymentStatus: 'Refunded',
+          refundedAt: new Date(),
+          refundAmount: Number(refund.amount) / 100,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    )
+
+    if (!finalizedOrder) {
+      // A previous verification request may have finalized it already.
+      const latestOrder = await Order.findById(order._id)
+
+      if (latestOrder?.refundId === refund.id && latestOrder?.returnStatus === 'Refunded' && latestOrder?.paymentStatus === 'Refunded') {
+        return res.status(200).json({
+          success: true,
+          message: 'Refund was already finalized',
+          data: latestOrder,
+        })
+      }
+
+      return res.status(409).json({
+        success: false,
+        message: 'Order state changed. Check the order and refund records before taking further action.',
+      })
+    }
+
+    await Payment.updateOne(
+      {
+        _id: payment._id,
+        refundId: refund.id,
+      },
+      {
+        $set: {
+          paymentStatus: 'Refunded',
+          refundStatus: 'Processed',
+          refundAmount: Number(refund.amount) / 100,
+          refundedAt: finalizedOrder.refundedAt,
+        },
+      },
+    )
+
+    return res.status(200).json({
+      success: true,
+      message: 'Razorpay refund confirmed and order marked as returned',
+      data: {
+        orderId: finalizedOrder._id,
+        refundId: refund.id,
+        refundStatus: refund.status,
+        refundAmount: finalizedOrder.refundAmount,
+        orderStatus: finalizedOrder.orderStatus,
+        returnStatus: finalizedOrder.returnStatus,
+      },
+    })
+  } catch (error) {
+    console.error('Verify Razorpay Refund Error:', error)
+
+    return res.status(502).json({
+      success: false,
+      message: 'Unable to verify refund status. Check Razorpay Dashboard and retry verification.',
+    })
+  }
+})
+
 // ! EXISTING: GET ALL ORDERS WITH PAYMENT
-// GET /payment
-router.get('/', authMiddleware, adminMiddleware,async (req, res) => {
+router.get('/', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const orders = await Order.find()
       .populate({
@@ -652,9 +987,192 @@ router.get('/', authMiddleware, adminMiddleware,async (req, res) => {
   }
 })
 
+// MANUAL REFUND CONFIRMATION FOR COD / ONLINE-ON-DELIVERY
+router.put('/admin/:id/manual-refund', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { refundReference } = req.body
+
+    if (typeof refundReference !== 'string' || !refundReference.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Refund reference or transaction number is required',
+      })
+    }
+
+    const order = await Order.findById(id)
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      })
+    }
+
+    if (!['COD', 'ONLINE_ON_DELIVERY'].includes(order.paymentMethod)) {
+      return res.status(400).json({
+        success: false,
+        message: 'This endpoint is only for COD or online-on-delivery orders',
+      })
+    }
+
+    if (order.orderStatus !== 'Delivered' || order.returnStatus !== 'Item Received') {
+      return res.status(400).json({
+        success: false,
+        message: 'Order must be delivered and the returned item must be received first',
+      })
+    }
+
+    if (order.paymentStatus !== 'Paid') {
+      return res.status(400).json({
+        success: false,
+        message: 'Only paid orders can be refunded',
+      })
+    }
+
+    if (order.refundId || order.refundedAt) {
+      return res.status(409).json({
+        success: false,
+        message: 'A refund is already recorded for this order',
+      })
+    }
+
+    const payment = await Payment.findOne({
+      orderId: order._id,
+      paymentMethod: order.paymentMethod,
+      paymentStatus: 'Paid',
+    })
+
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Matching paid payment record not found',
+      })
+    }
+
+    const refundAmount = Number(payment.amount)
+
+    if (!Number.isFinite(refundAmount) || refundAmount <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid refund amount',
+      })
+    }
+
+    // Claim the order to prevent concurrent manual refund confirmations.
+    const claimedOrder = await Order.findOneAndUpdate(
+      {
+        _id: order._id,
+        orderStatus: 'Delivered',
+        paymentStatus: 'Paid',
+        returnStatus: 'Item Received',
+        refundId: '',
+        refundedAt: null,
+      },
+      {
+        $set: {
+          returnStatus: 'Refund Processing',
+          refundAmount,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    )
+
+    if (!claimedOrder) {
+      return res.status(409).json({
+        success: false,
+        message: 'Refund is already processing or the order state has changed',
+      })
+    }
+
+    // This endpoint records a refund already issued outside Razorpay.
+    // Admin must verify the actual bank/cash refund before calling it.
+    const refundedAt = new Date()
+
+    const [updatedOrder, updatedPayment] = await Promise.all([
+      Order.findOneAndUpdate(
+        {
+          _id: claimedOrder._id,
+          returnStatus: 'Refund Processing',
+          refundId: '',
+        },
+        {
+          $set: {
+            refundId: refundReference.trim(),
+            refundAmount,
+            refundedAt,
+            returnStatus: 'Refunded',
+            orderStatus: 'Returned',
+            paymentStatus: 'Refunded',
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+        },
+      ),
+
+      Payment.findOneAndUpdate(
+        {
+          _id: payment._id,
+          paymentStatus: 'Paid',
+        },
+        {
+          $set: {
+            refundId: refundReference.trim(),
+            refundAmount,
+            refundedAt,
+            refundStatus: 'Processed',
+            paymentStatus: 'Refunded',
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+        },
+      ),
+    ])
+
+    if (!updatedOrder || !updatedPayment) {
+      console.error('Manual refund requires reconciliation:', {
+        orderId: String(order._id),
+        paymentId: String(payment._id),
+        refundReference: refundReference.trim(),
+      })
+
+      return res.status(500).json({
+        success: false,
+        message: 'Refund records could not both be updated. Reconcile the order and payment before retrying.',
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Manual refund recorded successfully',
+      data: {
+        orderId: updatedOrder._id,
+        refundReference: refundReference.trim(),
+        refundAmount,
+        orderStatus: updatedOrder.orderStatus,
+        returnStatus: updatedOrder.returnStatus,
+        paymentStatus: updatedPayment.paymentStatus,
+      },
+    })
+  } catch (error) {
+    console.error('Manual Refund Confirmation Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to record manual refund',
+    })
+  }
+})
+
 // EXISTING: CONFIRM COD / ONLINE-ON-DELIVERY PAYMENT
-// PUT /payment/admin/:id/confirm
-router.put('/admin/:id/confirm', authMiddleware,adminMiddleware, async (req, res) => {
+router.put('/admin/:id/confirm', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { id } = req.params
 

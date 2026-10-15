@@ -1,6 +1,6 @@
 import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
-import { Search, Eye, Package, ShoppingBag, Clock3, CheckCircle2, XCircle, UserRound, ShieldCheck, ChevronDown, ChevronLeft, ChevronRight, X, ArrowUpDown, Trash2 } from 'lucide-react'
+import { Search, Eye, Package, ShoppingBag, RotateCcw, Wallet, PackageCheck, Clock3, CheckCircle2, XCircle, UserRound, ShieldCheck, ChevronDown, ChevronLeft, ChevronRight, X, ArrowUpDown, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
@@ -38,6 +38,12 @@ export default function AdminOrders() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [deleteItem, setDeleteItem] = useState(null)
   const [deletingOrderId, setDeletingOrderId] = useState(null)
+
+  const [reviewingReturnId, setReviewingReturnId] = useState(null)
+  const [rejectionModalOrder, setRejectionModalOrder] = useState(null)
+  const [rejectionReason, setRejectionReason] = useState('')
+
+  const [returnActionId, setReturnActionId] = useState(null)
 
   // Get all orders
   const getOrders = async () => {
@@ -152,6 +158,73 @@ export default function AdminOrders() {
       toast.error(error.response?.data?.message || 'Payment confirmation failed')
     } finally {
       setConfirmingPaymentId(null)
+    }
+  }
+
+  // Approve or reject a return request
+  const handleReturnReview = async (order, action, reason = '') => {
+    if (action === 'Reject' && !reason.trim()) {
+      toast.error('Please enter a rejection reason')
+      return
+    }
+
+    try {
+      setReviewingReturnId(order._id)
+
+      const res = await axiosInstance.put(`/admin/orders/${order._id}/return-review`, {
+        action,
+        rejectionReason: reason.trim(),
+      })
+
+      if (res.data.success) {
+        setOrders((prev) => prev.map((item) => (item._id === order._id ? { ...item, ...res.data.data, payment: item.payment } : item)))
+
+        setRejectionModalOrder(null)
+        setRejectionReason('')
+
+        toast.success(action === 'Approve' ? 'Return request approved' : 'Return request rejected')
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Unable to review return request')
+    } finally {
+      setReviewingReturnId(null)
+    }
+  }
+
+  // Return / Refund actions
+  const handleReturnAction = async (order, action, refundReference = '') => {
+    try {
+      setReturnActionId(order._id)
+
+      let res
+
+      if (action === 'Item Received') {
+        res = await axiosInstance.put(`/admin/orders/${order._id}/item-received`)
+      } else if (action === 'Process Refund') {
+        if (order.paymentMethod === 'RAZORPAY') {
+          res = await axiosInstance.post(`/payment/admin/${order._id}/refund`)
+        } else {
+          if (!refundReference.trim()) {
+            toast.error('Please enter the refund reference')
+            return
+          }
+
+          res = await axiosInstance.put(`/payment/admin/${order._id}/manual-refund`, { refundReference: refundReference.trim() })
+        }
+      } else if (action === 'Verify Refund') {
+        res = await axiosInstance.put(`/payment/admin/${order._id}/refund/verify`)
+      }
+
+      if (res?.data?.success) {
+        toast.success(res.data.message || `${action} successful`)
+        await getOrders()
+      }
+    } catch (error) {
+      console.error(`${action} Error:`, error.response?.data || error.message)
+
+      toast.error(error.response?.data?.message || `${action} failed`)
+    } finally {
+      setReturnActionId(null)
     }
   }
 
@@ -525,8 +598,6 @@ export default function AdminOrders() {
 
                 <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Cancelled By</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Date</th>
-
                 <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
               </tr>
             </thead>
@@ -567,6 +638,11 @@ export default function AdminOrders() {
                             {order.items?.length || 0} item
                             {order.items?.length !== 1 ? 's' : ''}
                           </p>
+
+                          <p className="mt-1 flex items-center gap-1.5 text-xs text-[#6F6A64]">
+                            <Clock3 size={12} />
+                            {formatDate(order.createdAt)}
+                          </p>
                         </div>
                       </td>
 
@@ -594,9 +670,29 @@ export default function AdminOrders() {
 
                       <td className="px-5 py-4">
                         <p className="text-xs font-semibold text-[#292725]">{getPaymentMethodLabel(order.paymentMethod || order.payment?.paymentMethod)}</p>
+
+                        {order.returnStatus && order.returnStatus !== 'Not Requested' && (
+                          <div className="mt-2 max-w-52 rounded-lg border border-[#E3DED6] bg-[#F8F6F2] p-2.5">
+                            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#6B6258]">
+                              <RotateCcw size={13} />
+                              Return: {order.returnStatus}
+                            </p>
+
+                            {/* {order.returnReason && (
+                              <p className="mt-1 text-xs text-[#6F6A64]">
+                                <span className="font-semibold">Reason:</span> {order.returnReason}
+                              </p>
+                            )} */}
+
+                            {order.returnRejectionReason && (
+                              <p className="mt-1 text-xs text-[#A44A3F]">
+                                <span className="font-semibold">Rejection:</span> {order.returnRejectionReason}
+                              </p>
+                            )}
+                          </div>
+                        )}
                         <span className={`mt-1 inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold ${getPaymentStatusStyle(paymentStatus)}`}>{paymentStatus}</span>
 
-                        
                         {canConfirmPayment && (
                           <button
                             type="button"
@@ -639,8 +735,6 @@ export default function AdminOrders() {
                               </option>
 
                               <option value="Cancelled">Cancelled</option>
-
-                              <option value="Returned">Returned</option>
                             </select>
 
                             <ChevronDown size={14} className="pointer-events-none absolute right-2 top-2.5 text-[#6F6A64]" />
@@ -669,24 +763,80 @@ export default function AdminOrders() {
                         )}
                       </td>
 
-                      <td className="px-5 py-4">
-                        <span className="text-xs font-medium text-[#6F6A64]">{formatDate(order.createdAt)}</span>
-                      </td>
-
                       {/* Action */}
                       <td className="px-5 py-4">
                         <div className="flex justify-end gap-1">
-                          {canDeleteOrder && (
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteOpen(order)}
-                              disabled={deletingOrderId === order._id}
-                              className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F] disabled:cursor-not-allowed disabled:opacity-50"
-                              title="Delete Cancelled Order"
-                            >
-                              <Trash2 size={16} />
-                            </button>
+                          {order.returnStatus === 'Requested' && (
+                            <div className="flex flex-wrap justify-end gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleReturnReview(order, 'Approve')}
+                                disabled={reviewingReturnId === order._id}
+                                className="rounded-lg bg-[#EAEDE7] px-2.5 py-2 text-xs font-semibold text-[#5E6C55] hover:bg-[#DDE5D7] disabled:opacity-50"
+                              >
+                                {reviewingReturnId === order._id ? 'Please wait...' : 'Approve'}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setRejectionModalOrder(order)
+                                  setRejectionReason('')
+                                }}
+                                disabled={reviewingReturnId === order._id}
+                                className="rounded-lg bg-[#F1E7E5] px-2.5 py-2 text-xs font-semibold text-[#A44A3F] hover:bg-[#EBDAD7] disabled:opacity-50"
+                              >
+                                Reject
+                              </button>
+                            </div>
                           )}
+
+                          {/* Return / Refund Workflow */}
+                          <div className="flex flex-wrap justify-end gap-1.5">
+                            {order.returnStatus === 'Approved' && (
+                              <button
+                                type="button"
+                                onClick={() => handleReturnAction(order, 'Item Received')}
+                                disabled={returnActionId === order._id}
+                                className="rounded-lg bg-[#EEEAE4] px-2.5 py-2 text-xs font-semibold text-[#5D554C] hover:bg-[#E3DED6] disabled:opacity-50"
+                              >
+                                {returnActionId === order._id ? 'Please wait...' : 'Item Received'}
+                              </button>
+                            )}
+
+                            {order.returnStatus === 'Pickup Scheduled' && (
+                              <button
+                                type="button"
+                                onClick={() => handleReturnAction(order, 'Item Received')}
+                                disabled={returnActionId === order._id}
+                                className="rounded-lg bg-[#EEEAE4] px-2.5 py-2 text-xs font-semibold text-[#5D554C] hover:bg-[#E3DED6] disabled:opacity-50"
+                              >
+                                Confirm Received
+                              </button>
+                            )}
+
+                            {order.returnStatus === 'Item Received' && order.paymentMethod === 'RAZORPAY' && (
+                              <button
+                                type="button"
+                                onClick={() => handleReturnAction(order, 'Process Refund')}
+                                disabled={returnActionId === order._id}
+                                className="rounded-lg bg-[#EAEDE7] px-2.5 py-2 text-xs font-semibold text-[#5E6C55] hover:bg-[#DDE5D7] disabled:opacity-50"
+                              >
+                                Process Refund
+                              </button>
+                            )}
+
+                            {order.returnStatus === 'Refund Processing' && (
+                              <button
+                                type="button"
+                                onClick={() => handleReturnAction(order, 'Verify Refund')}
+                                disabled={returnActionId === order._id}
+                                className="rounded-lg bg-[#F1EEE8] px-2.5 py-2 text-xs font-semibold text-[#806B4F] hover:bg-[#EAE4D9] disabled:opacity-50"
+                              >
+                                {returnActionId === order._id ? 'Checking...' : 'Verify Refund'}
+                              </button>
+                            )}
+                          </div>
 
                           <button
                             type="button"
@@ -720,66 +870,150 @@ export default function AdminOrders() {
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-[#99938B]">Show</span>
+        {/* Pagination Footer */}
+        <div className="flex flex-col gap-4 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* Rows Per Page */}
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium text-[#8B857D]">Show</span>
 
             <select
               value={itemsPerPage}
               onChange={(e) => {
                 const value = e.target.value
-
                 handleItemsPerPageChange(value === 'all' ? 'all' : Number(value))
               }}
-              className="h-8 rounded-lg border border-[#E3DED6] bg-white px-2.5 pr-7 text-xs font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258]"
+              className="h-9 rounded-lg border border-[#E3DED6] bg-white px-3 text-xs font-semibold text-[#514B44] outline-none transition hover:border-[#BEB6AB] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
             >
               <option value={5}>5 Documents</option>
-
               <option value={10}>10 Documents</option>
-
               <option value={20}>20 Documents</option>
-
               <option value="all">All Documents</option>
             </select>
 
-            <span className="text-xs text-[#99938B]">of {filteredOrders.length}</span>
+            <span className="text-xs text-[#99938B]">
+              of <span className="font-semibold text-[#514B44]">{filteredOrders.length}</span>
+            </span>
           </div>
 
+          {/* Page Navigation */}
           {itemsPerPage !== 'all' && totalPages > 1 && (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center justify-center gap-2">
               <button
                 type="button"
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                className="flex size-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                aria-label="Previous page"
+                className="flex size-9 items-center justify-center rounded-xl border border-[#E3DED6] bg-white text-[#6B6258] transition hover:border-[#C9C0B5] hover:bg-[#F1EEE8] disabled:cursor-not-allowed disabled:opacity-35"
               >
-                <ChevronLeft size={16} />
+                <ChevronLeft size={17} strokeWidth={2.5} />
               </button>
 
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-                <button
-                  key={page}
-                  type="button"
-                  onClick={() => setCurrentPage(page)}
-                  className={`flex size-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-[#6B6258] text-white' : 'border border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#EEEAE4]'}`}
-                >
-                  {page}
-                </button>
-              ))}
+              <div className="flex h-9 items-center gap-2 rounded-xl border border-[#D6D1CA] bg-white px-3 shadow-sm">
+                <input
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  value={currentPage}
+                  aria-label="Current page"
+                  onChange={(e) => {
+                    const value = e.target.value
+
+                    if (value === '') return
+
+                    const page = Number(value)
+
+                    if (Number.isInteger(page) && page >= 1 && page <= totalPages) {
+                      setCurrentPage(page)
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const page = Number(e.target.value)
+
+                    setCurrentPage(Math.min(totalPages, Math.max(1, page || 1)))
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.currentTarget.blur()
+                  }}
+                  className="w-8 bg-transparent text-center text-sm font-semibold text-[#292725] outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+
+                <span className="text-xs text-[#B0AAA3]">of</span>
+
+                <span className="min-w-4 text-sm font-medium text-[#6F6A64]">{totalPages}</span>
+              </div>
 
               <button
                 type="button"
-                disabled={currentPage === totalPages || totalPages === 0}
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                className="flex size-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                aria-label="Next page"
+                className="flex size-9 items-center justify-center rounded-xl border border-[#E3DED6] bg-white text-[#6B6258] transition hover:border-[#C9C0B5] hover:bg-[#F1EEE8] disabled:cursor-not-allowed disabled:opacity-35"
               >
-                <ChevronRight size={16} />
+                <ChevronRight size={17} strokeWidth={2.5} />
               </button>
             </div>
           )}
         </div>
       </div>
+
+      {/* Reject Return Request Modal */}
+      {rejectionModalOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-[#E3DED6] bg-white p-5 shadow-xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-[#292725]">Reject Return Request</h2>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setRejectionModalOrder(null)
+                  setRejectionReason('')
+                }}
+                disabled={reviewingReturnId === rejectionModalOrder._id}
+                className="rounded-lg p-2 text-[#6F6A64] hover:bg-[#EEEAE4]"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <p className="mt-2 text-sm text-[#6F6A64]">Order #{rejectionModalOrder.orderId} reject કરવાનું કારણ લખો.</p>
+
+            <textarea
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              maxLength={1000}
+              rows={4}
+              placeholder="Enter rejection reason..."
+              className="mt-4 w-full resize-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] p-3 text-sm text-[#292725] outline-none focus:border-[#6B6258]"
+            />
+
+            <p className="mt-1 text-right text-xs text-[#99938B]">{rejectionReason.length}/1000</p>
+
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setRejectionModalOrder(null)
+                  setRejectionReason('')
+                }}
+                disabled={reviewingReturnId === rejectionModalOrder._id}
+                className="rounded-xl border border-[#E3DED6] px-4 py-2 text-sm font-semibold text-[#6F6A64] hover:bg-[#F8F6F2]"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleReturnReview(rejectionModalOrder, 'Reject', rejectionReason)}
+                disabled={reviewingReturnId === rejectionModalOrder._id || !rejectionReason.trim()}
+                className="rounded-xl bg-[#A44A3F] px-4 py-2 text-sm font-semibold text-white hover:bg-[#8F3C33] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {reviewingReturnId === rejectionModalOrder._id ? 'Rejecting...' : 'Confirm Reject'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation */}
       {deleteModalOpen && (

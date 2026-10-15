@@ -128,6 +128,22 @@ export default function OrderDetails() {
 
   const isDelivered = order?.orderStatus === 'Delivered'
 
+  const returnStatus = order?.returnStatus || 'Not Requested'
+
+  const hasReturnRequest = returnStatus !== 'Not Requested'
+
+  const returnStatusStyles = {
+    Requested: 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]',
+    Approved: 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]',
+    Rejected: 'border-[#E7D2CF] bg-[#FFF5F3] text-[#A44A3F]',
+    'Pickup Scheduled': 'border-[#D7E4F0] bg-[#F2F7FC] text-[#416A91]',
+    'Item Received': 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]',
+    'Refund Processing': 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]',
+    Refunded: 'border-[#D8D0E8] bg-[#F6F2FC] text-[#70529B]',
+  }
+
+  const canRequestReturn = isDelivered && !hasReturnRequest && !isCancelled && !isReturned
+
   // ! User can cancel only these statuses
   const canCancelOrder = ['Pending', 'Confirmed', 'Processing'].includes(order?.orderStatus)
 
@@ -557,7 +573,7 @@ export default function OrderDetails() {
                 </div>
               </div>
 
-              <div className="border-t border-[#E8DDD4] px-4 pb-4 sm:px-5">
+              <div className="border-t border-[#E8DDD4] px-4 py-5 sm:px-5">
                 <div className={`flex items-start gap-2.5 rounded-xl p-3.5 ${isCancelled ? 'bg-[#F1EFED]' : 'bg-[#F7EEE7]'}`}>
                   <ShieldCheck size={16} className={`mt-0.5 shrink-0 ${isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'}`} />
 
@@ -660,62 +676,111 @@ export default function OrderDetails() {
             )}
 
             {/* RETURN ORDER */}
-            {isDelivered && (
+
+            {/* RETURN & REFUND */}
+            {(isDelivered || hasReturnRequest) && (
               <div className="overflow-hidden rounded-2xl border border-[#EBD7B7] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.04)]">
                 <div className="flex flex-col gap-3 border-b border-[#F1E3CB] bg-[#FFFDF8] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                   <div>
                     <div className="flex items-center gap-2">
                       <Receipt size={16} className="text-[#B87935]" />
-
-                      <h2 className="text-sm font-extrabold text-[#351C18]">Return Order</h2>
+                      <h2 className="text-sm font-extrabold text-[#351C18]">Return & Refund</h2>
                     </div>
 
-                    <p className="mt-1 text-[10px] leading-5 text-[#806C63]">Need to return this order? Submit a return request.</p>
+                    <p className="mt-1 text-[10px] leading-5 text-[#806C63]">{hasReturnRequest ? 'Track your return request and refund progress.' : 'Need to return your delivered order?'}</p>
                   </div>
 
-                  {!showReturnBox && (
-                    <button type="button" onClick={() => setShowReturnBox(true)} className="w-full rounded-xl bg-[#FFF4DD] px-4 py-2.5 text-xs font-extrabold text-[#A05A16] transition-all duration-300 hover:bg-[#FFECC4] sm:w-auto">
-                      Return Order
+                  {canRequestReturn && !showReturnBox && (
+                    <button type="button" onClick={() => setShowReturnBox(true)} className="w-full rounded-xl bg-[#FFF4DD] px-4 py-2.5 text-xs font-extrabold text-[#A05A16] transition hover:bg-[#FFECC4] sm:w-auto">
+                      Request Return
                     </button>
                   )}
                 </div>
 
-                {showReturnBox && (
-                  <div className="p-4 sm:p-5">
-                    <label className="text-xs font-bold text-[#67544D]">Return Reason</label>
+                <div className="space-y-4 p-4 sm:p-5">
+                  {hasReturnRequest && (
+                    <div className="rounded-xl border border-[#E8DDD4] bg-[#FFFCF9] p-4">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-xs font-extrabold text-[#351C18]">Return Request Status</span>
 
-                    <textarea
-                      value={returnReason}
-                      onChange={(e) => setReturnReason(e.target.value)}
-                      placeholder="Why do you want to return this order?"
-                      rows={4}
-                      className="mt-2 w-full resize-none rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#B87935] focus:bg-white"
-                    />
+                        <span className={`inline-flex rounded-md border px-2 py-1 text-[9px] font-bold ${returnStatusStyles[returnStatus] || 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'}`}>{returnStatus}</span>
+                      </div>
 
-                    <div className="mt-3 flex flex-col gap-2.5 sm:flex-row">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowReturnBox(false)
-                          setReturnReason('')
-                        }}
-                        disabled={returning}
-                        className="rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        Cancel
-                      </button>
+                      {order.returnReason && (
+                        <p className="mt-3 text-[11px] leading-5 text-[#806C63]">
+                          <span className="font-bold text-[#67544D]">Your reason:</span> {order.returnReason}
+                        </p>
+                      )}
 
-                      <button
-                        type="button"
-                        onClick={handleReturnOrder}
-                        disabled={returning || !returnReason.trim()}
-                        className="rounded-xl bg-linear-to-r from-[#A05A16] to-[#B87935] px-4 py-2.5 text-xs font-bold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        {returning ? 'Submitting...' : 'Submit Return Request'}
-                      </button>
+                      {order.returnRejectionReason && (
+                        <div className="mt-3 rounded-lg border border-[#E7D2CF] bg-[#FFF5F3] p-3">
+                          <p className="text-[10px] font-extrabold text-[#A44A3F]">Return request rejected</p>
+                          <p className="mt-1 text-[10px] leading-4 text-[#8F625D]">{order.returnRejectionReason}</p>
+                        </div>
+                      )}
+
+                      {returnStatus === 'Refund Processing' && <p className="mt-3 text-[10px] leading-5 text-[#A05A16]">Your return has been received. Your refund is being processed.</p>}
+
+                      {returnStatus === 'Refunded' && (
+                        <div className="mt-3 rounded-lg border border-[#D8D0E8] bg-[#F6F2FC] p-3">
+                          <p className="text-[11px] font-extrabold text-[#70529B]">Refund completed</p>
+
+                          {order.refundAmount != null && <p className="mt-1 text-xs font-bold text-[#70529B]">Refund amount: ₹{formatPrice(order.refundAmount)}</p>}
+
+                          {order.refundedAt && <p className="mt-1 text-[10px] text-[#70529B]">Refunded on: {formatDate(order.refundedAt)}</p>}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )}
+                  )}
+
+                  {canRequestReturn && showReturnBox && (
+                    <div>
+                      <div className="rounded-xl border border-[#EBD7B7] bg-[#FFF9ED] p-3">
+                        <p className="text-xs font-extrabold text-[#80501D]">Before submitting</p>
+                        <p className="mt-1 text-[10px] leading-5 text-[#806C63]">Please provide a clear reason for returning your order.</p>
+                      </div>
+
+                      <label className="mt-4 block text-xs font-bold text-[#67544D]">
+                        Return Reason
+                        <span className="ml-1 text-[#A51D26]">*</span>
+                      </label>
+
+                      <textarea
+                        value={returnReason}
+                        onChange={(e) => setReturnReason(e.target.value)}
+                        placeholder="Explain why you want to return this order..."
+                        rows={4}
+                        maxLength={500}
+                        className="mt-2 w-full resize-none rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#B87935] focus:bg-white"
+                      />
+
+                      <p className="mt-1 text-right text-[9px] text-[#9A857B]">{returnReason.length}/500</p>
+
+                      <div className="mt-3 flex flex-col gap-2.5 sm:flex-row">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowReturnBox(false)
+                            setReturnReason('')
+                          }}
+                          disabled={returning}
+                          className="rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:opacity-50"
+                        >
+                          Cancel
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleReturnOrder}
+                          disabled={returning || !returnReason.trim()}
+                          className="rounded-xl bg-linear-to-r from-[#A05A16] to-[#B87935] px-4 py-2.5 text-xs font-bold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {returning ? 'Submitting...' : 'Submit Return Request'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

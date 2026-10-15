@@ -154,7 +154,6 @@ const orderSchema = new mongoose.Schema(
     },
 
     // Payment
-
     paymentMethod: {
       type: String,
       enum: ['COD', 'ONLINE_ON_DELIVERY', 'RAZORPAY'],
@@ -163,7 +162,7 @@ const orderSchema = new mongoose.Schema(
 
     paymentStatus: {
       type: String,
-      enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
+      enum: ['Pending', 'Paid', 'Failed', 'Partially Refunded', 'Refunded'],
       default: 'Pending',
     },
 
@@ -205,6 +204,57 @@ const orderSchema = new mongoose.Schema(
     cancelledBy: {
       type: String,
       enum: ['User', 'Admin'],
+      default: null,
+    },
+
+    // Order Return
+    returnReason: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+
+    returnRequestedAt: {
+      type: Date,
+      default: null,
+    },
+
+    returnStatus: {
+      type: String,
+      enum: ['Not Requested', 'Requested', 'Approved', 'Rejected', 'Pickup Scheduled', 'Item Received', 'Refund Processing', 'Refunded'],
+      default: 'Not Requested',
+    },
+
+    returnReviewedAt: {
+      type: Date,
+      default: null,
+    },
+
+    returnReviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserMineKart',
+      default: null,
+    },
+
+    returnRejectionReason: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+
+    refundAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
+    refundId: {
+      type: String,
+      default: '',
+    },
+
+    refundedAt: {
+      type: Date,
       default: null,
     },
   },

@@ -44,6 +44,30 @@ const paymentSchema = new mongoose.Schema(
       default: null,
     },
 
+    // Refund tracking
+    refundId: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+
+    refundAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
+    refundedAt: {
+      type: Date,
+      default: null,
+    },
+
+    refundStatus: {
+      type: String,
+      enum: ['Not Requested', 'Pending', 'Processed', 'Failed'],
+      default: 'Not Requested',
+    },
+
     // Razorpay order reference
     razorpayOrderId: {
       type: String,

@@ -96,6 +96,29 @@ export default function MyOrders() {
 
     return 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]'
   }
+
+  const getReturnStatusClass = (status) => {
+    const normalized = String(status || '').toLowerCase()
+
+    if (['refunded', 'approved', 'item received'].includes(normalized)) {
+      return 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]'
+    }
+
+    if (['rejected'].includes(normalized)) {
+      return 'border-[#E7D2CF] bg-[#FFF5F3] text-[#A44A3F]'
+    }
+
+    if (['requested', 'pickup scheduled', 'refund processing'].includes(normalized)) {
+      return 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]'
+    }
+
+    return 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'
+  }
+
+  const getReturnStatus = (order) => {
+    return order.returnStatus || 'Not Requested'
+  }
+
   const getOrderStatusClass = (status) => {
     if (status === 'Delivered') {
       return 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]'
@@ -331,6 +354,41 @@ export default function MyOrders() {
                       </div>
                     )}
                   </div>
+
+                  {/* RETURN & REFUND STATUS */}
+                  {order.returnStatus && order.returnStatus !== 'Not Requested' && (
+                    <div className="border-b border-[#E8DDD4] bg-[#FFFCF9] px-4 py-3 sm:px-5">
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E8DDD4] bg-white text-[#8E181F]">
+                          <ShieldCheck size={17} />
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[10px] font-extrabold text-[#351C18]">Return & Refund</p>
+
+                          <span className={`mt-1.5 inline-flex rounded-md border px-2 py-1 text-[9px] font-bold ${getReturnStatusClass(getReturnStatus(order))}`}>{getReturnStatus(order)}</span>
+
+                          {order.returnReason && (
+                            <p className="mt-2 text-[10px] leading-4 text-[#806C63]">
+                              <span className="font-bold">Reason:</span> {order.returnReason}
+                            </p>
+                          )}
+
+                          {order.returnRejectionReason && (
+                            <p className="mt-1 text-[10px] leading-4 text-[#A44A3F]">
+                              <span className="font-bold">Rejection reason:</span> {order.returnRejectionReason}
+                            </p>
+                          )}
+
+                          {order.refundAmount != null && (
+                            <p className="mt-1 text-[10px] text-[#67544D]">
+                              <span className="font-bold">Refund amount:</span> ₹{Number(order.refundAmount).toLocaleString('en-IN')}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* ORDER ITEMS */}
                   <div className={`px-4 py-4 sm:px-5 ${isCancelled ? 'bg-[#F8F7F6]' : 'bg-white'}`}>

@@ -303,7 +303,6 @@ router.get('/:id', authMiddleware, async (req, res) => {
 })
 
 // ! users ne order delete mate
-// ! CANCEL ORDER => User mate
 router.put('/:id/cancel', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.user
@@ -402,12 +401,12 @@ router.put('/:id/cancel', authMiddleware, async (req, res) => {
   }
 })
 
-// ! RETURN ORDER
+// ! RETURN ORDER => Customer Return Request
 router.put('/:id/return', authMiddleware, async (req, res) => {
   try {
     const { userId } = req.user
     const { id } = req.params
-    const { returnReason = '' } = req.body
+    const returnReason = String(req.body.returnReason || '').trim()
 
     const order = await Order.findOne({
       _id: id,
@@ -421,6 +420,7 @@ router.put('/:id/return', authMiddleware, async (req, res) => {
       })
     }
 
+    // Only delivered orders can be returned
     if (order.orderStatus !== 'Delivered') {
       return res.status(400).json({
         success: false,
@@ -428,30 +428,61 @@ router.put('/:id/return', authMiddleware, async (req, res) => {
       })
     }
 
-    if (!returnReason.trim()) {
+    // Validate return reason
+    if (!returnReason) {
       return res.status(400).json({
         success: false,
         message: 'Return reason is required',
       })
     }
 
-    order.orderStatus = 'Returned'
-    order.cancellationReason = returnReason.trim()
+    if (returnReason.length > 1000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Return reason cannot exceed 1000 characters',
+      })
+    }
+
+    // Prevent duplicate return requests
+    if (order.returnStatus && order.returnStatus !== 'Not Requested') {
+      return res.status(400).json({
+        success: false,
+        message: 'A return request has already been submitted',
+      })
+    }
+
+    // Support older orders that may already be marked Returned
+    if (order.orderStatus === 'Returned') {
+      return res.status(400).json({
+        success: false,
+        message: 'This order has already been returned',
+      })
+    }
+
+    // Save request without completing the return
+    order.returnReason = returnReason
+    order.returnRequestedAt = new Date()
+    order.returnStatus = 'Requested'
+    order.returnReviewedAt = null
+    order.returnReviewedBy = null
+    order.returnRejectionReason = ''
+    order.refundAmount = 0
+    order.refundId = ''
+    order.refundedAt = null
 
     await order.save()
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: 'Return request submitted successfully',
+      message: 'Return request submitted successfully. Awaiting admin review.',
       data: order,
     })
   } catch (error) {
-    console.log('Return Order Error:', error)
+    console.error('Return Order Error:', error)
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Internal server error',
-      error: error.message,
     })
   }
 })

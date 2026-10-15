@@ -1,7 +1,7 @@
 import { getImageUrl } from '../utils/imageUrl'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, CheckCircle2, Clock3, CreditCard, MapPin, Package, Phone, ReceiptText, Truck, User } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Clock3, CreditCard, MapPin, Package, Phone, ReceiptText, RefreshCw, RotateCcw, Truck, User } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import toast from 'react-hot-toast'
@@ -333,6 +333,76 @@ const AdminOrderView = () => {
               )}
             </div>
           </div>
+
+          {/* RETURN & REFUND DETAILS */}
+          {order.returnStatus && order.returnStatus !== 'Not Requested' && (
+            <div className="mt-5 rounded-xl border border-[#E3DED6] bg-white shadow-sm">
+              <div className="flex items-center gap-3 border-b border-[#E3DED6] px-5 py-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#F1EEE8] text-[#6B6258]">
+                  <RotateCcw size={19} />
+                </div>
+
+                <div>
+                  <h2 className="text-base font-bold text-[#292725]">Return & Refund Details</h2>
+                  <p className="text-xs text-[#99938B]">Return request and refund information</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm text-[#6F6A64]">Return Status</span>
+                  <span className="rounded-full border border-[#E3DED6] bg-[#F8F6F2] px-3 py-1 text-xs font-semibold text-[#6B6258]">{order.returnStatus}</span>
+                </div>
+
+                {order.returnReason && (
+                  <div>
+                    <p className="mb-1 text-xs font-medium text-[#99938B]">Return Reason</p>
+                    <p className="text-sm text-[#292725]">{order.returnReason}</p>
+                  </div>
+                )}
+
+                {order.returnRejectionReason && (
+                  <div className="rounded-lg border border-[#FECACA] bg-[#FEF2F2] p-3">
+                    <p className="text-xs font-semibold text-[#B91C1C]">Rejection Reason</p>
+                    <p className="mt-1 text-sm text-[#7F1D1D]">{order.returnRejectionReason}</p>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm text-[#6F6A64]">Refund Amount</span>
+                  <span className="text-base font-bold text-[#292725]">₹{Number(order.refundAmount || 0).toLocaleString('en-IN')}</span>
+                </div>
+
+                {order.refundId && (
+                  <div className="flex items-start justify-between gap-3">
+                    <span className="shrink-0 text-sm text-[#6F6A64]">Refund ID</span>
+                    <span className="break-all text-right text-xs font-medium text-[#292725]">{order.refundId}</span>
+                  </div>
+                )}
+
+                {order.refundedAt && (
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm text-[#6F6A64]">Refunded At</span>
+                    <span className="text-right text-xs text-[#292725]">{formatDate(order.refundedAt)}</span>
+                  </div>
+                )}
+
+                {order.returnStatus === 'Refund Processing' && (
+                  <div className="flex items-center gap-2 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] p-3 text-xs font-medium text-[#92400E]">
+                    <RefreshCw size={15} />
+                    Refund is being processed. Verify the status before marking it complete.
+                  </div>
+                )}
+
+                {order.returnStatus === 'Refunded' && (
+                  <div className="flex items-center gap-2 rounded-lg border border-[#BBF7D0] bg-[#ECFDF5] p-3 text-xs font-medium text-[#15803D]">
+                    <CheckCircle2 size={15} />
+                    Refund completed successfully.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* ORDER SUMMARY */}
           <div className="rounded-xl border border-[#E3DED6] bg-white shadow-sm">

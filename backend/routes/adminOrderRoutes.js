@@ -121,9 +121,10 @@ router.get('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => 
       })
     }
 
+
     const payment = await Payment.findOne({
       orderId: order._id,
-    }).select('_id paymentMethod paymentStatus transactionId amount paidAt')
+    }).select('_id paymentMethod paymentStatus transactionId amount paidAt refundId refundAmount refundedAt refundStatus')
 
     res.status(200).json({
       success: true,
@@ -144,13 +145,141 @@ router.get('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => 
   }
 })
 
+// REVIEW RETURN REQUEST => Admin Approve / Reject
+router.put('/:id/return-review', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+  try {
+    const { id } = req.params
+    const { action, rejectionReason = '' } = req.body
+
+    if (!['Approve', 'Reject'].includes(action)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Action must be Approve or Reject',
+      })
+    }
+
+    const order = await Order.findById(id)
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      })
+    }
+
+    // Only delivered orders can have a return request reviewed
+    if (order.orderStatus !== 'Delivered') {
+      return res.status(400).json({
+        success: false,
+        message: 'Only delivered orders can be reviewed for return',
+      })
+    }
+
+    // A return request must exist
+    if (order.returnStatus !== 'Requested') {
+      return res.status(400).json({
+        success: false,
+        message: 'There is no pending return request for this order',
+      })
+    }
+
+    if (action === 'Reject' && !String(rejectionReason).trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Rejection reason is required',
+      })
+    }
+
+    if (String(rejectionReason).trim().length > 1000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Rejection reason cannot exceed 1000 characters',
+      })
+    }
+
+    order.returnStatus = action === 'Approve' ? 'Approved' : 'Rejected'
+    order.returnReviewedAt = new Date()
+    order.returnReviewedBy = req.user.userId
+    order.returnRejectionReason = action === 'Reject' ? String(rejectionReason).trim() : ''
+
+    await order.save()
+
+    return res.status(200).json({
+      success: true,
+      message: action === 'Approve' ? 'Return request approved successfully' : 'Return request rejected successfully',
+      data: order,
+    })
+  } catch (error) {
+    console.error('Review Return Request Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    })
+  }
+})
+
+// CONFIRM RETURNED ITEM RECEIVED
+router.put('/:id/item-received', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+  try {
+    const { id } = req.params
+
+    // Atomic update prevents duplicate or invalid transitions.
+    const order = await Order.findOneAndUpdate(
+      {
+        _id: id,
+        orderStatus: 'Delivered',
+        returnStatus: { $in: ['Approved', 'Pickup Scheduled'] },
+      },
+      {
+        $set: {
+          returnStatus: 'Item Received',
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    )
+
+    if (!order) {
+      const existingOrder = await Order.findById(id)
+
+      if (!existingOrder) {
+        return res.status(404).json({
+          success: false,
+          message: 'Order not found',
+        })
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: 'Only approved returns can be marked as item received',
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Returned item received successfully. Refund can now be processed.',
+      data: order,
+    })
+  } catch (error) {
+    console.error('Confirm Returned Item Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Unable to confirm returned item',
+    })
+  }
+})
+
 // UPDATE ORDER STATUS
 router.put('/:id/status', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
   try {
     const { id } = req.params
     const { orderStatus, cancellationReason = '' } = req.body
 
-    const allowedStatuses = ['Pending', 'Confirmed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled', 'Returned']
+    const allowedStatuses = ['Pending', 'Confirmed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled']
 
     if (!allowedStatuses.includes(orderStatus)) {
       return res.status(400).json({
