@@ -9,8 +9,11 @@ const generateInvoicePdf = async (order, customerName = 'Customer') => {
     let puppeteer
 
     if (isVercel) {
-      const chromium = require('@sparticuz/chromium')
-      puppeteer = require('puppeteer-core')
+      const chromiumModule = await import('@sparticuz/chromium')
+      const puppeteerModule = await import('puppeteer-core')
+
+      const chromium = chromiumModule.default || chromiumModule
+      puppeteer = puppeteerModule.default || puppeteerModule
 
       browser = await puppeteer.launch({
         args: chromium.args,
@@ -19,7 +22,9 @@ const generateInvoicePdf = async (order, customerName = 'Customer') => {
         headless: true,
       })
     } else {
-      puppeteer = require('puppeteer')
+      const puppeteerModule = await import('puppeteer')
+
+      puppeteer = puppeteerModule.default || puppeteerModule
 
       browser = await puppeteer.launch({
         headless: true,
@@ -44,9 +49,11 @@ const generateInvoicePdf = async (order, customerName = 'Customer') => {
       displayHeaderFooter: false,
     })
 
+    console.log('Invoice PDF generated successfully')
+
     return Buffer.from(pdf)
   } catch (error) {
-    console.error('Invoice PDF generation failed:', error.message)
+    console.error('Invoice PDF generation failed:', error)
     throw error
   } finally {
     if (browser) {

@@ -255,25 +255,31 @@ export function CartProvider({ children }) {
     if (!user) {
       return {
         success: false,
-        message: 'Please login first',
+        message: 'User is not logged in',
       }
     }
 
     try {
-      const res = await axiosInstance.delete('/cart')
+      const response = await axiosInstance.delete('/cart')
 
-      if (res.data.success) {
-        await getCart()
-        // toast.success('Cart cleared successfully')
+      if (response.data?.success) {
+        setCart(response.data.data)
+        return {
+          success: true,
+          message: response.data.message,
+        }
       }
-
-      return res.data
-    } catch (error) {
-      console.error('Clear Cart Error:', error.response?.data || error.message)
 
       return {
         success: false,
-        message: error.response?.data?.message || 'Unable to clear cart',
+        message: response.data?.message || 'Failed to clear cart',
+      }
+    } catch (error) {
+      console.error('Clear Cart Error:', error)
+
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to clear cart',
       }
     }
   }

@@ -173,8 +173,6 @@ export default function Checkout() {
 
             toast.success('Payment successful!')
 
-          
-
             const params = new URLSearchParams({
               orderId: verifiedOrder.orderId,
               paymentMethod: verifiedOrder.paymentMethod || 'RAZORPAY',
@@ -182,6 +180,15 @@ export default function Checkout() {
               orderStatus: verifiedOrder.orderStatus || 'Pending',
               totalAmount: String(verifiedOrder.totalAmount ?? paymentData.amount / 100),
             })
+
+            const clearResponse = await clearCart()
+
+            if (!clearResponse?.success) {
+              console.error('Cart Clear Error:', clearResponse?.message)
+              toast.error('Payment successful, but cart could not be cleared.')
+            }
+
+            navigate(`/order-success?${params.toString()}`)
 
             navigate(`/order-success?${params.toString()}`)
           } catch (error) {
@@ -278,13 +285,14 @@ export default function Checkout() {
         totalAmount: String(order.totalAmount),
       })
 
-      navigate(`/order-success?${params.toString()}`)
+      const clearResponse = await clearCart()
 
-      clearCart().then((response) => {
-        if (!response?.success) {
-          console.warn('Cart Clear Error:', response?.message)
-        }
-      })
+      if (!clearResponse?.success) {
+        console.error('Cart Clear Error:', clearResponse?.message)
+        toast.error('Order placed, but cart could not be cleared.')
+      }
+
+      navigate(`/order-success?${params.toString()}`)
     } catch (error) {
       console.error('Place Order Error:', error.response?.data || error.message)
 
@@ -298,26 +306,11 @@ export default function Checkout() {
     return <CheckoutShimmer />
   }
 
-  if (cartItems.length === 0) {
-    return (
-      <div className="min-h-[65vh] bg-[#FBF7F2] px-4 py-12">
-        <div className="mx-auto  rounded-2xl border border-[#E8DDD4] bg-white px-6 py-12 text-center shadow-sm">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
-            <ShoppingBag size={30} />
-          </div>
+  // if (cartItems.length === 0) {
+  //   return (
 
-          <h1 className="mt-5 text-xl font-extrabold text-[#351C18]">Your cart is empty</h1>
-
-          <p className="mt-2 text-sm text-[#806C63]">Add products to your cart before proceeding to checkout.</p>
-
-          <button type="button" onClick={() => navigate('/')} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#8E181F] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#7D171C]">
-            Start Shopping
-            <ChevronRight size={17} />
-          </button>
-        </div>
-      </div>
-    )
-  }
+  //   )
+  // }
 
   const breadcrumbItems = [
     { title: 'cart', link: '/cart' },
@@ -384,6 +377,25 @@ export default function Checkout() {
             </div>
           </div>
         </div>
+
+        {cartItems.length === 0 && (
+          <div className="min-h-[65vh] bg-[#FBF7F2] px-4 py-12">
+            <div className="mx-auto  rounded-2xl border border-[#E8DDD4] bg-white px-6 py-12 text-center shadow-sm">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+                <ShoppingBag size={30} />
+              </div>
+
+              <h1 className="mt-5 text-xl font-extrabold text-[#351C18]">Your cart is empty</h1>
+
+              <p className="mt-2 text-sm text-[#806C63]">Add products to your cart before proceeding to checkout.</p>
+
+              <button type="button" onClick={() => navigate('/')} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#8E181F] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#7D171C]">
+                Start Shopping
+                <ChevronRight size={17} />
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px] 2xl:grid-cols-[minmax(0,1fr)_390px]">
           {/* LEFT: INVOICE */}
