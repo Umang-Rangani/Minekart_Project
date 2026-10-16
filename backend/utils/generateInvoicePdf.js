@@ -1,7 +1,7 @@
 const invoicePdfTemplate = require('./emailTemplates/invoicePdfTemplate').invoicePdfTemplate
 
 const isVercel = process.env.VERCEL === '1' || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME)
-
+ 
 const generateInvoicePdf = async (order, customerName = 'Customer') => {
   let browser
 
