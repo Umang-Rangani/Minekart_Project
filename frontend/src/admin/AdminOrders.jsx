@@ -286,56 +286,56 @@ export default function AdminOrders() {
     switch (status) {
       case 'Pending':
         return {
-          bg: 'bg-[#F1EEE8]',
-          text: 'text-[#8A6A3D]',
+          bg: 'bg-mk-surface',
+          text: 'text-mk-warning',
         }
 
       case 'Confirmed':
         return {
-          bg: 'bg-[#EAE7E1]',
-          text: 'text-[#5D554C]',
+          bg: 'bg-mk-surface',
+          text: 'text-mk-admin-hover',
         }
 
       case 'Processing':
         return {
-          bg: 'bg-[#EEEAE4]',
-          text: 'text-[#6B6258]',
+          bg: 'bg-mk-surface',
+          text: 'text-mk-admin',
         }
 
       case 'Shipped':
         return {
-          bg: 'bg-[#ECE9E4]',
-          text: 'text-[#625A51]',
+          bg: 'bg-mk-surface',
+          text: 'text-mk-admin-hover',
         }
 
       case 'Out for Delivery':
         return {
-          bg: 'bg-[#F1EEE8]',
-          text: 'text-[#806B4F]',
+          bg: 'bg-mk-surface',
+          text: 'text-mk-warning',
         }
 
       case 'Delivered':
         return {
-          bg: 'bg-[#EAEDE7]',
-          text: 'text-[#5E6C55]',
+          bg: 'bg-mk-success-soft',
+          text: 'text-mk-success',
         }
 
       case 'Cancelled':
         return {
-          bg: 'bg-[#F1E7E5]',
-          text: 'text-[#A44A3F]',
+          bg: 'bg-mk-danger-soft',
+          text: 'text-mk-danger',
         }
 
       case 'Returned':
         return {
-          bg: 'bg-[#F1EEE8]',
-          text: 'text-[#8A6A3D]',
+          bg: 'bg-mk-surface',
+          text: 'text-mk-warning',
         }
 
       default:
         return {
-          bg: 'bg-[#F8F6F2]',
-          text: 'text-[#6F6A64]',
+          bg: 'bg-mk-bg-admin',
+          text: 'text-mk-muted-admin',
         }
     }
   }
@@ -358,19 +358,19 @@ export default function AdminOrders() {
   const getPaymentStatusStyle = (status) => {
     switch (status) {
       case 'Paid':
-        return 'bg-[#EAEDE7] text-[#5E6C55]'
+        return 'bg-mk-success-soft text-mk-success'
 
       case 'Pending':
-        return 'bg-[#F1EEE8] text-[#8A6A3D]'
+        return 'bg-mk-surface text-mk-warning'
 
       case 'Failed':
-        return 'bg-[#F1E7E5] text-[#A44A3F]'
+        return 'bg-mk-danger-soft text-mk-danger'
 
       case 'Refunded':
-        return 'bg-[#ECE9F5] text-[#6D5A91]'
+        return 'bg-mk-info-soft text-mk-info'
 
       default:
-        return 'bg-[#F8F6F2] text-[#6F6A64]'
+        return 'bg-mk-bg-admin text-mk-muted-admin'
     }
   }
 
@@ -485,15 +485,15 @@ export default function AdminOrders() {
           const Icon = item.icon
 
           return (
-            <div key={item.title} className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+            <div key={item.title} className="rounded-2xl border border-mk-border-admin bg-white p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-[#99938B]">{item.title}</p>
+                  <p className="text-xs font-medium text-mk-subtle">{item.title}</p>
 
-                  <h2 className="mt-2 text-2xl font-bold text-[#292725]">{item.value}</h2>
+                  <h2 className="mt-2 text-2xl font-bold text-mk-ink-admin">{item.value}</h2>
                 </div>
 
-                <div className="flex size-11 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                <div className="flex size-11 items-center justify-center rounded-xl bg-mk-surface text-mk-admin">
                   <Icon size={21} />
                 </div>
               </div>
@@ -503,23 +503,23 @@ export default function AdminOrders() {
       </div>
 
       {/* Orders */}
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-mk-border-admin bg-white">
         {/* Search / Filter */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-4 border-b border-mk-border-admin p-5 lg:flex-row lg:items-center lg:justify-between">
           {/* Search */}
           <div className="relative w-full lg:max-w-xl">
-            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-mk-subtle" />
 
             <input
               type="text"
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search orders..."
-              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+              className="h-10 w-full rounded-xl border border-mk-border-admin bg-mk-bg-admin pl-10 pr-10 text-sm text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin"
             />
 
             {search && (
-              <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]" title="Clear Search">
+              <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-mk-subtle transition hover:bg-mk-surface hover:text-mk-ink-admin" title="Clear Search">
                 <X size={16} />
               </button>
             )}
@@ -529,7 +529,7 @@ export default function AdminOrders() {
           <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
             {/* Sort */}
             <div className="relative">
-              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-mk-admin" />
 
               <select
                 value={sortOrder}
@@ -540,7 +540,7 @@ export default function AdminOrders() {
                   localStorage.setItem('adminOrdersSort', value)
                   setCurrentPage(1)
                 }}
-                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+                className="h-10 w-full appearance-none rounded-xl border border-mk-border-admin bg-mk-bg-admin pl-9 pr-8 text-sm font-semibold text-mk-muted-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin sm:w-44"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -552,7 +552,7 @@ export default function AdminOrders() {
               <select
                 value={statusFilter}
                 onChange={(e) => handleStatusFilter(e.target.value)}
-                className="h-10 w-full min-w-45 appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 pr-10 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-45"
+                className="h-10 w-full min-w-45 appearance-none rounded-xl border border-mk-border-admin bg-mk-bg-admin px-4 pr-10 text-sm font-semibold text-mk-muted-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin sm:w-45"
               >
                 <option value="All">All Status</option>
                 <option value="Pending">Pending</option>
@@ -565,14 +565,14 @@ export default function AdminOrders() {
                 <option value="Returned">Returned</option>
               </select>
 
-              <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#6F6A64]" />
+              <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-mk-muted-admin" />
             </div>
 
             {/* Count */}
-            <div className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 sm:w-auto">
-              <Package size={17} className="text-[#6B6258]" />
+            <div className="flex h-10 items-center justify-center gap-2 rounded-xl border border-mk-border-admin bg-mk-bg-admin px-4 sm:w-auto">
+              <Package size={17} className="text-mk-admin" />
 
-              <span className="whitespace-nowrap text-sm font-semibold text-[#292725]">{filteredOrders.length} Orders</span>
+              <span className="whitespace-nowrap text-sm font-semibold text-mk-ink-admin">{filteredOrders.length} Orders</span>
             </div>
           </div>
         </div>
@@ -581,31 +581,31 @@ export default function AdminOrders() {
         <div className="w-full overflow-x-auto">
           <table className="w-full min-w-300">
             <thead>
-              <tr className="border-b border-[#E3DED6] bg-[#F8F6F2]">
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Index</th>
+              <tr className="border-b border-mk-border-admin bg-mk-bg-admin">
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Index</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Order</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Order</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Customer</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Customer</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Items</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Items</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Amount</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Amount</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Payment</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Payment</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Status</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Cancelled By</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Cancelled By</th>
 
-                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Action</th>
               </tr>
             </thead>
 
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="10" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                  <td colSpan="10" className="px-5 py-12 text-center text-sm text-mk-subtle">
                     Loading orders...
                   </td>
                 </tr>
@@ -625,21 +625,21 @@ export default function AdminOrders() {
                   const canConfirmPayment = ['Out for Delivery', 'Delivered'].includes(order.orderStatus) && paymentStatus === 'Pending' && order.payment?._id && !isLocked
 
                   return (
-                    <tr key={order._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
+                    <tr key={order._id} className="border-b border-mk-border-admin transition hover:bg-mk-bg-admin">
                       <td className="px-5 py-4">
-                        <span className="text-sm text-[#6F6A64]">{startIndex + index + 1}</span>
+                        <span className="text-sm text-mk-muted-admin">{startIndex + index + 1}</span>
                       </td>
 
                       <td className="px-5 py-4">
                         <div className="min-w-0">
-                          <p className="max-w-45 truncate text-sm font-semibold text-[#292725]">#{order.orderId}</p>
+                          <p className="max-w-45 truncate text-sm font-semibold text-mk-ink-admin">#{order.orderId}</p>
 
-                          <p className="mt-1 text-xs text-[#99938B]">
+                          <p className="mt-1 text-xs text-mk-subtle">
                             {order.items?.length || 0} item
                             {order.items?.length !== 1 ? 's' : ''}
                           </p>
 
-                          <p className="mt-1 flex items-center gap-1.5 text-xs text-[#6F6A64]">
+                          <p className="mt-1 flex items-center gap-1.5 text-xs text-mk-muted-admin">
                             <Clock3 size={12} />
                             {formatDate(order.createdAt)}
                           </p>
@@ -648,44 +648,44 @@ export default function AdminOrders() {
 
                       <td className="px-5 py-4">
                         <div className="min-w-35">
-                          <p className="max-w-45 truncate text-sm font-semibold text-[#292725]">{order.shippingAddress?.fullName || 'N/A'}</p>
+                          <p className="max-w-45 truncate text-sm font-semibold text-mk-ink-admin">{order.shippingAddress?.fullName || 'N/A'}</p>
 
-                          <p className="mt-1 text-xs text-[#99938B]">{order.shippingAddress?.phone || 'N/A'}</p>
+                          <p className="mt-1 text-xs text-mk-subtle">{order.shippingAddress?.phone || 'N/A'}</p>
                         </div>
                       </td>
 
                       <td className="px-5 py-4">
                         <div className="flex -space-x-2">
                           {order.items?.slice(0, 3).map((item, itemIndex) => (
-                            <div key={itemIndex} className="flex size-9 items-center justify-center overflow-hidden rounded-lg border-2 border-white bg-[#F8F6F2]">
-                              {item.image ? <img src={getImageUrl(item.image)} alt={item.productName} className="h-full w-full object-contain" /> : <Package size={15} className="text-[#99938B]" />}
+                            <div key={itemIndex} className="flex size-9 items-center justify-center overflow-hidden rounded-lg border-2 border-white bg-mk-bg-admin">
+                              {item.image ? <img src={getImageUrl(item.image)} alt={item.productName} className="h-full w-full object-contain" /> : <Package size={15} className="text-mk-subtle" />}
                             </div>
                           ))}
                         </div>
                       </td>
 
                       <td className="px-5 py-4">
-                        <p className="text-sm font-bold text-[#292725]">₹{Number(order.totalAmount || 0).toLocaleString('en-IN')}</p>
+                        <p className="text-sm font-bold text-mk-ink-admin">₹{Number(order.totalAmount || 0).toLocaleString('en-IN')}</p>
                       </td>
 
                       <td className="px-5 py-4">
-                        <p className="text-xs font-semibold text-[#292725]">{getPaymentMethodLabel(order.paymentMethod || order.payment?.paymentMethod)}</p>
+                        <p className="text-xs font-semibold text-mk-ink-admin">{getPaymentMethodLabel(order.paymentMethod || order.payment?.paymentMethod)}</p>
 
                         {order.returnStatus && order.returnStatus !== 'Not Requested' && (
-                          <div className="mt-2 max-w-52 rounded-lg border border-[#E3DED6] bg-[#F8F6F2] p-2.5">
-                            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#6B6258]">
+                          <div className="mt-2 max-w-52 rounded-lg border border-mk-border-admin bg-mk-bg-admin p-2.5">
+                            <p className="flex items-center gap-1.5 text-xs font-semibold text-mk-admin">
                               <RotateCcw size={13} />
                               Return: {order.returnStatus}
                             </p>
 
                             {/* {order.returnReason && (
-                              <p className="mt-1 text-xs text-[#6F6A64]">
+                              <p className="mt-1 text-xs text-mk-muted-admin">
                                 <span className="font-semibold">Reason:</span> {order.returnReason}
                               </p>
                             )} */}
 
                             {order.returnRejectionReason && (
-                              <p className="mt-1 text-xs text-[#A44A3F]">
+                              <p className="mt-1 text-xs text-mk-danger">
                                 <span className="font-semibold">Rejection:</span> {order.returnRejectionReason}
                               </p>
                             )}
@@ -698,7 +698,7 @@ export default function AdminOrders() {
                             type="button"
                             onClick={() => handlePaymentConfirm(order.payment._id)}
                             disabled={confirmingPaymentId === order.payment._id}
-                            className="mt-2 rounded-lg bg-[#6B6258] px-3 py-1.5 text-[10px] font-semibold text-white transition hover:bg-[#5D554C] disabled:cursor-not-allowed disabled:opacity-60"
+                            className="mt-2 rounded-lg bg-mk-admin px-3 py-1.5 text-[10px] font-semibold text-white transition hover:bg-mk-admin-hover disabled:cursor-not-allowed disabled:opacity-60"
                           >
                             {confirmingPaymentId === order.payment._id ? 'Confirming...' : 'Confirm Payment'}
                           </button>
@@ -708,7 +708,7 @@ export default function AdminOrders() {
                       <td className="px-5 py-4">
                         {isLocked ? (
                           <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
-                            <span className={`size-1.5 rounded-full ${isReturned ? 'bg-[#8A6A3D]' : 'bg-[#A44A3F]'}`} />
+                            <span className={`size-1.5 rounded-full ${isReturned ? 'bg-mk-warning' : 'bg-mk-danger'}`} />
 
                             {order.orderStatus}
                           </span>
@@ -718,7 +718,7 @@ export default function AdminOrders() {
                               value={order.orderStatus}
                               disabled={updatingOrderId === order._id}
                               onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                              className={`appearance-none rounded-lg border py-2 pl-3 pr-8 text-xs font-semibold outline-none transition disabled:cursor-not-allowed disabled:opacity-60 ${statusStyle.bg} ${statusStyle.text} border-[#E3DED6]`}
+                              className={`appearance-none rounded-lg border py-2 pl-3 pr-8 text-xs font-semibold outline-none transition disabled:cursor-not-allowed disabled:opacity-60 ${statusStyle.bg} ${statusStyle.text} border-mk-border-admin`}
                             >
                               <option value="Pending">Pending</option>
 
@@ -737,7 +737,7 @@ export default function AdminOrders() {
                               <option value="Cancelled">Cancelled</option>
                             </select>
 
-                            <ChevronDown size={14} className="pointer-events-none absolute right-2 top-2.5 text-[#6F6A64]" />
+                            <ChevronDown size={14} className="pointer-events-none absolute right-2 top-2.5 text-mk-muted-admin" />
                           </div>
                         )}
                       </td>
@@ -746,20 +746,20 @@ export default function AdminOrders() {
                       <td className="px-5 py-4">
                         {isCancelled ? (
                           order.cancelledBy === 'User' ? (
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-semibold text-[#6B6258]">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-mk-surface px-2.5 py-1 text-[11px] font-semibold text-mk-admin">
                               <UserRound size={12} />
                               User
                             </span>
                           ) : order.cancelledBy === 'Admin' ? (
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EEEAE4] px-2.5 py-1 text-[11px] font-semibold text-[#5D554C]">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-mk-surface px-2.5 py-1 text-[11px] font-semibold text-mk-admin-hover">
                               <ShieldCheck size={12} />
                               Admin
                             </span>
                           ) : (
-                            <span className="text-xs text-[#99938B]">Unknown</span>
+                            <span className="text-xs text-mk-subtle">Unknown</span>
                           )
                         ) : (
-                          <span className="text-xs text-[#B0AAA3]">—</span>
+                          <span className="text-xs text-mk-subtle">—</span>
                         )}
                       </td>
 
@@ -772,7 +772,7 @@ export default function AdminOrders() {
                                 type="button"
                                 onClick={() => handleReturnReview(order, 'Approve')}
                                 disabled={reviewingReturnId === order._id}
-                                className="rounded-lg bg-[#EAEDE7] px-2.5 py-2 text-xs font-semibold text-[#5E6C55] hover:bg-[#DDE5D7] disabled:opacity-50"
+                                className="rounded-lg bg-mk-success-soft px-2.5 py-2 text-xs font-semibold text-mk-success hover:bg-mk-border-admin disabled:opacity-50"
                               >
                                 {reviewingReturnId === order._id ? 'Please wait...' : 'Approve'}
                               </button>
@@ -784,7 +784,7 @@ export default function AdminOrders() {
                                   setRejectionReason('')
                                 }}
                                 disabled={reviewingReturnId === order._id}
-                                className="rounded-lg bg-[#F1E7E5] px-2.5 py-2 text-xs font-semibold text-[#A44A3F] hover:bg-[#EBDAD7] disabled:opacity-50"
+                                className="rounded-lg bg-mk-danger-soft px-2.5 py-2 text-xs font-semibold text-mk-danger hover:bg-mk-border disabled:opacity-50"
                               >
                                 Reject
                               </button>
@@ -798,7 +798,7 @@ export default function AdminOrders() {
                                 type="button"
                                 onClick={() => handleReturnAction(order, 'Item Received')}
                                 disabled={returnActionId === order._id}
-                                className="rounded-lg bg-[#EEEAE4] px-2.5 py-2 text-xs font-semibold text-[#5D554C] hover:bg-[#E3DED6] disabled:opacity-50"
+                                className="rounded-lg bg-mk-surface px-2.5 py-2 text-xs font-semibold text-mk-admin-hover hover:bg-mk-border-admin disabled:opacity-50"
                               >
                                 {returnActionId === order._id ? 'Please wait...' : 'Item Received'}
                               </button>
@@ -809,7 +809,7 @@ export default function AdminOrders() {
                                 type="button"
                                 onClick={() => handleReturnAction(order, 'Item Received')}
                                 disabled={returnActionId === order._id}
-                                className="rounded-lg bg-[#EEEAE4] px-2.5 py-2 text-xs font-semibold text-[#5D554C] hover:bg-[#E3DED6] disabled:opacity-50"
+                                className="rounded-lg bg-mk-surface px-2.5 py-2 text-xs font-semibold text-mk-admin-hover hover:bg-mk-border-admin disabled:opacity-50"
                               >
                                 Confirm Received
                               </button>
@@ -820,7 +820,7 @@ export default function AdminOrders() {
                                 type="button"
                                 onClick={() => handleReturnAction(order, 'Process Refund')}
                                 disabled={returnActionId === order._id}
-                                className="rounded-lg bg-[#EAEDE7] px-2.5 py-2 text-xs font-semibold text-[#5E6C55] hover:bg-[#DDE5D7] disabled:opacity-50"
+                                className="rounded-lg bg-mk-success-soft px-2.5 py-2 text-xs font-semibold text-mk-success hover:bg-mk-border-admin disabled:opacity-50"
                               >
                                 Process Refund
                               </button>
@@ -831,7 +831,7 @@ export default function AdminOrders() {
                                 type="button"
                                 onClick={() => handleReturnAction(order, 'Verify Refund')}
                                 disabled={returnActionId === order._id}
-                                className="rounded-lg bg-[#F1EEE8] px-2.5 py-2 text-xs font-semibold text-[#806B4F] hover:bg-[#EAE4D9] disabled:opacity-50"
+                                className="rounded-lg bg-mk-surface px-2.5 py-2 text-xs font-semibold text-mk-warning hover:bg-mk-border disabled:opacity-50"
                               >
                                 {returnActionId === order._id ? 'Checking...' : 'Verify Refund'}
                               </button>
@@ -841,7 +841,7 @@ export default function AdminOrders() {
                           <button
                             type="button"
                             onClick={() => navigate(`/admin/orders/${order.orderId}`)}
-                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            className="flex size-9 items-center justify-center rounded-lg text-mk-muted-admin transition hover:bg-mk-surface hover:text-mk-ink-admin"
                             title="View Order"
                           >
                             <Eye size={16} />
@@ -855,13 +855,13 @@ export default function AdminOrders() {
                 <tr>
                   <td colSpan="10" className="px-5 py-12 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <div className="flex size-14 items-center justify-center rounded-2xl bg-[#F1EEE8] text-[#6B6258]">
+                      <div className="flex size-14 items-center justify-center rounded-2xl bg-mk-surface text-mk-admin">
                         <Package size={27} />
                       </div>
 
-                      <p className="mt-3 text-sm font-semibold text-[#292725]">No orders found</p>
+                      <p className="mt-3 text-sm font-semibold text-mk-ink-admin">No orders found</p>
 
-                      <p className="mt-1 text-xs text-[#99938B]">Try changing your search or status filter.</p>
+                      <p className="mt-1 text-xs text-mk-subtle">Try changing your search or status filter.</p>
                     </div>
                   </td>
                 </tr>
@@ -871,10 +871,10 @@ export default function AdminOrders() {
         </div>
 
         {/* Pagination Footer */}
-        <div className="flex flex-col gap-4 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 border-t border-mk-border-admin bg-mk-bg-admin px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           {/* Rows Per Page */}
           <div className="flex items-center gap-3">
-            <span className="text-xs font-medium text-[#8B857D]">Show</span>
+            <span className="text-xs font-medium text-mk-disabled">Show</span>
 
             <select
               value={itemsPerPage}
@@ -882,7 +882,7 @@ export default function AdminOrders() {
                 const value = e.target.value
                 handleItemsPerPageChange(value === 'all' ? 'all' : Number(value))
               }}
-              className="h-9 rounded-lg border border-[#E3DED6] bg-white px-3 text-xs font-semibold text-[#514B44] outline-none transition hover:border-[#BEB6AB] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+              className="h-9 rounded-lg border border-mk-border-admin bg-white px-3 text-xs font-semibold text-mk-admin-hover outline-none transition hover:border-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin"
             >
               <option value={5}>5 Documents</option>
               <option value={10}>10 Documents</option>
@@ -890,8 +890,8 @@ export default function AdminOrders() {
               <option value="all">All Documents</option>
             </select>
 
-            <span className="text-xs text-[#99938B]">
-              of <span className="font-semibold text-[#514B44]">{filteredOrders.length}</span>
+            <span className="text-xs text-mk-subtle">
+              of <span className="font-semibold text-mk-admin-hover">{filteredOrders.length}</span>
             </span>
           </div>
 
@@ -903,12 +903,12 @@ export default function AdminOrders() {
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 aria-label="Previous page"
-                className="flex size-9 items-center justify-center rounded-xl border border-[#E3DED6] bg-white text-[#6B6258] transition hover:border-[#C9C0B5] hover:bg-[#F1EEE8] disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex size-9 items-center justify-center rounded-xl border border-mk-border-admin bg-white text-mk-admin transition hover:border-mk-border-admin hover:bg-mk-surface disabled:cursor-not-allowed disabled:opacity-35"
               >
                 <ChevronLeft size={17} strokeWidth={2.5} />
               </button>
 
-              <div className="flex h-9 items-center gap-2 rounded-xl border border-[#D6D1CA] bg-white px-3 shadow-sm">
+              <div className="flex h-9 items-center gap-2 rounded-xl border border-mk-border-admin bg-white px-3 shadow-sm">
                 <input
                   type="number"
                   min={1}
@@ -934,12 +934,12 @@ export default function AdminOrders() {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') e.currentTarget.blur()
                   }}
-                  className="w-8 bg-transparent text-center text-sm font-semibold text-[#292725] outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  className="w-8 bg-transparent text-center text-sm font-semibold text-mk-ink-admin outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
 
-                <span className="text-xs text-[#B0AAA3]">of</span>
+                <span className="text-xs text-mk-subtle">of</span>
 
-                <span className="min-w-4 text-sm font-medium text-[#6F6A64]">{totalPages}</span>
+                <span className="min-w-4 text-sm font-medium text-mk-muted-admin">{totalPages}</span>
               </div>
 
               <button
@@ -947,7 +947,7 @@ export default function AdminOrders() {
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 aria-label="Next page"
-                className="flex size-9 items-center justify-center rounded-xl border border-[#E3DED6] bg-white text-[#6B6258] transition hover:border-[#C9C0B5] hover:bg-[#F1EEE8] disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex size-9 items-center justify-center rounded-xl border border-mk-border-admin bg-white text-mk-admin transition hover:border-mk-border-admin hover:bg-mk-surface disabled:cursor-not-allowed disabled:opacity-35"
               >
                 <ChevronRight size={17} strokeWidth={2.5} />
               </button>
@@ -959,9 +959,9 @@ export default function AdminOrders() {
       {/* Reject Return Request Modal */}
       {rejectionModalOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-[#E3DED6] bg-white p-5 shadow-xl">
+          <div className="w-full max-w-md rounded-2xl border border-mk-border-admin bg-white p-5 shadow-xl">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-[#292725]">Reject Return Request</h2>
+              <h2 className="text-lg font-bold text-mk-ink-admin">Reject Return Request</h2>
 
               <button
                 type="button"
@@ -970,13 +970,13 @@ export default function AdminOrders() {
                   setRejectionReason('')
                 }}
                 disabled={reviewingReturnId === rejectionModalOrder._id}
-                className="rounded-lg p-2 text-[#6F6A64] hover:bg-[#EEEAE4]"
+                className="rounded-lg p-2 text-mk-muted-admin hover:bg-mk-surface"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <p className="mt-2 text-sm text-[#6F6A64]">Order #{rejectionModalOrder.orderId} reject કરવાનું કારણ લખો.</p>
+            <p className="mt-2 text-sm text-mk-muted-admin">Order #{rejectionModalOrder.orderId} reject કરવાનું કારણ લખો.</p>
 
             <textarea
               value={rejectionReason}
@@ -984,10 +984,10 @@ export default function AdminOrders() {
               maxLength={1000}
               rows={4}
               placeholder="Enter rejection reason..."
-              className="mt-4 w-full resize-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] p-3 text-sm text-[#292725] outline-none focus:border-[#6B6258]"
+              className="mt-4 w-full resize-none rounded-xl border border-mk-border-admin bg-mk-bg-admin p-3 text-sm text-mk-ink-admin outline-none focus:border-mk-admin"
             />
 
-            <p className="mt-1 text-right text-xs text-[#99938B]">{rejectionReason.length}/1000</p>
+            <p className="mt-1 text-right text-xs text-mk-subtle">{rejectionReason.length}/1000</p>
 
             <div className="mt-4 flex justify-end gap-2">
               <button
@@ -997,7 +997,7 @@ export default function AdminOrders() {
                   setRejectionReason('')
                 }}
                 disabled={reviewingReturnId === rejectionModalOrder._id}
-                className="rounded-xl border border-[#E3DED6] px-4 py-2 text-sm font-semibold text-[#6F6A64] hover:bg-[#F8F6F2]"
+                className="rounded-xl border border-mk-border-admin px-4 py-2 text-sm font-semibold text-mk-muted-admin hover:bg-mk-bg-admin"
               >
                 Cancel
               </button>
@@ -1006,7 +1006,7 @@ export default function AdminOrders() {
                 type="button"
                 onClick={() => handleReturnReview(rejectionModalOrder, 'Reject', rejectionReason)}
                 disabled={reviewingReturnId === rejectionModalOrder._id || !rejectionReason.trim()}
-                className="rounded-xl bg-[#A44A3F] px-4 py-2 text-sm font-semibold text-white hover:bg-[#8F3C33] disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl bg-mk-danger px-4 py-2 text-sm font-semibold text-white hover:bg-mk-danger disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {reviewingReturnId === rejectionModalOrder._id ? 'Rejecting...' : 'Confirm Reject'}
               </button>

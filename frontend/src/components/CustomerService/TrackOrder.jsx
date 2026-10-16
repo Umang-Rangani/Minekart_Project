@@ -142,13 +142,13 @@ export default function TrackOrder() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2] mx-auto max-w-350">
+    <div className="min-h-screen bg-mk-bg mx-auto max-w-350">
       <BreadCrumb items={items} />
 
       <div className="  py-5 ">
         {/* Header */}
-        <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
-          <div className="bg-linear-to-br from-[#351C18] via-[#4A2520] to-[#7D171C] px-5 py-6 sm:px-8 sm:py-8">
+        <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
+          <div className="bg-linear-to-br from-mk-ink via-mk-ink to-mk-primary-deep px-5 py-6 sm:px-8 sm:py-8">
             <div className="mx-auto max-w-xl text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-white shadow-[0_6px_20px_rgba(0,0,0,0.12)]">
                 <PackageSearch size={27} strokeWidth={1.8} />
@@ -159,7 +159,7 @@ export default function TrackOrder() {
               <p className="mt-1.5 text-xs leading-5 text-white/70 sm:text-sm">Enter your MineKart order ID to check the latest delivery status.</p>
 
               <div className="mt-5 flex h-11 items-center gap-2 rounded-xl border border-white/15 bg-white p-1.5 shadow-[0_5px_20px_rgba(0,0,0,0.12)]">
-                <Search size={17} className="ml-2 shrink-0 text-[#806C63]" />
+                <Search size={17} className="ml-2 shrink-0 text-mk-muted" />
 
                 <input
                   type="text"
@@ -168,14 +168,14 @@ export default function TrackOrder() {
                   onKeyDown={handleKeyDown}
                   placeholder="Enter order ID"
                   disabled={loading}
-                  className="min-w-0 flex-1 bg-transparent px-1 text-sm text-[#351C18] outline-none placeholder:text-[#A8978F] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="min-w-0 flex-1 bg-transparent px-1 text-sm text-mk-ink outline-none placeholder:text-mk-muted disabled:cursor-not-allowed disabled:opacity-60"
                 />
 
                 <button
                   type="button"
                   onClick={handleTrackOrder}
                   disabled={loading}
-                  className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#351C18] px-3 text-[10px] font-bold text-white transition hover:bg-[#7D171C] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-mk-ink px-3 text-[10px] font-bold text-white transition hover:bg-mk-primary-deep disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loading ? (
                     <>
@@ -194,23 +194,23 @@ export default function TrackOrder() {
           </div>
 
           {/* Quick Info */}
-          <div className="grid grid-cols-2 divide-x divide-[#E8DDD4] bg-[#FBF7F2] sm:grid-cols-3">
+          <div className="grid grid-cols-2 divide-x divide-mk-border bg-mk-bg sm:grid-cols-3">
             <div className="px-4 py-3 text-center">
-              <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Tracking</p>
+              <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Tracking</p>
 
-              <p className="mt-0.5 text-xs font-extrabold text-[#351C18]">Real-time</p>
+              <p className="mt-0.5 text-xs font-extrabold text-mk-ink">Real-time</p>
             </div>
 
             <div className="px-4 py-3 text-center">
-              <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Status</p>
+              <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Status</p>
 
-              <p className="mt-0.5 truncate text-xs font-extrabold text-[#351C18]">{order?.orderStatus || 'Order Status'}</p>
+              <p className="mt-0.5 truncate text-xs font-extrabold text-mk-ink">{order?.orderStatus || 'Order Status'}</p>
             </div>
 
-            <div className="col-span-2 border-t border-[#E8DDD4] px-4 py-3 text-center sm:col-span-1 sm:border-t-0">
-              <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Support</p>
+            <div className="col-span-2 border-t border-mk-border px-4 py-3 text-center sm:col-span-1 sm:border-t-0">
+              <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Support</p>
 
-              <Link to="/contact" className="mt-0.5 inline-flex text-xs font-extrabold text-[#A51D26] transition hover:text-[#351C18]">
+              <Link to="/contact" className="mt-0.5 inline-flex text-xs font-extrabold text-mk-primary transition hover:text-mk-ink">
                 Need Help?
               </Link>
             </div>
@@ -221,27 +221,27 @@ export default function TrackOrder() {
 
         {/* Order Result */}
         {!loading && order && (
-          <div className="mt-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.04)]">
+          <div className="mt-5 overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_16px_rgba(73,54,49,0.04)]">
             {/* Order Header */}
-            <div className="flex flex-col gap-3 border-b border-[#E8DDD4] bg-[#FBF7F2] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div className="flex flex-col gap-3 border-b border-mk-border bg-mk-bg px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <div className="min-w-0">
-                <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Order ID</p>
+                <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Order ID</p>
 
-                <p className="mt-1 break-all text-sm font-extrabold tracking-wide text-[#351C18]">{order?.orderId || order?._id || 'N/A'}</p>
+                <p className="mt-1 break-all text-sm font-extrabold tracking-wide text-mk-ink">{order?.orderId || order?._id || 'N/A'}</p>
               </div>
 
               <div className="flex shrink-0 items-center gap-2">
-                <p className="text-[9px] font-semibold text-[#806C63]">Current Status</p>
+                <p className="text-[9px] font-semibold text-mk-muted">Current Status</p>
 
                 <span
                   className={`rounded-lg border px-3 py-1.5 text-[9px] font-extrabold ${
                     order?.orderStatus === 'Delivered'
-                      ? 'border-[#BBDDC8] bg-[#EAF5EE] text-[#3E8B62]'
+                      ? 'border-mk-border-admin bg-mk-success-soft text-mk-success'
                       : order?.orderStatus === 'Cancelled'
-                        ? 'border-[#D9D9D9] bg-[#F3F3F3] text-[#888888]'
+                        ? 'border-mk-disabled-bg bg-mk-disabled-bg text-mk-disabled'
                         : order?.orderStatus === 'Returned'
-                          ? 'border-[#F0D2A8] bg-[#FFF4E5] text-[#A05A16]'
-                          : 'border-[#E2B7BA] bg-[#FCEBED] text-[#A51D26]'
+                          ? 'border-mk-border bg-mk-primary-soft text-mk-warning'
+                          : 'border-mk-border bg-mk-primary-soft text-mk-primary'
                   }`}
                 >
                   {order?.orderStatus || 'N/A'}
@@ -251,16 +251,16 @@ export default function TrackOrder() {
 
             {/* Cancelled */}
             {order.orderStatus === 'Cancelled' && (
-              <div className="border-b border-[#E8DDD4] bg-[#F3F3F3] px-5 py-4 sm:px-6">
+              <div className="border-b border-mk-border bg-mk-disabled-bg px-5 py-4 sm:px-6">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#E7E7E7] text-[#888888]">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-mk-disabled-bg text-mk-disabled">
                     <XCircle size={18} />
                   </div>
 
                   <div>
-                    <p className="text-xs font-extrabold text-[#555555]">Order Cancelled</p>
+                    <p className="text-xs font-extrabold text-mk-admin-hover">Order Cancelled</p>
 
-                    <p className="mt-0.5 text-[10px] leading-4 text-[#888888]">This order is no longer active and will not be delivered.</p>
+                    <p className="mt-0.5 text-[10px] leading-4 text-mk-disabled">This order is no longer active and will not be delivered.</p>
                   </div>
                 </div>
               </div>
@@ -268,16 +268,16 @@ export default function TrackOrder() {
 
             {/* Returned */}
             {order.orderStatus === 'Returned' && (
-              <div className="border-b border-[#E8DDD4] bg-[#FFF8EF] px-5 py-4 sm:px-6">
+              <div className="border-b border-mk-border bg-mk-bg px-5 py-4 sm:px-6">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#FBEBD5] text-[#A05A16]">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-mk-primary-soft text-mk-warning">
                     <RotateCcw size={18} />
                   </div>
 
                   <div>
-                    <p className="text-xs font-extrabold text-[#8A4D0B]">Order Returned</p>
+                    <p className="text-xs font-extrabold text-mk-primary-hover">Order Returned</p>
 
-                    <p className="mt-0.5 text-[10px] leading-4 text-[#A05A16]">This order has been returned successfully.</p>
+                    <p className="mt-0.5 text-[10px] leading-4 text-mk-warning">This order has been returned successfully.</p>
                   </div>
                 </div>
               </div>
@@ -288,12 +288,12 @@ export default function TrackOrder() {
               <div className="px-5 py-6 sm:px-6 sm:py-7">
                 <div className="mb-5 flex items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-sm font-extrabold text-[#351C18]">Order tracking</h3>
+                    <h3 className="text-sm font-extrabold text-mk-ink">Order tracking</h3>
 
-                    <p className="mt-1 text-[10px] text-[#806C63]">Follow your order from placement to delivery</p>
+                    <p className="mt-1 text-[10px] text-mk-muted">Follow your order from placement to delivery</p>
                   </div>
 
-                  <div className="hidden h-8 items-center gap-1.5 rounded-lg bg-[#F7EEE7] px-2.5 text-[9px] font-bold text-[#351C18] sm:flex">
+                  <div className="hidden h-8 items-center gap-1.5 rounded-lg bg-mk-primary-soft px-2.5 text-[9px] font-bold text-mk-ink sm:flex">
                     <Truck size={13} />
                     Easy Tracking
                   </div>
@@ -309,16 +309,16 @@ export default function TrackOrder() {
                     return (
                       <div key={status} className="relative flex items-center gap-3 sm:block sm:text-center">
                         {/* Connector */}
-                        {index < trackingSteps.length - 1 && <div className={`absolute left-5 top-10 h-5 w-0.5 sm:left-[calc(50%+24px)] sm:top-5 sm:h-0.5 sm:w-[calc(100%-48px)] ${isCompleted ? 'bg-[#A51D26]' : 'bg-[#E8DDD4]'}`} />}
+                        {index < trackingSteps.length - 1 && <div className={`absolute left-5 top-10 h-5 w-0.5 sm:left-[calc(50%+24px)] sm:top-5 sm:h-0.5 sm:w-[calc(100%-48px)] ${isCompleted ? 'bg-mk-primary' : 'bg-mk-border'}`} />}
 
                         {/* Icon */}
                         <div
                           className={`relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition sm:mx-auto sm:h-11 sm:w-11 ${
                             isCompleted
-                              ? 'border-[#A51D26] bg-[#A51D26] text-white shadow-[0_4px_12px_rgba(165,29,38,0.18)]'
+                              ? 'border-mk-primary bg-mk-primary text-white shadow-[0_4px_12px_rgba(165,29,38,0.18)]'
                               : isActive
-                                ? 'border-[#A51D26] bg-[#FCEBED] text-[#A51D26] shadow-[0_4px_12px_rgba(165,29,38,0.12)]'
-                                : 'border-[#E8DDD4] bg-white text-[#9A857B]'
+                                ? 'border-mk-primary bg-mk-primary-soft text-mk-primary shadow-[0_4px_12px_rgba(165,29,38,0.12)]'
+                                : 'border-mk-border bg-white text-mk-muted'
                           }`}
                         >
                           <Icon size={18} strokeWidth={1.8} className={isActive ? 'animate-pulse' : ''} />
@@ -326,9 +326,9 @@ export default function TrackOrder() {
 
                         {/* Text */}
                         <div className="sm:mt-2.5">
-                          <p className={`text-xs font-bold ${isCompleted || isActive ? 'text-[#351C18]' : 'text-[#9A857B]'}`}>{title}</p>
+                          <p className={`text-xs font-bold ${isCompleted || isActive ? 'text-mk-ink' : 'text-mk-muted'}`}>{title}</p>
 
-                          <p className={`mt-0.5 text-[9px] font-medium ${isCompleted ? 'text-[#A51D26]' : isActive ? 'font-bold text-[#A51D26]' : 'text-[#A8978F]'}`}>{isCompleted ? 'Completed' : isActive ? 'Current' : 'Upcoming'}</p>
+                          <p className={`mt-0.5 text-[9px] font-medium ${isCompleted ? 'text-mk-primary' : isActive ? 'font-bold text-mk-primary' : 'text-mk-muted'}`}>{isCompleted ? 'Completed' : isActive ? 'Current' : 'Upcoming'}</p>
                         </div>
                       </div>
                     )
@@ -341,15 +341,15 @@ export default function TrackOrder() {
 
         {/* Empty / How it works */}
         {!loading && !order && (
-          <div className="mt-5 rounded-2xl border border-[#E8DDD4] bg-white p-5 shadow-[0_4px_16px_rgba(73,54,49,0.04)] sm:p-6">
+          <div className="mt-5 rounded-2xl border border-mk-border bg-white p-5 shadow-[0_4px_16px_rgba(73,54,49,0.04)] sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-extrabold text-[#351C18]">How order tracking works</h3>
+                <h3 className="text-sm font-extrabold text-mk-ink">How order tracking works</h3>
 
-                <p className="mt-1 text-[10px] text-[#806C63]">Follow your order from placement to delivery</p>
+                <p className="mt-1 text-[10px] text-mk-muted">Follow your order from placement to delivery</p>
               </div>
 
-              <div className="hidden h-8 items-center gap-1.5 rounded-lg bg-[#F7EEE7] px-2.5 text-[9px] font-bold text-[#351C18] sm:flex">
+              <div className="hidden h-8 items-center gap-1.5 rounded-lg bg-mk-primary-soft px-2.5 text-[9px] font-bold text-mk-ink sm:flex">
                 <Truck size={13} />
                 Easy Tracking
               </div>
@@ -362,20 +362,20 @@ export default function TrackOrder() {
                 [Truck, 'Out for Delivery'],
                 [MapPin, 'Delivered'],
               ].map(([Icon, title], index) => (
-                <div key={title} className="relative flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 sm:block sm:p-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#351C18] text-white shadow-[0_4px_10px_rgba(53,28,24,0.12)]">
+                <div key={title} className="relative flex items-center gap-3 rounded-xl border border-mk-border bg-mk-bg p-3 sm:block sm:p-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mk-ink text-white shadow-[0_4px_10px_rgba(53,28,24,0.12)]">
                     <Icon size={18} strokeWidth={1.8} />
                   </div>
 
                   <div className="sm:mt-3">
-                    <p className="text-xs font-bold text-[#351C18]">{title}</p>
+                    <p className="text-xs font-bold text-mk-ink">{title}</p>
 
-                    <p className="mt-0.5 text-[10px] text-[#806C63]">Step {index + 1}</p>
+                    <p className="mt-0.5 text-[10px] text-mk-muted">Step {index + 1}</p>
                   </div>
 
                   {index < 3 && (
                     <div className="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 sm:block">
-                      <ArrowRight size={14} className="text-[#C7B6AE]" />
+                      <ArrowRight size={14} className="text-mk-border" />
                     </div>
                   )}
                 </div>
@@ -385,7 +385,7 @@ export default function TrackOrder() {
         )}
 
         {/* Footer / Help */}
-        <div className="mt-5 overflow-hidden rounded-2xl bg-linear-to-br from-[#351C18] via-[#4A2520] to-[#7D171C] px-5 py-6 text-center shadow-[0_5px_18px_rgba(53,28,24,0.10)] sm:px-6 sm:py-7">
+        <div className="mt-5 overflow-hidden rounded-2xl bg-linear-to-br from-mk-ink via-mk-ink to-mk-primary-deep px-5 py-6 text-center shadow-[0_5px_18px_rgba(53,28,24,0.10)] sm:px-6 sm:py-7">
           <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white">
             <PackageSearch size={20} strokeWidth={1.8} />
           </div>
@@ -395,7 +395,7 @@ export default function TrackOrder() {
           <p className="mx-auto mt-1 max-w-md text-[10px] leading-4 text-white/65 sm:text-xs">You can find your order ID in My Orders and use it here to track your delivery.</p>
 
           {user ? (
-            <Link to="/orders" className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-[#351C18] transition hover:bg-[#F7EEE7]">
+            <Link to="/orders" className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-mk-ink transition hover:bg-mk-primary-soft">
               View My Orders
               <ArrowRight size={13} />
             </Link>
@@ -403,7 +403,7 @@ export default function TrackOrder() {
             <>
               <p className="mt-3 text-[10px] text-white/65 sm:text-xs">To view your orders, please login</p>
 
-              <button type="button" onClick={() => setShowLogin(true)} className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-[#351C18] transition hover:bg-[#F7EEE7]">
+              <button type="button" onClick={() => setShowLogin(true)} className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-mk-ink transition hover:bg-mk-primary-soft">
                 Login to View Orders
                 <ArrowRight size={13} />
               </button>

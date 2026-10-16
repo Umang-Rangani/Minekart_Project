@@ -220,18 +220,18 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
   if (step === 'start') {
     return (
       <div>
-        <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5 sm:p-4">
+        <div className="rounded-xl border border-mk-border bg-mk-bg p-3.5 sm:p-4">
           <div className="flex items-start gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#8E181F] shadow-sm">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-mk-primary-hover shadow-sm">
               <Mail size={16} />
             </div>
 
             <div className="min-w-0">
-              <p className="text-[10px] font-bold text-[#67544D]">Registered Email</p>
+              <p className="text-[10px] font-bold text-mk-muted">Registered Email</p>
 
-              <p className="mt-1 text-xs font-extrabold text-[#351C18]">{email}</p>
+              <p className="mt-1 text-xs font-extrabold text-mk-ink">{email}</p>
 
-              <p className="mt-1 text-[9px] leading-4 text-[#9A857B]">A 6-digit verification code will be sent to your registered email.</p>
+              <p className="mt-1 text-[9px] leading-4 text-mk-muted">A 6-digit verification code will be sent to your registered email.</p>
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
           type="button"
           onClick={sendOtp}
           disabled={otpLoading}
-          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.16)] transition hover:-translate-y-0.5 hover:shadow-[0_9px_20px_rgba(125,23,28,0.20)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary px-4 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.16)] transition hover:-translate-y-0.5 hover:shadow-[0_9px_20px_rgba(125,23,28,0.20)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {otpLoading ? (
             <>
@@ -261,24 +261,24 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
   if (step === 'otp') {
     return (
       <div>
-        <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5 sm:p-4">
+        <div className="rounded-xl border border-mk-border bg-mk-bg p-3.5 sm:p-4">
           <div className="flex items-start gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#8E181F] shadow-sm">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-mk-primary-hover shadow-sm">
               <ShieldCheck size={16} />
             </div>
 
             <div className="min-w-0">
-              <p className="text-[10px] font-bold text-[#67544D]">Verification Code</p>
+              <p className="text-[10px] font-bold text-mk-muted">Verification Code</p>
 
-              <p className="mt-1 text-xs font-extrabold text-[#351C18]">OTP sent to {maskedEmail()}</p>
+              <p className="mt-1 text-xs font-extrabold text-mk-ink">OTP sent to {maskedEmail()}</p>
 
-              <p className="mt-1 text-[9px] leading-4 text-[#9A857B]">Enter the 6-digit code received on your registered email.</p>
+              <p className="mt-1 text-[9px] leading-4 text-mk-muted">Enter the 6-digit code received on your registered email.</p>
             </div>
           </div>
         </div>
 
         <div className="mt-3">
-          <label className="mb-1.5 block text-[10px] font-bold text-[#67544D] ">Verification Code</label>
+          <label className="mb-1.5 block text-[10px] font-bold text-mk-muted ">Verification Code</label>
 
           <div className="flex justify-between gap-2 sm:gap-3 xl:px-20">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -344,12 +344,12 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
                     targetInput.focus()
                   }
                 }}
-                className="h-11 w-full min-w-0 rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] text-center text-base font-extrabold text-[#351C18] outline-none transition focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6] sm:h-12"
+                className="h-11 w-full min-w-0 rounded-xl border border-mk-border bg-mk-card text-center text-base font-extrabold text-mk-ink outline-none transition focus:border-mk-primary focus:bg-white focus:ring-2 focus:ring-mk-danger-soft sm:h-12"
               />
             ))}
           </div>
 
-          <p className="mt-2 text-center text-[9px] text-[#9A857B]">Enter the 6-digit OTP received on your email</p>
+          <p className="mt-2 text-center text-[9px] text-mk-muted">Enter the 6-digit OTP received on your email</p>
         </div>
 
         <div className="mt-3 flex items-center justify-between gap-2">
@@ -358,7 +358,7 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
             onClick={resendOtp}
             tabIndex={-1}
             disabled={resendTimer > 0 || resendLoading}
-            className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#8E181F] transition hover:text-[#A51D26] disabled:cursor-not-allowed disabled:text-[#B7A49B]"
+            className="inline-flex items-center gap-1.5 text-[10px] font-bold text-mk-primary-hover transition hover:text-mk-primary disabled:cursor-not-allowed disabled:text-mk-muted"
           >
             {resendLoading ? <RefreshCw size={13} className="animate-spin" /> : <RefreshCw size={13} />}
 
@@ -369,7 +369,7 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
             type="button"
             onClick={verifyOtp}
             disabled={verifyLoading}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 text-[10px] font-extrabold text-white shadow-[0_5px_14px_rgba(125,23,28,0.15)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary px-4 text-[10px] font-extrabold text-white shadow-[0_5px_14px_rgba(125,23,28,0.15)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {verifyLoading ? (
               <>
@@ -388,19 +388,19 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
   if (step === 'reset') {
     return (
       <div>
-        <div className="mb-3 rounded-xl border border-[#D9E9DE] bg-[#F4FAF6] p-3">
+        <div className="mb-3 rounded-xl border border-mk-disabled-bg bg-mk-bg-admin p-3">
           <div className="flex items-start gap-2">
-            <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-[#3E8B62]" />
+            <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-mk-success" />
 
-            <p className="text-[9px] leading-4 text-[#527363]">OTP verified successfully. Create your new password below.</p>
+            <p className="text-[9px] leading-4 text-mk-muted-admin">OTP verified successfully. Create your new password below.</p>
           </div>
         </div>
 
         <div>
-          <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">New Password</label>
+          <label className="mb-1.5 block text-[10px] font-bold text-mk-muted">New Password</label>
 
           <div className="relative">
-            <LockKeyhole size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
+            <LockKeyhole size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted" />
 
             <input
               type={showPassword ? 'text' : 'password'}
@@ -408,13 +408,13 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter new password"
               autoComplete="new-password"
-              className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-11 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+              className="h-11 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-11 text-xs font-medium text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:bg-white focus:ring-2 focus:ring-mk-danger-soft"
             />
 
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#806C63] transition hover:bg-[#F7EEE7] hover:text-[#8E181F]"
+              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-mk-muted transition hover:bg-mk-primary-soft hover:text-mk-primary-hover"
             >
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
@@ -422,10 +422,10 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
         </div>
 
         <div className="mt-3">
-          <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Confirm Password</label>
+          <label className="mb-1.5 block text-[10px] font-bold text-mk-muted">Confirm Password</label>
 
           <div className="relative">
-            <LockKeyhole size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
+            <LockKeyhole size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted" />
 
             <input
               type={showConfirmPassword ? 'text' : 'password'}
@@ -433,30 +433,30 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm new password"
               autoComplete="new-password"
-              className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-11 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+              className="h-11 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-11 text-xs font-medium text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:bg-white focus:ring-2 focus:ring-mk-danger-soft"
             />
 
             <button
               type="button"
               onClick={() => setShowConfirmPassword((prev) => !prev)}
-              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#806C63] transition hover:bg-[#F7EEE7] hover:text-[#8E181F]"
+              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-mk-muted transition hover:bg-mk-primary-soft hover:text-mk-primary-hover"
             >
               {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
           </div>
         </div>
 
-        <div className="mt-3 flex items-start gap-2 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] px-3 py-2.5">
-          <ShieldCheck size={14} className="mt-0.5 shrink-0 text-[#3E8B62]" />
+        <div className="mt-3 flex items-start gap-2 rounded-xl border border-mk-border bg-mk-bg px-3 py-2.5">
+          <ShieldCheck size={14} className="mt-0.5 shrink-0 text-mk-success" />
 
-          <p className="text-[9px] leading-4 text-[#806C63]">Your password is securely encrypted before it is stored.</p>
+          <p className="text-[9px] leading-4 text-mk-muted">Your password is securely encrypted before it is stored.</p>
         </div>
 
         <button
           type="button"
           onClick={resetPassword}
           disabled={resetLoading}
-          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.16)] transition hover:-translate-y-0.5 hover:shadow-[0_9px_20px_rgba(125,23,28,0.20)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary px-4 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.16)] transition hover:-translate-y-0.5 hover:shadow-[0_9px_20px_rgba(125,23,28,0.20)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {resetLoading ? (
             <>
@@ -476,18 +476,18 @@ export default function ProfileForgotPassword({ email, onBusyChange }) {
 
   return (
     <div className="flex min-h-57.5 flex-col items-center justify-center text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EAF6EE] text-[#3E8B62]">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-mk-success-soft text-mk-success">
         <CheckCircle2 size={26} />
       </div>
 
-      <h3 className="mt-3 text-sm font-extrabold text-[#351C18]">Password Updated Successfully</h3>
+      <h3 className="mt-3 text-sm font-extrabold text-mk-ink">Password Updated Successfully</h3>
 
-      <p className="mt-1 max-w-xs text-[9px] leading-4 text-[#806C63]">Your password has been updated securely.</p>
+      <p className="mt-1 max-w-xs text-[9px] leading-4 text-mk-muted">Your password has been updated securely.</p>
 
       <button
         type="button"
         onClick={changeAgain}
-        className="mt-4 inline-flex h-10 items-center justify-center rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] px-5 text-[10px] font-bold text-[#67544D] transition hover:border-[#CDAFA4] hover:bg-[#F7EEE7] hover:text-[#8E181F]"
+        className="mt-4 inline-flex h-10 items-center justify-center rounded-xl border border-mk-border bg-mk-bg px-5 text-[10px] font-bold text-mk-muted transition hover:border-mk-border hover:bg-mk-primary-soft hover:text-mk-primary-hover"
       >
         Change Again
       </button>

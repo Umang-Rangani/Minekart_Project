@@ -108,8 +108,8 @@ export default function ContactUs() {
 
       <div className="py-5 ">
         {/* Header */}
-        <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
-          <div className="bg-linear-to-br from-[#351C18] via-[#4A2520] to-[#7D171C] px-5 py-6 sm:px-8 sm:py-8">
+        <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
+          <div className="bg-linear-to-br from-mk-ink via-mk-ink to-mk-primary-deep px-5 py-6 sm:px-8 sm:py-8">
             <div className="mx-auto max-w-xl text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-white shadow-[0_6px_20px_rgba(0,0,0,0.12)]">
                 <MessageCircle size={27} strokeWidth={1.8} />
@@ -119,7 +119,7 @@ export default function ContactUs() {
 
               <p className="mt-1.5 text-xs leading-5 text-white/70 sm:text-sm">We're here to help with your orders, delivery and returns.</p>
 
-              <Link to="/customer-help" className="mt-5 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-[#351C18] transition hover:bg-[#F7EEE7]">
+              <Link to="/customer-help" className="mt-5 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-mk-ink transition hover:bg-mk-primary-soft">
                 Help Center
                 <ArrowRight size={13} />
               </Link>
@@ -130,11 +130,11 @@ export default function ContactUs() {
         {/* Contact Content */}
         <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[0.9fr_1.1fr]">
           {/* Contact Options */}
-          <div className="rounded-2xl border border-[#E8DDD4] bg-white p-5 shadow-[0_4px_16px_rgba(73,54,49,0.04)] sm:p-6">
+          <div className="rounded-2xl border border-mk-border bg-white p-5 shadow-[0_4px_16px_rgba(73,54,49,0.04)] sm:p-6">
             <div>
-              <h3 className="text-sm font-extrabold text-[#351C18]">Customer Support</h3>
+              <h3 className="text-sm font-extrabold text-mk-ink">Customer Support</h3>
 
-              <p className="mt-1 text-[10px] leading-4 text-[#806C63] sm:text-xs">Choose an option below to get help with your MineKart order.</p>
+              <p className="mt-1 text-[10px] leading-4 text-mk-muted sm:text-xs">Choose an option below to get help with your MineKart order.</p>
             </div>
 
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -142,144 +142,144 @@ export default function ContactUs() {
               <button
                 type="button"
                 onClick={() => (window.location.href = 'tel:+919408209662')}
-                className="group flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 text-left transition hover:border-[#D9B7B2] hover:bg-[#F7EEE7]"
+                className="group flex items-center gap-3 rounded-xl border border-mk-border bg-mk-bg p-3 text-left transition hover:border-mk-danger-soft hover:bg-mk-primary-soft"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#A51D26] shadow-sm">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-mk-primary shadow-sm">
                   <Phone size={18} strokeWidth={1.8} />
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Phone Support</p>
+                  <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Phone Support</p>
 
-                  <p className="mt-0.5 text-xs font-extrabold text-[#351C18]">Call Support</p>
+                  <p className="mt-0.5 text-xs font-extrabold text-mk-ink">Call Support</p>
 
-                  <p className="mt-0.5 text-[9px] text-[#806C63]">+91 94082 09662</p>
+                  <p className="mt-0.5 text-[9px] text-mk-muted">+91 94082 09662</p>
                 </div>
 
-                <ArrowRight size={14} className="ml-auto shrink-0 text-[#C7B6AE] transition group-hover:translate-x-1 group-hover:text-[#A51D26]" />
+                <ArrowRight size={14} className="ml-auto shrink-0 text-mk-border transition group-hover:translate-x-1 group-hover:text-mk-primary" />
               </button>
 
               {/* Email Support */}
               <button
                 type="button"
                 onClick={() => (window.location.href = 'mailto:up24419@gmail.com')}
-                className="group flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 text-left transition hover:border-[#D9B7B2] hover:bg-[#F7EEE7]"
+                className="group flex items-center gap-3 rounded-xl border border-mk-border bg-mk-bg p-3 text-left transition hover:border-mk-danger-soft hover:bg-mk-primary-soft"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#A51D26] shadow-sm">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-mk-primary shadow-sm">
                   <Mail size={18} strokeWidth={1.8} />
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Email Support</p>
+                  <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Email Support</p>
 
-                  <p className="mt-0.5 truncate text-xs font-extrabold text-[#351C18]">Send Email</p>
+                  <p className="mt-0.5 truncate text-xs font-extrabold text-mk-ink">Send Email</p>
 
-                  <p className="mt-0.5 truncate text-[9px] text-[#806C63]">up24419@gmail.com</p>
+                  <p className="mt-0.5 truncate text-[9px] text-mk-muted">up24419@gmail.com</p>
                 </div>
 
-                <ArrowRight size={14} className="ml-auto shrink-0 text-[#C7B6AE] transition group-hover:translate-x-1 group-hover:text-[#A51D26]" />
+                <ArrowRight size={14} className="ml-auto shrink-0 text-mk-border transition group-hover:translate-x-1 group-hover:text-mk-primary" />
               </button>
 
               {/* Help Center */}
-              <Link to="/customer-help" className="group flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 transition hover:border-[#D9B7B2] hover:bg-[#F7EEE7]">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#A51D26] shadow-sm">
+              <Link to="/customer-help" className="group flex items-center gap-3 rounded-xl border border-mk-border bg-mk-bg p-3 transition hover:border-mk-danger-soft hover:bg-mk-primary-soft">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-mk-primary shadow-sm">
                   <MessageCircle size={18} strokeWidth={1.8} />
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Self Service</p>
+                  <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Self Service</p>
 
-                  <p className="mt-0.5 text-xs font-extrabold text-[#351C18]">Help Center</p>
+                  <p className="mt-0.5 text-xs font-extrabold text-mk-ink">Help Center</p>
 
-                  <p className="mt-0.5 text-[9px] text-[#806C63]">Find answers quickly</p>
+                  <p className="mt-0.5 text-[9px] text-mk-muted">Find answers quickly</p>
                 </div>
 
-                <ArrowRight size={14} className="ml-auto shrink-0 text-[#C7B6AE] transition group-hover:translate-x-1 group-hover:text-[#A51D26]" />
+                <ArrowRight size={14} className="ml-auto shrink-0 text-mk-border transition group-hover:translate-x-1 group-hover:text-mk-primary" />
               </Link>
 
               {/* My Orders */}
-              <Link to="/orders" className="group flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 transition hover:border-[#D9B7B2] hover:bg-[#F7EEE7]">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#A51D26] shadow-sm">
+              <Link to="/orders" className="group flex items-center gap-3 rounded-xl border border-mk-border bg-mk-bg p-3 transition hover:border-mk-danger-soft hover:bg-mk-primary-soft">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-mk-primary shadow-sm">
                   <Package size={18} strokeWidth={1.8} />
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Orders</p>
+                  <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Orders</p>
 
-                  <p className="mt-0.5 text-xs font-extrabold text-[#351C18]">My Orders</p>
+                  <p className="mt-0.5 text-xs font-extrabold text-mk-ink">My Orders</p>
 
-                  <p className="mt-0.5 text-[9px] text-[#806C63]">View order details</p>
+                  <p className="mt-0.5 text-[9px] text-mk-muted">View order details</p>
                 </div>
 
-                <ArrowRight size={14} className="ml-auto shrink-0 text-[#C7B6AE] transition group-hover:translate-x-1 group-hover:text-[#A51D26]" />
+                <ArrowRight size={14} className="ml-auto shrink-0 text-mk-border transition group-hover:translate-x-1 group-hover:text-mk-primary" />
               </Link>
             </div>
 
             {/* Support Details */}
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#A51D26]">
+              <div className="flex items-center gap-3 rounded-xl border border-mk-border bg-mk-bg p-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-mk-primary">
                   <MapPin size={16} />
                 </div>
 
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Location</p>
+                  <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Location</p>
 
-                  <p className="mt-0.5 text-[10px] font-extrabold text-[#351C18]">Ahmedabad, Gujarat</p>
+                  <p className="mt-0.5 text-[10px] font-extrabold text-mk-ink">Ahmedabad, Gujarat</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#A51D26]">
+              <div className="flex items-center gap-3 rounded-xl border border-mk-border bg-mk-bg p-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-mk-primary">
                   <Clock3 size={16} />
                 </div>
 
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Support Hours</p>
+                  <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Support Hours</p>
 
-                  <p className="mt-0.5 text-[10px] font-extrabold text-[#351C18]">Mon - Sat · 10 AM - 7 PM</p>
+                  <p className="mt-0.5 text-[10px] font-extrabold text-mk-ink">Mon - Sat · 10 AM - 7 PM</p>
                 </div>
               </div>
             </div>
 
             {/* My Support */}
-            <Link to="/my-support" className="group  mt-4 flex items-center gap-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3 transition hover:border-[#D9B7B2] hover:bg-[#F7EEE7]">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#A51D26] shadow-sm">
+            <Link to="/my-support" className="group  mt-4 flex items-center gap-3 rounded-xl border border-mk-border bg-mk-bg p-3 transition hover:border-mk-danger-soft hover:bg-mk-primary-soft">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-mk-primary shadow-sm">
                 {/* <MessageCircle  /> */}
 
                 <MessagesSquare size={18} strokeWidth={1.8} />
               </div>
 
               <div className="min-w-0">
-                <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Support</p>
+                <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Support</p>
 
-                <p className="mt-0.5 text-xs font-extrabold text-[#351C18]">My Support</p>
+                <p className="mt-0.5 text-xs font-extrabold text-mk-ink">My Support</p>
 
-                <p className="mt-0.5 text-[9px] text-[#806C63]">View support chat</p>
+                <p className="mt-0.5 text-[9px] text-mk-muted">View support chat</p>
               </div>
 
-              <ArrowRight size={14} className="ml-auto shrink-0 text-[#C7B6AE] transition group-hover:translate-x-1 group-hover:text-[#A51D26]" />
+              <ArrowRight size={14} className="ml-auto shrink-0 text-mk-border transition group-hover:translate-x-1 group-hover:text-mk-primary" />
             </Link>
           </div>
 
           {/* Send Message */}
-          <div className="rounded-2xl border border-[#E8DDD4] bg-white p-5 shadow-[0_4px_16px_rgba(73,54,49,0.04)] sm:p-6">
+          <div className="rounded-2xl border border-mk-border bg-white p-5 shadow-[0_4px_16px_rgba(73,54,49,0.04)] sm:p-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#A51D26]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mk-primary-soft text-mk-primary">
                 <MessageCircle size={19} strokeWidth={1.8} />
               </div>
 
               <div>
-                <h3 className="text-sm font-extrabold text-[#351C18]">Send us a message</h3>
+                <h3 className="text-sm font-extrabold text-mk-ink">Send us a message</h3>
 
-                <p className="mt-0.5 text-[10px] text-[#806C63]">Our support team will get back to you.</p>
+                <p className="mt-0.5 text-[10px] text-mk-muted">Our support team will get back to you.</p>
               </div>
             </div>
 
             {/* input form */}
             <form onSubmit={handleSubmit} className="mt-5 space-y-4">
               <div>
-                <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Name</label>
+                <label className="mb-1.5 block text-[10px] font-bold text-mk-muted">Name</label>
 
                 <input
                   type="text"
@@ -288,12 +288,12 @@ export default function ContactUs() {
                   onChange={handleChange}
                   placeholder="Enter your name"
                   disabled={sending}
-                  className="h-10 w-full rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] px-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A8978F] focus:border-[#A51D26] focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                  className="h-10 w-full rounded-xl border border-mk-border bg-mk-bg px-3 text-xs text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Email</label>
+                <label className="mb-1.5 block text-[10px] font-bold text-mk-muted">Email</label>
 
                 <input
                   type="email"
@@ -302,12 +302,12 @@ export default function ContactUs() {
                   onChange={handleChange}
                   placeholder="Enter your email"
                   disabled={sending}
-                  className="h-10 w-full rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] px-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A8978F] focus:border-[#A51D26] focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                  className="h-10 w-full rounded-xl border border-mk-border bg-mk-bg px-3 text-xs text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Message</label>
+                <label className="mb-1.5 block text-[10px] font-bold text-mk-muted">Message</label>
 
                 <textarea
                   rows="5"
@@ -316,20 +316,20 @@ export default function ContactUs() {
                   onChange={handleChange}
                   placeholder="How can we help you?"
                   disabled={sending}
-                  className="w-full resize-none rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] px-3 py-2.5 text-xs text-[#351C18] outline-none transition placeholder:text-[#A8978F] focus:border-[#A51D26] focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full resize-none rounded-xl border border-mk-border bg-mk-bg px-3 py-2.5 text-xs text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
 
               {!user && (
-                <div className="flex items-center gap-2 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] px-3 py-2.5">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#A51D26]/10">
-                    <LockKeyhole size={14} className="text-[#A51D26]" />
+                <div className="flex items-center gap-2 rounded-xl border border-mk-border bg-mk-bg px-3 py-2.5">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-mk-primary/10">
+                    <LockKeyhole size={14} className="text-mk-primary" />
                   </div>
 
                   <div>
-                    <p className="text-[10px] font-bold text-[#351C18]">Login required</p>
+                    <p className="text-[10px] font-bold text-mk-ink">Login required</p>
 
-                    <p className="text-[9px] text-[#8B7A72]">Please login before sending your message.</p>
+                    <p className="text-[9px] text-mk-muted">Please login before sending your message.</p>
                   </div>
                 </div>
               )}
@@ -337,7 +337,7 @@ export default function ContactUs() {
               <button
                 type="submit"
                 disabled={sending}
-                className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] text-xs font-bold text-white shadow-[0_5px_15px_rgba(125,23,28,0.18)] transition hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary text-xs font-bold text-white shadow-[0_5px_15px_rgba(125,23,28,0.18)] transition hover:-translate-y-0.5 hover:from-mk-primary-deep hover:to-mk-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {sending ? (
                   <>
@@ -356,7 +356,7 @@ export default function ContactUs() {
         </div>
 
         {/* Footer / Help CTA */}
-        <div className="mt-5 overflow-hidden rounded-2xl bg-linear-to-br from-[#351C18] via-[#4A2520] to-[#7D171C] px-5 py-6 text-center shadow-[0_5px_18px_rgba(53,28,24,0.10)] sm:px-6 sm:py-7">
+        <div className="mt-5 overflow-hidden rounded-2xl bg-linear-to-br from-mk-ink via-mk-ink to-mk-primary-deep px-5 py-6 text-center shadow-[0_5px_18px_rgba(53,28,24,0.10)] sm:px-6 sm:py-7">
           <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white">
             <MessageCircle size={20} strokeWidth={1.8} />
           </div>
@@ -365,7 +365,7 @@ export default function ContactUs() {
 
           <p className="mx-auto mt-1 max-w-md text-[10px] leading-4 text-white/65 sm:text-xs">Check your order details or contact our support team for further assistance.</p>
 
-          <Link to="/orders" className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-[#351C18] transition hover:bg-[#F7EEE7]">
+          <Link to="/orders" className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-lg bg-white px-4 text-[10px] font-extrabold text-mk-ink transition hover:bg-mk-primary-soft">
             View My Orders
             <ArrowRight size={13} />
           </Link>

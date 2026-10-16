@@ -188,104 +188,104 @@ export default function ProfileUpdate() {
 
   if (loading) {
     return (
-      <div className="min-h-[70vh] bg-[#FBF7F2] px-3 py-4 sm:px-5 sm:py-5">
+      <div className="min-h-[70vh] bg-mk-bg px-3 py-4 sm:px-5 sm:py-5">
         <div className="mx-auto">
           <div className="animate-pulse">
             {/* BREADCRUMB SHIMMER */}
             <div className="mb-3 flex h-5 items-center gap-2 px-1 sm:mb-4">
-              <div className="h-3 w-14 rounded bg-[#E8DDD4]" />
-              <div className="h-3 w-3 rounded bg-[#EEE5DF]" />
-              <div className="h-3 w-20 rounded bg-[#E8DDD4]" />
+              <div className="h-3 w-14 rounded bg-mk-border" />
+              <div className="h-3 w-3 rounded bg-mk-surface" />
+              <div className="h-3 w-20 rounded bg-mk-border" />
             </div>
 
             {/* HEADER SHIMMER */}
-            <div className="mb-4 flex h-16 items-center justify-between overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+            <div className="mb-4 flex h-16 items-center justify-between overflow-hidden rounded-xl border border-mk-border bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-lg bg-[#EEE5DF] sm:h-10 sm:w-10" />
+                <div className="h-9 w-9 rounded-lg bg-mk-surface sm:h-10 sm:w-10" />
 
                 <div className="space-y-1.5">
-                  <div className="h-3 w-24 rounded bg-[#E8DDD4] sm:w-28" />
-                  <div className="h-2.5 w-40 rounded bg-[#F0E9E4] sm:w-52" />
+                  <div className="h-3 w-24 rounded bg-mk-border sm:w-28" />
+                  <div className="h-2.5 w-40 rounded bg-mk-surface sm:w-52" />
                 </div>
               </div>
 
-              <div className="h-8 w-16 rounded-lg bg-[#F0E9E4] sm:w-20" />
+              <div className="h-8 w-16 rounded-lg bg-mk-surface sm:w-20" />
             </div>
 
             {/* MAIN SHIMMER */}
             <div className="grid items-start gap-4 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]">
               {/* PHOTO SHIMMER */}
-              <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-                <div className="h-20 bg-[#EEE5DF]" />
+              <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
+                <div className="h-20 bg-mk-surface" />
 
                 <div className="px-4 pb-5 sm:px-5">
                   <div className="-mt-9 flex justify-center">
-                    <div className="h-24 w-24 rounded-full border-4 border-white bg-[#E8DDD4] shadow-sm sm:h-28 sm:w-28" />
+                    <div className="h-24 w-24 rounded-full border-4 border-white bg-mk-border shadow-sm sm:h-28 sm:w-28" />
                   </div>
 
                   <div className="mt-4 flex flex-col items-center">
-                    <div className="h-3.5 w-24 rounded bg-[#E8DDD4]" />
-                    <div className="mt-2 h-2.5 w-32 rounded bg-[#F0E9E4]" />
+                    <div className="h-3.5 w-24 rounded bg-mk-border" />
+                    <div className="mt-2 h-2.5 w-32 rounded bg-mk-surface" />
                   </div>
 
-                  <div className="mt-4 h-10 rounded-xl bg-[#F0E9E4]" />
+                  <div className="mt-4 h-10 rounded-xl bg-mk-surface" />
 
-                  <div className="mt-4 h-16 rounded-xl bg-[#F0E9E4]" />
+                  <div className="mt-4 h-16 rounded-xl bg-mk-surface" />
                 </div>
               </div>
 
               {/* FORM SHIMMER */}
               <div className="space-y-4">
-                <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white">
-                  <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
-                    <div className="h-9 w-9 rounded-xl bg-[#EEE5DF]" />
+                <div className="overflow-hidden rounded-2xl border border-mk-border bg-white">
+                  <div className="flex items-center gap-3 border-b border-mk-surface px-4 py-3.5 sm:px-5">
+                    <div className="h-9 w-9 rounded-xl bg-mk-surface" />
 
                     <div className="space-y-1.5">
-                      <div className="h-3.5 w-36 rounded bg-[#E8DDD4]" />
-                      <div className="h-2.5 w-48 rounded bg-[#F0E9E4]" />
+                      <div className="h-3.5 w-36 rounded bg-mk-border" />
+                      <div className="h-2.5 w-48 rounded bg-mk-surface" />
                     </div>
                   </div>
 
                   <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
                     <div className="space-y-1.5">
-                      <div className="h-2.5 w-16 rounded bg-[#E8DDD4]" />
-                      <div className="h-11 rounded-xl bg-[#F0E9E4]" />
+                      <div className="h-2.5 w-16 rounded bg-mk-border" />
+                      <div className="h-11 rounded-xl bg-mk-surface" />
                     </div>
 
                     <div className="space-y-1.5">
-                      <div className="h-2.5 w-20 rounded bg-[#E8DDD4]" />
-                      <div className="h-11 rounded-xl bg-[#F0E9E4]" />
+                      <div className="h-2.5 w-20 rounded bg-mk-border" />
+                      <div className="h-11 rounded-xl bg-mk-surface" />
                     </div>
 
                     <div className="space-y-1.5 sm:col-span-2">
-                      <div className="h-2.5 w-24 rounded bg-[#E8DDD4]" />
-                      <div className="h-11 rounded-xl bg-[#F0E9E4]" />
+                      <div className="h-2.5 w-24 rounded bg-mk-border" />
+                      <div className="h-11 rounded-xl bg-mk-surface" />
                     </div>
                   </div>
                 </div>
 
-                <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white">
-                  <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
-                    <div className="h-9 w-9 rounded-xl bg-[#EEE5DF]" />
+                <div className="overflow-hidden rounded-2xl border border-mk-border bg-white">
+                  <div className="flex items-center gap-3 border-b border-mk-surface px-4 py-3.5 sm:px-5">
+                    <div className="h-9 w-9 rounded-xl bg-mk-surface" />
 
                     <div className="space-y-1.5">
-                      <div className="h-3.5 w-32 rounded bg-[#E8DDD4]" />
-                      <div className="h-2.5 w-48 rounded bg-[#F0E9E4]" />
+                      <div className="h-3.5 w-32 rounded bg-mk-border" />
+                      <div className="h-2.5 w-48 rounded bg-mk-surface" />
                     </div>
                   </div>
 
                   <div className="p-4 sm:p-5">
-                    <div className="h-11 rounded-xl bg-[#F0E9E4]" />
+                    <div className="h-11 rounded-xl bg-mk-surface" />
 
-                    <div className="mt-3 h-12 rounded-xl bg-[#F0E9E4]" />
+                    <div className="mt-3 h-12 rounded-xl bg-mk-surface" />
                   </div>
                 </div>
 
-                <div className="h-20 rounded-2xl bg-[#F0E9E4]" />
+                <div className="h-20 rounded-2xl bg-mk-surface" />
 
                 <div className="flex gap-2.5">
-                  <div className="h-11 flex-1 rounded-xl bg-[#E8DDD4] sm:flex-none sm:w-24" />
-                  <div className="h-11 flex-1 rounded-xl bg-[#E8DDD4] sm:flex-none sm:w-32" />
+                  <div className="h-11 flex-1 rounded-xl bg-mk-border sm:flex-none sm:w-24" />
+                  <div className="h-11 flex-1 rounded-xl bg-mk-border sm:flex-none sm:w-32" />
                 </div>
               </div>
             </div>
@@ -297,20 +297,20 @@ export default function ProfileUpdate() {
 
   if (!user) {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center bg-[#FBF7F2] px-4">
-        <div className="w-full max-w-sm rounded-2xl border border-[#E8DDD4] bg-white p-8 text-center shadow-[0_8px_30px_rgba(73,54,49,0.07)]">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#F7EEE7] text-[#A51D26]">
+      <div className="flex min-h-[70vh] items-center justify-center bg-mk-bg px-4">
+        <div className="w-full max-w-sm rounded-2xl border border-mk-border bg-white p-8 text-center shadow-[0_8px_30px_rgba(73,54,49,0.07)]">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-mk-primary-soft text-mk-primary">
             <UserRound size={28} />
           </div>
 
-          <h2 className="mt-4 text-lg font-extrabold text-[#351C18]">Please login first</h2>
+          <h2 className="mt-4 text-lg font-extrabold text-mk-ink">Please login first</h2>
 
-          <p className="mt-1 text-xs text-[#806C63]">Login to update your profile information.</p>
+          <p className="mt-1 text-xs text-mk-muted">Login to update your profile information.</p>
 
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-2.5 text-xs font-bold text-white shadow-[0_5px_15px_rgba(125,23,28,0.16)] transition hover:-translate-y-0.5 hover:shadow-md"
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary px-5 py-2.5 text-xs font-bold text-white shadow-[0_5px_15px_rgba(125,23,28,0.16)] transition hover:-translate-y-0.5 hover:shadow-md"
           >
             <ArrowLeft size={14} />
             Go Home
@@ -326,7 +326,7 @@ export default function ProfileUpdate() {
   ]
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-[#FBF7F2]">
+    <div className="min-h-[calc(100vh-80px)] bg-mk-bg">
       {/* IMAGE VIEWER */}
       {showAvatarViewer && avatarPreview && (
         <div
@@ -340,7 +340,7 @@ export default function ProfileUpdate() {
             type="button"
             onClick={() => setShowAvatarViewer(false)}
             aria-label="Close image preview"
-            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/75 text-[#351C18] shadow-[0_4px_16px_rgba(73,54,49,0.12)] backdrop-blur-md transition-all duration-300 hover:rotate-90 hover:bg-white hover:text-[#8E181F] sm:right-6 sm:top-6"
+            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/75 text-mk-ink shadow-[0_4px_16px_rgba(73,54,49,0.12)] backdrop-blur-md transition-all duration-300 hover:rotate-90 hover:bg-white hover:text-mk-primary-hover sm:right-6 sm:top-6"
           >
             <X size={19} />
           </button>
@@ -352,7 +352,7 @@ export default function ProfileUpdate() {
               className="max-h-[76vh] max-w-[88vw] rounded-2xl object-contain shadow-[0_20px_60px_rgba(53,28,24,0.22)] sm:max-h-[80vh] sm:max-w-[82vw] md:max-w-[72vw] lg:max-w-[60vw] xl:max-w-[52vw]"
             />
 
-            <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/70 bg-white/70 px-3 py-1.5 text-[9px] font-semibold text-[#67544D] shadow-sm backdrop-blur-md sm:bottom-4 sm:px-4 sm:py-2 sm:text-[10px]">
+            <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/70 bg-white/70 px-3 py-1.5 text-[9px] font-semibold text-mk-muted shadow-sm backdrop-blur-md sm:bottom-4 sm:px-4 sm:py-2 sm:text-[10px]">
               Profile Photo
             </div>
           </div>
@@ -363,23 +363,23 @@ export default function ProfileUpdate() {
 
       <div className="mx-auto pb-8 pt-4 sm:pt-5">
         {/* HEADER */}
-        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-mk-border bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4">
           <div className="flex min-w-0 items-center gap-2.5">
-            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
+            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
               <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
 
               <UserRound size={18} strokeWidth={1.8} className="relative z-10" />
             </div>
 
             <div className="min-w-0">
-              <h1 className="truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-sm">Edit Profile</h1>
+              <h1 className="truncate text-xs font-extrabold tracking-tight text-mk-ink sm:text-sm">Edit Profile</h1>
 
-              <p className="mt-0.5 truncate text-[9px] text-[#806C63] sm:text-[10px]">Update your personal account information</p>
+              <p className="mt-0.5 truncate text-[9px] text-mk-muted sm:text-[10px]">Update your personal account information</p>
             </div>
           </div>
 
-          <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-2.5 text-[8px] font-bold text-[#67544D] sm:px-3 sm:text-[9px]">
-            <ShieldCheck size={13} className="text-[#3E8B62]" />
+          <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-mk-border bg-mk-bg px-2.5 text-[8px] font-bold text-mk-muted sm:px-3 sm:text-[9px]">
+            <ShieldCheck size={13} className="text-mk-success" />
 
             <span className="hidden sm:inline">{user.status || 'Active'}</span>
 
@@ -390,11 +390,11 @@ export default function ProfileUpdate() {
         <form onSubmit={handleSubmit}>
           <div className="grid items-start gap-4 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]">
             {/* PROFILE PHOTO */}
-            <aside className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-              <div className="relative h-20 overflow-hidden bg-linear-to-br from-[#351C18] via-[#67231F] to-[#A51D26]">
+            <aside className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
+              <div className="relative h-20 overflow-hidden bg-linear-to-br from-mk-ink via-mk-primary-deep to-mk-primary">
                 <div className="absolute -right-8 -top-10 h-24 w-24 rounded-full border-15 border-white/5" />
 
-                <div className="absolute -bottom-12 left-10 h-24 w-24 rounded-full bg-[#D4A373]/10" />
+                <div className="absolute -bottom-12 left-10 h-24 w-24 rounded-full bg-mk-accent/10" />
 
                 <div className="absolute left-4 top-3">
                   <p className="text-[8px] font-bold uppercase tracking-[0.16em] text-white/60">Account</p>
@@ -409,7 +409,7 @@ export default function ProfileUpdate() {
                     {/* PROFILE IMAGE */}
                     <div
                       onClick={() => avatarPreview && setShowAvatarViewer(true)}
-                      className={`group flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#F7EEE7] text-[#A51D26] shadow-[0_6px_20px_rgba(73,54,49,0.12)] ring-1 ring-[#E8DDD4] sm:h-28 sm:w-28 ${
+                      className={`group flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-mk-primary-soft text-mk-primary shadow-[0_6px_20px_rgba(73,54,49,0.12)] ring-1 ring-mk-border sm:h-28 sm:w-28 ${
                         avatarPreview ? 'cursor-zoom-in' : ''
                       }`}
                     >
@@ -418,7 +418,7 @@ export default function ProfileUpdate() {
                           <img src={getAvatarSrc()} alt={formData.name || 'Profile'} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
 
                           <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-all duration-300 group-hover:bg-black/20">
-                            <div className="flex h-8 w-8 scale-75 items-center justify-center rounded-full bg-white/90 text-[#8E181F] opacity-0 shadow-md transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
+                            <div className="flex h-8 w-8 scale-75 items-center justify-center rounded-full bg-white/90 text-mk-primary-hover opacity-0 shadow-md transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
                               <Maximize2 size={14} />
                             </div>
                           </div>
@@ -434,7 +434,7 @@ export default function ProfileUpdate() {
                       onClick={() => fileInputRef.current?.click()}
                       disabled={passwordFlowBusy}
                       aria-label="Change profile photo"
-                      className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-4 border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-md transition hover:scale-105"
+                      className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-4 border-white bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-md transition hover:scale-105"
                     >
                       <Camera size={15} />
                     </button>
@@ -444,29 +444,29 @@ export default function ProfileUpdate() {
                 </div>
 
                 <div className="mt-4 text-center">
-                  <h2 className="truncate text-sm font-extrabold text-[#351C18]">{formData.name || 'Your Name'}</h2>
+                  <h2 className="truncate text-sm font-extrabold text-mk-ink">{formData.name || 'Your Name'}</h2>
 
-                  <p className="mt-1 truncate text-[10px] text-[#806C63]">{formData.email || 'Your email'}</p>
+                  <p className="mt-1 truncate text-[10px] text-mk-muted">{formData.email || 'Your email'}</p>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={passwordFlowBusy}
-                  className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-2.5 text-[10px] font-bold text-[#67544D] transition hover:border-[#CDAFA4] hover:bg-[#F7EEE7] hover:text-[#8E181F]"
+                  className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl border border-mk-border bg-mk-bg px-3 py-2.5 text-[10px] font-bold text-mk-muted transition hover:border-mk-border hover:bg-mk-primary-soft hover:text-mk-primary-hover"
                 >
                   <Camera size={13} />
                   Change Photo
                 </button>
 
-                <div className="mt-4 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3">
+                <div className="mt-4 rounded-xl border border-mk-border bg-mk-bg p-3">
                   <div className="flex items-start gap-2">
-                    <ShieldCheck size={14} className="mt-0.5 shrink-0 text-[#3E8B62]" />
+                    <ShieldCheck size={14} className="mt-0.5 shrink-0 text-mk-success" />
 
                     <div>
-                      <p className="text-[10px] font-bold text-[#351C18]">Photo guidelines</p>
+                      <p className="text-[10px] font-bold text-mk-ink">Photo guidelines</p>
 
-                      <p className="mt-1 text-[9px] leading-4 text-[#806C63]">
+                      <p className="mt-1 text-[9px] leading-4 text-mk-muted">
                         JPG, PNG or WEBP
                         <br />
                         Maximum file size: 5MB
@@ -481,26 +481,26 @@ export default function ProfileUpdate() {
             <main className="min-w-0 space-y-4">
               <div className="grid  sm:grid-cols-2 gap-5">
                 {/* PERSONAL INFORMATION */}
-                <section className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
-                  <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
+                <section className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)]">
+                  <div className="flex items-center gap-3 border-b border-mk-surface px-4 py-3.5 sm:px-5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-mk-primary-soft text-mk-primary-hover">
                       <UserRound size={17} />
                     </div>
 
                     <div className="min-w-0">
-                      <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Personal Information</h2>
+                      <h2 className="text-sm font-extrabold text-mk-ink sm:text-base">Personal Information</h2>
 
-                      <p className="mt-0.5 truncate text-[9px] text-[#9A857B] sm:text-[10px]">Keep your account details up to date</p>
+                      <p className="mt-0.5 truncate text-[9px] text-mk-muted sm:text-[10px]">Keep your account details up to date</p>
                     </div>
                   </div>
 
                   <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
                     {/* NAME */}
                     <div>
-                      <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Full Name</label>
+                      <label className="mb-1.5 block text-[10px] font-bold text-mk-muted">Full Name</label>
 
                       <div className="relative">
-                        <UserRound size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
+                        <UserRound size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted" />
 
                         <input
                           type="text"
@@ -509,17 +509,17 @@ export default function ProfileUpdate() {
                           disabled={passwordFlowBusy}
                           onChange={handleChange}
                           placeholder="Enter your name"
-                          className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                          className="h-11 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-3 text-xs font-medium text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:bg-white focus:ring-2 focus:ring-mk-danger-soft"
                         />
                       </div>
                     </div>
 
                     {/* PHONE */}
                     <div>
-                      <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Phone Number</label>
+                      <label className="mb-1.5 block text-[10px] font-bold text-mk-muted">Phone Number</label>
 
                       <div className="relative">
-                        <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
+                        <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted" />
 
                         <input
                           type="tel"
@@ -528,17 +528,17 @@ export default function ProfileUpdate() {
                           disabled={passwordFlowBusy}
                           onChange={handleChange}
                           placeholder="Enter phone number"
-                          className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                          className="h-11 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-3 text-xs font-medium text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:bg-white focus:ring-2 focus:ring-mk-danger-soft"
                         />
                       </div>
                     </div>
 
                     {/* EMAIL */}
                     <div className="sm:col-span-2">
-                      <label className="mb-1.5 block text-[10px] font-bold text-[#67544D]">Email Address</label>
+                      <label className="mb-1.5 block text-[10px] font-bold text-mk-muted">Email Address</label>
 
                       <div className="relative">
-                        <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B]" />
+                        <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted" />
 
                         <input
                           type="email"
@@ -547,26 +547,26 @@ export default function ProfileUpdate() {
                           disabled={passwordFlowBusy}
                           onChange={handleChange}
                           placeholder="Enter email address"
-                          className="h-11 w-full rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] pl-10 pr-3 text-xs font-medium text-[#351C18] outline-none transition placeholder:text-[#B7A49B] focus:border-[#A51D26] focus:bg-white focus:ring-2 focus:ring-[#F2D9D6]"
+                          className="h-11 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-3 text-xs font-medium text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:bg-white focus:ring-2 focus:ring-mk-danger-soft"
                         />
                       </div>
 
-                      <p className="mt-1.5 text-[9px] text-[#9A857B]">Your email is used for account communication and login.</p>
+                      <p className="mt-1.5 text-[9px] text-mk-muted">Your email is used for account communication and login.</p>
                     </div>
                   </div>
                 </section>
 
                 {/* PASSWORD */}
-                <section className={`overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)] transition ${passwordFlowBusy ? 'ring-2 ring-[#F2D9D6]' : ''}`}>
-                  <div className="flex items-center gap-3 border-b border-[#EEE5DF] px-4 py-3.5 sm:px-5">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F]">
+                <section className={`overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_18px_rgba(73,54,49,0.05)] transition ${passwordFlowBusy ? 'ring-2 ring-mk-danger-soft' : ''}`}>
+                  <div className="flex items-center gap-3 border-b border-mk-surface px-4 py-3.5 sm:px-5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-mk-primary-soft text-mk-primary-hover">
                       <LockKeyhole size={17} />
                     </div>
 
                     <div className="min-w-0">
-                      <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Change Password</h2>
+                      <h2 className="text-sm font-extrabold text-mk-ink sm:text-base">Change Password</h2>
 
-                      <p className="mt-0.5 truncate text-[9px] text-[#9A857B] sm:text-[10px]">Securely update your password using OTP</p>
+                      <p className="mt-0.5 truncate text-[9px] text-mk-muted sm:text-[10px]">Securely update your password using OTP</p>
                     </div>
                   </div>
 
@@ -577,19 +577,19 @@ export default function ProfileUpdate() {
               </div>
 
               {/* ACCOUNT STATUS */}
-              <section className="relative overflow-hidden rounded-2xl border border-[#E6D5C5] bg-linear-to-r from-[#FFF9F2] to-[#F7EEE7] p-4 sm:p-5">
-                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#D4A373]/10" />
+              <section className="relative overflow-hidden rounded-2xl border border-mk-border bg-linear-to-r from-mk-bg to-mk-primary-soft p-4 sm:p-5">
+                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-mk-accent/10" />
 
                 <div className="relative flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#3E8B62] shadow-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-mk-success shadow-sm">
                     <CheckCircle2 size={18} />
                   </div>
 
                   <div className="min-w-0">
-                    <h3 className="text-xs font-extrabold text-[#351C18] sm:text-sm">Account information</h3>
+                    <h3 className="text-xs font-extrabold text-mk-ink sm:text-sm">Account information</h3>
 
-                    <p className="mt-1 text-[9px] leading-4 text-[#806C63] sm:text-[10px]">
-                      Your account is currently <span className="font-extrabold text-[#3E8B62]">{user.status || 'Active'}</span>. Keep your profile information accurate for orders and delivery updates.
+                    <p className="mt-1 text-[9px] leading-4 text-mk-muted sm:text-[10px]">
+                      Your account is currently <span className="font-extrabold text-mk-success">{user.status || 'Active'}</span>. Keep your profile information accurate for orders and delivery updates.
                     </p>
                   </div>
                 </div>
@@ -601,7 +601,7 @@ export default function ProfileUpdate() {
                   type="button"
                   onClick={() => navigate('/profile')}
                   disabled={saving || passwordFlowBusy}
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-white px-5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-mk-border bg-white px-5 text-xs font-bold text-mk-muted transition hover:bg-mk-primary-soft disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                 >
                   <ArrowLeft size={15} />
                   Cancel
@@ -610,7 +610,7 @@ export default function ProfileUpdate() {
                 <button
                   type="submit"
                   disabled={saving || passwordFlowBusy}
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-6 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.22)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary px-6 text-xs font-extrabold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.22)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                 >
                   {saving ? (
                     <>

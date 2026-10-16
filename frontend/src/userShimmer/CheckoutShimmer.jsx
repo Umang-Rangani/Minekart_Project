@@ -3,7 +3,7 @@ import { ShoppingBag, MapPin, ShieldCheck, CreditCard, Truck } from 'lucide-reac
 import BreadCrumb from '../user/BreadCrumb'
 
 const Shimmer = ({ className = '' }) => {
-  return <div className={`animate-pulse rounded-lg bg-[#E8DDD4] ${className}`} />
+  return <div className={`animate-pulse rounded-lg bg-mk-border ${className}`} />
 }
 
 export default function CheckoutShimmer() {
@@ -19,12 +19,12 @@ export default function CheckoutShimmer() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2]">
+    <div className="min-h-screen bg-mk-bg">
       <BreadCrumb items={items} />
 
       <div className="mx-auto w-full pb-10 pt-4 sm:pt-6">
         {/* CHECKOUT HEADER */}
-        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-20 sm:px-4">
+        <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-mk-border bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-20 sm:px-4">
           {/* Left - Cart */}
           <div className="flex min-w-0 items-center gap-2.5">
             <Shimmer className="h-9 w-9 shrink-0 rounded-lg sm:h-10 sm:w-10" />
@@ -62,8 +62,8 @@ export default function CheckoutShimmer() {
           {/* LEFT */}
           <div className="min-w-0 space-y-4">
             {/* ORDER ITEMS */}
-            <div className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.04)]">
-              <div className="flex items-center justify-between border-b border-[#E8DDD4] px-4 py-3.5 sm:px-5">
+            <div className="overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_2px_10px_rgba(73,54,49,0.04)]">
+              <div className="flex items-center justify-between border-b border-mk-border px-4 py-3.5 sm:px-5">
                 <div className="flex items-center gap-2.5">
                   <Shimmer className="h-8 w-8 rounded-lg" />
 
@@ -79,7 +79,7 @@ export default function CheckoutShimmer() {
               <div className="max-h-96 overflow-hidden p-3 sm:p-4">
                 <div className="space-y-2.5">
                   {[1, 2, 3].map((item) => (
-                    <div key={item} className="flex gap-3 rounded-xl border border-[#E8DDD4] bg-[#FFFCFA] p-2.5">
+                    <div key={item} className="flex gap-3 rounded-xl border border-mk-border bg-mk-card p-2.5">
                       <Shimmer className="h-22 w-18 shrink-0 rounded-lg sm:h-24 sm:w-20" />
 
                       <div className="min-w-0 flex-1">
@@ -103,8 +103,8 @@ export default function CheckoutShimmer() {
             </div>
 
             {/* DELIVERY ADDRESS */}
-            <div className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_2px_10px_rgba(73,54,49,0.04)]">
-              <div className="flex items-center justify-between border-b border-[#E8DDD4] px-4 py-3.5 sm:px-5">
+            <div className="overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_2px_10px_rgba(73,54,49,0.04)]">
+              <div className="flex items-center justify-between border-b border-mk-border px-4 py-3.5 sm:px-5">
                 <div className="flex items-center gap-2.5">
                   <Shimmer className="h-8 w-8 rounded-lg" />
 
@@ -119,7 +119,7 @@ export default function CheckoutShimmer() {
 
               <div className="space-y-2.5 p-3 sm:p-4">
                 {[1, 2].map((item) => (
-                  <div key={item} className="rounded-xl border border-[#E8DDD4] bg-white p-3">
+                  <div key={item} className="rounded-xl border border-mk-border bg-white p-3">
                     <div className="flex items-start gap-3">
                       <Shimmer className="mt-0.5 h-5 w-5 shrink-0 rounded-full" />
 
@@ -141,7 +141,7 @@ export default function CheckoutShimmer() {
             </div>
 
             {/* SECURITY */}
-            <div className="flex items-center gap-3 rounded-xl border border-[#D5E8DA] bg-[#F0F8F3] p-3.5">
+            <div className="flex items-center gap-3 rounded-xl border border-mk-success-soft bg-mk-success-soft p-3.5">
               <Shimmer className="h-9 w-9 shrink-0 rounded-lg" />
 
               <div>
@@ -153,9 +153,9 @@ export default function CheckoutShimmer() {
 
           {/* RIGHT SUMMARY */}
           <div className="min-w-0">
-            <div className="h-fit overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_5px_22px_rgba(73,54,49,0.08)] lg:sticky lg:top-24">
+            <div className="h-fit overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_5px_22px_rgba(73,54,49,0.08)] lg:sticky lg:top-24">
               {/* SUMMARY HEADER */}
-              <div className="border-b border-[#E8DDD4] px-4 py-4 sm:px-5">
+              <div className="border-b border-mk-border px-4 py-4 sm:px-5">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <Shimmer className="h-4 w-28 sm:h-5 sm:w-32" />
@@ -168,7 +168,7 @@ export default function CheckoutShimmer() {
 
               <div className="p-4 sm:p-5">
                 {/* ITEM COUNT */}
-                <div className="flex items-center justify-between rounded-lg bg-[#FBF7F2] px-3 py-2.5">
+                <div className="flex items-center justify-between rounded-lg bg-mk-bg px-3 py-2.5">
                   <Shimmer className="h-2.5 w-24" />
                   <Shimmer className="h-6 w-8 rounded-md" />
                 </div>
@@ -184,7 +184,7 @@ export default function CheckoutShimmer() {
                 </div>
 
                 {/* TOTAL */}
-                <div className="mt-5 flex items-end justify-between border-t border-[#E8DDD4] pt-4">
+                <div className="mt-5 flex items-end justify-between border-t border-mk-border pt-4">
                   <div>
                     <Shimmer className="h-3.5 w-20" />
                     <Shimmer className="mt-1.5 h-2.5 w-12" />
@@ -194,14 +194,14 @@ export default function CheckoutShimmer() {
                 </div>
 
                 {/* FREE DELIVERY */}
-                <div className="mt-4 flex items-start gap-2.5 rounded-lg border border-[#EADCC8] bg-[#FFF8EF] px-3 py-2.5">
+                <div className="mt-4 flex items-start gap-2.5 rounded-lg border border-mk-border bg-mk-bg px-3 py-2.5">
                   <Shimmer className="mt-0.5 h-4 w-4 shrink-0 rounded-md" />
                   <Shimmer className="h-2.5 w-[80%] sm:w-[85%]" />
                 </div>
 
                 {/* PAYMENT METHOD */}
-                <div className="mt-4 overflow-hidden rounded-lg border border-[#E8DDD4]">
-                  <div className="flex items-center justify-between bg-[#FBF7F2] px-3.5 py-3">
+                <div className="mt-4 overflow-hidden rounded-lg border border-mk-border">
+                  <div className="flex items-center justify-between bg-mk-bg px-3.5 py-3">
                     <div>
                       <Shimmer className="h-2 w-20" />
                       <Shimmer className="mt-1.5 h-3.5 w-28" />
@@ -210,8 +210,8 @@ export default function CheckoutShimmer() {
                     <Shimmer className="h-6 w-12 rounded-md" />
                   </div>
 
-                  <div className="border-t border-[#E8DDD4] p-2.5">
-                    <div className="flex items-start gap-2 rounded-md bg-[#F7EEE7] px-2.5 py-2.5">
+                  <div className="border-t border-mk-border p-2.5">
+                    <div className="flex items-start gap-2 rounded-md bg-mk-primary-soft px-2.5 py-2.5">
                       <Shimmer className="mt-0.5 h-4 w-4 shrink-0 rounded-md" />
                       <Shimmer className="h-2.5 w-[80%]" />
                     </div>
@@ -219,7 +219,7 @@ export default function CheckoutShimmer() {
                 </div>
 
                 {/* SELECTED ADDRESS */}
-                <div className="mt-4 rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-3 py-2.5">
+                <div className="mt-4 rounded-lg border border-mk-border bg-mk-bg px-3 py-2.5">
                   <div className="flex items-center gap-2">
                     <Shimmer className="h-4 w-4 shrink-0 rounded-md" />
 

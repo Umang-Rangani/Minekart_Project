@@ -1,5 +1,48 @@
 @import 'tailwindcss';
 
+/* MineKart design tokens — change hex here to retheme the whole app */
+@theme inline {
+  /* Brand */
+  --color-mk-primary: #a51d26;
+  --color-mk-primary-hover: #8e181f;
+  --color-mk-primary-deep: #7d171c;
+  --color-mk-primary-soft: #f7eee7;
+  --color-mk-accent: #d4a373;
+
+  /* Ink */
+  --color-mk-ink: #351c18;
+  --color-mk-ink-admin: #292725;
+  --color-mk-muted: #806c63;
+  --color-mk-muted-admin: #6f6a64;
+  --color-mk-subtle: #99938b;
+
+  /* Surfaces */
+  --color-mk-bg: #fbf7f2;
+  --color-mk-bg-admin: #f8f6f2;
+  --color-mk-card: #fffdfc;
+  --color-mk-surface: #f1eee8;
+  --color-mk-border: #e8ddd4;
+  --color-mk-border-admin: #e3ded6;
+
+  /* Admin chrome */
+  --color-mk-admin: #6b6258;
+  --color-mk-admin-hover: #5d554c;
+
+  /* Status */
+  --color-mk-success: #3e8b62;
+  --color-mk-success-soft: #eaede7;
+  --color-mk-danger: #a44a3f;
+  --color-mk-danger-soft: #f1e7e5;
+  --color-mk-warning: #8a6a3d;
+  --color-mk-warning-soft: #f1eee8;
+  --color-mk-info: #6d5a91;
+  --color-mk-info-soft: #ece9f5;
+
+  /* Disabled */
+  --color-mk-disabled: #888888;
+  --color-mk-disabled-bg: #e8e5e2;
+}
+
 /* Hide scrollbar */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -16,16 +59,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #F8FAFC;
+  background: var(--color-mk-bg-admin);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: var(--color-mk-subtle);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: var(--color-mk-muted-admin);
 }
 
 html {
@@ -35,7 +78,7 @@ html {
 /* MineKart Horizontal Scrollbar */
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: #A51D26 #F7EEE7;
+  scrollbar-color: var(--color-mk-primary) var(--color-mk-primary-soft);
 }
 
 .scrollbar-thin::-webkit-scrollbar {
@@ -43,16 +86,16 @@ html {
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  background: #F7EEE7;
+  background: var(--color-mk-primary-soft);
   border-radius: 10px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #A51D26;
+  background: var(--color-mk-primary);
   border-radius: 10px;
-  border: 1px solid #F7EEE7;
+  border: 1px solid var(--color-mk-primary-soft);
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: #7D171C;
+  background: var(--color-mk-primary-deep);
 }

@@ -118,23 +118,23 @@ export default function AdminLayout() {
   const getNotificationIconStyle = (type) => {
     switch (type) {
       case 'NEW_ORDER':
-        return 'bg-[#EAEDE7] text-[#5E6C55]'
+        return 'bg-mk-success-soft text-mk-success'
 
       case 'USER_CANCELLED_ORDER':
       case 'PAYMENT_FAILED':
-        return 'bg-[#F1E7E5] text-[#A44A3F]'
+        return 'bg-mk-danger-soft text-mk-danger'
 
       case 'ORDER_RETURN_REQUESTED':
-        return 'bg-[#F1EEE8] text-[#8A6A3D]'
+        return 'bg-mk-surface text-mk-warning'
 
       case 'PAYMENT_RECEIVED':
-        return 'bg-[#EAEDE7] text-[#5E6C55]'
+        return 'bg-mk-success-soft text-mk-success'
 
       case 'SYSTEM':
-        return 'bg-[#EEEAE4] text-[#6B6258]'
+        return 'bg-mk-surface text-mk-admin'
 
       default:
-        return 'bg-[#F1EEE8] text-[#6B6258]'
+        return 'bg-mk-surface text-mk-admin'
     }
   }
 
@@ -198,29 +198,29 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F2EE] text-[#292725]">
+    <div className="min-h-screen bg-mk-bg-admin text-mk-ink-admin">
       {/* HEADER */}
-      <header className="fixed left-0 right-0 top-0 z-50 h-17 border-b border-[#E3DED6] bg-[#FBFAF7]/95 backdrop-blur-md">
+      <header className="fixed left-0 right-0 top-0 z-50 h-17 border-b border-mk-border-admin bg-mk-bg/95 backdrop-blur-md">
         <div className="flex h-full items-center justify-between px-5 lg:px-7">
           {/* LEFT */}
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-[#6B6258] text-white shadow-sm">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-mk-admin text-white shadow-sm">
               <ShieldCheck size={21} />
             </div>
 
             <div>
-              <h1 className="text-lg font-bold tracking-tight text-[#292725]">
-                Mine<span className="text-[#6B6258]">Kart</span>
+              <h1 className="text-lg font-bold tracking-tight text-mk-ink-admin">
+                Mine<span className="text-mk-admin">Kart</span>
               </h1>
 
-              <p className="text-[11px] font-medium text-[#99938B]">Admin Panel</p>
+              <p className="text-[11px] font-medium text-mk-subtle">Admin Panel</p>
             </div>
 
             <button
               type="button"
               onClick={() => setSidebarOpen((prev) => !prev)}
               title={sidebarOpen ? 'Collapse Sidebar' : 'Expand Sidebar'}
-              className="ml-2 flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+              className="ml-2 flex size-9 items-center justify-center rounded-lg text-mk-muted-admin transition hover:bg-mk-surface hover:text-mk-ink-admin"
             >
               {sidebarOpen ? <ChevronLeft size={21} /> : <ChevronRight size={21} />}
             </button>
@@ -234,32 +234,32 @@ export default function AdminLayout() {
                 type="button"
                 onClick={() => setNotificationOpen((prev) => !prev)}
                 title="Notifications"
-                className={`relative flex size-10 items-center justify-center rounded-xl transition ${notificationOpen ? 'bg-[#EEEAE4] text-[#292725]' : 'text-[#6F6A64] hover:bg-[#EEEAE4] hover:text-[#292725]'}`}
+                className={`relative flex size-10 items-center justify-center rounded-xl transition ${notificationOpen ? 'bg-mk-surface text-mk-ink-admin' : 'text-mk-muted-admin hover:bg-mk-surface hover:text-mk-ink-admin'}`}
               >
-                <Bell size={20} strokeWidth={1.9} className={unreadCount > 0 ? 'text-[#6B6258]' : ''} />
+                <Bell size={20} strokeWidth={1.9} className={unreadCount > 0 ? 'text-mk-admin' : ''} />
 
                 {unreadCount > 0 && (
-                  <span className="absolute right-0.5 top-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-[#6B6258] px-1 py-0.5 text-[9px] font-bold leading-none text-white shadow-sm">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                  <span className="absolute right-0.5 top-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-mk-admin px-1 py-0.5 text-[9px] font-bold leading-none text-white shadow-sm">{unreadCount > 99 ? '99+' : unreadCount}</span>
                 )}
               </button>
 
               {/* NOTIFICATION DROPDOWN */}
               {notificationOpen && (
-                <div className="absolute right-0 top-12 z-70 w-90 overflow-hidden rounded-2xl border border-[#E3DED6] bg-[#FBFAF7] shadow-[0_18px_45px_rgba(63,58,53,0.14)] sm:w-96">
+                <div className="absolute right-0 top-12 z-70 w-90 overflow-hidden rounded-2xl border border-mk-border-admin bg-mk-bg shadow-[0_18px_45px_rgba(63,58,53,0.14)] sm:w-96">
                   {/* HEADER */}
-                  <div className="flex items-center justify-between border-b border-[#E3DED6] px-4 py-3.5">
+                  <div className="flex items-center justify-between border-b border-mk-border-admin px-4 py-3.5">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-bold text-[#292725]">Notifications</h3>
+                        <h3 className="text-sm font-bold text-mk-ink-admin">Notifications</h3>
 
-                        {unreadCount > 0 && <span className="rounded-full bg-[#EAE7E1] px-2 py-0.5 text-[9px] font-bold text-[#6B6258]">{unreadCount} new</span>}
+                        {unreadCount > 0 && <span className="rounded-full bg-mk-surface px-2 py-0.5 text-[9px] font-bold text-mk-admin">{unreadCount} new</span>}
                       </div>
 
-                      <p className="mt-0.5 text-[10px] font-medium text-[#99938B]">Stay updated with your store</p>
+                      <p className="mt-0.5 text-[10px] font-medium text-mk-subtle">Stay updated with your store</p>
                     </div>
 
                     {unreadCount > 0 && (
-                      <button type="button" onClick={markAllAsRead} className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-[10px] font-bold text-[#6B6258] transition hover:bg-[#EEEAE4]">
+                      <button type="button" onClick={markAllAsRead} className="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-[10px] font-bold text-mk-admin transition hover:bg-mk-surface">
                         <CheckCheck size={14} />
                         Mark all read
                       </button>
@@ -284,13 +284,13 @@ export default function AdminLayout() {
                       </div>
                     ) : notifications.length === 0 ? (
                       <div className="flex flex-col items-center justify-center px-5 py-12 text-center">
-                        <div className="flex size-14 items-center justify-center rounded-2xl bg-[#F1EEE8] text-[#99938B]">
+                        <div className="flex size-14 items-center justify-center rounded-2xl bg-mk-surface text-mk-subtle">
                           <Bell size={24} strokeWidth={1.7} />
                         </div>
 
-                        <p className="mt-4 text-sm font-bold text-[#292725]">No notifications</p>
+                        <p className="mt-4 text-sm font-bold text-mk-ink-admin">No notifications</p>
 
-                        <p className="mt-1 max-w-58 text-[11px] leading-5 text-[#99938B]">You are all caught up. New store activity will appear here.</p>
+                        <p className="mt-1 max-w-58 text-[11px] leading-5 text-mk-subtle">You are all caught up. New store activity will appear here.</p>
                       </div>
                     ) : (
                       notifications.map((notification) => (
@@ -298,31 +298,31 @@ export default function AdminLayout() {
                           key={notification._id}
                           type="button"
                           onClick={() => handleNotificationClick(notification)}
-                          className={`relative flex w-full gap-3 border-b border-[#E3DED6] px-4 py-3.5 text-left transition last:border-b-0 ${notification.isRead ? 'bg-[#FBFAF7] hover:bg-[#F1EEE8]' : 'bg-[#F6F3EE] hover:bg-[#EEEAE4]'}`}
+                          className={`relative flex w-full gap-3 border-b border-mk-border-admin px-4 py-3.5 text-left transition last:border-b-0 ${notification.isRead ? 'bg-mk-bg hover:bg-mk-surface' : 'bg-mk-bg-admin hover:bg-mk-surface'}`}
                         >
-                          {!notification.isRead && <span className="absolute left-2 top-5 size-1.5 rounded-full bg-[#6B6258]" />}
+                          {!notification.isRead && <span className="absolute left-2 top-5 size-1.5 rounded-full bg-mk-admin" />}
 
                           <div className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${getNotificationIconStyle(notification.type)}`}>{getNotificationIcon(notification.type)}</div>
 
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start justify-between gap-2">
-                              <p className={`text-xs ${notification.isRead ? 'font-semibold text-[#4B4743]' : 'font-bold text-[#292725]'}`}>{notification.title}</p>
+                              <p className={`text-xs ${notification.isRead ? 'font-semibold text-mk-admin-hover' : 'font-bold text-mk-ink-admin'}`}>{notification.title}</p>
 
-                              {!notification.isRead && <span className="mt-1 size-1.5 shrink-0 rounded-full bg-[#6B6258]" />}
+                              {!notification.isRead && <span className="mt-1 size-1.5 shrink-0 rounded-full bg-mk-admin" />}
                             </div>
 
-                            <p className="mt-1 line-clamp-2 text-[11px] leading-4.5 text-[#6F6A64]">{notification.message}</p>
+                            <p className="mt-1 line-clamp-2 text-[11px] leading-4.5 text-mk-muted-admin">{notification.message}</p>
 
                             <div className="mt-2 flex items-center gap-2">
-                              <Clock size={11} className="text-[#99938B]" />
+                              <Clock size={11} className="text-mk-subtle" />
 
-                              <span className="text-[9px] font-medium text-[#99938B]">{formatNotificationTime(notification.createdAt)}</span>
+                              <span className="text-[9px] font-medium text-mk-subtle">{formatNotificationTime(notification.createdAt)}</span>
 
                               {notification.orderId?.orderId && (
                                 <>
-                                  <span className="text-[#D8D1C8]">•</span>
+                                  <span className="text-mk-border-admin">•</span>
 
-                                  <span className="truncate text-[9px] font-bold text-[#6B6258]">{notification.orderId.orderId}</span>
+                                  <span className="truncate text-[9px] font-bold text-mk-admin">{notification.orderId.orderId}</span>
                                 </>
                               )}
                             </div>
@@ -334,14 +334,14 @@ export default function AdminLayout() {
 
                   {/* FOOTER */}
                   {!loading && (
-                    <div className="border-t border-[#E3DED6] bg-[#F8F6F2] px-4 py-2.5">
+                    <div className="border-t border-mk-border-admin bg-mk-bg-admin px-4 py-2.5">
                       <button
                         type="button"
                         onClick={() => {
                           setNotificationOpen(false)
                           navigate('/admin/notifications')
                         }}
-                        className="w-full rounded-lg py-2 text-center text-[10px] font-bold text-[#6B6258] transition hover:bg-[#EEEAE4] hover:text-[#3F3A35]"
+                        className="w-full rounded-lg py-2 text-center text-[10px] font-bold text-mk-admin transition hover:bg-mk-surface hover:text-mk-ink-admin"
                       >
                         View all notifications
                       </button>
@@ -353,11 +353,11 @@ export default function AdminLayout() {
 
             {/* ADMIN USER */}
             <div className="hidden items-center gap-2 sm:flex">
-              <ShieldCheck size={17} className="text-[#6B6258]" />
+              <ShieldCheck size={17} className="text-mk-admin" />
 
-              <p className="text-sm font-semibold text-[#292725]">{user?.name}</p>
+              <p className="text-sm font-semibold text-mk-ink-admin">{user?.name}</p>
 
-              <span className="rounded-full bg-[#EAE7E1] px-2.5 py-1 text-[10px] font-bold text-[#5D554C]">{user?.role.toUpperCase()}</span>
+              <span className="rounded-full bg-mk-surface px-2.5 py-1 text-[10px] font-bold text-mk-admin-hover">{user?.role.toUpperCase()}</span>
             </div>
 
             {/* LOGOUT */}
@@ -368,7 +368,7 @@ export default function AdminLayout() {
                 logout()
               }}
               title="Logout"
-              className="flex h-9 items-center gap-2 rounded-lg border border-[#E3DED6] bg-[#F8F6F2] px-3 text-xs font-bold text-[#6F6A64] transition hover:border-[#D8D1C8] hover:bg-[#EEEAE4] hover:text-[#3F3A35]"
+              className="flex h-9 items-center gap-2 rounded-lg border border-mk-border-admin bg-mk-bg-admin px-3 text-xs font-bold text-mk-muted-admin transition hover:border-mk-border-admin hover:bg-mk-surface hover:text-mk-ink-admin"
             >
               <LogOut size={16} strokeWidth={2} />
 
@@ -379,9 +379,9 @@ export default function AdminLayout() {
       </header>
 
       {/* SIDEBAR */}
-      <aside className={`fixed bottom-0 left-0 top-17 z-40 border-r border-[#E3DED6] bg-[#F8F6F2] transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-18'}`}>
+      <aside className={`fixed bottom-0 left-0 top-17 z-40 border-r border-mk-border-admin bg-mk-bg-admin transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-18'}`}>
         <div className={`flex h-full flex-col py-5 ${sidebarOpen ? 'px-4' : 'px-2'}`}>
-          <p className={`mb-3 text-[11px] font-semibold uppercase tracking-wider text-[#99938B] ${sidebarOpen ? 'px-3' : 'text-center'}`}>{sidebarOpen ? 'Main Menu' : 'Menu'}</p>
+          <p className={`mb-3 text-[11px] font-semibold uppercase tracking-wider text-mk-subtle ${sidebarOpen ? 'px-3' : 'text-center'}`}>{sidebarOpen ? 'Main Menu' : 'Menu'}</p>
 
           <nav className="space-y-1.5">
             {menuItems.map((item) => {
@@ -395,7 +395,7 @@ export default function AdminLayout() {
                   title={!sidebarOpen ? item.name : ''}
                   className={({ isActive }) =>
                     `group flex h-11 items-center rounded-xl text-sm font-medium transition ${sidebarOpen ? 'gap-3 px-3.5' : 'justify-center px-0'} ${
-                      isActive ? 'bg-[#6B6258] text-white shadow-sm' : 'text-[#6F6A64] hover:bg-[#EEEAE4] hover:text-[#292725]'
+                      isActive ? 'bg-mk-admin text-white shadow-sm' : 'text-mk-muted-admin hover:bg-mk-surface hover:text-mk-ink-admin'
                     }`
                   }
                 >
@@ -406,7 +406,7 @@ export default function AdminLayout() {
 
                         {/* COLLAPSED UNREAD BADGE */}
                         {item.path === '/admin/notifications' && unreadCount > 0 && !sidebarOpen && (
-                          <span className="absolute -right-2 -top-2 flex size-4 items-center justify-center rounded-full bg-[#6B6258] text-[8px] font-bold text-white">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                          <span className="absolute -right-2 -top-2 flex size-4 items-center justify-center rounded-full bg-mk-admin text-[8px] font-bold text-white">{unreadCount > 9 ? '9+' : unreadCount}</span>
                         )}
                       </div>
 
@@ -416,7 +416,7 @@ export default function AdminLayout() {
 
                           {/* SIDEBAR UNREAD BADGE */}
                           {item.path === '/admin/notifications' && unreadCount > 0 && (
-                            <span className={`flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-[9px] font-bold ${isActive ? 'bg-white/20 text-white' : 'bg-[#EAE7E1] text-[#6B6258]'}`}>
+                            <span className={`flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-[9px] font-bold ${isActive ? 'bg-white/20 text-white' : 'bg-mk-surface text-mk-admin'}`}>
                               {unreadCount > 99 ? '99+' : unreadCount}
                             </span>
                           )}
@@ -429,13 +429,13 @@ export default function AdminLayout() {
             })}
           </nav>
 
-          <div className="my-5 border-t border-[#E3DED6]" />
+          <div className="my-5 border-t border-mk-border-admin" />
 
           {sidebarOpen && (
-            <div className="mt-auto rounded-2xl border border-[#E3DED6] bg-[#F1EEE8] p-4">
-              <p className="text-xs font-semibold text-[#292725]">MineKart Admin</p>
+            <div className="mt-auto rounded-2xl border border-mk-border-admin bg-mk-surface p-4">
+              <p className="text-xs font-semibold text-mk-ink-admin">MineKart Admin</p>
 
-              <p className="mt-1 text-[11px] leading-5 text-[#99938B]">Manage your store, products and orders.</p>
+              <p className="mt-1 text-[11px] leading-5 text-mk-subtle">Manage your store, products and orders.</p>
             </div>
           )}
         </div>
@@ -449,21 +449,21 @@ export default function AdminLayout() {
           </div>
 
           {/* ADMIN FOOTER */}
-          <footer className="mt-20 border-t border-[#E3DED6] bg-[#FBFAF7] px-5 py-4 lg:px-7">
+          <footer className="mt-20 border-t border-mk-border-admin bg-mk-bg px-5 py-4 lg:px-7">
             <div className="flex flex-col items-center justify-between gap-2 text-center sm:flex-row sm:text-left">
               <div>
-                <p className="text-xs font-bold text-[#3F3A35]">
+                <p className="text-xs font-bold text-mk-ink-admin">
                   Mine
-                  <span className="text-[#6B6258]">Kart</span> Admin Panel
+                  <span className="text-mk-admin">Kart</span> Admin Panel
                 </p>
 
-                <p className="mt-0.5 text-[10px] font-medium text-[#99938B]">Manage your store with ease.</p>
+                <p className="mt-0.5 text-[10px] font-medium text-mk-subtle">Manage your store with ease.</p>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-medium text-[#99938B]">Designed & Developed by</span>
+                <span className="text-[10px] font-medium text-mk-subtle">Designed & Developed by</span>
 
-                <span className="rounded-lg bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-extrabold text-[#6B6258]">Rangani Umang 🤍</span>
+                <span className="rounded-lg bg-mk-surface px-2.5 py-1 text-[11px] font-extrabold text-mk-admin">Rangani Umang 🤍</span>
               </div>
             </div>
           </footer>

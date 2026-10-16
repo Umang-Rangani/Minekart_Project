@@ -6,7 +6,7 @@ const Shimmer = ({ className = '' }) => {
 
 export default function TrackOrderResultShimmer() {
   return (
-    <div className="mt-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.04)]">
+    <div className="mt-5 overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_16px_rgba(73,54,49,0.04)]">
       <style>{`
         @keyframes minekartShimmer {
           0% {
@@ -31,7 +31,7 @@ export default function TrackOrderResultShimmer() {
       `}</style>
 
       {/* Header */}
-      <div className="flex flex-col gap-3 border-b border-[#E8DDD4] bg-[#FBF7F2] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div className="flex flex-col gap-3 border-b border-mk-border bg-mk-bg px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div className="space-y-2">
           <Shimmer className="h-3 w-16 rounded" />
           <Shimmer className="h-4 w-44 rounded-md sm:w-56" />

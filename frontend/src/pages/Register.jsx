@@ -261,7 +261,7 @@ export default function Register() {
   }
 
   return (
-    <div className="relative flex min-h-dvh w-full items-end justify-center overflow-hidden bg-[#241210] px-0 py-0 sm:items-center sm:px-5 sm:py-6 lg:px-8">
+    <div className="relative flex min-h-dvh w-full items-end justify-center overflow-hidden bg-mk-ink px-0 py-0 sm:items-center sm:px-5 sm:py-6 lg:px-8">
       <style>{`
         @keyframes registerSheetUp {
           from {
@@ -294,13 +294,13 @@ export default function Register() {
 
       {/* Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-br from-[#241210] via-[#4B171A] to-[#8E181F]" />
+        <div className="absolute inset-0 bg-linear-to-br from-mk-ink via-mk-ink to-mk-primary-hover" />
 
-        <div className="absolute -left-32 -top-32 h-105 w-105 rounded-full bg-[#A51D26]/35 blur-[100px]" />
+        <div className="absolute -left-32 -top-32 h-105 w-105 rounded-full bg-mk-primary/35 blur-[100px]" />
 
-        <div className="absolute -bottom-40 -right-32 h-125 w-125 rounded-full bg-[#D4A373]/15 blur-[120px]" />
+        <div className="absolute -bottom-40 -right-32 h-125 w-125 rounded-full bg-mk-accent/15 blur-[120px]" />
 
-        <div className="absolute left-[45%] top-[10%] h-56 w-56 rounded-full bg-[#7D171C]/30 blur-[90px]" />
+        <div className="absolute left-[45%] top-[10%] h-56 w-56 rounded-full bg-mk-primary-deep/30 blur-[90px]" />
 
         <div
           className="absolute inset-0 opacity-[0.07]"
@@ -320,7 +320,7 @@ export default function Register() {
             <div className="mt-3 h-2 w-24 rounded-full bg-white/10" />
 
             <div className="mt-4 flex gap-2">
-              <div className="h-7 w-7 rounded-lg bg-[#D4A373]/20" />
+              <div className="h-7 w-7 rounded-lg bg-mk-accent/20" />
               <div className="h-7 flex-1 rounded-lg bg-white/5" />
             </div>
           </div>
@@ -329,7 +329,7 @@ export default function Register() {
         <div className="absolute bottom-[15%] right-[5%] hidden h-28 w-40 rotate-10 rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-sm lg:block">
           <div className="p-4">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-xl bg-[#A51D26]/40" />
+              <div className="h-8 w-8 rounded-xl bg-mk-primary/40" />
 
               <div>
                 <div className="h-2 w-14 rounded-full bg-white/20" />
@@ -341,14 +341,14 @@ export default function Register() {
           </div>
         </div>
 
-        <div className="absolute bottom-[13%] left-[13%] h-16 w-16 rounded-full border border-[#D4A373]/20 bg-[#D4A373]/5 backdrop-blur-sm" />
+        <div className="absolute bottom-[13%] left-[13%] h-16 w-16 rounded-full border border-mk-accent/20 bg-mk-accent/5 backdrop-blur-sm" />
 
         <div className="absolute right-[16%] top-[15%] h-20 w-20 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm" />
 
         <div className="absolute left-8 top-8 hidden select-none text-white/10 xl:block">
           <p className="text-4xl font-black tracking-tight">
             Mine
-            <span className="text-[#D4A373]">Kart</span>
+            <span className="text-mk-accent">Kart</span>
           </p>
 
           <p className="mt-1 text-[9px] font-semibold tracking-[0.35em]">SHOP • DISCOVER • ENJOY</p>
@@ -360,7 +360,7 @@ export default function Register() {
           <p className="mt-1 text-2xl font-black">STARTS HERE</p>
         </div>
 
-        <div className="absolute inset-0 bg-[#1F0D0B]/20" />
+        <div className="absolute inset-0 bg-mk-ink/20" />
       </div>
 
       {/* Main Card / Mobile Bottom Sheet */}
@@ -372,7 +372,7 @@ export default function Register() {
           flex-col overflow-hidden
           rounded-t-[28px]
           border border-white/20
-          bg-[#FFFDFC]
+          bg-mk-card
           shadow-[0_-20px_70px_rgba(0,0,0,0.35)]
           sm:h-auto
           sm:min-h-0
@@ -381,14 +381,14 @@ export default function Register() {
           sm:shadow-[0_35px_100px_rgba(0,0,0,0.35)]
         "
       >
-        <div className="relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col overflow-hidden rounded-t-[28px] border border-[#E3D5CC] bg-[#FFFDFC]/95 shadow-[0_-20px_60px_rgba(53,28,24,0.20)] backdrop-blur-xl sm:max-h-[calc(100dvh-48px)] sm:rounded-[28px] sm:shadow-[0_30px_90px_rgba(53,28,24,0.18)]">
+        <div className="relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col overflow-hidden rounded-t-[28px] border border-mk-border bg-mk-card/95 shadow-[0_-20px_60px_rgba(53,28,24,0.20)] backdrop-blur-xl sm:max-h-[calc(100dvh-48px)] sm:rounded-[28px] sm:shadow-[0_30px_90px_rgba(53,28,24,0.18)]">
           {/* Header */}
-          <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-[#321715] via-[#64171B] to-[#A51D26] px-3.5 py-3 text-white sm:px-8 sm:py-6">
+          <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-mk-ink via-mk-primary-deep to-mk-primary px-3.5 py-3 text-white sm:px-8 sm:py-6">
             <div className="absolute -right-16 -top-24 h-40 w-40 rounded-full bg-white/7 blur-sm sm:h-56 sm:w-56" />
 
-            <div className="absolute -bottom-20 right-[18%] h-36 w-36 rounded-full bg-[#D4A373]/10 blur-2xl sm:-bottom-28 sm:h-52 sm:w-52" />
+            <div className="absolute -bottom-20 right-[18%] h-36 w-36 rounded-full bg-mk-accent/10 blur-2xl sm:-bottom-28 sm:h-52 sm:w-52" />
 
-            <div className="absolute -bottom-14 -left-12 h-28 w-28 rounded-full bg-[#A51D26]/30 blur-xl sm:-bottom-20 sm:-left-16 sm:h-40 sm:w-40" />
+            <div className="absolute -bottom-14 -left-12 h-28 w-28 rounded-full bg-mk-primary/30 blur-xl sm:-bottom-20 sm:-left-16 sm:h-40 sm:w-40" />
 
             <div className="relative flex items-center justify-between gap-3">
               <div className="min-w-0">
@@ -400,42 +400,42 @@ export default function Register() {
                   <div className="min-w-0">
                     <h1 className="text-base font-extrabold tracking-tight sm:text-2xl">Create Account</h1>
 
-                    <p className="mt-0.5 truncate text-[9px] leading-3.5 text-[#F3DCD5] sm:text-xs">Your MineKart shopping journey starts here</p>
+                    <p className="mt-0.5 truncate text-[9px] leading-3.5 text-mk-border sm:text-xs">Your MineKart shopping journey starts here</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 h-px w-full bg-linear-to-r from-transparent via-[#D4A373]/40 to-transparent" />
+            <div className="absolute bottom-0 left-0 h-px w-full bg-linear-to-r from-transparent via-mk-accent/40 to-transparent" />
           </div>
 
           {/* Main Form */}
           <form onSubmit={submitHandle} className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden md:grid-cols-[280px_1fr] lg:grid-cols-[310px_1fr]">
             {/* Desktop Profile Section */}
-            <div className="relative hidden min-h-0 shrink-0 flex-col items-center justify-center overflow-hidden border-b border-[#E8DDD4] bg-linear-to-br from-[#FBF7F2] via-[#F8EFE9] to-[#F3E6DE] px-8 md:flex md:border-b-0 md:border-r">
-              <div className="pointer-events-none absolute -left-16 top-8 h-40 w-40 rounded-full bg-[#A51D26]/6 blur-3xl" />
+            <div className="relative hidden min-h-0 shrink-0 flex-col items-center justify-center overflow-hidden border-b border-mk-border bg-linear-to-br from-mk-bg via-mk-primary-soft to-mk-danger-soft px-8 md:flex md:border-b-0 md:border-r">
+              <div className="pointer-events-none absolute -left-16 top-8 h-40 w-40 rounded-full bg-mk-primary/6 blur-3xl" />
 
-              <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-[#D4A373]/15 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-mk-accent/15 blur-3xl" />
 
               <div className="relative z-10">
                 <button
                   type="button"
                   onClick={openImageViewer}
-                  className="group relative block h-40 w-40 overflow-hidden rounded-full border-2 border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_14px_32px_rgba(73,54,49,0.16)] ring-1 ring-[#DCCBC1] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(73,54,49,0.20)] lg:h-44 lg:w-44"
+                  className="group relative block h-40 w-40 overflow-hidden rounded-full border-2 border-white bg-linear-to-br from-mk-danger-soft to-mk-border shadow-[0_14px_32px_rgba(73,54,49,0.16)] ring-1 ring-mk-border transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(73,54,49,0.20)] lg:h-44 lg:w-44"
                 >
                   {preview ? (
                     <img src={preview} alt="Profile Preview" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
-                      <User size={62} strokeWidth={1.1} className="text-[#8E181F]/70" />
+                      <User size={62} strokeWidth={1.1} className="text-mk-primary-hover/70" />
                     </div>
                   )}
 
-                  <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/20 via-transparent to-[#351C18]/10" />
+                  <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/20 via-transparent to-mk-ink/10" />
 
                   {preview && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-[#351C18]/0 opacity-0 transition-all duration-300 group-hover:bg-[#351C18]/20 group-hover:opacity-100">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#8E181F] shadow-lg backdrop-blur-sm">
+                    <div className="absolute inset-0 flex items-center justify-center bg-mk-ink/0 opacity-0 transition-all duration-300 group-hover:bg-mk-ink/20 group-hover:opacity-100">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-mk-primary-hover shadow-lg backdrop-blur-sm">
                         <Maximize2 size={17} />
                       </div>
                     </div>
@@ -445,7 +445,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={chooseProfilePhoto}
-                  className="absolute bottom-1 right-4 flex h-10 w-10 items-center justify-center rounded-xl border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_6px_16px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105"
+                  className="absolute bottom-1 right-4 flex h-10 w-10 items-center justify-center rounded-xl border-[3px] border-white bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-[0_6px_16px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105"
                   aria-label="Change profile photo"
                 >
                   <Camera size={17} />
@@ -454,51 +454,51 @@ export default function Register() {
 
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
 
-              <div className="relative z-10 mt-5 flex items-center gap-2 rounded-full border border-[#E2D5CC] bg-white/80 px-3.5 py-1.5 text-[10px] font-semibold text-[#806C63] shadow-sm backdrop-blur-sm">
-                <ShieldCheck size={13} className="text-[#3E8B62]" />
+              <div className="relative z-10 mt-5 flex items-center gap-2 rounded-full border border-mk-border bg-white/80 px-3.5 py-1.5 text-[10px] font-semibold text-mk-muted shadow-sm backdrop-blur-sm">
+                <ShieldCheck size={13} className="text-mk-success" />
                 JPG, PNG or WEBP
               </div>
 
               <div className="relative z-10 mt-2 text-center">
-                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#A8958C]">Click image to view • Camera to edit</p>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-mk-subtle">Click image to view • Camera to edit</p>
               </div>
             </div>
 
             {/* Form Area */}
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#FFFDFC] px-4 pb-6 pt-4 sm:p-7 lg:p-9">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-mk-card px-4 pb-6 pt-4 sm:p-7 lg:p-9">
               {/* Mobile Profile Section */}
-              <div className="mb-4 flex items-center gap-3 rounded-2xl border border-[#E2D5CC] bg-[#FBF7F2] p-3 shadow-[0_4px_14px_rgba(73,54,49,0.04)] sm:hidden">
+              <div className="mb-4 flex items-center gap-3 rounded-2xl border border-mk-border bg-mk-bg p-3 shadow-[0_4px_14px_rgba(73,54,49,0.04)] sm:hidden">
                 <button
                   type="button"
                   onClick={openImageViewer}
-                  className="group relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-sm ring-1 ring-[#DCCBC1]"
+                  className="group relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 border-white bg-linear-to-br from-mk-danger-soft to-mk-border shadow-sm ring-1 ring-mk-border"
                   aria-label="Preview profile photo"
                 >
                   {preview ? (
                     <img src={preview} alt="Profile Preview" className="h-full w-full object-cover transition-transform duration-300 group-active:scale-95" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
-                      <User size={22} strokeWidth={1.2} className="text-[#8E181F]/70" />
+                      <User size={22} strokeWidth={1.2} className="text-mk-primary-hover/70" />
                     </div>
                   )}
 
                   {preview && (
-                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#351C18]/0 transition-all duration-200 group-active:bg-[#351C18]/15">
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-mk-ink/0 transition-all duration-200 group-active:bg-mk-ink/15">
                       <Maximize2 size={13} className="text-white opacity-0 drop-shadow-lg group-active:opacity-100" />
                     </div>
                   )}
                 </button>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-extrabold text-[#351C18]">{preview ? 'Profile Photo Added' : 'Profile Photo'}</p>
+                  <p className="text-xs font-extrabold text-mk-ink">{preview ? 'Profile Photo Added' : 'Profile Photo'}</p>
 
-                  <p className="mt-0.5 text-[10px] leading-4 text-[#806C63]">{preview ? 'Tap image to preview' : 'Add a photo to your account'}</p>
+                  <p className="mt-0.5 text-[10px] leading-4 text-mk-muted">{preview ? 'Tap image to preview' : 'Add a photo to your account'}</p>
                 </div>
 
                 <button
                   type="button"
                   onClick={openProfilePopup}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E1D1C8] bg-white text-[#8E181F] shadow-sm transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] active:scale-95"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-mk-border bg-white text-mk-primary-hover shadow-sm transition-all duration-300 hover:border-mk-border hover:bg-mk-primary-soft active:scale-95"
                   aria-label="Open profile photo options"
                 >
                   <ImagePlus size={17} />
@@ -507,31 +507,31 @@ export default function Register() {
 
               {/* Section Header */}
               <div className="mb-5 hidden items-center gap-2.5 sm:mb-6 sm:flex sm:gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/15 sm:h-11 sm:w-11">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-lg shadow-mk-primary-deep/15 sm:h-11 sm:w-11">
                   <UserPlus size={16} className="sm:size-4.75" />
                 </div>
 
                 <div>
-                  <h2 className="text-sm font-extrabold text-[#351C18] sm:text-base">Personal Information</h2>
+                  <h2 className="text-sm font-extrabold text-mk-ink sm:text-base">Personal Information</h2>
 
-                  <p className="mt-0.5 text-[10px] leading-4 text-[#806C63] sm:text-xs">Enter your details to create your MineKart account</p>
+                  <p className="mt-0.5 text-[10px] leading-4 text-mk-muted sm:text-xs">Enter your details to create your MineKart account</p>
                 </div>
               </div>
 
               {/* Error */}
-              {error && <div className="mb-4 flex items-center rounded-xl border border-[#E7C8C5] bg-[#FFF2F1] px-3 py-2.5 text-xs font-medium text-[#A51D26] shadow-sm sm:mb-5 sm:px-4 sm:py-3 sm:text-sm">{error}</div>}
+              {error && <div className="mb-4 flex items-center rounded-xl border border-mk-border bg-mk-bg px-3 py-2.5 text-xs font-medium text-mk-primary shadow-sm sm:mb-5 sm:px-4 sm:py-3 sm:text-sm">{error}</div>}
 
               {/* Success */}
-              {success && <div className="mb-4 flex items-center rounded-xl border border-[#CFE4D7] bg-[#F0F8F3] px-3 py-2.5 text-xs font-medium text-[#3E8B62] shadow-sm sm:mb-5 sm:px-4 sm:py-3 sm:text-sm">{success}</div>}
+              {success && <div className="mb-4 flex items-center rounded-xl border border-mk-border-admin bg-mk-success-soft px-3 py-2.5 text-xs font-medium text-mk-success shadow-sm sm:mb-5 sm:px-4 sm:py-3 sm:text-sm">{success}</div>}
 
               {/* Inputs */}
               <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-5">
                 {/* Name */}
                 <div>
-                  <label className="mb-1.5 block text-[11px] font-bold text-[#493631] sm:mb-2 sm:text-sm">Full Name</label>
+                  <label className="mb-1.5 block text-[11px] font-bold text-mk-ink sm:mb-2 sm:text-sm">Full Name</label>
 
                   <div className="group relative">
-                    <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F] sm:left-3.5 sm:size-4.5" />
+                    <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted transition-colors duration-200 group-focus-within:text-mk-primary-hover sm:left-3.5 sm:size-4.5" />
 
                     <input
                       type="text"
@@ -540,17 +540,17 @@ export default function Register() {
                       onChange={handleChange}
                       required
                       placeholder="Enter your name"
-                      className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
+                      className="h-10 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-4 text-xs text-mk-ink outline-none transition-all duration-200 placeholder:text-mk-muted hover:border-mk-border focus:border-mk-primary focus:bg-white focus:ring-4 focus:ring-mk-primary/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
                   </div>
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label className="mb-1.5 block text-[11px] font-bold text-[#493631] sm:mb-2 sm:text-sm">Email Address</label>
+                  <label className="mb-1.5 block text-[11px] font-bold text-mk-ink sm:mb-2 sm:text-sm">Email Address</label>
 
                   <div className="group relative">
-                    <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F] sm:left-3.5 sm:size-4.5" />
+                    <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted transition-colors duration-200 group-focus-within:text-mk-primary-hover sm:left-3.5 sm:size-4.5" />
 
                     <input
                       type="email"
@@ -559,17 +559,17 @@ export default function Register() {
                       onChange={handleChange}
                       required
                       placeholder="Enter your email"
-                      className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
+                      className="h-10 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-4 text-xs text-mk-ink outline-none transition-all duration-200 placeholder:text-mk-muted hover:border-mk-border focus:border-mk-primary focus:bg-white focus:ring-4 focus:ring-mk-primary/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
                   </div>
                 </div>
 
                 {/* Password */}
                 <div>
-                  <label className="mb-1.5 block text-[11px] font-bold text-[#493631] sm:mb-2 sm:text-sm">Password</label>
+                  <label className="mb-1.5 block text-[11px] font-bold text-mk-ink sm:mb-2 sm:text-sm">Password</label>
 
                   <div className="group relative">
-                    <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F] sm:left-3.5 sm:size-4.5" />
+                    <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted transition-colors duration-200 group-focus-within:text-mk-primary-hover sm:left-3.5 sm:size-4.5" />
 
                     <input
                       type={showPassword ? 'text' : 'password'}
@@ -578,13 +578,13 @@ export default function Register() {
                       onChange={handleChange}
                       required
                       placeholder="Create password"
-                      className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-11 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
+                      className="h-10 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-11 text-xs text-mk-ink outline-none transition-all duration-200 placeholder:text-mk-muted hover:border-mk-border focus:border-mk-primary focus:bg-white focus:ring-4 focus:ring-mk-primary/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
 
                     <button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center text-[#9A857B] transition-colors duration-200 hover:text-[#8E181F] sm:right-3.5"
+                      className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center text-mk-muted transition-colors duration-200 hover:text-mk-primary-hover sm:right-3.5"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
@@ -594,10 +594,10 @@ export default function Register() {
 
                 {/* Phone */}
                 <div>
-                  <label className="mb-1.5 block text-[11px] font-bold text-[#493631] sm:mb-2 sm:text-sm">Phone Number</label>
+                  <label className="mb-1.5 block text-[11px] font-bold text-mk-ink sm:mb-2 sm:text-sm">Phone Number</label>
 
                   <div className="group relative">
-                    <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F] sm:left-3.5 sm:size-4.5" />
+                    <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-mk-muted transition-colors duration-200 group-focus-within:text-mk-primary-hover sm:left-3.5 sm:size-4.5" />
 
                     <input
                       type="tel"
@@ -606,19 +606,19 @@ export default function Register() {
                       onChange={handleChange}
                       required
                       placeholder="Enter phone number"
-                      className="h-10 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-10 pr-4 text-xs text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 sm:h-11 sm:pl-11 sm:text-sm"
+                      className="h-10 w-full rounded-xl border border-mk-border bg-mk-card pl-10 pr-4 text-xs text-mk-ink outline-none transition-all duration-200 placeholder:text-mk-muted hover:border-mk-border focus:border-mk-primary focus:bg-white focus:ring-4 focus:ring-mk-primary/5 sm:h-11 sm:pl-11 sm:text-sm"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Buttons */}
-              <div className="mt-5 flex flex-col-reverse gap-2.5 border-t border-[#E8DDD4] pt-4 sm:mt-7 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
+              <div className="mt-5 flex flex-col-reverse gap-2.5 border-t border-mk-border pt-4 sm:mt-7 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-5">
                 <button
                   type="button"
                   onClick={clearHandle}
                   tabIndex={-1}
-                  className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-4 text-xs font-semibold text-[#806C63] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] hover:text-[#493631] sm:h-11 sm:px-5 sm:text-sm"
+                  className="flex h-10 items-center justify-center gap-2 rounded-xl border border-mk-border bg-mk-card px-4 text-xs font-semibold text-mk-muted transition-all duration-300 hover:border-mk-border hover:bg-mk-primary-soft hover:text-mk-ink sm:h-11 sm:px-5 sm:text-sm"
                 >
                   <X size={15} className="sm:size-4.25" />
                   Clear
@@ -629,7 +629,7 @@ export default function Register() {
                     type="button"
                     tabIndex={-1}
                     onClick={() => navigate(-1)}
-                    className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] px-3 text-xs font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8] sm:h-11 sm:gap-2 sm:px-5 sm:text-sm"
+                    className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-mk-border bg-mk-card px-3 text-xs font-semibold text-mk-ink transition-all duration-300 hover:border-mk-border hover:bg-mk-primary-soft sm:h-11 sm:gap-2 sm:px-5 sm:text-sm"
                   >
                     <ArrowLeft size={15} className="sm:size-4.25" />
                     Back
@@ -638,7 +638,7 @@ export default function Register() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-3 text-xs font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:h-11 sm:gap-2 sm:px-7 sm:text-sm"
+                    className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary px-3 text-xs font-bold text-white shadow-md shadow-mk-primary-deep/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-mk-primary-deep hover:to-mk-primary-hover hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:h-11 sm:gap-2 sm:px-7 sm:text-sm"
                   >
                     <UserPlus size={15} className="sm:size-4.25" />
 
@@ -653,10 +653,10 @@ export default function Register() {
 
       {/* Mobile Profile Popup */}
       {showProfilePopup && (
-        <div className="fixed inset-0 z-100 flex h-screen w-screen items-center justify-center overflow-hidden bg-[#241210]/75 px-4 py-4 backdrop-blur-md md:hidden" onClick={closeProfilePopup}>
-          <div className="relative flex max-h-[calc(100vh-32px)] w-full max-w-sm flex-col overflow-hidden rounded-3xl border border-white/30 bg-[#FFFDFC]/95 shadow-[0_25px_80px_rgba(0,0,0,0.4)] backdrop-blur-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-100 flex h-screen w-screen items-center justify-center overflow-hidden bg-mk-ink/75 px-4 py-4 backdrop-blur-md md:hidden" onClick={closeProfilePopup}>
+          <div className="relative flex max-h-[calc(100vh-32px)] w-full max-w-sm flex-col overflow-hidden rounded-3xl border border-white/30 bg-mk-card/95 shadow-[0_25px_80px_rgba(0,0,0,0.4)] backdrop-blur-xl" onClick={(e) => e.stopPropagation()}>
             {/* Popup Header */}
-            <div className="relative shrink-0 overflow-hidden bg-linear-to-br from-[#351C18] via-[#5A211E] to-[#8E181F] px-5 py-4 text-white">
+            <div className="relative shrink-0 overflow-hidden bg-linear-to-br from-mk-ink via-mk-primary-deep to-mk-primary-hover px-5 py-4 text-white">
               <div className="absolute -right-10 -top-12 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
 
               <div className="relative flex items-center justify-between">
@@ -678,21 +678,21 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={openImageViewer}
-                  className="group relative block h-60 w-60 overflow-hidden rounded-full border-4 border-white bg-linear-to-br from-[#F5E8E1] to-[#EBD8CE] shadow-[0_15px_35px_rgba(73,54,49,0.18)] ring-1 ring-[#DCCBC1]"
+                  className="group relative block h-60 w-60 overflow-hidden rounded-full border-4 border-white bg-linear-to-br from-mk-danger-soft to-mk-border shadow-[0_15px_35px_rgba(73,54,49,0.18)] ring-1 ring-mk-border"
                 >
                   {preview ? (
                     <img src={preview} alt="Profile Preview" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
-                      <User size={70} strokeWidth={1.1} className="text-[#8E181F]/70" />
+                      <User size={70} strokeWidth={1.1} className="text-mk-primary-hover/70" />
                     </div>
                   )}
 
-                  <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/20 via-transparent to-[#351C18]/10" />
+                  <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/20 via-transparent to-mk-ink/10" />
 
                   {preview && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-[#351C18]/0 opacity-0 transition-all duration-300 group-hover:bg-[#351C18]/20 group-hover:opacity-100">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#8E181F] shadow-lg backdrop-blur-sm">
+                    <div className="absolute inset-0 flex items-center justify-center bg-mk-ink/0 opacity-0 transition-all duration-300 group-hover:bg-mk-ink/20 group-hover:opacity-100">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-mk-primary-hover shadow-lg backdrop-blur-sm">
                         <Maximize2 size={18} />
                       </div>
                     </div>
@@ -702,22 +702,22 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={chooseProfilePhoto}
-                  className="absolute bottom-1 right-8 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_6px_16px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+                  className="absolute bottom-1 right-8 flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-white bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-[0_6px_16px_rgba(125,23,28,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
                   aria-label="Change profile photo"
                 >
                   <Camera size={18} />
                 </button>
               </div>
 
-              <div className="mt-5 flex shrink-0 items-center gap-1.5 rounded-full border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-1.5 text-[9px] font-semibold text-[#806C63]">
-                <ShieldCheck size={12} className="text-[#3E8B62]" />
+              <div className="mt-5 flex shrink-0 items-center gap-1.5 rounded-full border border-mk-border bg-mk-bg px-3 py-1.5 text-[9px] font-semibold text-mk-muted">
+                <ShieldCheck size={12} className="text-mk-success" />
                 JPG, PNG or WEBP
               </div>
 
               <button
                 type="button"
                 onClick={chooseProfilePhoto}
-                className="mt-5 flex h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] text-xs font-bold text-white shadow-md shadow-[#7D171C]/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-[#681419] hover:to-[#8E181F]"
+                className="mt-5 flex h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary text-xs font-bold text-white shadow-md shadow-mk-primary-deep/20 transition-all duration-300 hover:-translate-y-0.5 hover:from-mk-primary-deep hover:to-mk-primary-hover"
               >
                 <Camera size={16} />
                 {preview ? 'Change Photo' : 'Choose Photo'}
@@ -726,12 +726,12 @@ export default function Register() {
               <button
                 type="button"
                 onClick={closeProfilePopup}
-                className="mt-2.5 h-10 w-full shrink-0 rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] text-xs font-semibold text-[#493631] transition-all duration-300 hover:border-[#CDAFA4] hover:bg-[#F8EEE8]"
+                className="mt-2.5 h-10 w-full shrink-0 rounded-xl border border-mk-border bg-mk-card text-xs font-semibold text-mk-ink transition-all duration-300 hover:border-mk-border hover:bg-mk-primary-soft"
               >
                 Done
               </button>
 
-              <p className="mt-3 text-center text-[9px] leading-4 text-[#A8958C]">Profile photo is optional</p>
+              <p className="mt-3 text-center text-[9px] leading-4 text-mk-subtle">Profile photo is optional</p>
             </div>
           </div>
         </div>
@@ -739,7 +739,7 @@ export default function Register() {
 
       {/* Image Viewer */}
       {showImageViewer && preview && (
-        <div className="fixed inset-0 z-200 flex h-screen w-screen items-center justify-center overflow-hidden bg-[#180908]/90 p-4 backdrop-blur-xl" onClick={closeImageViewer}>
+        <div className="fixed inset-0 z-200 flex h-screen w-screen items-center justify-center overflow-hidden bg-mk-ink/90 p-4 backdrop-blur-xl" onClick={closeImageViewer}>
           <button
             type="button"
             onClick={closeImageViewer}

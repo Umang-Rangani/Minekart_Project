@@ -511,20 +511,20 @@ export default function Products() {
       <div className="mx-auto w-full pt-2.5 sm:pt-4">
         {/* Header */}
 
-        <div className="mb-3 flex h-auto min-h-14 flex-col gap-2 overflow-visible rounded-lg border border-[#E8DDD4] bg-[#FFFDFC] px-2 py-2 shadow-[0_2px_10px_rgba(73,54,49,0.05)] sm:mb-4 sm:h-15 sm:flex-row sm:items-center sm:gap-4 sm:px-3.5 sm:py-0">
+        <div className="mb-3 flex h-auto min-h-14 flex-col gap-2 overflow-visible rounded-lg border border-mk-border bg-mk-card px-2 py-2 shadow-[0_2px_10px_rgba(73,54,49,0.05)] sm:mb-4 sm:h-15 sm:flex-row sm:items-center sm:gap-4 sm:px-3.5 sm:py-0">
           {/* Title */}
 
           <div className="flex min-w-0 shrink-0 items-center gap-2">
-            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_3px_10px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
+            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-[0_3px_10px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
               <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
 
               <Sparkles size={16} strokeWidth={1.8} className="relative z-10 sm:h-4.5 sm:w-4.5" />
             </div>
 
             <div className="min-w-0">
-              <h1 className="truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-base">All Products</h1>
+              <h1 className="truncate text-xs font-extrabold tracking-tight text-mk-ink sm:text-base">All Products</h1>
 
-              <p className="mt-0.5 truncate text-[8px] text-[#806C63] sm:text-[9px]">Explore our complete product collection</p>
+              <p className="mt-0.5 truncate text-[8px] text-mk-muted sm:text-[9px]">Explore our complete product collection</p>
             </div>
           </div>
 
@@ -534,7 +534,7 @@ export default function Products() {
             {/* Search */}
 
             <div className="relative min-w-0 flex-1">
-              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#9A857B] sm:left-3 sm:h-3.5 sm:w-3.5" />
+              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-mk-muted sm:left-3 sm:h-3.5 sm:w-3.5" />
 
               <input
                 type="text"
@@ -553,11 +553,11 @@ export default function Products() {
                             ? `Search products under ₹${priceLimit.toLocaleString('en-IN')}...`
                             : 'Search products from categories & brands...'
                 }
-                className="h-8 w-full rounded-lg border border-[#E2D5CC] bg-[#FFFDFC] pl-8 pr-8 text-[10px] text-[#351C18] outline-none transition placeholder:text-[#AA9991] focus:border-[#B98578] focus:ring-2 focus:ring-[#8E181F]/10 sm:h-9 sm:pl-9 sm:pr-9 sm:text-xs"
+                className="h-8 w-full rounded-lg border border-mk-border bg-mk-card pl-8 pr-8 text-[10px] text-mk-ink outline-none transition placeholder:text-mk-subtle focus:border-mk-subtle focus:ring-2 focus:ring-mk-primary-hover/10 sm:h-9 sm:pl-9 sm:pr-9 sm:text-xs"
               />
 
               {search && (
-                <button type="button" onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors hover:text-[#8E181F]">
+                <button type="button" onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-mk-muted transition-colors hover:text-mk-primary-hover">
                   <X size={13} />
                 </button>
               )}
@@ -569,7 +569,7 @@ export default function Products() {
               <button
                 type="button"
                 onClick={() => setSortOpen((prev) => !prev)}
-                className="flex h-8 shrink-0 items-center justify-center gap-1 rounded-md border border-[#E2D5CC] bg-white px-2 text-[9px] font-semibold text-[#66544D] transition hover:bg-[#F8EEE8] sm:h-9 sm:px-2.5 sm:text-[10px]"
+                className="flex h-8 shrink-0 items-center justify-center gap-1 rounded-md border border-mk-border bg-white px-2 text-[9px] font-semibold text-mk-muted transition hover:bg-mk-primary-soft sm:h-9 sm:px-2.5 sm:text-[10px]"
               >
                 <span className="hidden sm:inline">Sort:</span>
 
@@ -586,7 +586,7 @@ export default function Products() {
 
                   {/* Desktop Sort Dropdown */}
 
-                  <div className="absolute right-0 top-full z-60 mt-1 hidden w-44 overflow-hidden rounded-lg border border-[#E8DDD4] bg-white p-1 shadow-[0_10px_25px_rgba(73,54,49,0.14)] sm:block">
+                  <div className="absolute right-0 top-full z-60 mt-1 hidden w-44 overflow-hidden rounded-lg border border-mk-border bg-white p-1 shadow-[0_10px_25px_rgba(73,54,49,0.14)] sm:block">
                     {sortOptions.map((option) => (
                       <button
                         key={option.value}
@@ -595,7 +595,7 @@ export default function Products() {
                           setSortBy(option.value)
                           setSortOpen(false)
                         }}
-                        className={`flex w-full items-center justify-between rounded-md px-2.5 py-2 text-left text-[10px] font-semibold transition ${sortBy === option.value ? 'bg-[#F7EEE7] text-[#8E181F]' : 'text-[#66544D] hover:bg-[#FBF5F1]'}`}
+                        className={`flex w-full items-center justify-between rounded-md px-2.5 py-2 text-left text-[10px] font-semibold transition ${sortBy === option.value ? 'bg-mk-primary-soft text-mk-primary-hover' : 'text-mk-muted hover:bg-mk-bg'}`}
                       >
                         <span>{option.label}</span>
 
@@ -606,11 +606,11 @@ export default function Products() {
 
                   {/* Mobile Sort Menu */}
 
-                  <div className="fixed bottom-2 left-2 right-2 z-60 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white p-1.5 shadow-[0_12px_35px_rgba(73,54,49,0.18)] sm:hidden">
+                  <div className="fixed bottom-2 left-2 right-2 z-60 overflow-hidden rounded-xl border border-mk-border bg-white p-1.5 shadow-[0_12px_35px_rgba(73,54,49,0.18)] sm:hidden">
                     <div className="mb-0.5 flex items-center justify-between px-2 py-1.5">
-                      <span className="text-[11px] font-extrabold text-[#351C18]">Sort Products</span>
+                      <span className="text-[11px] font-extrabold text-mk-ink">Sort Products</span>
 
-                      <button type="button" onClick={() => setSortOpen(false)} className="flex h-6 w-6 items-center justify-center rounded-full bg-[#F7EEE7] text-[#8E181F]">
+                      <button type="button" onClick={() => setSortOpen(false)} className="flex h-6 w-6 items-center justify-center rounded-full bg-mk-primary-soft text-mk-primary-hover">
                         <X size={12} />
                       </button>
                     </div>
@@ -623,7 +623,7 @@ export default function Products() {
                           setSortBy(option.value)
                           setSortOpen(false)
                         }}
-                        className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-[10px] font-semibold transition ${sortBy === option.value ? 'bg-[#F7EEE7] text-[#8E181F]' : 'text-[#66544D] hover:bg-[#FBF5F1]'}`}
+                        className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-[10px] font-semibold transition ${sortBy === option.value ? 'bg-mk-primary-soft text-mk-primary-hover' : 'text-mk-muted hover:bg-mk-bg'}`}
                       >
                         <span>{option.label}</span>
 
@@ -643,7 +643,7 @@ export default function Products() {
           <button
             type="button"
             onClick={() => setMobileFilterOpen(true)}
-            className="flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-[#E2D5CC] bg-[#FFFDFC] px-3 text-[10px] font-bold text-[#351C18] transition hover:border-[#CDAFA4] hover:bg-[#F8EEE8]"
+            className="flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-mk-border bg-mk-card px-3 text-[10px] font-bold text-mk-ink transition hover:border-mk-border hover:bg-mk-primary-soft"
           >
             <SlidersHorizontal size={13} />
             Filters
@@ -654,18 +654,18 @@ export default function Products() {
           {/* Desktop Filters */}
 
           <aside className="hidden w-52 shrink-0 lg:block">
-            <div className="sticky top-4 rounded-xl border border-[#E8DDD4] bg-[#FFFDFC] p-3 shadow-[0_3px_14px_rgba(73,54,49,0.05)]">
+            <div className="sticky top-4 rounded-xl border border-mk-border bg-mk-card p-3 shadow-[0_3px_14px_rgba(73,54,49,0.05)]">
               {/* Filter Header */}
 
               <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <Filter size={13} className="text-[#8E181F]" />
+                  <Filter size={13} className="text-mk-primary-hover" />
 
-                  <h2 className="text-xs font-extrabold text-[#351C18]">Filters</h2>
+                  <h2 className="text-xs font-extrabold text-mk-ink">Filters</h2>
                 </div>
 
                 {hasFilters && (
-                  <button type="button" onClick={clearFilters} className="text-[9px] font-bold text-[#8E181F] hover:underline">
+                  <button type="button" onClick={clearFilters} className="text-[9px] font-bold text-mk-primary-hover hover:underline">
                     Clear
                   </button>
                 )}
@@ -673,8 +673,8 @@ export default function Products() {
 
               {/* Category */}
 
-              <div className="border-t border-[#EEE5DF] pt-3">
-                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Category</p>
+              <div className="border-t border-mk-surface pt-3">
+                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-mk-muted">Category</p>
 
                 {categoriesLoading ? (
                   <FilterListShimmer count={6} />
@@ -686,7 +686,7 @@ export default function Products() {
                         type="button"
                         onClick={() => setSelectedCategory(category.id)}
                         className={`flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-[10px] font-semibold transition ${
-                          selectedCategory === category.id ? 'bg-[#F7EEE7] text-[#8E181F]' : 'text-[#66544D] hover:bg-[#FBF5F1]'
+                          selectedCategory === category.id ? 'bg-mk-primary-soft text-mk-primary-hover' : 'text-mk-muted hover:bg-mk-bg'
                         }`}
                       >
                         <span className="truncate">{category.name}</span>
@@ -700,8 +700,8 @@ export default function Products() {
 
               {/* Brand */}
 
-              <div className="mt-3 border-t border-[#EEE5DF] pt-3">
-                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Brand</p>
+              <div className="mt-3 border-t border-mk-surface pt-3">
+                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-mk-muted">Brand</p>
 
                 {brandsLoading ? (
                   <FilterListShimmer count={5} />
@@ -712,7 +712,7 @@ export default function Products() {
                         key={brand.id}
                         type="button"
                         onClick={() => setSelectedBrand(brand.id)}
-                        className={`flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-[10px] font-semibold transition ${selectedBrand === brand.id ? 'bg-[#F7EEE7] text-[#8E181F]' : 'text-[#66544D] hover:bg-[#FBF5F1]'}`}
+                        className={`flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-[10px] font-semibold transition ${selectedBrand === brand.id ? 'bg-mk-primary-soft text-mk-primary-hover' : 'text-mk-muted hover:bg-mk-bg'}`}
                       >
                         <span className="truncate">{brand.name}</span>
 
@@ -725,15 +725,15 @@ export default function Products() {
 
 
               {/* Rating */}
-              <div className="mt-3 border-t border-[#EEE5DF] pt-3">
-                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Rating</p>
+              <div className="mt-3 border-t border-mk-surface pt-3">
+                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-mk-muted">Rating</p>
 
                 {[4, 3, 2].map((rating) => (
                   <button
                     key={rating}
                     type="button"
                     onClick={() => setSelectedRating(selectedRating === String(rating) ? 'All' : String(rating))}
-                    className={`mb-0.5 flex w-full items-center gap-1 rounded-md px-2 py-1.5 text-[10px] font-semibold transition ${selectedRating === String(rating) ? 'bg-[#F7EEE7] text-[#8E181F]' : 'text-[#66544D] hover:bg-[#FBF5F1]'}`}
+                    className={`mb-0.5 flex w-full items-center gap-1 rounded-md px-2 py-1.5 text-[10px] font-semibold transition ${selectedRating === String(rating) ? 'bg-mk-primary-soft text-mk-primary-hover' : 'text-mk-muted hover:bg-mk-bg'}`}
                   >
                     <Star size={10} fill="currentColor" />
                     {rating} & above
@@ -743,11 +743,11 @@ export default function Products() {
 
               {/* Stock */}
 
-              <div className="mt-3 border-t border-[#EEE5DF] pt-3">
+              <div className="mt-3 border-t border-mk-surface pt-3">
                 <button type="button" onClick={() => setStockOnly((prev) => !prev)} className="flex w-full items-center justify-between">
-                  <span className="text-[10px] font-semibold text-[#66544D]">In Stock Only</span>
+                  <span className="text-[10px] font-semibold text-mk-muted">In Stock Only</span>
 
-                  <span className={`flex h-4.5 w-8 items-center rounded-full p-0.5 transition ${stockOnly ? 'bg-[#8E181F]' : 'bg-[#D9CEC8]'}`}>
+                  <span className={`flex h-4.5 w-8 items-center rounded-full p-0.5 transition ${stockOnly ? 'bg-mk-primary-hover' : 'bg-mk-border-admin'}`}>
                     <span className={`h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-transform ${stockOnly ? 'translate-x-3.5' : 'translate-x-0'}`} />
                   </span>
                 </button>
@@ -761,19 +761,19 @@ export default function Products() {
             {productsLoading ? (
               <ProductsGridShimmer count={10} />
             ) : products.length === 0 ? (
-              <div className="flex min-h-64 flex-col items-center justify-center rounded-xl border border-dashed border-[#D8C9C0] bg-[#FFFDFC] px-4 text-center sm:min-h-72 sm:rounded-2xl sm:px-5">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#8E181F] sm:h-14 sm:w-14 sm:rounded-2xl">
+              <div className="flex min-h-64 flex-col items-center justify-center rounded-xl border border-dashed border-mk-border bg-mk-card px-4 text-center sm:min-h-72 sm:rounded-2xl sm:px-5">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-mk-primary-soft text-mk-primary-hover sm:h-14 sm:w-14 sm:rounded-2xl">
                   <Package size={24} strokeWidth={1.5} />
                 </div>
 
-                <h3 className="mt-3 text-xs font-extrabold text-[#351C18] sm:mt-4 sm:text-base">No Products Found</h3>
+                <h3 className="mt-3 text-xs font-extrabold text-mk-ink sm:mt-4 sm:text-base">No Products Found</h3>
 
-                <p className="mt-1 max-w-sm text-[9px] text-[#806C63] sm:text-xs">We couldn't find any products matching your current filters.</p>
+                <p className="mt-1 max-w-sm text-[9px] text-mk-muted sm:text-xs">We couldn't find any products matching your current filters.</p>
 
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-3 rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] px-3.5 py-2 text-[9px] font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:mt-4 sm:rounded-xl sm:px-4 sm:py-2.5 sm:text-xs"
+                  className="mt-3 rounded-lg bg-linear-to-r from-mk-primary-deep to-mk-primary px-3.5 py-2 text-[9px] font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:mt-4 sm:rounded-xl sm:px-4 sm:py-2.5 sm:text-xs"
                 >
                   Clear Filters
                 </button>
@@ -798,17 +798,17 @@ export default function Products() {
                       key={product._id}
                       to={`/product/${product._id}`}
                       className={`group relative overflow-hidden rounded-lg border transition-all duration-300 sm:rounded-xl ${
-                        isDisabled ? 'cursor-pointer border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#E8DDD4] bg-[#FFFDFC] shadow-[0_2px_8px_rgba(73,54,49,0.05)] hover:-translate-y-1 hover:border-[#CDAFA4] hover:shadow-[0_14px_30px_rgba(73,54,49,0.13)]'
+                        isDisabled ? 'cursor-pointer border-mk-disabled-bg bg-mk-disabled-bg' : 'border-mk-border bg-mk-card shadow-[0_2px_8px_rgba(73,54,49,0.05)] hover:-translate-y-1 hover:border-mk-border hover:shadow-[0_14px_30px_rgba(73,54,49,0.13)]'
                       }`}
                     >
                       {/* Image */}
                       <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-white p-2 sm:p-3">
-                        {!isDisabled && <div className="absolute -right-7 -top-7 h-20 w-20 rounded-full bg-[#A51D26]/5 transition-transform duration-500 group-hover:scale-150 sm:-right-8 sm:-top-8 sm:h-24 sm:w-24" />}
+                        {!isDisabled && <div className="absolute -right-7 -top-7 h-20 w-20 rounded-full bg-mk-primary/5 transition-transform duration-500 group-hover:scale-150 sm:-right-8 sm:-top-8 sm:h-24 sm:w-24" />}
 
                         {product.discount > 0 && (
                           <span
                             className={`absolute left-1.5 top-1.5 z-20 rounded-md px-1.5 py-0.5 text-[6.5px] font-extrabold text-white shadow-sm sm:left-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px] ${
-                              isDisabled ? 'bg-linear-to-r from-[#777] to-[#999]' : 'bg-linear-to-r from-[#7D171C] to-[#A51D26]'
+                              isDisabled ? 'bg-linear-to-r from-[#777] to-[#999]' : 'bg-linear-to-r from-mk-primary-deep to-mk-primary'
                             }`}
                           >
                             {product.discount}% OFF
@@ -818,13 +818,13 @@ export default function Products() {
                         {isDisabled ? (
                           <span
                             className={`absolute right-1.5 top-1.5 z-20 rounded-md px-1.5 py-0.5 text-[6.5px] font-bold sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px] ${
-                              isInactive || isCategoryInactive || isOutOfStock ? 'border border-[#E8D5CB] bg-[#FFF8F3] text-[#8E181F]' : 'bg-[#E5E5E5] text-[#888]'
+                              isInactive || isCategoryInactive || isOutOfStock ? 'border border-mk-border bg-mk-primary-soft text-mk-primary-hover' : 'bg-mk-disabled-bg text-[#888]'
                             }`}
                           >
                             {unavailableLabel}
                           </span>
                         ) : isLowStock ? (
-                          <span className="absolute right-1.5 top-1.5 z-20 rounded-md bg-[#FFF5E7] px-1.5 py-0.5 text-[6.5px] font-bold text-[#B87935] sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">Only {product.stock} left</span>
+                          <span className="absolute right-1.5 top-1.5 z-20 rounded-md bg-mk-primary-soft px-1.5 py-0.5 text-[6.5px] font-bold text-mk-accent sm:right-2.5 sm:top-2.5 sm:px-2 sm:py-0.5 sm:text-[8px]">Only {product.stock} left</span>
                         ) : null}
 
                         {product.images?.length > 0 ? (
@@ -834,29 +834,29 @@ export default function Products() {
                             className={`relative z-10 h-full w-full object-contain ${isDisabled ? 'grayscale opacity-45' : 'transition-transform duration-500 group-hover:scale-105'}`}
                           />
                         ) : (
-                          <div className={`relative z-10 flex flex-col items-center gap-1 ${isDisabled ? 'text-[#999]' : 'text-[#9A857B]'}`}>
+                          <div className={`relative z-10 flex flex-col items-center gap-1 ${isDisabled ? 'text-[#999]' : 'text-mk-muted'}`}>
                             <ShoppingCart size={22} strokeWidth={1.5} className="sm:h-6 sm:w-6" />
 
                             <span className="text-[7px] sm:text-[8px]">No Image</span>
                           </div>
                         )}
 
-                        {!isDisabled && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-10 bg-linear-to-t from-[#351C18]/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:h-14" />}
+                        {!isDisabled && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-10 bg-linear-to-t from-mk-ink/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:h-14" />}
                       </div>
 
                       {/* Info */}
 
-                      <div className={`border-t px-1.5 py-1.5 sm:px-2.5 sm:py-2.5 ${isDisabled ? 'border-[#D9D9D9] bg-[#F3F3F3]' : 'border-[#EEE5DF] bg-[#FFFCFA] transition-colors duration-300 group-hover:bg-[#FBF5F1]'}`}>
-                        <p className={`truncate text-[6.5px] font-bold uppercase tracking-wider sm:text-[8px] ${isDisabled ? 'text-[#999]' : 'text-[#9A857B]'}`}>{product.category?.categoryName || 'Product'}</p>
+                      <div className={`border-t px-1.5 py-1.5 sm:px-2.5 sm:py-2.5 ${isDisabled ? 'border-mk-disabled-bg bg-mk-disabled-bg' : 'border-mk-surface bg-mk-card transition-colors duration-300 group-hover:bg-mk-bg'}`}>
+                        <p className={`truncate text-[6.5px] font-bold uppercase tracking-wider sm:text-[8px] ${isDisabled ? 'text-[#999]' : 'text-mk-muted'}`}>{product.category?.categoryName || 'Product'}</p>
 
-                        <h3 className={`mt-1 line-clamp-2 min-h-8 text-[10px] font-bold leading-4 sm:min-h-10 sm:text-[12px] sm:leading-5 ${isDisabled ? 'text-[#777]' : 'text-[#351C18] transition-colors duration-300 group-hover:text-[#8E181F]'}`}>
+                        <h3 className={`mt-1 line-clamp-2 min-h-8 text-[10px] font-bold leading-4 sm:min-h-10 sm:text-[12px] sm:leading-5 ${isDisabled ? 'text-[#777]' : 'text-mk-ink transition-colors duration-300 group-hover:text-mk-primary-hover'}`}>
                           {product.productName}
                         </h3>
 
                         {/* Rating */}
 
                         <div className="mt-1 flex items-center gap-1 sm:mt-1.5 sm:gap-1">
-                          <span className={`flex items-center gap-0.5 rounded px-1 py-0.5 text-[7px] font-bold sm:px-1.5 sm:text-[8px] ${isDisabled ? 'bg-[#E5E5E5] text-[#888]' : 'bg-[#3E8B62] text-white'}`}>
+                          <span className={`flex items-center gap-0.5 rounded px-1 py-0.5 text-[7px] font-bold sm:px-1.5 sm:text-[8px] ${isDisabled ? 'bg-mk-disabled-bg text-[#888]' : 'bg-mk-success text-white'}`}>
                             {Number(product.rating || 0).toFixed(1)}
 
                             <Star size={6} fill="currentColor" strokeWidth={2} className="sm:h-1.75 sm:w-1.75" />
@@ -864,9 +864,9 @@ export default function Products() {
 
                           {Number(product.soldCount || 0) > 0 && (
                             <>
-                              <span className={`h-0.5 w-0.5 rounded-full ${isDisabled ? 'bg-[#BDBDBD]' : 'bg-[#C9B8AF]'}`} />
+                              <span className={`h-0.5 w-0.5 rounded-full ${isDisabled ? 'bg-mk-border-admin' : 'bg-mk-border'}`} />
 
-                              <span className={`truncate text-[6.5px] font-medium sm:text-[8px] ${isDisabled ? 'text-[#999]' : 'text-[#806C63]'}`}>{product.soldCount}+ sold</span>
+                              <span className={`truncate text-[6.5px] font-medium sm:text-[8px] ${isDisabled ? 'text-[#999]' : 'text-mk-muted'}`}>{product.soldCount}+ sold</span>
                             </>
                           )}
                         </div>
@@ -874,28 +874,28 @@ export default function Products() {
                         {/* Price */}
 
                         <div className="mt-1 flex items-baseline gap-1 sm:mt-1.5 sm:gap-1">
-                          <span className={`text-[12px] font-extrabold tracking-tight sm:text-[14px] ${isDisabled ? 'text-[#777]' : 'text-[#351C18]'}`}>₹{displayPrice.toLocaleString('en-IN')}</span>
+                          <span className={`text-[12px] font-extrabold tracking-tight sm:text-[14px] ${isDisabled ? 'text-[#777]' : 'text-mk-ink'}`}>₹{displayPrice.toLocaleString('en-IN')}</span>
 
                           {Number(product.price || 0) > displayPrice && (
                             <>
-                              <span className={`text-[7px] line-through sm:text-[9px] ${isDisabled ? 'text-[#AAA]' : 'text-[#9A857B]'}`}>₹{Number(product.price).toLocaleString('en-IN')}</span>
+                              <span className={`text-[7px] line-through sm:text-[9px] ${isDisabled ? 'text-[#AAA]' : 'text-mk-muted'}`}>₹{Number(product.price).toLocaleString('en-IN')}</span>
 
-                              {!isDisabled && <span className="text-[6.5px] font-bold text-[#3E8B62] sm:text-[8px]">{product.discount}% off</span>}
+                              {!isDisabled && <span className="text-[6.5px] font-bold text-mk-success sm:text-[8px]">{product.discount}% off</span>}
                             </>
                           )}
                         </div>
 
                         {/* Bottom */}
 
-                        <div className={`mt-1 flex items-center justify-between border-t pt-1 sm:mt-1.5 sm:pt-1.5 ${isDisabled ? 'border-[#D9D9D9]' : 'border-[#EFE5DF]'}`}>
+                        <div className={`mt-1 flex items-center justify-between border-t pt-1 sm:mt-1.5 sm:pt-1.5 ${isDisabled ? 'border-mk-disabled-bg' : 'border-mk-surface'}`}>
                           <div className="flex items-center gap-0.5 sm:gap-1">
-                            <span className={`h-1 w-1 rounded-full sm:h-1.5 sm:w-1.5 ${isDisabled ? 'bg-[#999]' : isLowStock ? 'bg-[#B87935]' : 'bg-[#3E8B62]'}`} />
+                            <span className={`h-1 w-1 rounded-full sm:h-1.5 sm:w-1.5 ${isDisabled ? 'bg-[#999]' : isLowStock ? 'bg-mk-accent' : 'bg-mk-success'}`} />
 
-                            <span className={`text-[6.5px] font-bold sm:text-[8px] ${isDisabled ? 'text-[#888]' : isLowStock ? 'text-[#B87935]' : 'text-[#3E8B62]'}`}>
+                            <span className={`text-[6.5px] font-bold sm:text-[8px] ${isDisabled ? 'text-[#888]' : isLowStock ? 'text-mk-accent' : 'text-mk-success'}`}>
                               {isInactive || isCategoryInactive ? 'Unavailable' : isOutOfStock ? 'Out of Stock' : isLowStock ? 'Limited Stock' : 'In Stock'}
                             </span>
                           </div>
-                          <span className={`flex items-center gap-0.5 text-[7px] font-bold transition-all duration-300 sm:text-[9px] ${isDisabled ? 'text-[#999]' : 'text-[#8E181F] group-hover:gap-1'}`}>
+                          <span className={`flex items-center gap-0.5 text-[7px] font-bold transition-all duration-300 sm:text-[9px] ${isDisabled ? 'text-[#999]' : 'text-mk-primary-hover group-hover:gap-1'}`}>
                             View
                             <ChevronRight size={9} className={`transition-transform duration-300 sm:h-2.5 sm:w-2.5 ${isDisabled ? '' : 'group-hover:translate-x-0.5'}`} />
                           </span>
@@ -915,31 +915,31 @@ export default function Products() {
           <div className="fixed inset-0 z-100 lg:hidden">
             {/* Overlay */}
 
-            <div className="absolute inset-0 bg-[#351C18]/40 backdrop-blur-[2px]" onClick={() => setMobileFilterOpen(false)} />
+            <div className="absolute inset-0 bg-mk-ink/40 backdrop-blur-[2px]" onClick={() => setMobileFilterOpen(false)} />
 
             {/* Bottom Sheet */}
 
-            <div className="absolute bottom-0 left-0 right-0 max-h-[86vh] overflow-y-auto rounded-t-2xl bg-[#FFFDFC] p-4 shadow-[0_-12px_40px_rgba(53,28,24,0.18)] sm:rounded-t-3xl sm:p-5">
+            <div className="absolute bottom-0 left-0 right-0 max-h-[86vh] overflow-y-auto rounded-t-2xl bg-mk-card p-4 shadow-[0_-12px_40px_rgba(53,28,24,0.18)] sm:rounded-t-3xl sm:p-5">
               {/* Header */}
 
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#8E181F]">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-mk-primary-soft text-mk-primary-hover">
                     <Filter size={13} />
                   </span>
 
-                  <h2 className="text-sm font-extrabold text-[#351C18]">Filters</h2>
+                  <h2 className="text-sm font-extrabold text-mk-ink">Filters</h2>
                 </div>
 
-                <button type="button" onClick={() => setMobileFilterOpen(false)} className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F7EEE7] text-[#8E181F]">
+                <button type="button" onClick={() => setMobileFilterOpen(false)} className="flex h-7 w-7 items-center justify-center rounded-full bg-mk-primary-soft text-mk-primary-hover">
                   <X size={14} />
                 </button>
               </div>
 
               {/* Category */}
 
-              <div className="border-t border-[#EEE5DF] pt-3">
-                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Category</p>
+              <div className="border-t border-mk-surface pt-3">
+                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-mk-muted">Category</p>
 
                 {categoriesLoading ? (
                   <FilterListShimmer count={6} rounded />
@@ -950,7 +950,7 @@ export default function Products() {
                         key={category.id}
                         type="button"
                         onClick={() => setSelectedCategory(category.id)}
-                        className={`rounded-full border px-2.5 py-1.5 text-[9px] font-bold transition ${selectedCategory === category.id ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#E2D5CC] bg-white text-[#66544D]'}`}
+                        className={`rounded-full border px-2.5 py-1.5 text-[9px] font-bold transition ${selectedCategory === category.id ? 'border-mk-primary-hover bg-mk-primary-hover text-white' : 'border-mk-border bg-white text-mk-muted'}`}
                       >
                         {category.name}
                       </button>
@@ -961,8 +961,8 @@ export default function Products() {
 
               {/* Brand */}
 
-              <div className="mt-4 border-t border-[#EEE5DF] pt-3">
-                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Brand</p>
+              <div className="mt-4 border-t border-mk-surface pt-3">
+                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-mk-muted">Brand</p>
 
                 {brandsLoading ? (
                   <FilterListShimmer count={5} rounded />
@@ -973,7 +973,7 @@ export default function Products() {
                         key={brand.id}
                         type="button"
                         onClick={() => setSelectedBrand(brand.id)}
-                        className={`rounded-full border px-2.5 py-1.5 text-[9px] font-bold transition ${selectedBrand === brand.id ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#E2D5CC] bg-white text-[#66544D]'}`}
+                        className={`rounded-full border px-2.5 py-1.5 text-[9px] font-bold transition ${selectedBrand === brand.id ? 'border-mk-primary-hover bg-mk-primary-hover text-white' : 'border-mk-border bg-white text-mk-muted'}`}
                       >
                         {brand.name}
                       </button>
@@ -984,20 +984,20 @@ export default function Products() {
 
               {/* Price */}
 
-              <div className="mt-4 border-t border-[#EEE5DF] pt-3">
+              <div className="mt-4 border-t border-mk-surface pt-3">
                 {maxPrice <= 0 ? (
                   <PriceFilterShimmer />
                 ) : (
                   <>
                     <div className="mb-2 flex items-center justify-between">
-                      <p className="text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Maximum Price</p>
+                      <p className="text-[9px] font-extrabold uppercase tracking-wider text-mk-muted">Maximum Price</p>
 
-                      <span className="text-[11px] font-extrabold text-[#8E181F]">₹{priceLimit.toLocaleString('en-IN')}</span>
+                      <span className="text-[11px] font-extrabold text-mk-primary-hover">₹{priceLimit.toLocaleString('en-IN')}</span>
                     </div>
 
-                    <input type="range" min="0" max={maxPrice || 1} value={priceLimit} onChange={(e) => setPriceLimit(Number(e.target.value))} className="h-1.5 w-full accent-[#8E181F]" />
+                    <input type="range" min="0" max={maxPrice || 1} value={priceLimit} onChange={(e) => setPriceLimit(Number(e.target.value))} className="h-1.5 w-full accent-mk-primary-hover" />
 
-                    <div className="mt-1 flex justify-between text-[8px] text-[#9A857B]">
+                    <div className="mt-1 flex justify-between text-[8px] text-mk-muted">
                       <span>₹0</span>
 
                       <span>₹{maxPrice.toLocaleString('en-IN')}</span>
@@ -1008,8 +1008,8 @@ export default function Products() {
 
               {/* Rating */}
 
-              <div className="mt-4 border-t border-[#EEE5DF] pt-3">
-                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-[#806C63]">Rating</p>
+              <div className="mt-4 border-t border-mk-surface pt-3">
+                <p className="mb-2 text-[9px] font-extrabold uppercase tracking-wider text-mk-muted">Rating</p>
 
                 <div className="flex gap-1.5">
                   {[4, 3, 2].map((rating) => (
@@ -1017,7 +1017,7 @@ export default function Products() {
                       key={rating}
                       type="button"
                       onClick={() => setSelectedRating(selectedRating === String(rating) ? 'All' : String(rating))}
-                      className={`flex items-center gap-1 rounded-full border px-2.5 py-1.5 text-[9px] font-bold transition ${selectedRating === String(rating) ? 'border-[#8E181F] bg-[#8E181F] text-white' : 'border-[#E2D5CC] text-[#66544D]'}`}
+                      className={`flex items-center gap-1 rounded-full border px-2.5 py-1.5 text-[9px] font-bold transition ${selectedRating === String(rating) ? 'border-mk-primary-hover bg-mk-primary-hover text-white' : 'border-mk-border text-mk-muted'}`}
                     >
                       <Star size={9} fill="currentColor" />
                       {rating}+
@@ -1028,11 +1028,11 @@ export default function Products() {
 
               {/* Stock */}
 
-              <div className="mt-4 border-t border-[#EEE5DF] pt-3">
+              <div className="mt-4 border-t border-mk-surface pt-3">
                 <button type="button" onClick={() => setStockOnly((prev) => !prev)} className="flex w-full items-center justify-between">
-                  <span className="text-[10px] font-bold text-[#66544D]">In Stock Only</span>
+                  <span className="text-[10px] font-bold text-mk-muted">In Stock Only</span>
 
-                  <span className={`flex h-5 w-9 items-center rounded-full p-0.5 transition ${stockOnly ? 'bg-[#8E181F]' : 'bg-[#D9CEC8]'}`}>
+                  <span className={`flex h-5 w-9 items-center rounded-full p-0.5 transition ${stockOnly ? 'bg-mk-primary-hover' : 'bg-mk-border-admin'}`}>
                     <span className={`h-4 w-4 rounded-full bg-white shadow transition-transform ${stockOnly ? 'translate-x-4' : 'translate-x-0'}`} />
                   </span>
                 </button>
@@ -1041,11 +1041,11 @@ export default function Products() {
               {/* Bottom Buttons */}
 
               <div className="mt-5 flex gap-2">
-                <button type="button" onClick={clearFilters} className="flex-1 rounded-lg border border-[#E2D5CC] py-2.5 text-[10px] font-bold text-[#8E181F] transition hover:bg-[#F8EEE8]">
+                <button type="button" onClick={clearFilters} className="flex-1 rounded-lg border border-mk-border py-2.5 text-[10px] font-bold text-mk-primary-hover transition hover:bg-mk-primary-soft">
                   Clear All
                 </button>
 
-                <button type="button" onClick={() => setMobileFilterOpen(false)} className="flex-1 rounded-lg bg-linear-to-r from-[#7D171C] to-[#A51D26] py-2.5 text-[10px] font-bold text-white shadow-sm">
+                <button type="button" onClick={() => setMobileFilterOpen(false)} className="flex-1 rounded-lg bg-linear-to-r from-mk-primary-deep to-mk-primary py-2.5 text-[10px] font-bold text-white shadow-sm">
                   Show {products.length} Products
                 </button>
               </div>

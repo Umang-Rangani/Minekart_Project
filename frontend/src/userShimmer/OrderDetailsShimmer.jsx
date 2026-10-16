@@ -12,7 +12,7 @@ export default function OrderDetailsShimmer() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2]">
+    <div className="min-h-screen bg-mk-bg">
       <style>{`
         @keyframes minekartShimmer {
           0% {
@@ -46,7 +46,7 @@ export default function OrderDetailsShimmer() {
 
         <div className="pt-4 sm:pt-5">
           {/* HEADER */}
-          <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-sm sm:mb-5 sm:h-17 sm:px-4">
+          <div className="mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-mk-border bg-white px-3 shadow-sm sm:mb-5 sm:h-17 sm:px-4">
             <div className="flex min-w-0 items-center gap-2.5">
               <Shimmer className="h-9 w-9 shrink-0 rounded-lg sm:h-10 sm:w-10" />
 
@@ -62,7 +62,7 @@ export default function OrderDetailsShimmer() {
           {/* ORDER META */}
           <div className="mb-4 grid grid-cols-2 gap-3 sm:mb-5 sm:grid-cols-3">
             {[1, 2, 3].map((item) => (
-              <div key={item} className={`rounded-xl border border-[#E8DDD4] bg-white p-3 shadow-sm ${item === 3 ? 'col-span-2 sm:col-span-1' : ''}`}>
+              <div key={item} className={`rounded-xl border border-mk-border bg-white p-3 shadow-sm ${item === 3 ? 'col-span-2 sm:col-span-1' : ''}`}>
                 <div className="flex items-center gap-2">
                   <Shimmer className="h-7 w-7 shrink-0 rounded-lg" />
                   <Shimmer className="h-3 w-20 rounded" />
@@ -76,9 +76,9 @@ export default function OrderDetailsShimmer() {
           {/* MAIN GRID */}
           <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[270px_minmax(0,1fr)_310px]">
             {/* TRACKING */}
-            <div className="order-2 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-sm lg:order-1">
+            <div className="order-2 overflow-hidden rounded-2xl border border-mk-border bg-white shadow-sm lg:order-1">
               {/* Tracking header */}
-              <div className="border-b border-[#EEE5DF] bg-[#FBF7F2] p-4 sm:p-5">
+              <div className="border-b border-mk-surface bg-mk-bg p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div className="space-y-2">
                     <Shimmer className="h-4 w-28 rounded-md" />
@@ -108,8 +108,8 @@ export default function OrderDetailsShimmer() {
             {/* CENTER */}
             <div className="order-1 min-w-0 space-y-4 sm:space-y-5 lg:order-2">
               {/* ORDER ITEMS */}
-              <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-sm">
-                <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-[#FBF7F2] px-4 py-3.5 sm:px-5">
+              <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-sm">
+                <div className="flex items-center justify-between border-b border-mk-border bg-mk-bg px-4 py-3.5 sm:px-5">
                   <div className="flex items-center gap-2">
                     <Shimmer className="h-4 w-4 rounded" />
                     <Shimmer className="h-4 w-28 rounded-md" />
@@ -118,7 +118,7 @@ export default function OrderDetailsShimmer() {
                   <Shimmer className="h-6 w-16 rounded-lg" />
                 </div>
 
-                <div className="divide-y divide-[#EEE5DF]">
+                <div className="divide-y divide-mk-surface">
                   {[1, 2].map((item) => (
                     <div key={item} className="flex gap-3 p-3.5 sm:gap-4 sm:p-4">
                       {/* Product image */}
@@ -142,8 +142,8 @@ export default function OrderDetailsShimmer() {
               </div>
 
               {/* DELIVERY ADDRESS */}
-              <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-sm">
-                <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-[#FBF7F2] px-4 py-3.5 sm:px-5">
+              <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-sm">
+                <div className="flex items-center justify-between border-b border-mk-border bg-mk-bg px-4 py-3.5 sm:px-5">
                   <div className="flex items-center gap-2">
                     <Shimmer className="h-4 w-4 rounded" />
                     <Shimmer className="h-4 w-32 rounded-md" />
@@ -153,7 +153,7 @@ export default function OrderDetailsShimmer() {
                 </div>
 
                 <div className="p-4 sm:p-5">
-                  <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-4">
+                  <div className="rounded-xl border border-mk-border bg-mk-bg p-4">
                     <div className="flex items-start gap-3">
                       <Shimmer className="h-10 w-10 shrink-0 rounded-xl" />
 
@@ -173,8 +173,8 @@ export default function OrderDetailsShimmer() {
               </div>
 
               {/* PAYMENT */}
-              <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-sm">
-                <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-[#FBF7F2] px-4 py-3.5 sm:px-5">
+              <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-sm">
+                <div className="flex items-center justify-between border-b border-mk-border bg-mk-bg px-4 py-3.5 sm:px-5">
                   <div className="flex items-center gap-2">
                     <Shimmer className="h-4 w-4 rounded" />
                     <Shimmer className="h-4 w-36 rounded-md" />
@@ -185,7 +185,7 @@ export default function OrderDetailsShimmer() {
 
                 <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 sm:p-5">
                   {[1, 2].map((item) => (
-                    <div key={item} className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5">
+                    <div key={item} className="rounded-xl border border-mk-border bg-mk-bg p-3.5">
                       <Shimmer className="h-3 w-24 rounded" />
                       <Shimmer className="mt-2 h-4 w-32 rounded-md" />
                       <Shimmer className="mt-2 h-5 w-20 rounded-md" />
@@ -193,8 +193,8 @@ export default function OrderDetailsShimmer() {
                   ))}
                 </div>
 
-                <div className="border-t border-[#E8DDD4] px-4 pb-4 sm:px-5">
-                  <div className="flex items-center gap-2.5 rounded-xl bg-[#F7EEE7] p-3.5">
+                <div className="border-t border-mk-border px-4 pb-4 sm:px-5">
+                  <div className="flex items-center gap-2.5 rounded-xl bg-mk-primary-soft p-3.5">
                     <Shimmer className="h-4 w-4 shrink-0 rounded" />
                     <Shimmer className="h-3 w-full rounded" />
                   </div>
@@ -202,8 +202,8 @@ export default function OrderDetailsShimmer() {
               </div>
 
               {/* ACTION CARD */}
-              <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-sm">
-                <div className="flex items-center justify-between bg-[#FBF7F2] px-4 py-4 sm:px-5">
+              <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-sm">
+                <div className="flex items-center justify-between bg-mk-bg px-4 py-4 sm:px-5">
                   <div className="space-y-2">
                     <Shimmer className="h-4 w-28 rounded-md" />
                     <Shimmer className="h-3 w-48 rounded" />
@@ -216,16 +216,16 @@ export default function OrderDetailsShimmer() {
 
             {/* RIGHT SUMMARY */}
             <div className="order-3">
-              <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-sm">
+              <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-sm">
                 {/* Summary header */}
-                <div className="bg-[#351C18] px-4 py-4 sm:px-5">
+                <div className="bg-mk-ink px-4 py-4 sm:px-5">
                   <Shimmer className="h-4 w-32 rounded-md" />
                   <Shimmer className="mt-2 h-3 w-28 rounded" />
                 </div>
 
                 <div className="p-4 sm:p-5">
                   {/* Total */}
-                  <div className="rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-3.5">
+                  <div className="rounded-xl border border-mk-border bg-mk-bg p-3.5">
                     <Shimmer className="h-3 w-24 rounded" />
                     <Shimmer className="mt-2 h-7 w-28 rounded-md" />
                   </div>
@@ -244,7 +244,7 @@ export default function OrderDetailsShimmer() {
                     </div>
                   </div>
 
-                  <div className="my-4 border-t border-dashed border-[#DCCBC1]" />
+                  <div className="my-4 border-t border-dashed border-mk-border" />
 
                   {/* Final total */}
                   <div className="flex items-center justify-between">
@@ -253,7 +253,7 @@ export default function OrderDetailsShimmer() {
                   </div>
 
                   {/* Payment */}
-                  <div className="mt-4 rounded-xl bg-[#FFF9ED] px-3 py-3">
+                  <div className="mt-4 rounded-xl bg-mk-warning-soft px-3 py-3">
                     <div className="flex items-center gap-2">
                       <Shimmer className="h-4 w-4 rounded" />
                       <Shimmer className="h-3 w-20 rounded" />
@@ -262,7 +262,7 @@ export default function OrderDetailsShimmer() {
                   </div>
 
                   {/* Security */}
-                  <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#EAF6EF] px-3 py-2.5">
+                  <div className="mt-3 flex items-center gap-2 rounded-xl bg-mk-success-soft px-3 py-2.5">
                     <Shimmer className="h-4 w-4 shrink-0 rounded" />
                     <Shimmer className="h-3 flex-1 rounded" />
                   </div>

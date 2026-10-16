@@ -133,13 +133,13 @@ export default function OrderDetails() {
   const hasReturnRequest = returnStatus !== 'Not Requested'
 
   const returnStatusStyles = {
-    Requested: 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]',
-    Approved: 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]',
-    Rejected: 'border-[#E7D2CF] bg-[#FFF5F3] text-[#A44A3F]',
-    'Pickup Scheduled': 'border-[#D7E4F0] bg-[#F2F7FC] text-[#416A91]',
-    'Item Received': 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]',
-    'Refund Processing': 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]',
-    Refunded: 'border-[#D8D0E8] bg-[#F6F2FC] text-[#70529B]',
+    Requested: 'border-mk-accent bg-mk-warning-soft text-mk-warning',
+    Approved: 'border-mk-success-soft bg-mk-success-soft text-mk-success',
+    Rejected: 'border-mk-danger-soft bg-mk-danger-soft text-mk-danger',
+    'Pickup Scheduled': 'border-mk-disabled-bg bg-mk-bg-admin text-mk-info',
+    'Item Received': 'border-mk-success-soft bg-mk-success-soft text-mk-success',
+    'Refund Processing': 'border-mk-accent bg-mk-warning-soft text-mk-warning',
+    Refunded: 'border-mk-border-admin bg-mk-info-soft text-mk-info',
   }
 
   const canRequestReturn = isDelivered && !hasReturnRequest && !isCancelled && !isReturned
@@ -154,22 +154,22 @@ export default function OrderDetails() {
         .toLowerCase()
     ) {
       case 'paid':
-        return 'bg-[#EAF6EF] text-[#3E8B62]'
+        return 'bg-mk-success-soft text-mk-success'
 
       case 'failed':
-        return 'bg-[#FCEBEC] text-[#A51D26]'
+        return 'bg-mk-primary-soft text-mk-primary'
 
       case 'refunded':
       case 'partially refunded':
-        return 'bg-[#F6F2FC] text-[#70529B]'
+        return 'bg-mk-info-soft text-mk-info'
 
       case 'pending':
       case 'initiated':
       case 'processing':
-        return 'bg-[#FFF4DD] text-[#A05A16]'
+        return 'bg-mk-primary-soft text-mk-warning'
 
       default:
-        return 'bg-[#F1EFED] text-[#786E69]'
+        return 'bg-mk-surface text-mk-muted-admin'
     }
   }
 
@@ -227,22 +227,22 @@ export default function OrderDetails() {
   // ! Order Not Found
   if (!order) {
     return (
-      <div className="min-h-screen bg-[#FBF7F2] py-8 sm:py-10">
-        <div className="mx-auto max-w-xl rounded-2xl border border-[#E8DDD4] bg-[#FFFDFC] p-6 text-center shadow-[0_8px_30px_rgba(73,54,49,0.07)] sm:p-8">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+      <div className="min-h-screen bg-mk-bg py-8 sm:py-10">
+        <div className="mx-auto max-w-xl rounded-2xl border border-mk-border bg-mk-card p-6 text-center shadow-[0_8px_30px_rgba(73,54,49,0.07)] sm:p-8">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-mk-primary-soft text-mk-primary-hover">
             <Package size={30} strokeWidth={1.6} />
           </div>
 
-          <span className="mt-5 inline-flex rounded-full bg-[#F7EEE7] px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider text-[#8E181F]">Order</span>
+          <span className="mt-5 inline-flex rounded-full bg-mk-primary-soft px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider text-mk-primary-hover">Order</span>
 
-          <h1 className="mt-3 text-xl font-extrabold text-[#351C18]">Order Not Found</h1>
+          <h1 className="mt-3 text-xl font-extrabold text-mk-ink">Order Not Found</h1>
 
-          <p className="mx-auto mt-2 max-w-sm text-xs leading-5 text-[#806C63] sm:text-sm">We could not find this order. Please check your order history and try again.</p>
+          <p className="mx-auto mt-2 max-w-sm text-xs leading-5 text-mk-muted sm:text-sm">We could not find this order. Please check your order history and try again.</p>
 
           <button
             type="button"
             onClick={() => navigate('/orders')}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-5 py-3 text-sm font-bold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.24)]"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary px-5 py-3 text-sm font-bold text-white shadow-[0_6px_16px_rgba(125,23,28,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(125,23,28,0.24)]"
           >
             <ArrowLeft size={17} />
             Back to Orders
@@ -258,20 +258,20 @@ export default function OrderDetails() {
   ]
 
   return (
-    <div className={`min-h-screen ${isCancelled ? 'bg-[#F5F3F2]' : 'bg-[#FBF7F2]'}`}>
+    <div className={`min-h-screen ${isCancelled ? 'bg-mk-bg-admin' : 'bg-mk-bg'}`}>
       <BreadCrumb items={items} />
 
       <div className="mx-auto w-full pt-4 sm:pt-5">
         {/* HEADER */}
         <div
           className={`mb-4 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-17 sm:px-4 ${
-            isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'
+            isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'
           }`}
         >
           <div className="flex min-w-0 items-center gap-2.5">
             <div
               className={`relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg sm:h-10 sm:w-10 ${
-                isCancelled ? 'bg-[#E8E4E2] text-[#8F837E]' : 'bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)]'
+                isCancelled ? 'bg-mk-disabled-bg text-mk-disabled' : 'bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)]'
               }`}
             >
               <div className={`absolute -right-2 -top-2 h-6 w-6 rounded-full ${isCancelled ? 'bg-white/40' : 'bg-white/10'}`} />
@@ -280,18 +280,18 @@ export default function OrderDetails() {
             </div>
 
             <div className="min-w-0">
-              <h1 className={`truncate text-xs font-extrabold tracking-tight sm:text-sm ${isCancelled ? 'text-[#665D59]' : 'text-[#351C18]'}`}>Order Details</h1>
+              <h1 className={`truncate text-xs font-extrabold tracking-tight sm:text-sm ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>Order Details</h1>
 
-              <p className={`mt-0.5 truncate text-[9px] sm:text-[10px] ${isCancelled ? 'text-[#9A918C]' : 'text-[#806C63]'}`}>Order #{order.orderId || order._id}</p>
+              <p className={`mt-0.5 truncate text-[9px] sm:text-[10px] ${isCancelled ? 'text-mk-subtle' : 'text-mk-muted'}`}>Order #{order.orderId || order._id}</p>
             </div>
           </div>
 
           <div
             className={`flex h-8 shrink-0 items-center gap-1.5 rounded-lg border px-2 text-[8px] font-bold sm:px-2.5 sm:text-[9px] ${
-              isCancelled ? 'border-[#DDD7D4] bg-[#EEECEA] text-[#786E69]' : isReturned ? 'border-[#EBD7B7] bg-[#FFF9ED] text-[#A05A16]' : isDelivered ? 'border-[#D5E8DA] bg-[#F0F8F3] text-[#34704F]' : 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'
+              isCancelled ? 'border-mk-border-admin bg-mk-surface text-mk-muted-admin' : isReturned ? 'border-mk-accent bg-mk-warning-soft text-mk-warning' : isDelivered ? 'border-mk-success-soft bg-mk-success-soft text-mk-success' : 'border-mk-border bg-mk-bg text-mk-muted'
             }`}
           >
-            <span className={`h-1.5 w-1.5 rounded-full ${isCancelled ? 'bg-[#9A817B]' : isReturned ? 'bg-[#B87935]' : isDelivered ? 'bg-[#3E8B62]' : 'bg-[#D4A373]'}`} />
+            <span className={`h-1.5 w-1.5 rounded-full ${isCancelled ? 'bg-mk-disabled' : isReturned ? 'bg-mk-accent' : isDelivered ? 'bg-mk-success' : 'bg-mk-accent'}`} />
 
             <span>{order.orderStatus}</span>
           </div>
@@ -299,75 +299,75 @@ export default function OrderDetails() {
 
         {/* CANCELLED NOTICE */}
         {isCancelled && (
-          <div className="mb-4 flex items-center gap-3 rounded-xl border border-[#DED8D5] bg-[#F1EFED] px-4 py-3 sm:mb-5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E6E1DE] text-[#8F625D]">
+          <div className="mb-4 flex items-center gap-3 rounded-xl border border-mk-border-admin bg-mk-surface px-4 py-3 sm:mb-5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-mk-disabled-bg text-mk-muted">
               <XCircle size={16} />
             </div>
 
             <div className="min-w-0">
-              <p className="text-xs font-extrabold text-[#705F5A]">This order is cancelled</p>
+              <p className="text-xs font-extrabold text-mk-admin">This order is cancelled</p>
 
-              <p className="mt-0.5 text-[10px] text-[#958A85]">This order is closed and no longer active.</p>
+              <p className="mt-0.5 text-[10px] text-mk-subtle">This order is closed and no longer active.</p>
             </div>
 
-            <span className="ml-auto hidden shrink-0 rounded-md border border-[#DDD6D2] bg-white px-2 py-1 text-[8px] font-extrabold uppercase tracking-wide text-[#918681] sm:inline-flex">Closed</span>
+            <span className="ml-auto hidden shrink-0 rounded-md border border-mk-border-admin bg-white px-2 py-1 text-[8px] font-extrabold uppercase tracking-wide text-mk-subtle sm:inline-flex">Closed</span>
           </div>
         )}
 
         {/* ORDER META */}
         <div className="mb-4 grid grid-cols-2 gap-3 sm:mb-5 sm:grid-cols-3">
-          <div className={`rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
+          <div className={`rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] ${isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'}`}>
             <div className="flex items-center gap-2">
-              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-[#ECE9E7] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
+              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-mk-success-soft text-mk-subtle' : 'bg-mk-primary-soft text-mk-primary-hover'}`}>
                 <Receipt size={13} />
               </div>
 
-              <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Order ID</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-mk-muted">Order ID</span>
             </div>
 
-            <p className={`mt-2 truncate text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>#{order.orderId || order._id}</p>
+            <p className={`mt-2 truncate text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>#{order.orderId || order._id}</p>
           </div>
 
-          <div className={`rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
+          <div className={`rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] ${isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'}`}>
             <div className="flex items-center gap-2">
-              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-[#ECE9E7] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
+              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-mk-success-soft text-mk-subtle' : 'bg-mk-primary-soft text-mk-primary-hover'}`}>
                 <CalendarDays size={13} />
               </div>
 
-              <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Ordered On</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-mk-muted">Ordered On</span>
             </div>
 
-            <p className={`mt-2 text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{formatDate(order.createdAt)}</p>
+            <p className={`mt-2 text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>{formatDate(order.createdAt)}</p>
           </div>
 
-          <div className={`col-span-2 rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] sm:col-span-1 ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
+          <div className={`col-span-2 rounded-xl border p-3 shadow-[0_3px_12px_rgba(73,54,49,0.04)] sm:col-span-1 ${isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'}`}>
             <div className="flex items-center gap-2">
-              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-[#ECE9E7] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
+              <div className={`flex h-7 w-7 items-center justify-center rounded-lg ${isCancelled ? 'bg-mk-success-soft text-mk-subtle' : 'bg-mk-primary-soft text-mk-primary-hover'}`}>
                 <CreditCard size={13} />
               </div>
 
-              <span className="text-[8px] font-bold uppercase tracking-wider text-[#9A857B]">Payment</span>
+              <span className="text-[8px] font-bold uppercase tracking-wider text-mk-muted">Payment</span>
             </div>
 
-            <p className={`mt-2 truncate text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{getPaymentMethodLabel(order.paymentMethod)}</p>
+            <p className={`mt-2 truncate text-[10px] font-extrabold sm:text-xs ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>{getPaymentMethodLabel(order.paymentMethod)}</p>
           </div>
         </div>
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-[270px_minmax(0,1fr)_310px]">
           {/* TRACKING */}
-          <div className={`order-2 rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] lg:order-1 ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
-            <div className={`border-b p-4 sm:p-5 ${isCancelled ? 'border-[#E2DDDA] bg-linear-to-r from-[#F8F7F6] to-[#F1EFED]' : 'border-[#EEE5DF] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7]'}`}>
+          <div className={`order-2 rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] lg:order-1 ${isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'}`}>
+            <div className={`border-b p-4 sm:p-5 ${isCancelled ? 'border-mk-border-admin bg-linear-to-r from-mk-bg-admin to-mk-surface' : 'border-mk-surface bg-linear-to-r from-mk-card to-mk-primary-soft'}`}>
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Order Tracking</h2>
+                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>Order Tracking</h2>
 
-                  <p className="mt-1 text-[10px] leading-4 text-[#918681]">
+                  <p className="mt-1 text-[10px] leading-4 text-mk-subtle">
                     {isCancelled ? 'Tracking is disabled because this order is cancelled.' : isReturned ? 'Tracking is closed because this order has been returned.' : 'Track your order progress.'}
                   </p>
                 </div>
 
-                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${isTrackingDisabled ? 'bg-[#EAE7E5] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${isTrackingDisabled ? 'bg-mk-disabled-bg text-mk-subtle' : 'bg-mk-primary-soft text-mk-primary-hover'}`}>
                   {isTrackingDisabled ? <XCircle size={17} /> : <Truck size={17} />}
                 </div>
               </div>
@@ -384,24 +384,24 @@ export default function OrderDetails() {
 
                 return (
                   <div key={item.status} className="relative flex gap-3">
-                    {!isLast && <div className={`absolute left-4.5 top-9 h-[calc(100%-8px)] w-0.5 ${isTrackingDisabled ? 'bg-[#D8D2CE]' : index < currentStatusIndex ? 'bg-[#A51D26]' : 'bg-[#E8DDD4]'}`} />}
+                    {!isLast && <div className={`absolute left-4.5 top-9 h-[calc(100%-8px)] w-0.5 ${isTrackingDisabled ? 'bg-mk-border-admin' : index < currentStatusIndex ? 'bg-mk-primary' : 'bg-mk-border'}`} />}
 
                     <div
                       className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 ${
-                        isTrackingDisabled ? 'border-[#D8D2CE] bg-[#F1EFED] text-[#A39A95]' : isCompleted ? 'border-[#8E181F] bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white' : 'border-[#E2D5CC] bg-white text-[#B7A49B]'
-                      } ${isCurrent ? 'ring-4 ring-[#F7EEE7]' : ''}`}
+                        isTrackingDisabled ? 'border-mk-border-admin bg-mk-surface text-mk-subtle' : isCompleted ? 'border-mk-primary-hover bg-linear-to-br from-mk-primary-deep to-mk-primary text-white' : 'border-mk-border bg-white text-mk-muted'
+                      } ${isCurrent ? 'ring-4 ring-mk-primary-soft' : ''}`}
                     >
                       <Icon size={15} strokeWidth={2.3} />
                     </div>
 
                     <div className={`${isLast ? 'pb-0' : 'pb-6'} min-w-0`}>
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <h3 className={`text-xs font-extrabold ${isTrackingDisabled ? 'text-[#8A817C]' : isCompleted ? 'text-[#351C18]' : 'text-[#B7A49B]'}`}>{item.label}</h3>
+                        <h3 className={`text-xs font-extrabold ${isTrackingDisabled ? 'text-mk-disabled' : isCompleted ? 'text-mk-ink' : 'text-mk-muted'}`}>{item.label}</h3>
 
-                        {isCurrent && <span className="rounded-md bg-[#F7EEE7] px-1.5 py-0.5 text-[8px] font-extrabold text-[#8E181F]">Current</span>}
+                        {isCurrent && <span className="rounded-md bg-mk-primary-soft px-1.5 py-0.5 text-[8px] font-extrabold text-mk-primary-hover">Current</span>}
                       </div>
 
-                      <p className={`mt-1 text-[10px] leading-4 ${isTrackingDisabled ? 'text-[#AAA19C]' : isCompleted ? 'text-[#806C63]' : 'text-[#B7A49B]'}`}>{item.description}</p>
+                      <p className={`mt-1 text-[10px] leading-4 ${isTrackingDisabled ? 'text-mk-subtle' : isCompleted ? 'text-mk-muted' : 'text-mk-muted'}`}>{item.description}</p>
                     </div>
                   </div>
                 )
@@ -409,24 +409,24 @@ export default function OrderDetails() {
 
               {/* CANCELLED */}
               {isCancelled && (
-                <div className="mt-5 rounded-xl border border-[#DED8D5] bg-[#F3F1F0] p-3.5">
+                <div className="mt-5 rounded-xl border border-mk-border-admin bg-mk-bg-admin p-3.5">
                   <div className="flex items-start gap-2.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E7E3E0] text-[#8F625D]">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-mk-disabled-bg text-mk-muted">
                       <XCircle size={15} />
                     </div>
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="text-xs font-extrabold text-[#705F5A]">Order Cancelled</h3>
+                        <h3 className="text-xs font-extrabold text-mk-admin">Order Cancelled</h3>
 
-                        <span className="rounded-md border border-[#DDD6D2] bg-white px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-[#918681]">Closed</span>
+                        <span className="rounded-md border border-mk-border-admin bg-white px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-mk-subtle">Closed</span>
                       </div>
 
-                      <p className="mt-1 text-[10px] leading-4 text-[#8F8782]">This order is no longer active.</p>
+                      <p className="mt-1 text-[10px] leading-4 text-mk-disabled">This order is no longer active.</p>
 
-                      {order.cancellationReason && <p className="mt-1.5 text-[10px] font-semibold text-[#786D68]">Reason: {order.cancellationReason}</p>}
+                      {order.cancellationReason && <p className="mt-1.5 text-[10px] font-semibold text-mk-muted">Reason: {order.cancellationReason}</p>}
 
-                      {order.cancelledAt && <p className="mt-1 text-[9px] font-medium text-[#9A918C]">Cancelled on: {formatDate(order.cancelledAt)}</p>}
+                      {order.cancelledAt && <p className="mt-1 text-[9px] font-medium text-mk-subtle">Cancelled on: {formatDate(order.cancelledAt)}</p>}
                     </div>
                   </div>
                 </div>
@@ -434,18 +434,18 @@ export default function OrderDetails() {
 
               {/* RETURNED */}
               {isReturned && (
-                <div className="mt-5 rounded-xl border border-[#EBD7B7] bg-[#FFF9ED] p-3.5">
+                <div className="mt-5 rounded-xl border border-mk-accent bg-mk-warning-soft p-3.5">
                   <div className="flex items-start gap-2.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#B87935]">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-mk-accent">
                       <Package size={15} />
                     </div>
 
                     <div className="min-w-0">
-                      <h3 className="text-xs font-extrabold text-[#A05A16]">Order Returned</h3>
+                      <h3 className="text-xs font-extrabold text-mk-warning">Order Returned</h3>
 
-                      <p className="mt-1 text-[10px] leading-4 text-[#A05A16]">Your return request has been submitted successfully.</p>
+                      <p className="mt-1 text-[10px] leading-4 text-mk-warning">Your return request has been submitted successfully.</p>
 
-                      {(order.returnReason || order.cancellationReason) && <p className="mt-1.5 text-[10px] font-semibold text-[#79521F]">Reason: {order.returnReason || order.cancellationReason}</p>}
+                      {(order.returnReason || order.cancellationReason) && <p className="mt-1.5 text-[10px] font-semibold text-mk-warning">Reason: {order.returnReason || order.cancellationReason}</p>}
                     </div>
                   </div>
                 </div>
@@ -456,47 +456,47 @@ export default function OrderDetails() {
           {/* CENTER CONTENT */}
           <div className="order-1 min-w-0 space-y-4 sm:space-y-5 lg:order-2">
             {/* ORDER ITEMS */}
-            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
-              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-[#E2DDDA] bg-linear-to-r from-[#F8F7F6] to-[#F1EFED]' : 'border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7]'}`}>
+            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'}`}>
+              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-mk-border-admin bg-linear-to-r from-mk-bg-admin to-mk-surface' : 'border-mk-border bg-linear-to-r from-mk-card to-mk-primary-soft'}`}>
                 <div className="flex items-center gap-2">
-                  <ShoppingBag size={17} className={isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'} />
+                  <ShoppingBag size={17} className={isCancelled ? 'text-mk-subtle' : 'text-mk-primary-hover'} />
 
-                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Ordered Items</h2>
+                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>Ordered Items</h2>
                 </div>
 
-                <span className="rounded-lg bg-white px-2.5 py-1 text-[9px] font-extrabold text-[#67544D] shadow-sm">
+                <span className="rounded-lg bg-white px-2.5 py-1 text-[9px] font-extrabold text-mk-muted shadow-sm">
                   {order.items?.length || 0} {order.items?.length === 1 ? 'Item' : 'Items'}
                 </span>
               </div>
 
               <div className="max-h-97 overflow-y-auto scrollbar-thin [scrollbar-color:#CDBDB4_transparent]">
-                <div className="divide-y divide-[#EEE5DF]">
+                <div className="divide-y divide-mk-surface">
                   {order.items?.map((item, index) => (
-                    <div key={`${order._id}-${index}`} className={`flex gap-3 p-3.5 sm:gap-4 sm:p-4 ${isCancelled ? 'opacity-70' : 'transition-colors duration-200 hover:bg-[#FFFCFA]'}`}>
-                      <div className={`flex h-19 w-19 shrink-0 items-center justify-center overflow-hidden rounded-xl border sm:h-20 sm:w-20 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED] grayscale' : 'border-[#E2D5CC] bg-[#FBF7F2]'}`}>
+                    <div key={`${order._id}-${index}`} className={`flex gap-3 p-3.5 sm:gap-4 sm:p-4 ${isCancelled ? 'opacity-70' : 'transition-colors duration-200 hover:bg-mk-card'}`}>
+                      <div className={`flex h-19 w-19 shrink-0 items-center justify-center overflow-hidden rounded-xl border sm:h-20 sm:w-20 ${isCancelled ? 'border-mk-border-admin bg-mk-surface grayscale' : 'border-mk-border bg-mk-bg'}`}>
                         {item.image ? (
                           <img src={getImageUrl(item.image)} alt={item.productName} className="h-full w-full object-contain p-1.5 transition-transform duration-300 hover:scale-105" />
                         ) : (
-                          <Package size={26} strokeWidth={1.5} className="text-[#B7A49B]" />
+                          <Package size={26} strokeWidth={1.5} className="text-mk-muted" />
                         )}
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <h3 className={`line-clamp-2 text-xs font-bold leading-5 sm:text-sm ${isCancelled ? 'text-[#756B66]' : 'text-[#351C18]'}`}>{item.productName}</h3>
+                        <h3 className={`line-clamp-2 text-xs font-bold leading-5 sm:text-sm ${isCancelled ? 'text-mk-muted-admin' : 'text-mk-ink'}`}>{item.productName}</h3>
 
                         <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-                          <span className="text-[10px] font-semibold text-[#806C63]">Qty: {item.quantity}</span>
+                          <span className="text-[10px] font-semibold text-mk-muted">Qty: {item.quantity}</span>
 
                           {item.size && (
                             <>
-                              <span className="h-1 w-1 rounded-full bg-[#CDBDB4]" />
+                              <span className="h-1 w-1 rounded-full bg-mk-border-admin" />
 
-                              <span className="text-[10px] font-semibold text-[#806C63]">Size: {item.size}</span>
+                              <span className="text-[10px] font-semibold text-mk-muted">Size: {item.size}</span>
                             </>
                           )}
                         </div>
 
-                        <p className={`mt-2 text-sm font-extrabold ${isCancelled ? 'text-[#8F817B]' : 'text-[#8E181F]'}`}>₹{formatPrice(item.totalPrice)}</p>
+                        <p className={`mt-2 text-sm font-extrabold ${isCancelled ? 'text-mk-disabled' : 'text-mk-primary-hover'}`}>₹{formatPrice(item.totalPrice)}</p>
                       </div>
                     </div>
                   ))}
@@ -505,41 +505,41 @@ export default function OrderDetails() {
             </div>
 
             {/* DELIVERY ADDRESS */}
-            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
-              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-[#E2DDDA] bg-linear-to-r from-[#F8F7F6] to-[#F1EFED]' : 'border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7]'}`}>
+            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'}`}>
+              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-mk-border-admin bg-linear-to-r from-mk-bg-admin to-mk-surface' : 'border-mk-border bg-linear-to-r from-mk-card to-mk-primary-soft'}`}>
                 <div className="flex items-center gap-2">
-                  <MapPin size={17} className={isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'} />
+                  <MapPin size={17} className={isCancelled ? 'text-mk-subtle' : 'text-mk-primary-hover'} />
 
-                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Delivery Address</h2>
+                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>Delivery Address</h2>
                 </div>
 
-                <span className={`rounded-md px-2 py-1 text-[8px] font-extrabold uppercase tracking-wider ${isCancelled ? 'bg-[#ECE9E7] text-[#918681]' : 'bg-[#F7EEE7] text-[#8E181F]'}`}>Delivery</span>
+                <span className={`rounded-md px-2 py-1 text-[8px] font-extrabold uppercase tracking-wider ${isCancelled ? 'bg-mk-success-soft text-mk-subtle' : 'bg-mk-primary-soft text-mk-primary-hover'}`}>Delivery</span>
               </div>
 
               <div className="p-4 sm:p-5">
-                <div className={`relative overflow-hidden rounded-xl border p-4 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
-                  <div className={`absolute -right-8 -top-8 h-20 w-20 rounded-full ${isCancelled ? 'bg-[#8F817B]/5' : 'bg-[#A51D26]/[0.035]'}`} />
+                <div className={`relative overflow-hidden rounded-xl border p-4 ${isCancelled ? 'border-mk-border-admin bg-mk-surface' : 'border-mk-border bg-mk-bg'}`}>
+                  <div className={`absolute -right-8 -top-8 h-20 w-20 rounded-full ${isCancelled ? 'bg-mk-disabled/5' : 'bg-mk-primary/[0.035]'}`} />
 
                   <div className="relative flex items-start gap-3">
-                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm ${isCancelled ? 'bg-[#E7E3E0] text-[#918681]' : 'bg-white text-[#8E181F]'}`}>
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm ${isCancelled ? 'bg-mk-disabled-bg text-mk-subtle' : 'bg-white text-mk-primary-hover'}`}>
                       <MapPin size={17} />
                     </div>
 
                     <div className="min-w-0">
-                      <p className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{order.shippingAddress?.fullName}</p>
+                      <p className={`text-sm font-extrabold ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>{order.shippingAddress?.fullName}</p>
 
-                      <p className="mt-1.5 text-xs leading-5 text-[#806C63]">
+                      <p className="mt-1.5 text-xs leading-5 text-mk-muted">
                         {order.shippingAddress?.addressLine}
                         <br />
                         {order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.pincode}
                       </p>
 
-                      {order.shippingAddress?.landmark && <p className="mt-1.5 text-[10px] font-medium text-[#806C63]">Landmark: {order.shippingAddress.landmark}</p>}
+                      {order.shippingAddress?.landmark && <p className="mt-1.5 text-[10px] font-medium text-mk-muted">Landmark: {order.shippingAddress.landmark}</p>}
 
                       <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                        <span className="text-[10px] font-bold text-[#9A857B]">Phone</span>
+                        <span className="text-[10px] font-bold text-mk-muted">Phone</span>
 
-                        <span className={`text-xs font-bold ${isCancelled ? 'text-[#786D68]' : 'text-[#351C18]'}`}>{order.shippingAddress?.phone}</span>
+                        <span className={`text-xs font-bold ${isCancelled ? 'text-mk-muted' : 'text-mk-ink'}`}>{order.shippingAddress?.phone}</span>
                       </div>
                     </div>
                   </div>
@@ -548,34 +548,34 @@ export default function OrderDetails() {
             </div>
 
             {/* PAYMENT */}
-            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
-              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-[#E2DDDA] bg-linear-to-r from-[#F8F7F6] to-[#F1EFED]' : 'border-[#E8DDD4] bg-linear-to-r from-[#FFFDFC] to-[#F7EEE7]'}`}>
+            <div className={`overflow-hidden rounded-2xl border shadow-[0_4px_18px_rgba(73,54,49,0.05)] ${isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'}`}>
+              <div className={`flex items-center justify-between border-b px-4 py-3.5 sm:px-5 ${isCancelled ? 'border-mk-border-admin bg-linear-to-r from-mk-bg-admin to-mk-surface' : 'border-mk-border bg-linear-to-r from-mk-card to-mk-primary-soft'}`}>
                 <div className="flex items-center gap-2">
-                  <CreditCard size={17} className={isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'} />
+                  <CreditCard size={17} className={isCancelled ? 'text-mk-subtle' : 'text-mk-primary-hover'} />
 
-                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>Payment Information</h2>
+                  <h2 className={`text-sm font-extrabold ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>Payment Information</h2>
                 </div>
 
-                <ShieldCheck size={16} className={isCancelled ? 'text-[#918681]' : 'text-[#3E8B62]'} />
+                <ShieldCheck size={16} className={isCancelled ? 'text-mk-subtle' : 'text-mk-success'} />
               </div>
 
               <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 sm:p-5">
-                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Payment Method</p>
+                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-mk-border-admin bg-mk-surface' : 'border-mk-border bg-mk-bg'}`}>
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-mk-muted">Payment Method</p>
 
-                  <p className={`mt-1.5 text-xs font-extrabold ${isCancelled ? 'text-[#716762]' : 'text-[#351C18]'}`}>{getPaymentMethodLabel(order.paymentMethod)}</p>
+                  <p className={`mt-1.5 text-xs font-extrabold ${isCancelled ? 'text-mk-admin' : 'text-mk-ink'}`}>{getPaymentMethodLabel(order.paymentMethod)}</p>
                 </div>
 
-                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Payment Status</p>
+                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-mk-border-admin bg-mk-surface' : 'border-mk-border bg-mk-bg'}`}>
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-mk-muted">Payment Status</p>
 
                   <span className={`mt-1.5 inline-flex rounded-md px-2 py-1 text-[9px] font-extrabold ${getPaymentStatusClass(order.paymentStatus)}`}>{order.paymentStatus || 'Pending'}</span>
                 </div>
               </div>
 
-              <div className="border-t border-[#E8DDD4] px-4 py-5 sm:px-5">
-                <div className={`flex items-start gap-2.5 rounded-xl p-3.5 ${isCancelled ? 'bg-[#F1EFED]' : 'bg-[#F7EEE7]'}`}>
-                  <ShieldCheck size={16} className={`mt-0.5 shrink-0 ${isCancelled ? 'text-[#918681]' : 'text-[#8E181F]'}`} />
+              <div className="border-t border-mk-border px-4 py-5 sm:px-5">
+                <div className={`flex items-start gap-2.5 rounded-xl p-3.5 ${isCancelled ? 'bg-mk-surface' : 'bg-mk-primary-soft'}`}>
+                  <ShieldCheck size={16} className={`mt-0.5 shrink-0 ${isCancelled ? 'text-mk-subtle' : 'text-mk-primary-hover'}`} />
 
                   {isCOD
                     ? 'Payment will be collected in cash when your order is delivered.'
@@ -594,8 +594,8 @@ export default function OrderDetails() {
 
             {/* CANCEL ORDER */}
             {canCancelOrder && (
-              <div className="overflow-hidden rounded-2xl border border-[#E8B7BB] bg-white shadow-[0_4px_18px_rgba(125,23,28,0.06)]">
-                <div className="flex flex-col gap-3 border-b border-[#DFA1A6] bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+              <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_18px_rgba(125,23,28,0.06)]">
+                <div className="flex flex-col gap-3 border-b border-mk-accent bg-linear-to-r from-mk-primary-deep to-mk-primary px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                   <div>
                     <div className="flex items-center gap-2">
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">
@@ -612,7 +612,7 @@ export default function OrderDetails() {
                     <button
                       type="button"
                       onClick={() => setShowCancelBox(true)}
-                      className="w-full rounded-xl bg-white px-4 py-2.5 text-xs font-extrabold text-[#8E181F] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#FFF7F7] hover:shadow-md sm:w-auto"
+                      className="w-full rounded-xl bg-white px-4 py-2.5 text-xs font-extrabold text-mk-primary-hover shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-mk-bg hover:shadow-md sm:w-auto"
                     >
                       Cancel Order
                     </button>
@@ -620,24 +620,24 @@ export default function OrderDetails() {
                 </div>
 
                 {showCancelBox && (
-                  <div className="bg-[#FFF9F9] p-4 sm:p-5">
-                    <div className="rounded-xl border border-[#E8B7BB] bg-[#FCEBEC] p-3.5">
+                  <div className="bg-mk-card p-4 sm:p-5">
+                    <div className="rounded-xl border border-mk-border bg-mk-primary-soft p-3.5">
                       <div className="flex items-start gap-2.5">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#A51D26] text-white">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-mk-primary text-white">
                           <XCircle size={15} />
                         </div>
 
                         <div>
-                          <p className="text-xs font-extrabold text-[#7D171C]">Are you sure you want to cancel this order?</p>
+                          <p className="text-xs font-extrabold text-mk-primary-deep">Are you sure you want to cancel this order?</p>
 
-                          <p className="mt-1 text-[10px] leading-4 text-[#8E181F]">This action cannot be undone once the order is cancelled.</p>
+                          <p className="mt-1 text-[10px] leading-4 text-mk-primary-hover">This action cannot be undone once the order is cancelled.</p>
                         </div>
                       </div>
                     </div>
 
-                    <label className="mt-4 block text-xs font-bold text-[#67544D]">
+                    <label className="mt-4 block text-xs font-bold text-mk-muted">
                       Cancellation Reason
-                      <span className="ml-1 font-medium text-[#9A857B]">(Optional)</span>
+                      <span className="ml-1 font-medium text-mk-muted">(Optional)</span>
                     </label>
 
                     <textarea
@@ -645,7 +645,7 @@ export default function OrderDetails() {
                       onChange={(e) => setCancelReason(e.target.value)}
                       placeholder="Why do you want to cancel this order?"
                       rows={4}
-                      className="mt-2 w-full resize-none rounded-xl border border-[#E2D5CC] bg-white px-3 py-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#A51D26] focus:ring-2 focus:ring-[#A51D26]/10"
+                      className="mt-2 w-full resize-none rounded-xl border border-mk-border bg-white px-3 py-3 text-xs text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-primary focus:ring-2 focus:ring-mk-primary/10"
                     />
 
                     <div className="mt-3 flex flex-col gap-2.5 sm:flex-row">
@@ -656,7 +656,7 @@ export default function OrderDetails() {
                           setCancelReason('')
                         }}
                         disabled={cancelling}
-                        className="rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded-xl border border-mk-border bg-white px-4 py-2.5 text-xs font-bold text-mk-muted transition hover:bg-mk-primary-soft disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Keep Order
                       </button>
@@ -665,7 +665,7 @@ export default function OrderDetails() {
                         type="button"
                         onClick={handleCancelOrder}
                         disabled={cancelling}
-                        className="rounded-xl bg-linear-to-r from-[#7D171C] to-[#A51D26] px-4 py-2.5 text-xs font-bold text-white shadow-[0_5px_14px_rgba(125,23,28,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(125,23,28,0.22)] disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded-xl bg-linear-to-r from-mk-primary-deep to-mk-primary px-4 py-2.5 text-xs font-bold text-white shadow-[0_5px_14px_rgba(125,23,28,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(125,23,28,0.22)] disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {cancelling ? 'Cancelling...' : 'Confirm Cancellation'}
                       </button>
@@ -679,19 +679,19 @@ export default function OrderDetails() {
 
             {/* RETURN & REFUND */}
             {(isDelivered || hasReturnRequest) && (
-              <div className="overflow-hidden rounded-2xl border border-[#EBD7B7] bg-white shadow-[0_4px_18px_rgba(73,54,49,0.04)]">
-                <div className="flex flex-col gap-3 border-b border-[#F1E3CB] bg-[#FFFDF8] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+              <div className="overflow-hidden rounded-2xl border border-mk-accent bg-white shadow-[0_4px_18px_rgba(73,54,49,0.04)]">
+                <div className="flex flex-col gap-3 border-b border-mk-border bg-mk-card px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                   <div>
                     <div className="flex items-center gap-2">
-                      <Receipt size={16} className="text-[#B87935]" />
-                      <h2 className="text-sm font-extrabold text-[#351C18]">Return & Refund</h2>
+                      <Receipt size={16} className="text-mk-accent" />
+                      <h2 className="text-sm font-extrabold text-mk-ink">Return & Refund</h2>
                     </div>
 
-                    <p className="mt-1 text-[10px] leading-5 text-[#806C63]">{hasReturnRequest ? 'Track your return request and refund progress.' : 'Need to return your delivered order?'}</p>
+                    <p className="mt-1 text-[10px] leading-5 text-mk-muted">{hasReturnRequest ? 'Track your return request and refund progress.' : 'Need to return your delivered order?'}</p>
                   </div>
 
                   {canRequestReturn && !showReturnBox && (
-                    <button type="button" onClick={() => setShowReturnBox(true)} className="w-full rounded-xl bg-[#FFF4DD] px-4 py-2.5 text-xs font-extrabold text-[#A05A16] transition hover:bg-[#FFECC4] sm:w-auto">
+                    <button type="button" onClick={() => setShowReturnBox(true)} className="w-full rounded-xl bg-mk-primary-soft px-4 py-2.5 text-xs font-extrabold text-mk-warning transition hover:bg-mk-border sm:w-auto">
                       Request Return
                     </button>
                   )}
@@ -699,35 +699,35 @@ export default function OrderDetails() {
 
                 <div className="space-y-4 p-4 sm:p-5">
                   {hasReturnRequest && (
-                    <div className="rounded-xl border border-[#E8DDD4] bg-[#FFFCF9] p-4">
+                    <div className="rounded-xl border border-mk-border bg-mk-card p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-xs font-extrabold text-[#351C18]">Return Request Status</span>
+                        <span className="text-xs font-extrabold text-mk-ink">Return Request Status</span>
 
-                        <span className={`inline-flex rounded-md border px-2 py-1 text-[9px] font-bold ${returnStatusStyles[returnStatus] || 'border-[#E8DDD4] bg-[#FBF7F2] text-[#67544D]'}`}>{returnStatus}</span>
+                        <span className={`inline-flex rounded-md border px-2 py-1 text-[9px] font-bold ${returnStatusStyles[returnStatus] || 'border-mk-border bg-mk-bg text-mk-muted'}`}>{returnStatus}</span>
                       </div>
 
                       {order.returnReason && (
-                        <p className="mt-3 text-[11px] leading-5 text-[#806C63]">
-                          <span className="font-bold text-[#67544D]">Your reason:</span> {order.returnReason}
+                        <p className="mt-3 text-[11px] leading-5 text-mk-muted">
+                          <span className="font-bold text-mk-muted">Your reason:</span> {order.returnReason}
                         </p>
                       )}
 
                       {order.returnRejectionReason && (
-                        <div className="mt-3 rounded-lg border border-[#E7D2CF] bg-[#FFF5F3] p-3">
-                          <p className="text-[10px] font-extrabold text-[#A44A3F]">Return request rejected</p>
-                          <p className="mt-1 text-[10px] leading-4 text-[#8F625D]">{order.returnRejectionReason}</p>
+                        <div className="mt-3 rounded-lg border border-mk-danger-soft bg-mk-danger-soft p-3">
+                          <p className="text-[10px] font-extrabold text-mk-danger">Return request rejected</p>
+                          <p className="mt-1 text-[10px] leading-4 text-mk-muted">{order.returnRejectionReason}</p>
                         </div>
                       )}
 
-                      {returnStatus === 'Refund Processing' && <p className="mt-3 text-[10px] leading-5 text-[#A05A16]">Your return has been received. Your refund is being processed.</p>}
+                      {returnStatus === 'Refund Processing' && <p className="mt-3 text-[10px] leading-5 text-mk-warning">Your return has been received. Your refund is being processed.</p>}
 
                       {returnStatus === 'Refunded' && (
-                        <div className="mt-3 rounded-lg border border-[#D8D0E8] bg-[#F6F2FC] p-3">
-                          <p className="text-[11px] font-extrabold text-[#70529B]">Refund completed</p>
+                        <div className="mt-3 rounded-lg border border-mk-border-admin bg-mk-info-soft p-3">
+                          <p className="text-[11px] font-extrabold text-mk-info">Refund completed</p>
 
-                          {order.refundAmount != null && <p className="mt-1 text-xs font-bold text-[#70529B]">Refund amount: ₹{formatPrice(order.refundAmount)}</p>}
+                          {order.refundAmount != null && <p className="mt-1 text-xs font-bold text-mk-info">Refund amount: ₹{formatPrice(order.refundAmount)}</p>}
 
-                          {order.refundedAt && <p className="mt-1 text-[10px] text-[#70529B]">Refunded on: {formatDate(order.refundedAt)}</p>}
+                          {order.refundedAt && <p className="mt-1 text-[10px] text-mk-info">Refunded on: {formatDate(order.refundedAt)}</p>}
                         </div>
                       )}
                     </div>
@@ -735,14 +735,14 @@ export default function OrderDetails() {
 
                   {canRequestReturn && showReturnBox && (
                     <div>
-                      <div className="rounded-xl border border-[#EBD7B7] bg-[#FFF9ED] p-3">
-                        <p className="text-xs font-extrabold text-[#80501D]">Before submitting</p>
-                        <p className="mt-1 text-[10px] leading-5 text-[#806C63]">Please provide a clear reason for returning your order.</p>
+                      <div className="rounded-xl border border-mk-accent bg-mk-warning-soft p-3">
+                        <p className="text-xs font-extrabold text-mk-warning">Before submitting</p>
+                        <p className="mt-1 text-[10px] leading-5 text-mk-muted">Please provide a clear reason for returning your order.</p>
                       </div>
 
-                      <label className="mt-4 block text-xs font-bold text-[#67544D]">
+                      <label className="mt-4 block text-xs font-bold text-mk-muted">
                         Return Reason
-                        <span className="ml-1 text-[#A51D26]">*</span>
+                        <span className="ml-1 text-mk-primary">*</span>
                       </label>
 
                       <textarea
@@ -751,10 +751,10 @@ export default function OrderDetails() {
                         placeholder="Explain why you want to return this order..."
                         rows={4}
                         maxLength={500}
-                        className="mt-2 w-full resize-none rounded-xl border border-[#E2D5CC] bg-[#FBF7F2] px-3 py-3 text-xs text-[#351C18] outline-none transition placeholder:text-[#A89890] focus:border-[#B87935] focus:bg-white"
+                        className="mt-2 w-full resize-none rounded-xl border border-mk-border bg-mk-bg px-3 py-3 text-xs text-mk-ink outline-none transition placeholder:text-mk-muted focus:border-mk-accent focus:bg-white"
                       />
 
-                      <p className="mt-1 text-right text-[9px] text-[#9A857B]">{returnReason.length}/500</p>
+                      <p className="mt-1 text-right text-[9px] text-mk-muted">{returnReason.length}/500</p>
 
                       <div className="mt-3 flex flex-col gap-2.5 sm:flex-row">
                         <button
@@ -764,7 +764,7 @@ export default function OrderDetails() {
                             setReturnReason('')
                           }}
                           disabled={returning}
-                          className="rounded-xl border border-[#E2D5CC] bg-white px-4 py-2.5 text-xs font-bold text-[#67544D] transition hover:bg-[#F7EEE7] disabled:opacity-50"
+                          className="rounded-xl border border-mk-border bg-white px-4 py-2.5 text-xs font-bold text-mk-muted transition hover:bg-mk-primary-soft disabled:opacity-50"
                         >
                           Cancel
                         </button>
@@ -773,7 +773,7 @@ export default function OrderDetails() {
                           type="button"
                           onClick={handleReturnOrder}
                           disabled={returning || !returnReason.trim()}
-                          className="rounded-xl bg-linear-to-r from-[#A05A16] to-[#B87935] px-4 py-2.5 text-xs font-bold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="rounded-xl bg-linear-to-r from-mk-warning to-mk-accent px-4 py-2.5 text-xs font-bold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {returning ? 'Submitting...' : 'Submit Return Request'}
                         </button>
@@ -787,9 +787,9 @@ export default function OrderDetails() {
 
           {/* RIGHT SUMMARY */}
           <div className="order-3">
-            <div className={`sticky top-5 overflow-hidden rounded-2xl border shadow-[0_6px_24px_rgba(73,54,49,0.07)] ${isCancelled ? 'border-[#E0DBD8] bg-[#F8F7F6]' : 'border-[#E8DDD4] bg-white'}`}>
+            <div className={`sticky top-5 overflow-hidden rounded-2xl border shadow-[0_6px_24px_rgba(73,54,49,0.07)] ${isCancelled ? 'border-mk-border-admin bg-mk-bg-admin' : 'border-mk-border bg-white'}`}>
               {/* SUMMARY HEADER */}
-              <div className={`relative overflow-hidden px-4 py-4 sm:px-5 ${isCancelled ? 'bg-linear-to-br from-[#5E5956] via-[#716A66] to-[#817974]' : 'bg-linear-to-br from-[#351C18] via-[#5A2A25] to-[#7D171C]'}`}>
+              <div className={`relative overflow-hidden px-4 py-4 sm:px-5 ${isCancelled ? 'bg-linear-to-br from-mk-admin-hover via-mk-muted-admin to-mk-muted' : 'bg-linear-to-br from-mk-ink via-mk-primary-deep to-mk-primary-deep'}`}>
                 <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white/5" />
 
                 <div className="relative flex items-center gap-2">
@@ -803,58 +803,58 @@ export default function OrderDetails() {
 
               <div className="p-4 sm:p-5">
                 {/* ORDER TOTAL */}
-                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-[#DDD8D4] bg-[#F1EFED]' : 'border-[#E8DDD4] bg-[#FBF7F2]'}`}>
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#9A857B]">Total Amount</p>
+                <div className={`rounded-xl border p-3.5 ${isCancelled ? 'border-mk-border-admin bg-mk-surface' : 'border-mk-border bg-mk-bg'}`}>
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-mk-muted">Total Amount</p>
 
-                  <p className={`mt-1 text-2xl font-extrabold tracking-tight ${isCancelled ? 'text-[#786E69]' : 'text-[#8E181F]'}`}>₹{formatPrice(order.totalAmount)}</p>
+                  <p className={`mt-1 text-2xl font-extrabold tracking-tight ${isCancelled ? 'text-mk-muted-admin' : 'text-mk-primary-hover'}`}>₹{formatPrice(order.totalAmount)}</p>
                 </div>
 
                 {/* PRICE DETAILS */}
                 <div className="mt-4">
-                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#67544D]">Price Details</p>
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-mk-muted">Price Details</p>
 
                   <div className="mt-3 space-y-3">
                     <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs text-[#806C63]">Subtotal</span>
+                      <span className="text-xs text-mk-muted">Subtotal</span>
 
-                      <span className={`text-xs font-bold ${isCancelled ? 'text-[#786E69]' : 'text-[#351C18]'}`}>₹{formatPrice(order.subtotal)}</span>
+                      <span className={`text-xs font-bold ${isCancelled ? 'text-mk-muted-admin' : 'text-mk-ink'}`}>₹{formatPrice(order.subtotal)}</span>
                     </div>
 
                     <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs text-[#806C63]">Delivery</span>
+                      <span className="text-xs text-mk-muted">Delivery</span>
 
-                      <span className={`text-xs font-bold ${isCancelled ? 'text-[#918681]' : 'text-[#3E8B62]'}`}>{order.deliveryCharge === 0 ? 'FREE' : `₹${formatPrice(order.deliveryCharge)}`}</span>
+                      <span className={`text-xs font-bold ${isCancelled ? 'text-mk-subtle' : 'text-mk-success'}`}>{order.deliveryCharge === 0 ? 'FREE' : `₹${formatPrice(order.deliveryCharge)}`}</span>
                     </div>
 
                     <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs text-[#806C63]">Tax</span>
+                      <span className="text-xs text-mk-muted">Tax</span>
 
-                      <span className={`text-xs font-bold ${isCancelled ? 'text-[#786E69]' : 'text-[#351C18]'}`}>₹{formatPrice(order.tax)}</span>
+                      <span className={`text-xs font-bold ${isCancelled ? 'text-mk-muted-admin' : 'text-mk-ink'}`}>₹{formatPrice(order.tax)}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="my-4 border-t border-dashed border-[#DCCBC1]" />
+                <div className="my-4 border-t border-dashed border-mk-border" />
 
                 {/* FINAL TOTAL */}
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-extrabold text-[#67544D]">Total Amount</span>
+                  <span className="text-xs font-extrabold text-mk-muted">Total Amount</span>
 
-                  <span className={`text-lg font-extrabold ${isCancelled ? 'text-[#786E69]' : 'text-[#8E181F]'}`}>₹{formatPrice(order.totalAmount)}</span>
+                  <span className={`text-lg font-extrabold ${isCancelled ? 'text-mk-muted-admin' : 'text-mk-primary-hover'}`}>₹{formatPrice(order.totalAmount)}</span>
                 </div>
 
                 {/* PAYMENT STATUS */}
                 <div
                   className={`mt-4 rounded-xl px-3 py-3 ${
                     isCancelled
-                      ? 'bg-[#F1EFED]'
+                      ? 'bg-mk-surface'
                       : order.paymentStatus === 'Paid'
-                        ? 'bg-[#EAF6EF]'
+                        ? 'bg-mk-success-soft'
                         : order.paymentStatus === 'Failed'
-                          ? 'bg-[#FCEBEC]'
+                          ? 'bg-mk-primary-soft'
                           : ['Refunded', 'Partially Refunded'].includes(order.paymentStatus)
-                            ? 'bg-[#F6F2FC]'
-                            : 'bg-[#FFF9ED]'
+                            ? 'bg-mk-info-soft'
+                            : 'bg-mk-warning-soft'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -862,28 +862,28 @@ export default function OrderDetails() {
                       size={14}
                       className={
                         isCancelled
-                          ? 'text-[#918681]'
+                          ? 'text-mk-subtle'
                           : order.paymentStatus === 'Paid'
-                            ? 'text-[#3E8B62]'
+                            ? 'text-mk-success'
                             : order.paymentStatus === 'Failed'
-                              ? 'text-[#A51D26]'
+                              ? 'text-mk-primary'
                               : ['Refunded', 'Partially Refunded'].includes(order.paymentStatus)
-                                ? 'text-[#70529B]'
-                                : 'text-[#B87935]'
+                                ? 'text-mk-info'
+                                : 'text-mk-accent'
                       }
                     />
 
-                    <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#67544D]">Payment</span>
+                    <span className="text-[9px] font-extrabold uppercase tracking-wider text-mk-muted">Payment</span>
 
-                    <span className={`ml-auto text-[9px] font-extrabold ${isCancelled ? 'text-[#918681]' : getPaymentStatusClass(order.paymentStatus)}`}>{order.paymentStatus || 'Pending'}</span>
+                    <span className={`ml-auto text-[9px] font-extrabold ${isCancelled ? 'text-mk-subtle' : getPaymentStatusClass(order.paymentStatus)}`}>{order.paymentStatus || 'Pending'}</span>
                   </div>
                 </div>
 
                 {/* SECURITY */}
-                <div className={`mt-3 flex items-center gap-2 rounded-xl px-3 py-2.5 ${isCancelled ? 'bg-[#F1EFED]' : 'bg-[#EAF6EF]'}`}>
-                  <CheckCircle2 size={14} className={`shrink-0 ${isCancelled ? 'text-[#918681]' : 'text-[#3E8B62]'}`} />
+                <div className={`mt-3 flex items-center gap-2 rounded-xl px-3 py-2.5 ${isCancelled ? 'bg-mk-surface' : 'bg-mk-success-soft'}`}>
+                  <CheckCircle2 size={14} className={`shrink-0 ${isCancelled ? 'text-mk-subtle' : 'text-mk-success'}`} />
 
-                  <p className={`text-[9px] font-bold ${isCancelled ? 'text-[#918681]' : 'text-[#3E8B62]'}`}>{isCancelled ? 'This order is closed and no longer active.' : 'Your order information is secure'}</p>
+                  <p className={`text-[9px] font-bold ${isCancelled ? 'text-mk-subtle' : 'text-mk-success'}`}>{isCancelled ? 'This order is closed and no longer active.' : 'Your order information is secure'}</p>
                 </div>
 
                 {/* BACK BUTTON */}
@@ -892,8 +892,8 @@ export default function OrderDetails() {
                   onClick={() => navigate('/orders')}
                   className={`mt-4 flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs font-extrabold transition-all duration-300 ${
                     isCancelled
-                      ? 'border-[#D9D3D0] bg-[#F1EFED] text-[#756B66] hover:border-[#B9ADA7] hover:bg-[#EAE7E5] hover:text-[#665B56]'
-                      : 'border-[#E2D5CC] bg-white text-[#67544D] hover:border-[#8E181F] hover:bg-[#F7EEE7] hover:text-[#8E181F]'
+                      ? 'border-mk-border-admin bg-mk-surface text-mk-muted-admin hover:border-mk-subtle hover:bg-mk-disabled-bg hover:text-mk-admin'
+                      : 'border-mk-border bg-white text-mk-muted hover:border-mk-primary-hover hover:bg-mk-primary-soft hover:text-mk-primary-hover'
                   }`}
                 >
                   <ArrowLeft size={15} />
@@ -906,9 +906,9 @@ export default function OrderDetails() {
 
         {/* FOOTER */}
         <div className="flex items-center justify-center gap-2 py-5">
-          <CheckCircle2 size={13} className={isCancelled ? 'text-[#B0A7A2]' : 'text-[#9A857B]'} />
+          <CheckCircle2 size={13} className={isCancelled ? 'text-mk-subtle' : 'text-mk-muted'} />
 
-          <p className={`text-[10px] font-medium sm:text-[11px] ${isCancelled ? 'text-[#AAA19C]' : 'text-[#9A857B]'}`}>Thank you for shopping with MineKart.</p>
+          <p className={`text-[10px] font-medium sm:text-[11px] ${isCancelled ? 'text-mk-subtle' : 'text-mk-muted'}`}>Thank you for shopping with MineKart.</p>
         </div>
       </div>
     </div>

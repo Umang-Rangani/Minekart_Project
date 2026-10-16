@@ -153,28 +153,28 @@ export default function AdminSubCategoryForm() {
       <AdminBreadCrumb items={items} />
 
       {/* Form Card */}
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-mk-border-admin bg-white">
         {/* Header */}
-        <div className="border-b border-[#E3DED6] bg-[#FBFAF7] px-5 py-4">
-          <h2 className="text-base font-bold text-[#292725]">{isEdit ? 'Update SubCategory' : 'Create SubCategory'}</h2>
+        <div className="border-b border-mk-border-admin bg-mk-bg px-5 py-4">
+          <h2 className="text-base font-bold text-mk-ink-admin">{isEdit ? 'Update SubCategory' : 'Create SubCategory'}</h2>
 
-          <p className="mt-0.5 text-xs text-[#99938B]">{isEdit ? 'Update subcategory information' : 'Add a new store subcategory'}</p>
+          <p className="mt-0.5 text-xs text-mk-subtle">{isEdit ? 'Update subcategory information' : 'Add a new store subcategory'}</p>
         </div>
 
         {/* Form */}
         <form onSubmit={submitHandle} className="p-5">
           {/* BASIC INFORMATION */}
           <div>
-            <div className="border-b border-[#E3DED6] pb-3">
-              <h3 className="text-sm font-bold text-[#292725]">Basic Information</h3>
+            <div className="border-b border-mk-border-admin pb-3">
+              <h3 className="text-sm font-bold text-mk-ink-admin">Basic Information</h3>
 
-              <p className="mt-0.5 text-xs text-[#99938B]">Enter subcategory details</p>
+              <p className="mt-0.5 text-xs text-mk-subtle">Enter subcategory details</p>
             </div>
 
             <div className="grid grid-cols-1 gap-5 pt-5 lg:grid-cols-2">
               {/* SubCategory Name */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#292725]">SubCategory Name</label>
+                <label className="mb-2 block text-sm font-medium text-mk-ink-admin">SubCategory Name</label>
 
                 <input
                   type="text"
@@ -183,20 +183,20 @@ export default function AdminSubCategoryForm() {
                   onChange={handleChange}
                   placeholder="e.g. Shirts"
                   required
-                  className="h-12 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+                  className="h-12 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-surface"
                 />
               </div>
 
               {/* Category */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#292725]">Category</label>
+                <label className="mb-2 block text-sm font-medium text-mk-ink-admin">Category</label>
 
                 <select
                   name="category"
                   value={subCategoryData.category}
                   onChange={handleChange}
                   required
-                  className="h-12 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+                  className="h-12 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-surface"
                 >
                   <option value="">Select Category</option>
 
@@ -212,10 +212,10 @@ export default function AdminSubCategoryForm() {
 
           {/* DESCRIPTION */}
           <div className="mt-6">
-            <div className="border-b border-[#E3DED6] pb-3">
-              <h3 className="text-sm font-bold text-[#292725]">Description</h3>
+            <div className="border-b border-mk-border-admin pb-3">
+              <h3 className="text-sm font-bold text-mk-ink-admin">Description</h3>
 
-              <p className="mt-0.5 text-xs text-[#99938B]">Add a short description for this subcategory</p>
+              <p className="mt-0.5 text-xs text-mk-subtle">Add a short description for this subcategory</p>
             </div>
 
             <div className="pt-5">
@@ -225,38 +225,38 @@ export default function AdminSubCategoryForm() {
                 onChange={handleChange}
                 rows={6}
                 placeholder="Enter subcategory description..."
-                className="w-full resize-none rounded-xl border border-[#E3DED6] bg-white px-4 py-3 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+                className="w-full resize-none rounded-xl border border-mk-border-admin bg-white px-4 py-3 text-sm text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-surface"
               />
             </div>
           </div>
 
           {/* STORE & DISPLAY */}
           <div className="mt-6">
-            <div className="border-b border-[#E3DED6] pb-3">
-              <h3 className="text-sm font-bold text-[#292725]">Store & Display</h3>
+            <div className="border-b border-mk-border-admin pb-3">
+              <h3 className="text-sm font-bold text-mk-ink-admin">Store & Display</h3>
 
-              <p className="mt-0.5 text-xs text-[#99938B]">Manage subcategory visibility</p>
+              <p className="mt-0.5 text-xs text-mk-subtle">Manage subcategory visibility</p>
             </div>
 
             <div className="grid grid-cols-1 gap-5 pt-5 lg:grid-cols-2">
               {/* Selected Category */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#292725]">Selected Category</label>
+                <label className="mb-2 block text-sm font-medium text-mk-ink-admin">Selected Category</label>
 
-                <div className="flex h-12 items-center rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4">
-                  <span className="text-sm font-medium text-[#6F6A64]">{selectedCategory?.categoryName || 'No category selected'}</span>
+                <div className="flex h-12 items-center rounded-xl border border-mk-border-admin bg-mk-bg-admin px-4">
+                  <span className="text-sm font-medium text-mk-muted-admin">{selectedCategory?.categoryName || 'No category selected'}</span>
                 </div>
               </div>
 
               {/* Status */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#292725]">Status</label>
+                <label className="mb-2 block text-sm font-medium text-mk-ink-admin">Status</label>
 
                 <select
                   name="status"
                   value={subCategoryData.status}
                   onChange={handleChange}
-                  className="h-12 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+                  className="h-12 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-surface"
                 >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
@@ -266,12 +266,12 @@ export default function AdminSubCategoryForm() {
           </div>
 
           {/* BUTTONS */}
-          <div className="mt-6 flex justify-end gap-3 border-t border-[#E3DED6] pt-5">
-            <button type="button" onClick={cancelHandle} className="h-10 rounded-xl border border-[#E3DED6] bg-white px-5 text-sm font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4]">
+          <div className="mt-6 flex justify-end gap-3 border-t border-mk-border-admin pt-5">
+            <button type="button" onClick={cancelHandle} className="h-10 rounded-xl border border-mk-border-admin bg-white px-5 text-sm font-medium text-mk-muted-admin transition hover:bg-mk-surface">
               Cancel
             </button>
 
-            <button type="submit" disabled={loading} className="h-10 rounded-xl bg-[#6B6258] px-6 text-sm font-semibold text-white transition hover:bg-[#3F3A35] disabled:cursor-not-allowed disabled:opacity-60">
+            <button type="submit" disabled={loading} className="h-10 rounded-xl bg-mk-admin px-6 text-sm font-semibold text-white transition hover:bg-mk-ink-admin disabled:cursor-not-allowed disabled:opacity-60">
               {loading ? 'Saving...' : isEdit ? 'Update SubCategory' : 'Create SubCategory'}
             </button>
           </div>

@@ -156,7 +156,7 @@ export default function LogIn({ onClose }) {
         }
       `}</style>
 
-      <div className="fixed inset-0 z-100 flex items-end justify-center overflow-hidden bg-[#351C18]/55 px-0 py-0 backdrop-blur-sm sm:items-center sm:px-4 sm:py-5" onClick={closeHandle}>
+      <div className="fixed inset-0 z-100 flex items-end justify-center overflow-hidden bg-mk-ink/55 px-0 py-0 backdrop-blur-sm sm:items-center sm:px-4 sm:py-5" onClick={closeHandle}>
         <div
           onClick={(e) => e.stopPropagation()}
           className="
@@ -166,8 +166,8 @@ export default function LogIn({ onClose }) {
             flex-col
             overflow-hidden
             rounded-t-[30px]
-            border border-[#E8DDD4]
-            bg-[#FFFDFC]
+            border border-mk-border
+            bg-mk-card
             shadow-[0_-18px_70px_rgba(53,28,24,0.32)]
             sm:max-h-[calc(100vh-40px)]
             sm:flex-row
@@ -183,15 +183,15 @@ export default function LogIn({ onClose }) {
               absolute right-3 top-3 z-40
               flex h-9 w-9 items-center justify-center
               rounded-xl
-              border border-[#E8DDD4]
-              bg-[#FFFDFC]/95
-              text-[#806C63]
+              border border-mk-border
+              bg-mk-card/95
+              text-mk-muted
               shadow-md
               backdrop-blur-sm
               transition-all duration-300
               hover:rotate-90
-              hover:bg-[#F8EEE8]
-              hover:text-[#8E181F]
+              hover:bg-mk-primary-soft
+              hover:text-mk-primary-hover
               disabled:cursor-not-allowed
               disabled:opacity-50
               sm:right-4 sm:top-4
@@ -200,12 +200,12 @@ export default function LogIn({ onClose }) {
             <X size={19} />
           </button>
 
-          <div className="relative hidden w-[43%] overflow-hidden bg-linear-to-br from-[#2B1210] via-[#571519] to-[#A51D26] p-8 text-white sm:flex sm:flex-col sm:justify-between lg:p-10">
+          <div className="relative hidden w-[43%] overflow-hidden bg-linear-to-br from-mk-ink via-mk-ink to-mk-primary p-8 text-white sm:flex sm:flex-col sm:justify-between lg:p-10">
             <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-white/6 blur-2xl" />
 
-            <div className="absolute -bottom-28 -left-20 h-60 w-60 rounded-full bg-[#D4A373]/12 blur-2xl" />
+            <div className="absolute -bottom-28 -left-20 h-60 w-60 rounded-full bg-mk-accent/12 blur-2xl" />
 
-            <div className="absolute right-12 top-[42%] h-24 w-24 rounded-full bg-[#B5262D]/20 blur-xl" />
+            <div className="absolute right-12 top-[42%] h-24 w-24 rounded-full bg-mk-primary/20 blur-xl" />
 
             <div
               className="absolute inset-0 opacity-[0.05]"
@@ -227,28 +227,28 @@ export default function LogIn({ onClose }) {
                 <UserPlus size={25} strokeWidth={1.8} />
               </div>
 
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#E8B7B3]">Welcome Back</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-mk-border">Welcome Back</p>
 
               <h2 className="mt-3 text-3xl font-extrabold leading-tight lg:text-4xl">
                 Login to
                 <br />
-                <span className="text-[#F1C7A5]">MineKart</span>
+                <span className="text-mk-border">MineKart</span>
               </h2>
 
-              <p className="mt-4 max-w-xs text-sm leading-6 text-[#F0D8D4]">Continue your shopping journey and manage everything from one place.</p>
+              <p className="mt-4 max-w-xs text-sm leading-6 text-mk-border">Continue your shopping journey and manage everything from one place.</p>
             </div>
 
             <div className="relative z-10 space-y-3">
               <div className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-xl backdrop-blur-md">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                    <ShieldCheck size={20} className="text-[#F1C7A5]" />
+                    <ShieldCheck size={20} className="text-mk-border" />
                   </div>
 
                   <div>
                     <p className="text-sm font-bold">Secure Shopping</p>
 
-                    <p className="mt-0.5 text-xs text-[#E0C8C3]">Your account stays protected</p>
+                    <p className="mt-0.5 text-xs text-mk-border">Your account stays protected</p>
                   </div>
                 </div>
               </div>
@@ -268,7 +268,7 @@ export default function LogIn({ onClose }) {
               flex-col
               overflow-y-auto
               overscroll-contain
-              bg-[#FFFDFC]
+              bg-mk-card
               px-5
               pb-6
               pt-6
@@ -279,17 +279,17 @@ export default function LogIn({ onClose }) {
             "
           >
             <div className="mb-6 pr-10 sm:mb-7 sm:pr-0">
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/15">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-lg shadow-mk-primary-deep/15">
                 <Lock size={19} />
               </div>
 
-              <h2 className="text-2xl font-extrabold tracking-tight text-[#351C18]">Welcome Back</h2>
+              <h2 className="text-2xl font-extrabold tracking-tight text-mk-ink">Welcome Back</h2>
 
-              <p className="mt-1.5 text-sm text-[#806C63]">Enter your details to continue shopping</p>
+              <p className="mt-1.5 text-sm text-mk-muted">Enter your details to continue shopping</p>
             </div>
 
             <div className="mb-5">
-              <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Email Address</label>
+              <label className="mb-2 block text-xs font-bold text-mk-ink sm:text-sm">Email Address</label>
 
               <div className="group relative">
                 <Mail
@@ -297,9 +297,9 @@ export default function LogIn({ onClose }) {
                   className="
                     absolute left-3.5 top-1/2
                     -translate-y-1/2
-                    text-[#9A857B]
+                    text-mk-muted
                     transition-colors duration-200
-                    group-focus-within:text-[#8E181F]
+                    group-focus-within:text-mk-primary-hover
                   "
                 />
 
@@ -311,16 +311,16 @@ export default function LogIn({ onClose }) {
                   placeholder="Enter your email"
                   autoComplete="email"
                   disabled={loading}
-                  className=" h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-4 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 disabled:cursor-not-allowed disabled:opacity-60 "
+                  className=" h-12 w-full rounded-xl border border-mk-border bg-mk-card pl-11 pr-4 text-sm text-mk-ink outline-none transition-all duration-200 placeholder:text-mk-muted hover:border-mk-border focus:border-mk-primary focus:bg-white focus:ring-4 focus:ring-mk-primary/5 disabled:cursor-not-allowed disabled:opacity-60 "
                 />
               </div>
             </div>
 
             <div className="mb-5">
-              <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Password</label>
+              <label className="mb-2 block text-xs font-bold text-mk-ink sm:text-sm">Password</label>
 
               <div className="group relative">
-                <Lock size={18} className=" absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9A857B] transition-colors duration-200 group-focus-within:text-[#8E181F] " />
+                <Lock size={18} className=" absolute left-3.5 top-1/2 -translate-y-1/2 text-mk-muted transition-colors duration-200 group-focus-within:text-mk-primary-hover " />
 
                 <input
                   onChange={changeHandle}
@@ -330,14 +330,14 @@ export default function LogIn({ onClose }) {
                   placeholder="Enter your password"
                   autoComplete="current-password"
                   disabled={loading}
-                  className=" h-12 w-full rounded-xl border border-[#E2D5CC] bg-[#FFFDFC] pl-11 pr-12 text-sm text-[#351C18] outline-none transition-all duration-200 placeholder:text-[#B09E95] hover:border-[#D5C2B8] focus:border-[#A51D26] focus:bg-white focus:ring-4 focus:ring-[#A51D26]/5 disabled:cursor-not-allowed disabled:opacity-60 "
+                  className=" h-12 w-full rounded-xl border border-mk-border bg-mk-card pl-11 pr-12 text-sm text-mk-ink outline-none transition-all duration-200 placeholder:text-mk-muted hover:border-mk-border focus:border-mk-primary focus:bg-white focus:ring-4 focus:ring-mk-primary/5 disabled:cursor-not-allowed disabled:opacity-60 "
                 />
 
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   disabled={loading}
-                  className=" absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center justify-center text-[#9A857B] transition-colors duration-200 hover:text-[#8E181F] disabled:cursor-not-allowed disabled:opacity-50 "
+                  className=" absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center justify-center text-mk-muted transition-colors duration-200 hover:text-mk-primary-hover disabled:cursor-not-allowed disabled:opacity-50 "
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -352,9 +352,9 @@ export default function LogIn({ onClose }) {
                   disabled={loading}
                   className="
                     text-xs font-bold
-                    text-[#8E181F]
+                    text-mk-primary-hover
                     transition-colors
-                    hover:text-[#A51D26]
+                    hover:text-mk-primary
                     hover:underline
                     disabled:cursor-not-allowed
                     disabled:opacity-50
@@ -374,13 +374,13 @@ export default function LogIn({ onClose }) {
                 shrink-0
                 items-center justify-center gap-2
                 rounded-xl
-                bg-linear-to-r from-[#7D171C] to-[#A51D26]
+                bg-linear-to-r from-mk-primary-deep to-mk-primary
                 font-bold text-white
-                shadow-md shadow-[#7D171C]/20
+                shadow-md shadow-mk-primary-deep/20
                 transition-all duration-300
                 hover:-translate-y-0.5
-                hover:from-[#681419]
-                hover:to-[#8E181F]
+                hover:from-mk-primary-deep
+                hover:to-mk-primary-hover
                 hover:shadow-lg
                 active:scale-[0.99]
                 disabled:cursor-not-allowed
@@ -401,8 +401,8 @@ export default function LogIn({ onClose }) {
               )}
             </button>
 
-            <div className="mt-6 border-t border-[#E8DDD4] pt-4 text-center sm:mt-7 sm:pt-5">
-              <p className="text-sm text-[#806C63]">Don't have an account?</p>
+            <div className="mt-6 border-t border-mk-border pt-4 text-center sm:mt-7 sm:pt-5">
+              <p className="text-sm text-mk-muted">Don't have an account?</p>
 
               <button
                 type="button"
@@ -419,10 +419,10 @@ export default function LogIn({ onClose }) {
                   mt-2
                   inline-flex items-center gap-1.5
                   text-sm font-bold
-                  text-[#8E181F]
+                  text-mk-primary-hover
                   transition-all duration-300
                   hover:gap-2.5
-                  hover:text-[#A51D26]
+                  hover:text-mk-primary
                   disabled:cursor-not-allowed
                   disabled:opacity-50
                 "

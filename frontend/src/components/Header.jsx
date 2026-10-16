@@ -163,9 +163,9 @@ export default function Header() {
   const userAvatar = user?.avatar ? getImageUrl(user.avatar) : ''
 
   return (
-    <header ref={headerRef} className="fixed left-0 top-0 z-50 w-full text-[#35231F]">
+    <header ref={headerRef} className="fixed left-0 top-0 z-50 w-full text-mk-ink">
       {/* TOP OFFER BAR */}
-      <div className="bg-[#6B4139] text-[#FFF9F5]">
+      <div className="bg-mk-admin-hover text-mk-bg">
         <div className="mx-auto flex h-8 max-w-[1600px] items-center justify-between px-3 sm:px-5 lg:px-7">
           <div className="flex min-w-0 items-center gap-3 text-[9px] font-medium sm:gap-5 sm:text-[10px]">
             <span className="truncate">Free Shipping on Orders Above ₹999</span>
@@ -182,7 +182,7 @@ export default function Header() {
       </div>
 
       {/* MAIN HEADER */}
-      <div className="border-b border-[#E7D8CE] bg-[#FFFCF9]/95 shadow-[0_5px_22px_rgba(59,33,29,0.06)] backdrop-blur-md">
+      <div className="border-b border-mk-border bg-mk-card/95 shadow-[0_5px_22px_rgba(59,33,29,0.06)] backdrop-blur-md">
         <div className="mx-auto flex h-15 max-w-[1600px] items-center gap-1.5 px-2 sm:h-19 sm:gap-3 sm:px-5 lg:gap-5 lg:px-7">
           {/* LOGO */}
           <Link
@@ -194,17 +194,17 @@ export default function Header() {
             }}
             className="flex shrink-0 items-center gap-2.5"
           >
-            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-[#E4CFC5] bg-[#F6E9E0] sm:h-12 sm:w-12">
+            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-mk-border bg-mk-primary-soft sm:h-12 sm:w-12">
               <img src="/cart_image.jpg" alt="MineKart" className="h-7 w-7 object-contain sm:h-10 sm:w-10" />
             </div>
 
             <div className="hidden leading-none sm:block">
-              <h1 className="text-[22px] font-black tracking-tight text-[#35231F] lg:text-[24px]">
+              <h1 className="text-[22px] font-black tracking-tight text-mk-ink lg:text-[24px]">
                 Mine
-                <span className="text-[#9D2932]">Kart</span>
+                <span className="text-mk-primary-hover">Kart</span>
               </h1>
 
-              <p className="mt-1 text-[7px] font-bold tracking-[0.18em] text-[#967E74] lg:text-[8px]">SHOP MORE • LIVE BETTER</p>
+              <p className="mt-1 text-[7px] font-bold tracking-[0.18em] text-mk-muted lg:text-[8px]">SHOP MORE • LIVE BETTER</p>
             </div>
           </Link>
 
@@ -212,9 +212,9 @@ export default function Header() {
           {mobileSearchOpen ? (
             <>
               <div className="min-w-0 flex-1">
-                <div className="flex h-10 w-full items-center overflow-hidden rounded-xl border border-[#CFA8A0] bg-white shadow-[0_0_0_3px_rgba(157,41,50,0.05)] sm:h-11">
+                <div className="flex h-10 w-full items-center overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_0_0_3px_rgba(157,41,50,0.05)] sm:h-11">
 
-                    <button type="button" onClick={handleSearch} className="mr-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#9D2932] transition-colors duration-200 hover:bg-[#F7EEE7]" aria-label="Search">
+                    <button type="button" onClick={handleSearch} className="mr-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-mk-primary-hover transition-colors duration-200 hover:bg-mk-primary-soft" aria-label="Search">
                     <Search size={17} strokeWidth={2.2} />
                   </button>
                   <input
@@ -232,7 +232,7 @@ export default function Header() {
                       }
                     }}
                     placeholder="Search products..."
-                    className="h-full min-w-0 flex-1 bg-transparent px-3 text-[11px] text-[#35231F] outline-none placeholder:text-[#9D8980] sm:text-sm"
+                    className="h-full min-w-0 flex-1 bg-transparent px-3 text-[11px] text-mk-ink outline-none placeholder:text-mk-subtle sm:text-sm"
                   />
 
                 
@@ -240,7 +240,7 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={closeMobileSearch}
-                    className="mr-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#806C63] transition-colors duration-200 hover:bg-[#F7EEE7] hover:text-[#9D2932]"
+                    className="mr-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-mk-muted transition-colors duration-200 hover:bg-mk-primary-soft hover:text-mk-primary-hover"
                     aria-label="Close search"
                   >
                     <X size={17} strokeWidth={2} />
@@ -258,12 +258,12 @@ export default function Header() {
                     setMobileSearchOpen(false)
                     navigate('/cart')
                   }}
-                  className="group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E4D5CD] bg-[#F7EEE7] text-[#5B423A] transition-colors duration-200 hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#9D2932] sm:h-10 sm:w-10"
+                  className="group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-mk-border bg-mk-primary-soft text-mk-admin-hover transition-colors duration-200 hover:border-mk-border hover:bg-mk-primary-soft hover:text-mk-primary-hover sm:h-10 sm:w-10"
                   aria-label="Cart"
                 >
                   <ShoppingCart size={18} strokeWidth={1.9} />
 
-                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#9D2932] px-1 text-[7px] font-extrabold leading-none text-white">{cart?.totalQuantity || 0}</span>
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-mk-card bg-mk-primary-hover px-1 text-[7px] font-extrabold leading-none text-white">{cart?.totalQuantity || 0}</span>
                 </button>
               )}
             </>
@@ -273,8 +273,8 @@ export default function Header() {
               <div className="min-w-0 flex-1">
                 {/* DESKTOP SEARCH */}
                 <div className="hidden sm:block">
-                  <div className="group flex h-11 w-full items-center overflow-hidden rounded-xl border border-[#DDCDC3] bg-[#F8F1EC] transition-all duration-200 focus-within:border-[#CFA8A0] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(157,41,50,0.05)]">
-                    <Search size={18} strokeWidth={2} className="ml-3.5 shrink-0 text-[#8D766D] transition-colors duration-200 group-focus-within:text-[#9D2932]" />
+                  <div className="group flex h-11 w-full items-center overflow-hidden rounded-xl border border-mk-border bg-mk-primary-soft transition-all duration-200 focus-within:border-mk-border focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(157,41,50,0.05)]">
+                    <Search size={18} strokeWidth={2} className="ml-3.5 shrink-0 text-mk-muted transition-colors duration-200 group-focus-within:text-mk-primary-hover" />
 
                     <input
                       type="text"
@@ -286,10 +286,10 @@ export default function Header() {
                         }
                       }}
                       placeholder="Search products, brands and more..."
-                      className="h-full min-w-0 flex-1 bg-transparent px-3 text-xs text-[#35231F] outline-none placeholder:text-[#9D8980] md:text-sm"
+                      className="h-full min-w-0 flex-1 bg-transparent px-3 text-xs text-mk-ink outline-none placeholder:text-mk-subtle md:text-sm"
                     />
 
-                    <button type="button" onClick={handleSearch} className="mr-1 flex h-9 items-center justify-center rounded-lg bg-[#9D2932] px-5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-[#86232B]">
+                    <button type="button" onClick={handleSearch} className="mr-1 flex h-9 items-center justify-center rounded-lg bg-mk-primary-hover px-5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-mk-primary-hover">
                       Search
                     </button>
                   </div>
@@ -299,7 +299,7 @@ export default function Header() {
                 <button
                   type="button"
                   onClick={openMobileSearch}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E4D5CD] bg-[#F7EEE7] text-[#5B423A] transition-colors duration-200 hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#9D2932] sm:hidden"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-mk-border bg-mk-primary-soft text-mk-admin-hover transition-colors duration-200 hover:border-mk-border hover:bg-mk-primary-soft hover:text-mk-primary-hover sm:hidden"
                   aria-label="Open search"
                 >
                   <Search size={19} strokeWidth={1.9} />
@@ -312,12 +312,12 @@ export default function Header() {
                   type="button"
                   onClick={handleAccountToggle}
                   className={`group flex h-9 w-auto items-center justify-center rounded-xl border transition-all duration-200 sm:h-auto sm:w-auto   sm:gap-2 px-2 sm:py-1.5 ${
-                    accountOpen ? 'border-[#D9C4BA] bg-[#F7EEE7]' : 'border-transparent hover:border-[#E4D5CD] hover:bg-[#F9F2ED]'
+                    accountOpen ? 'border-mk-border bg-mk-primary-soft' : 'border-transparent hover:border-mk-border hover:bg-mk-bg-admin'
                   }`}
                 >
                   {/* PROFILE IMAGE */}
                   {user && userAvatar ? (
-                    <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 border-[#DCC8BF] bg-[#F5E9E2] shadow-[0_2px_8px_rgba(53,35,31,0.08)] sm:h-10 sm:w-10">
+                    <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 border-mk-border bg-mk-danger-soft shadow-[0_2px_8px_rgba(53,35,31,0.08)] sm:h-10 sm:w-10">
                       <img
                         src={userAvatar}
                         alt={user.name || 'Profile'}
@@ -328,41 +328,41 @@ export default function Header() {
                       />
                     </div>
                   ) : (
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#DCC8BF] bg-[#F5E9E2] text-[#9D2932] transition-colors duration-200 group-hover:border-[#CFA8A0] group-hover:bg-[#EFE0D7] sm:h-10 sm:w-10">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-mk-border bg-mk-danger-soft text-mk-primary-hover transition-colors duration-200 group-hover:border-mk-border group-hover:bg-mk-primary-soft sm:h-10 sm:w-10">
                       <UserCircle size={21} strokeWidth={1.8} />
                     </div>
                   )}
 
                   {/* MOBILE USER NAME */}
-                  {user && <span className="ml-1 max-w-20 truncate text-[10px] font-bold text-[#35231F] sm:hidden">{user.name}</span>}
+                  {user && <span className="ml-1 max-w-20 truncate text-[10px] font-bold text-mk-ink sm:hidden">{user.name}</span>}
 
                   {/* DESKTOP ACCOUNT INFO */}
                   <div className="hidden max-w-25 text-left lg:block">
-                    <p className="text-[8px] font-medium uppercase tracking-wider text-[#967E74]">{user ? 'Welcome back' : 'Account'}</p>
+                    <p className="text-[8px] font-medium uppercase tracking-wider text-mk-muted">{user ? 'Welcome back' : 'Account'}</p>
 
-                    <p className="mt-0.5 truncate text-xs font-extrabold text-[#35231F]">{user ? user.name : 'Login'}</p>
+                    <p className="mt-0.5 truncate text-xs font-extrabold text-mk-ink">{user ? user.name : 'Login'}</p>
                   </div>
 
-                  {user && <ChevronDown size={14} strokeWidth={2} className={`hidden transition-all duration-200 lg:block ${accountOpen ? 'rotate-180 text-[#9D2932]' : 'text-[#806C63]'}`} />}
+                  {user && <ChevronDown size={14} strokeWidth={2} className={`hidden transition-all duration-200 lg:block ${accountOpen ? 'rotate-180 text-mk-primary-hover' : 'text-mk-muted'}`} />}
                 </button>
 
                 {/* ACCOUNT DROPDOWN */}
                 {user && accountOpen && (
                   <div className="absolute right-0 top-full z-70 pt-2 sm:pt-3">
-                    <div className="w-64 max-w-[calc(100vw-1rem)] overflow-hidden rounded-xl border border-[#E3D6CE] bg-white shadow-[0_20px_50px_rgba(53,28,24,0.12)] sm:w-72 sm:rounded-2xl">
+                    <div className="w-64 max-w-[calc(100vw-1rem)] overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_20px_50px_rgba(53,28,24,0.12)] sm:w-72 sm:rounded-2xl">
                       {/* PROFILE HEADER */}
-                      <div className="border-b border-[#EEE5DF] bg-linear-to-br from-[#FBF5F0] to-[#F7EEE7] px-3 py-3 sm:px-4 sm:py-4">
+                      <div className="border-b border-mk-surface bg-linear-to-br from-mk-bg to-mk-primary-soft px-3 py-3 sm:px-4 sm:py-4">
                         <div className="flex items-center gap-2.5 sm:gap-3">
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E2CEC5] bg-[#F5E9E2] text-[#9D2932] sm:h-12 sm:w-12">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-mk-border bg-mk-danger-soft text-mk-primary-hover sm:h-12 sm:w-12">
                             {userAvatar ? <img src={userAvatar} alt={user.name} className="h-full w-full object-cover" /> : <User size={16} strokeWidth={2} />}
                           </div>
 
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-[11px] font-extrabold text-[#351C18] sm:text-sm">{user.name}</p>
+                            <p className="truncate text-[11px] font-extrabold text-mk-ink sm:text-sm">{user.name}</p>
 
-                            <p className="mt-0.5 truncate text-[8px] text-[#9A857B] sm:text-[10px]">{user.email}</p>
+                            <p className="mt-0.5 truncate text-[8px] text-mk-muted sm:text-[10px]">{user.email}</p>
 
-                            <span className="mt-1 inline-flex items-center rounded-full bg-[#F3E3DC] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-[#9D2932] sm:mt-1.5 sm:px-2 sm:text-[8px]">My Account</span>
+                            <span className="mt-1 inline-flex items-center rounded-full bg-mk-danger-soft px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-mk-primary-hover sm:mt-1.5 sm:px-2 sm:text-[8px]">My Account</span>
                           </div>
                         </div>
                       </div>
@@ -373,38 +373,38 @@ export default function Header() {
                         <Link
                           to="/profile"
                           onClick={() => setAccountOpen(false)}
-                          className="group flex items-center gap-2 rounded-xl px-2 py-2 text-[10px] font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#9D2932] sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
+                          className="group flex items-center gap-2 rounded-xl px-2 py-2 text-[10px] font-semibold text-mk-ink transition-colors duration-200 hover:bg-mk-primary-soft hover:text-mk-primary-hover sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
                         >
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#9D2932] transition-colors group-hover:bg-[#F2DDD5] sm:h-9 sm:w-9">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-mk-primary-soft text-mk-primary-hover transition-colors group-hover:bg-mk-primary-soft sm:h-9 sm:w-9">
                             <User size={14} strokeWidth={1.9} />
                           </span>
 
                           <span className="min-w-0 flex-1">
                             <span className="block truncate font-bold">My Profile</span>
 
-                            <span className="mt-0.5 hidden truncate text-[9px] font-normal text-[#9A857B] sm:block">Manage your personal information</span>
+                            <span className="mt-0.5 hidden truncate text-[9px] font-normal text-mk-muted sm:block">Manage your personal information</span>
                           </span>
 
-                          <ArrowRight size={12} className="shrink-0 text-[#B6A39A] transition-colors group-hover:text-[#9D2932]" />
+                          <ArrowRight size={12} className="shrink-0 text-mk-subtle transition-colors group-hover:text-mk-primary-hover" />
                         </Link>
 
                         {/* ORDERS */}
                         <Link
                           to="/orders"
                           onClick={() => setAccountOpen(false)}
-                          className="group mt-0.5 flex items-center gap-2 rounded-xl px-2 py-2 text-[10px] font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#9D2932] sm:mt-1 sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
+                          className="group mt-0.5 flex items-center gap-2 rounded-xl px-2 py-2 text-[10px] font-semibold text-mk-ink transition-colors duration-200 hover:bg-mk-primary-soft hover:text-mk-primary-hover sm:mt-1 sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
                         >
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#9D2932] transition-colors group-hover:bg-[#F2DDD5] sm:h-9 sm:w-9">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-mk-primary-soft text-mk-primary-hover transition-colors group-hover:bg-mk-primary-soft sm:h-9 sm:w-9">
                             <Package size={14} strokeWidth={1.9} />
                           </span>
 
                           <span className="min-w-0 flex-1">
                             <span className="block truncate font-bold">My Orders</span>
 
-                            <span className="mt-0.5 hidden truncate text-[9px] font-normal text-[#9A857B] sm:block">Track and manage your orders</span>
+                            <span className="mt-0.5 hidden truncate text-[9px] font-normal text-mk-muted sm:block">Track and manage your orders</span>
                           </span>
 
-                          <ArrowRight size={12} className="shrink-0 text-[#B6A39A] transition-colors group-hover:text-[#9D2932]" />
+                          <ArrowRight size={12} className="shrink-0 text-mk-subtle transition-colors group-hover:text-mk-primary-hover" />
                         </Link>
 
                         {/* ADMIN PANEL */}
@@ -416,25 +416,25 @@ export default function Header() {
                               setNotificationOpen(false)
                               setMobileSearchOpen(false)
                             }}
-                            className="group mt-0.5 flex items-center gap-2 rounded-xl px-2 py-2 text-[10px] font-semibold text-[#493631] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#9D2932] sm:mt-1 sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
+                            className="group mt-0.5 flex items-center gap-2 rounded-xl px-2 py-2 text-[10px] font-semibold text-mk-ink transition-colors duration-200 hover:bg-mk-primary-soft hover:text-mk-primary-hover sm:mt-1 sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
                           >
-                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#9D2932] transition-colors group-hover:bg-[#F2DDD5] sm:h-9 sm:w-9">
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-mk-primary-soft text-mk-primary-hover transition-colors group-hover:bg-mk-primary-soft sm:h-9 sm:w-9">
                               <Settings size={14} strokeWidth={1.9} />
                             </span>
 
                             <span className="min-w-0 flex-1">
                               <span className="block truncate font-bold">Admin Panel</span>
 
-                              <span className="mt-0.5 hidden truncate text-[9px] font-normal text-[#9A857B] sm:block">Manage your MineKart store</span>
+                              <span className="mt-0.5 hidden truncate text-[9px] font-normal text-mk-muted sm:block">Manage your MineKart store</span>
                             </span>
 
-                            <ArrowRight size={12} className="shrink-0 text-[#B6A39A] transition-colors group-hover:text-[#9D2932]" />
+                            <ArrowRight size={12} className="shrink-0 text-mk-subtle transition-colors group-hover:text-mk-primary-hover" />
                           </Link>
                         )}
                       </div>
 
                       {/* LOGOUT */}
-                      <div className="border-t border-[#EEE5DF] p-1 sm:p-2">
+                      <div className="border-t border-mk-surface p-1 sm:p-2">
                         <button
                           type="button"
                           onClick={() => {
@@ -444,19 +444,19 @@ export default function Header() {
                             setMobileSearchOpen(false)
                             navigate('/')
                           }}
-                          className="group flex w-full items-center gap-2 rounded-xl px-2 py-2 text-left text-[10px] font-semibold text-[#9D2932] transition-colors duration-200 hover:bg-[#FFF1F1] sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
+                          className="group flex w-full items-center gap-2 rounded-xl px-2 py-2 text-left text-[10px] font-semibold text-mk-primary-hover transition-colors duration-200 hover:bg-mk-bg sm:gap-3 sm:px-3 sm:py-3 sm:text-xs"
                         >
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#FFF1F1] text-[#9D2932] transition-colors group-hover:bg-[#FFE5E5] sm:h-9 sm:w-9">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-mk-bg text-mk-primary-hover transition-colors group-hover:bg-mk-primary-soft sm:h-9 sm:w-9">
                             <LogOut size={14} strokeWidth={1.9} />
                           </span>
 
                           <span className="min-w-0 flex-1">
                             <span className="block font-bold">Logout</span>
 
-                            <span className="mt-0.5 hidden truncate text-[9px] font-normal text-[#B17A73] sm:block">Sign out from your account</span>
+                            <span className="mt-0.5 hidden truncate text-[9px] font-normal text-mk-subtle sm:block">Sign out from your account</span>
                           </span>
 
-                          <ArrowRight size={12} className="shrink-0 text-[#D1AAA4]" />
+                          <ArrowRight size={12} className="shrink-0 text-mk-accent" />
                         </button>
                       </div>
                     </div>
@@ -465,7 +465,7 @@ export default function Header() {
               </div>
 
               {/* DIVIDER */}
-              {user && <div className="hidden h-9 w-px shrink-0 bg-[#E5D6CD] sm:block" />}
+              {user && <div className="hidden h-9 w-px shrink-0 bg-mk-border sm:block" />}
 
               {/* NOTIFICATION */}
               {user && (
@@ -474,13 +474,13 @@ export default function Header() {
                     type="button"
                     onClick={handleNotificationToggle}
                     className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border transition-colors duration-200 sm:h-10 sm:w-10 ${
-                      notificationOpen ? 'border-[#CFA8A0] bg-[#EFE0D7] text-[#9D2932]' : 'border-[#E4D5CD] bg-[#F7EEE7] text-[#5B423A] hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#9D2932]'
+                      notificationOpen ? 'border-mk-border bg-mk-primary-soft text-mk-primary-hover' : 'border-mk-border bg-mk-primary-soft text-mk-admin-hover hover:border-mk-border hover:bg-mk-primary-soft hover:text-mk-primary-hover'
                     }`}
                   >
                     <Bell size={18} strokeWidth={1.9} />
 
                     {unreadCount > 0 && (
-                      <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#9D2932] px-1 text-[7px] font-extrabold leading-none text-white sm:h-4.5 sm:min-w-4.5 sm:text-[8px]">
+                      <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-mk-card bg-mk-primary-hover px-1 text-[7px] font-extrabold leading-none text-white sm:h-4.5 sm:min-w-4.5 sm:text-[8px]">
                         {unreadCount > 99 ? '99+' : unreadCount}
                       </span>
                     )}
@@ -489,18 +489,18 @@ export default function Header() {
                   {/* NOTIFICATION DROPDOWN */}
                   {notificationOpen && (
                     <div className="absolute right-0 top-full z-80 pt-2 sm:pt-3">
-                      <div className="w-72 max-w-[calc(100vw-1rem)] overflow-hidden rounded-xl border border-[#E3D6CE] bg-white shadow-[0_20px_50px_rgba(53,28,24,0.12)] sm:w-96 sm:rounded-2xl">
+                      <div className="w-72 max-w-[calc(100vw-1rem)] overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_20px_50px_rgba(53,28,24,0.12)] sm:w-96 sm:rounded-2xl">
                         {/* HEADER */}
-                        <div className="flex items-center justify-between border-b border-[#EEE5DF] bg-linear-to-r from-[#FFFCFA] to-[#FBF5F0] px-3 py-2.5 sm:px-5 sm:py-4">
+                        <div className="flex items-center justify-between border-b border-mk-surface bg-linear-to-r from-mk-card to-mk-bg px-3 py-2.5 sm:px-5 sm:py-4">
                           <div className="flex min-w-0 items-center gap-2">
-                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F7EEE7] text-[#9D2932] sm:h-8 sm:w-8">
+                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-mk-primary-soft text-mk-primary-hover sm:h-8 sm:w-8">
                               <Bell size={14} strokeWidth={1.9} />
                             </div>
 
                             <div className="min-w-0">
-                              <h3 className="text-[11px] font-black text-[#351C18] sm:text-sm">Notifications</h3>
+                              <h3 className="text-[11px] font-black text-mk-ink sm:text-sm">Notifications</h3>
 
-                              <p className="mt-0.5 truncate text-[7px] text-[#9A857B] sm:text-[9px]">{unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'You are all caught up'}</p>
+                              <p className="mt-0.5 truncate text-[7px] text-mk-muted sm:text-[9px]">{unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'You are all caught up'}</p>
                             </div>
                           </div>
 
@@ -508,7 +508,7 @@ export default function Header() {
                             <button
                               type="button"
                               onClick={handleMarkAllRead}
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[#9D2932] transition-colors duration-200 hover:bg-[#F8ECE6] hover:text-[#7D2028] sm:h-auto sm:w-auto sm:gap-1 sm:px-2 sm:py-1.5 sm:text-[9px]"
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-mk-primary-hover transition-colors duration-200 hover:bg-mk-primary-soft hover:text-mk-primary-deep sm:h-auto sm:w-auto sm:gap-1 sm:px-2 sm:py-1.5 sm:text-[9px]"
                               aria-label="Mark all as read"
                             >
                               <CheckCheck size={13} />
@@ -521,13 +521,13 @@ export default function Header() {
                         {/* EMPTY */}
                         {notifications.length === 0 ? (
                           <div className="flex min-h-36 flex-col items-center justify-center px-4 text-center sm:min-h-56 sm:px-6">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7EEE7] text-[#9D2932] sm:h-14 sm:w-14 sm:rounded-2xl">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-mk-primary-soft text-mk-primary-hover sm:h-14 sm:w-14 sm:rounded-2xl">
                               <Bell size={19} strokeWidth={1.7} />
                             </div>
 
-                            <p className="mt-2.5 text-[11px] font-bold text-[#493631] sm:mt-4 sm:text-sm">No notifications yet</p>
+                            <p className="mt-2.5 text-[11px] font-bold text-mk-ink sm:mt-4 sm:text-sm">No notifications yet</p>
 
-                            <p className="mt-1 max-w-48 text-[8px] leading-3.5 text-[#9A857B] sm:max-w-55 sm:text-[10px] sm:leading-4">We will keep you updated about your orders and account activity.</p>
+                            <p className="mt-1 max-w-48 text-[8px] leading-3.5 text-mk-muted sm:max-w-55 sm:text-[10px] sm:leading-4">We will keep you updated about your orders and account activity.</p>
                           </div>
                         ) : (
                           <div className="max-h-[45vh] overflow-y-auto sm:max-h-96">
@@ -539,29 +539,29 @@ export default function Header() {
                                   key={notification._id}
                                   type="button"
                                   onClick={() => handleNotificationClick(notification)}
-                                  className={`group flex w-full items-start gap-2 border-b border-[#F1E9E4] px-3 py-2.5 text-left transition-colors duration-200 last:border-b-0 hover:bg-[#FFF8F4] sm:gap-3 sm:px-5 sm:py-4 ${
-                                    !notification.isRead ? 'bg-[#FFFCFA]' : 'bg-white'
+                                  className={`group flex w-full items-start gap-2 border-b border-mk-danger-soft px-3 py-2.5 text-left transition-colors duration-200 last:border-b-0 hover:bg-mk-bg sm:gap-3 sm:px-5 sm:py-4 ${
+                                    !notification.isRead ? 'bg-mk-card' : 'bg-white'
                                   }`}
                                 >
                                   {/* ICON */}
-                                  <div className={`relative mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg sm:h-10 sm:w-10 sm:rounded-xl ${notification.isRead ? 'bg-[#F7EEE7] text-[#806C63]' : 'bg-[#F8E8E5] text-[#9D2932]'}`}>
+                                  <div className={`relative mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg sm:h-10 sm:w-10 sm:rounded-xl ${notification.isRead ? 'bg-mk-primary-soft text-mk-muted' : 'bg-mk-primary-soft text-mk-primary-hover'}`}>
                                     <Icon size={13} strokeWidth={1.8} />
 
-                                    {!notification.isRead && <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-white bg-[#9D2932]" />}
+                                    {!notification.isRead && <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-white bg-mk-primary-hover" />}
                                   </div>
 
                                   {/* CONTENT */}
                                   <div className="min-w-0 flex-1">
                                     <div className="flex items-start justify-between gap-2">
-                                      <p className={`min-w-0 truncate text-[8px] sm:text-[11px] ${notification.isRead ? 'font-semibold text-[#493631]' : 'font-extrabold text-[#351C18]'}`}>{notification.title}</p>
+                                      <p className={`min-w-0 truncate text-[8px] sm:text-[11px] ${notification.isRead ? 'font-semibold text-mk-ink' : 'font-extrabold text-mk-ink'}`}>{notification.title}</p>
 
-                                      <span className="shrink-0 text-[6px] font-medium text-[#A8968D] sm:text-[8px]">{formatNotificationDate(notification.createdAt)}</span>
+                                      <span className="shrink-0 text-[6px] font-medium text-mk-subtle sm:text-[8px]">{formatNotificationDate(notification.createdAt)}</span>
                                     </div>
 
-                                    <p className="mt-0.5 line-clamp-2 text-[7px] leading-3 text-[#806C63] sm:mt-1 sm:text-[10px] sm:leading-4">{notification.message}</p>
+                                    <p className="mt-0.5 line-clamp-2 text-[7px] leading-3 text-mk-muted sm:mt-1 sm:text-[10px] sm:leading-4">{notification.message}</p>
 
                                     {notification.orderId && (
-                                      <span className="mt-1 inline-flex items-center gap-1 text-[6px] font-extrabold text-[#9D2932] sm:mt-2 sm:text-[9px]">
+                                      <span className="mt-1 inline-flex items-center gap-1 text-[6px] font-extrabold text-mk-primary-hover sm:mt-2 sm:text-[9px]">
                                         View order
                                         <ArrowRight size={8} />
                                       </span>
@@ -582,7 +582,7 @@ export default function Header() {
                               setAccountOpen(false)
                               navigate('/notifications')
                             }}
-                            className="flex w-full items-center justify-center gap-1.5 border-t border-[#EEE5DF] bg-[#FFFCFA] px-3 py-2.5 text-[7px] font-extrabold text-[#9D2932] transition-colors duration-200 hover:bg-[#F8ECE6] sm:gap-2 sm:px-5 sm:py-4 sm:text-[10px]"
+                            className="flex w-full items-center justify-center gap-1.5 border-t border-mk-surface bg-mk-card px-3 py-2.5 text-[7px] font-extrabold text-mk-primary-hover transition-colors duration-200 hover:bg-mk-primary-soft sm:gap-2 sm:px-5 sm:py-4 sm:text-[10px]"
                           >
                             View all notifications
                             <ArrowRight size={11} />
@@ -603,12 +603,12 @@ export default function Header() {
                     setNotificationOpen(false)
                     navigate('/cart')
                   }}
-                  className="group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#E4D5CD] bg-[#F7EEE7] text-[#5B423A] transition-colors duration-200 hover:border-[#CFA8A0] hover:bg-[#EFE0D7] hover:text-[#9D2932] sm:h-10 sm:w-10"
+                  className="group relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-mk-border bg-mk-primary-soft text-mk-admin-hover transition-colors duration-200 hover:border-mk-border hover:bg-mk-primary-soft hover:text-mk-primary-hover sm:h-10 sm:w-10"
                   aria-label="Cart"
                 >
                   <ShoppingCart size={18} strokeWidth={1.9} />
 
-                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-[#FFFCF9] bg-[#9D2932] px-1 text-[7px] font-extrabold leading-none text-white sm:h-4.5 sm:min-w-4.5 sm:text-[8px]">
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-mk-card bg-mk-primary-hover px-1 text-[7px] font-extrabold leading-none text-white sm:h-4.5 sm:min-w-4.5 sm:text-[8px]">
                     {cart?.totalQuantity || 0}
                   </span>
                 </button>

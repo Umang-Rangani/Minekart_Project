@@ -313,7 +313,7 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
           fixed inset-0 z-110
           flex items-end justify-center
           overflow-hidden
-          bg-[#351C18]/55
+          bg-mk-ink/55
           px-0 py-0
           backdrop-blur-sm
           sm:items-center
@@ -332,8 +332,8 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
             flex-col
             overflow-hidden
             rounded-t-[30px]
-            border border-[#E8DDD4]
-            bg-[#FFFDFC]
+            border border-mk-border
+            bg-mk-card
             shadow-[0_-18px_70px_rgba(53,28,24,0.32)]
             sm:max-h-[calc(100vh-40px)]
             sm:flex-row
@@ -350,15 +350,15 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
               flex h-9 w-9
               items-center justify-center
               rounded-xl
-              border border-[#E8DDD4]
-              bg-[#FFFDFC]/95
-              text-[#806C63]
+              border border-mk-border
+              bg-mk-card/95
+              text-mk-muted
               shadow-md
               backdrop-blur-sm
               transition-all duration-300
               hover:rotate-90
-              hover:bg-[#F8EEE8]
-              hover:text-[#8E181F]
+              hover:bg-mk-primary-soft
+              hover:text-mk-primary-hover
               disabled:cursor-not-allowed
               disabled:opacity-50
               sm:right-4 sm:top-4
@@ -367,12 +367,12 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
             <X size={19} />
           </button>
 
-          <div className="relative hidden w-[43%] overflow-hidden bg-linear-to-br from-[#2B1210] via-[#571519] to-[#A51D26] p-8 text-white sm:flex sm:flex-col sm:justify-between lg:p-10">
+          <div className="relative hidden w-[43%] overflow-hidden bg-linear-to-br from-mk-ink via-mk-ink to-mk-primary p-8 text-white sm:flex sm:flex-col sm:justify-between lg:p-10">
             <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-white/6 blur-2xl" />
 
-            <div className="absolute -bottom-28 -left-20 h-60 w-60 rounded-full bg-[#D4A373]/12 blur-2xl" />
+            <div className="absolute -bottom-28 -left-20 h-60 w-60 rounded-full bg-mk-accent/12 blur-2xl" />
 
-            <div className="absolute right-12 top-[42%] h-24 w-24 rounded-full bg-[#B5262D]/20 blur-xl" />
+            <div className="absolute right-12 top-[42%] h-24 w-24 rounded-full bg-mk-primary/20 blur-xl" />
 
             <div
               className="absolute inset-0 opacity-[0.05]"
@@ -394,28 +394,28 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                 <ShieldCheck size={25} strokeWidth={1.8} />
               </div>
 
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#E8B7B3]">Account Security</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-mk-border">Account Security</p>
 
               <h2 className="mt-3 text-3xl font-extrabold leading-tight lg:text-4xl">
                 Reset your
                 <br />
-                <span className="text-[#F1C7A5]">MineKart Password</span>
+                <span className="text-mk-border">MineKart Password</span>
               </h2>
 
-              <p className="mt-4 max-w-xs text-sm leading-6 text-[#F0D8D4]">Securely recover your account using a one-time verification code.</p>
+              <p className="mt-4 max-w-xs text-sm leading-6 text-mk-border">Securely recover your account using a one-time verification code.</p>
             </div>
 
             <div className="relative z-10 space-y-3">
               <div className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-xl backdrop-blur-md">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                    <KeyRound size={20} className="text-[#F1C7A5]" />
+                    <KeyRound size={20} className="text-mk-border" />
                   </div>
 
                   <div>
                     <p className="text-sm font-bold">Secure Verification</p>
 
-                    <p className="mt-0.5 text-xs text-[#E0C8C3]">OTP protected password recovery</p>
+                    <p className="mt-0.5 text-xs text-mk-border">OTP protected password recovery</p>
                   </div>
                 </div>
               </div>
@@ -434,7 +434,7 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
               flex-col
               overflow-y-auto
               overscroll-contain
-              bg-[#FFFDFC]
+              bg-mk-card
               px-5
               pb-6
               pt-6
@@ -445,7 +445,7 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
             "
           >
             <div className="pr-10">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-lg shadow-[#7D171C]/15">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-lg shadow-mk-primary-deep/15">
                 {step === 'email' && <Mail size={20} />}
 
                 {step === 'otp' && <ShieldCheck size={20} />}
@@ -456,9 +456,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
               </div>
 
               <div className="mb-6">
-                <h2 className="text-2xl font-extrabold tracking-tight text-[#351C18]">{getTitle()}</h2>
+                <h2 className="text-2xl font-extrabold tracking-tight text-mk-ink">{getTitle()}</h2>
 
-                <p className="mt-1.5 max-w-md text-sm leading-6 text-[#806C63]">{getSubtitle()}</p>
+                <p className="mt-1.5 max-w-md text-sm leading-6 text-mk-muted">{getSubtitle()}</p>
               </div>
             </div>
 
@@ -466,11 +466,11 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
               <div className="mb-6 flex items-center gap-2">
                 <StepIndicator active={step === 'email'} completed={step !== 'email'} number="1" label="Email" />
 
-                <div className={`h-px flex-1 ${step === 'email' ? 'bg-[#E8DDD4]' : 'bg-[#8E181F]'}`} />
+                <div className={`h-px flex-1 ${step === 'email' ? 'bg-mk-border' : 'bg-mk-primary-hover'}`} />
 
                 <StepIndicator active={step === 'otp'} completed={step === 'reset'} number="2" label="OTP" />
 
-                <div className={`h-px flex-1 ${step === 'reset' ? 'bg-[#8E181F]' : 'bg-[#E8DDD4]'}`} />
+                <div className={`h-px flex-1 ${step === 'reset' ? 'bg-mk-primary-hover' : 'bg-mk-border'}`} />
 
                 <StepIndicator active={step === 'reset'} completed={false} number="3" label="Reset" />
               </div>
@@ -480,7 +480,7 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
               <form onSubmit={sendOtpHandle}>
                 <div className="mb-5">
                   <div className="mb-2 flex items-center justify-between">
-                    <label className="text-xs font-bold text-[#493631] sm:text-sm">Email Address</label>
+                    <label className="text-xs font-bold text-mk-ink sm:text-sm">Email Address</label>
                   </div>
 
                   <div className="group relative">
@@ -489,9 +489,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       className="
                         absolute left-3.5 top-1/2
                         -translate-y-1/2
-                        text-[#9A857B]
+                        text-mk-muted
                         transition-colors
-                        group-focus-within:text-[#8E181F]
+                        group-focus-within:text-mk-primary-hover
                       "
                     />
 
@@ -507,18 +507,18 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       className="
                         h-12 w-full
                         rounded-xl
-                        border border-[#E2D5CC]
-                        bg-[#FFFDFC]
+                        border border-mk-border
+                        bg-mk-card
                         pl-11 pr-4
-                        text-sm text-[#351C18]
+                        text-sm text-mk-ink
                         outline-none
                         transition-all duration-200
-                        placeholder:text-[#B09E95]
-                        hover:border-[#D5C2B8]
-                        focus:border-[#A51D26]
+                        placeholder:text-mk-muted
+                        hover:border-mk-border
+                        focus:border-mk-primary
                         focus:bg-white
                         focus:ring-4
-                        focus:ring-[#A51D26]/5
+                        focus:ring-mk-primary/5
                         disabled:cursor-not-allowed
                         disabled:opacity-60
                       "
@@ -533,9 +533,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       disabled={loading || resendLoading}
                       className="
                         text-xs font-bold
-                        text-[#8E181F]
+                        text-mk-primary-hover
                         transition-colors
-                        hover:text-[#A51D26]
+                        hover:text-mk-primary
                         hover:underline
                         disabled:cursor-not-allowed
                         disabled:opacity-50
@@ -555,13 +555,13 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                     shrink-0
                     items-center justify-center gap-2
                     rounded-xl
-                    bg-linear-to-r from-[#7D171C] to-[#A51D26]
+                    bg-linear-to-r from-mk-primary-deep to-mk-primary
                     font-bold text-white
-                    shadow-md shadow-[#7D171C]/20
+                    shadow-md shadow-mk-primary-deep/20
                     transition-all duration-300
                     hover:-translate-y-0.5
-                    hover:from-[#681419]
-                    hover:to-[#8E181F]
+                    hover:from-mk-primary-deep
+                    hover:to-mk-primary-hover
                     hover:shadow-lg
                     active:scale-[0.99]
                     disabled:cursor-not-allowed
@@ -587,9 +587,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
             {step === 'otp' && (
               <form onSubmit={verifyOtpHandle}>
                 <div className="mb-5">
-                  <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Verification Code</label>
+                  <label className="mb-2 block text-xs font-bold text-mk-ink sm:text-sm">Verification Code</label>
 
-                  <p className="mb-4 text-xs leading-5 text-[#806C63]">Enter the 6-digit verification code sent to your email.</p>
+                  <p className="mb-4 text-xs leading-5 text-mk-muted">Enter the 6-digit verification code sent to your email.</p>
 
                   <div className="flex justify-center gap-1.5 xs:gap-2 sm:gap-3">
                     {Array.from({ length: 6 }).map((_, index) => (
@@ -652,19 +652,19 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                           h-11
                           w-10
                           rounded-xl
-                          border border-[#E2D5CC]
-                          bg-[#FFFDFC]
+                          border border-mk-border
+                          bg-mk-card
                           text-center
                           text-lg
                           font-extrabold
-                          text-[#351C18]
+                          text-mk-ink
                           outline-none
                           transition-all duration-200
-                          hover:border-[#D5C2B8]
-                          focus:border-[#A51D26]
+                          hover:border-mk-border
+                          focus:border-mk-primary
                           focus:bg-white
                           focus:ring-4
-                          focus:ring-[#A51D26]/5
+                          focus:ring-mk-primary/5
                           disabled:cursor-not-allowed
                           disabled:opacity-60
                           sm:h-14
@@ -677,7 +677,7 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                 </div>
 
                 <div className="mb-5 flex items-center justify-between gap-3">
-                  <p className="text-xs text-[#806C63]">Didn't receive the code?</p>
+                  <p className="text-xs text-mk-muted">Didn't receive the code?</p>
 
                   <button
                     type="button"
@@ -690,9 +690,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       gap-1.5
                       text-xs
                       font-bold
-                      text-[#8E181F]
+                      text-mk-primary-hover
                       transition-colors
-                      hover:text-[#A51D26]
+                      hover:text-mk-primary
                       hover:underline
                       disabled:cursor-not-allowed
                       disabled:opacity-50
@@ -713,13 +713,13 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                     shrink-0
                     items-center justify-center gap-2
                     rounded-xl
-                    bg-linear-to-r from-[#7D171C] to-[#A51D26]
+                    bg-linear-to-r from-mk-primary-deep to-mk-primary
                     font-bold text-white
-                    shadow-md shadow-[#7D171C]/20
+                    shadow-md shadow-mk-primary-deep/20
                     transition-all duration-300
                     hover:-translate-y-0.5
-                    hover:from-[#681419]
-                    hover:to-[#8E181F]
+                    hover:from-mk-primary-deep
+                    hover:to-mk-primary-hover
                     hover:shadow-lg
                     active:scale-[0.99]
                     disabled:cursor-not-allowed
@@ -755,9 +755,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                     text-center
                     text-xs
                     font-semibold
-                    text-[#806C63]
+                    text-mk-muted
                     transition-colors
-                    hover:text-[#8E181F]
+                    hover:text-mk-primary-hover
                     disabled:cursor-not-allowed
                     disabled:opacity-50
                   "
@@ -770,7 +770,7 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
             {step === 'reset' && (
               <form onSubmit={resetPasswordHandle}>
                 <div className="mb-4">
-                  <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">New Password</label>
+                  <label className="mb-2 block text-xs font-bold text-mk-ink sm:text-sm">New Password</label>
 
                   <div className="group relative">
                     <Lock
@@ -778,9 +778,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       className="
                         absolute left-3.5 top-1/2
                         -translate-y-1/2
-                        text-[#9A857B]
+                        text-mk-muted
                         transition-colors
-                        group-focus-within:text-[#8E181F]
+                        group-focus-within:text-mk-primary-hover
                       "
                     />
 
@@ -797,18 +797,18 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       className="
                         h-12 w-full
                         rounded-xl
-                        border border-[#E2D5CC]
-                        bg-[#FFFDFC]
+                        border border-mk-border
+                        bg-mk-card
                         pl-11 pr-12
-                        text-sm text-[#351C18]
+                        text-sm text-mk-ink
                         outline-none
                         transition-all duration-200
-                        placeholder:text-[#B09E95]
-                        hover:border-[#D5C2B8]
-                        focus:border-[#A51D26]
+                        placeholder:text-mk-muted
+                        hover:border-mk-border
+                        focus:border-mk-primary
                         focus:bg-white
                         focus:ring-4
-                        focus:ring-[#A51D26]/5
+                        focus:ring-mk-primary/5
                         disabled:cursor-not-allowed
                         disabled:opacity-60
                       "
@@ -820,9 +820,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       className="
                         absolute right-3.5 top-1/2
                         -translate-y-1/2
-                        text-[#9A857B]
+                        text-mk-muted
                         transition-colors
-                        hover:text-[#8E181F]
+                        hover:text-mk-primary-hover
                       "
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -831,7 +831,7 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                 </div>
 
                 <div className="mb-3">
-                  <label className="mb-2 block text-xs font-bold text-[#493631] sm:text-sm">Confirm Password</label>
+                  <label className="mb-2 block text-xs font-bold text-mk-ink sm:text-sm">Confirm Password</label>
 
                   <div className="group relative">
                     <Lock
@@ -839,9 +839,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       className="
                         absolute left-3.5 top-1/2
                         -translate-y-1/2
-                        text-[#9A857B]
+                        text-mk-muted
                         transition-colors
-                        group-focus-within:text-[#8E181F]
+                        group-focus-within:text-mk-primary-hover
                       "
                     />
 
@@ -857,18 +857,18 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       className="
                         h-12 w-full
                         rounded-xl
-                        border border-[#E2D5CC]
-                        bg-[#FFFDFC]
+                        border border-mk-border
+                        bg-mk-card
                         pl-11 pr-12
-                        text-sm text-[#351C18]
+                        text-sm text-mk-ink
                         outline-none
                         transition-all duration-200
-                        placeholder:text-[#B09E95]
-                        hover:border-[#D5C2B8]
-                        focus:border-[#A51D26]
+                        placeholder:text-mk-muted
+                        hover:border-mk-border
+                        focus:border-mk-primary
                         focus:bg-white
                         focus:ring-4
-                        focus:ring-[#A51D26]/5
+                        focus:ring-mk-primary/5
                         disabled:cursor-not-allowed
                         disabled:opacity-60
                       "
@@ -880,9 +880,9 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                       className="
                         absolute right-3.5 top-1/2
                         -translate-y-1/2
-                        text-[#9A857B]
+                        text-mk-muted
                         transition-colors
-                        hover:text-[#8E181F]
+                        hover:text-mk-primary-hover
                       "
                     >
                       {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -890,7 +890,7 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                   </div>
                 </div>
 
-                <p className="mb-5 text-[11px] leading-5 text-[#806C63]">Password must contain at least 6 characters.</p>
+                <p className="mb-5 text-[11px] leading-5 text-mk-muted">Password must contain at least 6 characters.</p>
 
                 <button
                   type="submit"
@@ -901,13 +901,13 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                     shrink-0
                     items-center justify-center gap-2
                     rounded-xl
-                    bg-linear-to-r from-[#7D171C] to-[#A51D26]
+                    bg-linear-to-r from-mk-primary-deep to-mk-primary
                     font-bold text-white
-                    shadow-md shadow-[#7D171C]/20
+                    shadow-md shadow-mk-primary-deep/20
                     transition-all duration-300
                     hover:-translate-y-0.5
-                    hover:from-[#681419]
-                    hover:to-[#8E181F]
+                    hover:from-mk-primary-deep
+                    hover:to-mk-primary-hover
                     hover:shadow-lg
                     active:scale-[0.99]
                     disabled:cursor-not-allowed
@@ -932,13 +932,13 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
 
             {step === 'success' && (
               <div className="text-center">
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#F8EEE8] text-[#8E181F]">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-mk-primary-soft text-mk-primary-hover">
                   <CheckCircle2 size={42} strokeWidth={1.7} />
                 </div>
 
-                <h3 className="mt-6 text-xl font-extrabold text-[#351C18]">Password Reset Successful</h3>
+                <h3 className="mt-6 text-xl font-extrabold text-mk-ink">Password Reset Successful</h3>
 
-                <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#806C63]">Your MineKart password has been successfully updated. You can now login using your new password.</p>
+                <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-mk-muted">Your MineKart password has been successfully updated. You can now login using your new password.</p>
 
                 {/* <button
                   type="button"
@@ -949,13 +949,13 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
                     flex h-12 w-full
                     items-center justify-center gap-2
                     rounded-xl
-                    bg-linear-to-r from-[#7D171C] to-[#A51D26]
+                    bg-linear-to-r from-mk-primary-deep to-mk-primary
                     font-bold text-white
-                    shadow-md shadow-[#7D171C]/20
+                    shadow-md shadow-mk-primary-deep/20
                     transition-all duration-300
                     hover:-translate-y-0.5
-                    hover:from-[#681419]
-                    hover:to-[#8E181F]
+                    hover:from-mk-primary-deep
+                    hover:to-mk-primary-hover
                     hover:shadow-lg
                     active:scale-[0.99]
                   "
@@ -967,10 +967,10 @@ export default function ForgotPassword({email: initialEmail = '', onClose, onBac
             )}
 
             {step !== 'success' && (
-              <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-[#E8DDD4] bg-[#F8EEE8]/60 p-3.5">
-                <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#8E181F]" />
+              <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-mk-border bg-mk-primary-soft/60 p-3.5">
+                <ShieldCheck size={16} className="mt-0.5 shrink-0 text-mk-primary-hover" />
 
-                <p className="text-[10px] leading-5 text-[#806C63]">Never share your OTP or password with anyone. MineKart will never ask you to share your verification code.</p>
+                <p className="text-[10px] leading-5 text-mk-muted">Never share your OTP or password with anyone. MineKart will never ask you to share your verification code.</p>
               </div>
             )}
           </div>
@@ -985,13 +985,13 @@ function StepIndicator({ active, completed, number, label }) {
     <div className="flex shrink-0 flex-col items-center gap-1.5">
       <div
         className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-extrabold transition-all ${
-          active || completed ? 'bg-[#8E181F] text-white shadow-md shadow-[#8E181F]/20' : 'border border-[#E8DDD4] bg-[#FFFDFC] text-[#9A857B]'
+          active || completed ? 'bg-mk-primary-hover text-white shadow-md shadow-mk-primary-hover/20' : 'border border-mk-border bg-mk-card text-mk-muted'
         }`}
       >
         {completed ? <CheckCircle2 size={14} /> : number}
       </div>
 
-      <span className={`text-[9px] font-bold ${active || completed ? 'text-[#8E181F]' : 'text-[#9A857B]'}`}>{label}</span>
+      <span className={`text-[9px] font-bold ${active || completed ? 'text-mk-primary-hover' : 'text-mk-muted'}`}>{label}</span>
     </div>
   )
 }

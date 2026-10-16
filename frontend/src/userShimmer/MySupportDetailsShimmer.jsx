@@ -50,7 +50,7 @@ export default function MySupportDetailsShimmer() {
 
       <div className="py-5">
         {/*  HEADER  */}
-        <div className="mb-4 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5">
+        <div className="mb-4 overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5">
           <div className="flex min-h-16 items-center justify-between gap-3 px-3 py-2.5 sm:min-h-17 sm:px-4">
             <div className="flex min-w-0 items-center gap-2.5">
               {/* Icon */}
@@ -67,9 +67,9 @@ export default function MySupportDetailsShimmer() {
           </div>
 
           {/* Header Meta */}
-          <div className="grid grid-cols-3 border-t border-[#F0E7E1] bg-[#FBF7F2]">
+          <div className="grid grid-cols-3 border-t border-mk-primary-soft bg-mk-bg">
             {[1, 2, 3].map((item) => (
-              <div key={item} className={`px-3 py-2.5 ${item !== 3 ? 'border-r border-[#E8DDD4]' : ''}`}>
+              <div key={item} className={`px-3 py-2.5 ${item !== 3 ? 'border-r border-mk-border' : ''}`}>
                 <Shimmer className="h-2.5 w-14 rounded" />
                 <Shimmer className="mt-1.5 h-3 w-24 rounded-md sm:w-32" />
               </div>
@@ -78,9 +78,9 @@ export default function MySupportDetailsShimmer() {
         </div>
 
         {/*  CONVERSATION  */}
-        <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
+        <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
           {/* Conversation Header */}
-          <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-[#FBF7F2] px-4 py-3">
+          <div className="flex items-center justify-between border-b border-mk-border bg-mk-bg px-4 py-3">
             <div className="flex items-center gap-2">
               <Shimmer className="h-8 w-8 rounded-lg" />
 
@@ -94,7 +94,7 @@ export default function MySupportDetailsShimmer() {
           </div>
 
           {/*  MESSAGE AREA  */}
-          <div className="max-h-140 min-h-75 space-y-5 overflow-hidden bg-[#FFFDFC] p-3 sm:p-5">
+          <div className="max-h-140 min-h-75 space-y-5 overflow-hidden bg-mk-card p-3 sm:p-5">
             {/* User message */}
             <div className="flex justify-start">
               <div className="flex max-w-[88%] items-end gap-2 sm:max-w-[75%]">
@@ -149,13 +149,13 @@ export default function MySupportDetailsShimmer() {
           </div>
 
           {/*  REPLY AREA  */}
-          <div className="border-t border-[#E8DDD4] bg-[#FBF7F2] p-3 sm:p-4">
-            <div className="rounded-xl border border-[#E8DDD4] bg-white p-2 shadow-[0_2px_8px_rgba(73,54,49,0.03)]">
+          <div className="border-t border-mk-border bg-mk-bg p-3 sm:p-4">
+            <div className="rounded-xl border border-mk-border bg-white p-2 shadow-[0_2px_8px_rgba(73,54,49,0.03)]">
               {/* Textarea */}
               <Shimmer className="h-20 w-full rounded-lg sm:h-20" />
 
               {/* Bottom controls */}
-              <div className="flex items-center justify-between gap-2 border-t border-[#F0E8E3] pt-2">
+              <div className="flex items-center justify-between gap-2 border-t border-mk-danger-soft pt-2">
                 <Shimmer className="h-2.5 w-12 rounded" />
 
                 <Shimmer className="h-8 w-24 rounded-lg" />

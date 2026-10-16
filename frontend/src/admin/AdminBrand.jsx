@@ -158,15 +158,15 @@ export default function AdminBrand() {
           const Icon = item.icon
 
           return (
-            <div key={item.title} className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+            <div key={item.title} className="rounded-2xl border border-mk-border-admin bg-white p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-[#99938B]">{item.title}</p>
+                  <p className="text-xs font-medium text-mk-subtle">{item.title}</p>
 
-                  <h2 className="mt-2 text-2xl font-bold text-[#292725]">{item.value}</h2>
+                  <h2 className="mt-2 text-2xl font-bold text-mk-ink-admin">{item.value}</h2>
                 </div>
 
-                <div className="flex size-11 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                <div className="flex size-11 items-center justify-center rounded-xl bg-mk-surface text-mk-admin">
                   <Icon size={21} />
                 </div>
               </div>
@@ -176,13 +176,13 @@ export default function AdminBrand() {
       </div>
 
       {/* BRAND TABLE */}
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-mk-border-admin bg-white">
         {/* TOOLBAR */}
         {/* TOOLBAR */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-4 border-b border-mk-border-admin p-5 lg:flex-row lg:items-center lg:justify-between">
           {/* Search */}
           <div className="relative w-full lg:max-w-xl">
-            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-mk-subtle" />
 
             <input
               type="text"
@@ -195,7 +195,7 @@ export default function AdminBrand() {
                 setCurrentPage(1)
               }}
               placeholder="Search brands..."
-              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+              className="h-10 w-full rounded-xl border border-mk-border-admin bg-mk-bg-admin pl-10 pr-10 text-sm text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin"
             />
 
             {search && (
@@ -206,7 +206,7 @@ export default function AdminBrand() {
                   localStorage.removeItem('adminBrandsSearch')
                   setCurrentPage(1)
                 }}
-                className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-mk-subtle transition hover:bg-mk-surface hover:text-mk-ink-admin"
                 title="Clear Search"
               >
                 <X size={16} />
@@ -218,7 +218,7 @@ export default function AdminBrand() {
           <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
             {/* Sort */}
             <div className="relative">
-              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-mk-admin" />
 
               <select
                 value={sortOrder}
@@ -229,7 +229,7 @@ export default function AdminBrand() {
                   localStorage.setItem('adminBrandsSort', value)
                   setCurrentPage(1)
                 }}
-                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+                className="h-10 w-full appearance-none rounded-xl border border-mk-border-admin bg-mk-bg-admin pl-9 pr-8 text-sm font-semibold text-mk-muted-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin sm:w-44"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -237,7 +237,7 @@ export default function AdminBrand() {
             </div>
 
             {canCreate && (
-              <button type="button" onClick={() => navigate('/admin/brand/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+              <button type="button" onClick={() => navigate('/admin/brand/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-mk-admin px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-mk-admin-hover">
                 <Plus size={18} />
                 Add Brand
               </button>
@@ -249,71 +249,71 @@ export default function AdminBrand() {
         <div className="w-full overflow-x-auto">
           <table className="w-full min-w-225">
             <thead>
-              <tr className="border-b border-[#E3DED6] bg-[#F8F6F2]">
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Index</th>
+              <tr className="border-b border-mk-border-admin bg-mk-bg-admin">
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Index</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Brand</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Brand</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Description</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Description</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Logo</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Logo</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Status</th>
 
-                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Action</th>
               </tr>
             </thead>
 
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-mk-subtle">
                     Loading brands...
                   </td>
                 </tr>
               ) : currentBrands.length > 0 ? (
                 currentBrands.map((brand, index) => (
-                  <tr key={brand._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
+                  <tr key={brand._id} className="border-b border-mk-border-admin transition hover:bg-mk-bg-admin">
                     {/* INDEX */}
                     <td className="px-5 py-4">
-                      <span className="text-sm text-[#6F6A64]">{startIndex + index + 1}</span>
+                      <span className="text-sm text-mk-muted-admin">{startIndex + index + 1}</span>
                     </td>
 
                     {/* BRAND */}
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E3DED6] bg-white">
-                          {brand.brandLogo ? <img src={getImageUrl(brand.brandLogo)} alt={brand.brandName} className="h-full w-full object-contain p-1" /> : <ImageIcon size={18} className="text-[#99938B]" />}
+                        <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-mk-border-admin bg-white">
+                          {brand.brandLogo ? <img src={getImageUrl(brand.brandLogo)} alt={brand.brandName} className="h-full w-full object-contain p-1" /> : <ImageIcon size={18} className="text-mk-subtle" />}
                         </div>
 
                         <div className="min-w-0">
-                          <p className="max-w-50 truncate text-sm font-semibold text-[#292725]">{brand.brandName}</p>
+                          <p className="max-w-50 truncate text-sm font-semibold text-mk-ink-admin">{brand.brandName}</p>
                         </div>
                       </div>
                     </td>
 
                     {/* DESCRIPTION */}
                     <td className="px-5 py-4">
-                      <p className="max-w-75 truncate text-sm text-[#6F6A64]">{brand.description || '-'}</p>
+                      <p className="max-w-75 truncate text-sm text-mk-muted-admin">{brand.description || '-'}</p>
                       {/* {brand.brandLogo} */}
                     </td>
 
                     {/* LOGO */}
                     <td className="px-5 py-4">
                       {brand.brandLogo ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F1EEE8] px-2.5 py-1 text-[11px] font-semibold text-[#6B6258]">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-mk-surface px-2.5 py-1 text-[11px] font-semibold text-mk-admin">
                           <ImageIcon size={13} />
                           Available
                         </span>
                       ) : (
-                        <span className="text-sm text-[#99938B]">No Logo</span>
+                        <span className="text-sm text-mk-subtle">No Logo</span>
                       )}
                     </td>
 
                     {/* STATUS */}
                     <td className="px-5 py-4">
-                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${brand.status === 'Active' ? 'bg-[#EAE7E1] text-[#5D554C]' : 'bg-[#F1E7E5] text-[#A44A3F]'}`}>
-                        <span className={`size-1.5 rounded-full ${brand.status === 'Active' ? 'bg-[#6B6258]' : 'bg-[#A44A3F]'}`} />
+                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${brand.status === 'Active' ? 'bg-mk-surface text-mk-admin-hover' : 'bg-mk-danger-soft text-mk-danger'}`}>
+                        <span className={`size-1.5 rounded-full ${brand.status === 'Active' ? 'bg-mk-admin' : 'bg-mk-danger'}`} />
 
                         {brand.status}
                       </span>
@@ -323,7 +323,7 @@ export default function AdminBrand() {
                     <td className="px-5 py-4">
                       <div className="flex justify-end gap-1">
                         {canView && (
-                          <button type="button" onClick={() => navigate(`/admin/brand/${brand._id}`)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]" title="View Brand">
+                          <button type="button" onClick={() => navigate(`/admin/brand/${brand._id}`)} className="flex size-9 items-center justify-center rounded-lg text-mk-muted-admin transition hover:bg-mk-surface hover:text-mk-ink-admin" title="View Brand">
                             <Eye size={16} />
                           </button>
                         )}
@@ -332,7 +332,7 @@ export default function AdminBrand() {
                           <button
                             type="button"
                             onClick={() => navigate(`/admin/brand/${brand._id}/update`)}
-                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            className="flex size-9 items-center justify-center rounded-lg text-mk-muted-admin transition hover:bg-mk-surface hover:text-mk-ink-admin"
                             title="Edit Brand"
                           >
                             <Pencil size={16} />
@@ -340,7 +340,7 @@ export default function AdminBrand() {
                         )}
 
                         {canDelete && (
-                          <button type="button" onClick={() => handleModalOpen(brand)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Brand">
+                          <button type="button" onClick={() => handleModalOpen(brand)} className="flex size-9 items-center justify-center rounded-lg text-mk-muted-admin transition hover:bg-mk-danger-soft hover:text-mk-danger" title="Delete Brand">
                             <Trash2 size={16} />
                           </button>
                         )}
@@ -350,7 +350,7 @@ export default function AdminBrand() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-mk-subtle">
                     No brands found
                   </td>
                 </tr>
@@ -360,10 +360,10 @@ export default function AdminBrand() {
         </div>
 
         {/* FOOTER */}
-        <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-t border-mk-border-admin bg-mk-bg-admin px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
           {/* SHOW */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#99938B]">Show</span>
+            <span className="text-xs text-mk-subtle">Show</span>
 
             <select
               value={itemsPerPage}
@@ -372,7 +372,7 @@ export default function AdminBrand() {
 
                 handleItemsPerPageChange(value === 'all' ? 'all' : Number(value))
               }}
-              className="h-8 rounded-lg border border-[#E3DED6] bg-white px-2.5 pr-7 text-xs font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258]"
+              className="h-8 rounded-lg border border-mk-border-admin bg-white px-2.5 pr-7 text-xs font-semibold text-mk-muted-admin outline-none transition focus:border-mk-admin"
             >
               <option value={5}>5 Documents</option>
               <option value={10}>10 Documents</option>
@@ -388,7 +388,7 @@ export default function AdminBrand() {
               type="button"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((prev) => prev - 1)}
-              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white px-2 text-xs font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-mk-border-admin bg-white px-2 text-xs font-medium text-mk-muted-admin transition hover:bg-mk-surface disabled:cursor-not-allowed disabled:opacity-40"
             >
               ←
             </button>
@@ -399,7 +399,7 @@ export default function AdminBrand() {
                 key={page}
                 type="button"
                 onClick={() => setCurrentPage(page)}
-                className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-[#6B6258] text-white' : 'border border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#EEEAE4]'}`}
+                className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-mk-admin text-white' : 'border border-mk-border-admin bg-white text-mk-muted-admin hover:bg-mk-surface'}`}
               >
                 {page}
               </button>
@@ -410,7 +410,7 @@ export default function AdminBrand() {
               type="button"
               disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white px-2 text-xs font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-8 min-w-8 items-center justify-center rounded-lg border border-mk-border-admin bg-white px-2 text-xs font-medium text-mk-muted-admin transition hover:bg-mk-surface disabled:cursor-not-allowed disabled:opacity-40"
             >
               →
             </button>

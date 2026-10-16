@@ -3,15 +3,15 @@ import { ShoppingBag } from 'lucide-react'
 import BreadCrumb from '../user/BreadCrumb'
 
 const Shimmer = ({ className = '' }) => {
-  return <div className={`animate-pulse rounded-lg bg-[#E8DDD4] ${className}`} />
+  return <div className={`animate-pulse rounded-lg bg-mk-border ${className}`} />
 }
 
 const ProductCardShimmer = () => {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_3px_12px_rgba(73,54,49,0.045)] sm:rounded-2xl">
+    <div className="overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_3px_12px_rgba(73,54,49,0.045)] sm:rounded-2xl">
       <div className="flex gap-2.5 p-2.5 sm:gap-4 sm:p-4">
         {/* IMAGE */}
-        <div className="h-24 w-20 shrink-0 overflow-hidden rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] sm:h-32 sm:w-32 sm:rounded-xl">
+        <div className="h-24 w-20 shrink-0 overflow-hidden rounded-lg border border-mk-border bg-mk-bg sm:h-32 sm:w-32 sm:rounded-xl">
           <div className="flex h-full w-full items-center justify-center">
             <Shimmer className="h-[55%] w-[55%] rounded-xl sm:rounded-2xl" />
           </div>
@@ -56,7 +56,7 @@ const ProductCardShimmer = () => {
           </div>
 
           {/* PRICE + QUANTITY */}
-          <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-[#F0E7E1] pt-2.5 sm:mt-3 sm:items-end sm:gap-3 sm:pt-3">
+          <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-mk-primary-soft pt-2.5 sm:mt-3 sm:items-end sm:gap-3 sm:pt-3">
             {/* DESKTOP PRICE */}
             <div className="hidden sm:block">
               <Shimmer className="h-2.5 w-10" />
@@ -70,9 +70,9 @@ const ProductCardShimmer = () => {
             {/* QUANTITY + TOTAL */}
             <div className="flex w-full items-center justify-between sm:w-auto sm:items-end sm:gap-3">
               {/* QUANTITY */}
-              <div className="flex h-8 overflow-hidden rounded-lg border border-[#DCCFC7]">
+              <div className="flex h-8 overflow-hidden rounded-lg border border-mk-border">
                 <Shimmer className="h-full w-8 rounded-none" />
-                <Shimmer className="h-full w-9 rounded-none border-x border-[#DCCFC7]" />
+                <Shimmer className="h-full w-9 rounded-none border-x border-mk-border" />
                 <Shimmer className="h-full w-8 rounded-none" />
               </div>
 
@@ -93,7 +93,7 @@ const BenefitsShimmer = () => {
   return (
     <div className="mt-4 grid grid-cols-3 gap-1.5 sm:mt-5 sm:gap-2.5">
       {[1, 2, 3].map((item) => (
-        <div key={item} className="flex flex-col items-center justify-center rounded-xl border border-[#E8DDD4] bg-white px-1.5 py-2.5 sm:flex-row sm:gap-2.5 sm:px-3 sm:py-3">
+        <div key={item} className="flex flex-col items-center justify-center rounded-xl border border-mk-border bg-white px-1.5 py-2.5 sm:flex-row sm:gap-2.5 sm:px-3 sm:py-3">
           <Shimmer className="h-7 w-7 shrink-0 rounded-lg sm:h-8 sm:w-8" />
 
           <div className="mt-1.5 sm:mt-0">
@@ -109,9 +109,9 @@ const BenefitsShimmer = () => {
 const SummaryShimmer = () => {
   return (
     <div className="min-w-0">
-      <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_5px_20px_rgba(73,54,49,0.07)] lg:sticky lg:top-24">
+      <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_5px_20px_rgba(73,54,49,0.07)] lg:sticky lg:top-24">
         {/* HEADER */}
-        <div className="border-b border-[#E8DDD4] bg-[#F7EEE7] px-3 py-3.5 sm:px-5 sm:py-4">
+        <div className="border-b border-mk-border bg-mk-primary-soft px-3 py-3.5 sm:px-5 sm:py-4">
           <div className="flex items-center justify-between gap-3">
             <div>
               <Shimmer className="h-4 w-28 sm:h-5 sm:w-32" />
@@ -142,7 +142,7 @@ const SummaryShimmer = () => {
           </div>
 
           {/* SAVINGS */}
-          <div className="mt-3 flex items-center justify-between rounded-lg border border-[#D5E8DA] bg-[#F0F8F3] px-2.5 py-2 sm:mt-4 sm:px-3 sm:py-2.5">
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-mk-success-soft bg-mk-success-soft px-2.5 py-2 sm:mt-4 sm:px-3 sm:py-2.5">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <Shimmer className="h-3 w-3 rounded sm:h-3.5 sm:w-3.5" />
               <Shimmer className="h-2.5 w-20 sm:h-3 sm:w-24" />
@@ -152,7 +152,7 @@ const SummaryShimmer = () => {
           </div>
 
           {/* PRICE */}
-          <div className="mt-4 space-y-2.5 border-t border-[#E8DDD4] pt-3 sm:mt-5 sm:space-y-3 sm:pt-4">
+          <div className="mt-4 space-y-2.5 border-t border-mk-border pt-3 sm:mt-5 sm:space-y-3 sm:pt-4">
             <div className="flex items-center justify-between">
               <Shimmer className="h-2.5 w-14 sm:h-3 sm:w-16" />
               <Shimmer className="h-3 w-14 sm:h-3.5 sm:w-16" />
@@ -163,7 +163,7 @@ const SummaryShimmer = () => {
               <Shimmer className="h-3 w-10 sm:h-3.5 sm:w-12" />
             </div>
 
-            <div className="flex items-center justify-between border-t border-[#E8DDD4] pt-3 sm:pt-4">
+            <div className="flex items-center justify-between border-t border-mk-border pt-3 sm:pt-4">
               <div>
                 <Shimmer className="h-3 w-20 sm:h-3.5 sm:w-24" />
                 <Shimmer className="mt-1.5 h-2 w-12 sm:h-2.5 sm:w-16" />
@@ -174,7 +174,7 @@ const SummaryShimmer = () => {
           </div>
 
           {/* DELIVERY */}
-          <div className="mt-3 rounded-xl border border-[#E8DDD4] bg-[#FBF7F2] p-2.5 sm:mt-4 sm:p-3">
+          <div className="mt-3 rounded-xl border border-mk-border bg-mk-bg p-2.5 sm:mt-4 sm:p-3">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <Shimmer className="h-3.5 w-3.5 rounded sm:h-4 sm:w-4" />
@@ -207,16 +207,16 @@ const SummaryShimmer = () => {
 
 export default function CartShimmer() {
   return (
-    <div className="min-h-screen bg-[#FBF7F2]">
+    <div className="min-h-screen bg-mk-bg">
       <BreadCrumb items={[{ title: 'Cart', link: null }]} />
 
       <div className="mx-auto w-full pb-10 pt-3 sm:pt-5">
         {/* PAGE HEADER */}
-        <div className="mb-3 flex h-14 items-center justify-between gap-2 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-2.5 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-20 sm:px-4">
+        <div className="mb-3 flex h-14 items-center justify-between gap-2 overflow-hidden rounded-xl border border-mk-border bg-white px-2.5 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5 sm:h-20 sm:px-4">
           {/* LEFT */}
           <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
-            <div className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#F7EEE7] sm:h-10 sm:w-10">
-              <ShoppingBag size={17} strokeWidth={1.8} className="text-[#D8CBC4]" />
+            <div className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-mk-primary-soft sm:h-10 sm:w-10">
+              <ShoppingBag size={17} strokeWidth={1.8} className="text-mk-border" />
             </div>
 
             <div className="min-w-0">

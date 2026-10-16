@@ -193,7 +193,7 @@ export default function AdminBrandForm() {
   if (pageLoading) {
     return (
       <div className="flex min-h-100 items-center justify-center">
-        <div className="text-sm font-medium text-[#6F6A64]">Loading brand...</div>
+        <div className="text-sm font-medium text-mk-muted-admin">Loading brand...</div>
       </div>
     )
   }
@@ -235,58 +235,58 @@ export default function AdminBrandForm() {
       <AdminBreadCrumb items={items} />
 
       {/* FORM */}
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-mk-border-admin bg-white shadow-sm">
         <form onSubmit={submitHandle} className="p-6 lg:p-7">
           <div className="space-y-8">
             {/* FORM HEADER */}
             <div>
-              <h3 className="text-lg font-semibold text-[#292725]">Brand Information</h3>
+              <h3 className="text-lg font-semibold text-mk-ink-admin">Brand Information</h3>
 
-              <p className="mt-1 text-sm text-[#99938B]">Add your brand details and logo.</p>
+              <p className="mt-1 text-sm text-mk-subtle">Add your brand details and logo.</p>
             </div>
 
             {/* MAIN FORM AREA */}
             <div className="grid grid-cols-1 gap-8 xl:grid-cols-[320px_minmax(0,1fr)]">
               {/*  BRAND LOGO  */}
               <section>
-                <label className="mb-2 block text-sm font-semibold text-[#292725]">Brand Logo</label>
+                <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Brand Logo</label>
 
-                <div className="rounded-2xl border border-[#E3DED6] bg-[#FCFBF9] p-4">
+                <div className="rounded-2xl border border-mk-border-admin bg-mk-bg-admin p-4">
                   {/* LOGO PREVIEW */}
-                  <div className="relative flex h-64 w-full items-center justify-center overflow-hidden rounded-xl border border-dashed border-[#D8D2C9] bg-white">
+                  <div className="relative flex h-64 w-full items-center justify-center overflow-hidden rounded-xl border border-dashed border-mk-border-admin bg-white">
                     {preview ? (
                       <>
                         <img src={preview} alt="Brand Logo" className="h-full w-full object-contain p-7" />
 
                         {/* REMOVE LOGO */}
-                        <button type="button" onClick={removeImage} className="absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-[#EF4444] text-white shadow-md transition hover:bg-[#DC2626]">
+                        <button type="button" onClick={removeImage} className="absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-mk-danger text-white shadow-md transition hover:bg-mk-primary">
                           <X size={15} strokeWidth={2.5} />
                         </button>
                       </>
                     ) : (
                       /* ADD LOGO */
-                      <button type="button" onClick={() => fileInputRef.current?.click()} className="flex h-full w-full flex-col items-center justify-center rounded-xl text-[#6F6A64] transition hover:bg-[#FAF9F7]">
-                        <div className="flex size-16 items-center justify-center rounded-2xl bg-[#F1EEE8]">
-                          <Plus size={30} strokeWidth={1.7} className="text-[#6B6258]" />
+                      <button type="button" onClick={() => fileInputRef.current?.click()} className="flex h-full w-full flex-col items-center justify-center rounded-xl text-mk-muted-admin transition hover:bg-mk-bg">
+                        <div className="flex size-16 items-center justify-center rounded-2xl bg-mk-surface">
+                          <Plus size={30} strokeWidth={1.7} className="text-mk-admin" />
                         </div>
 
-                        <p className="mt-4 text-sm font-semibold text-[#292725]">Upload Logo</p>
+                        <p className="mt-4 text-sm font-semibold text-mk-ink-admin">Upload Logo</p>
 
-                        <p className="mt-1 text-xs text-[#99938B]">Click to select an image</p>
+                        <p className="mt-1 text-xs text-mk-subtle">Click to select an image</p>
                       </button>
                     )}
                   </div>
 
                   {/* LOGO INFO */}
                   <div className="mt-4">
-                    <p className="text-xs font-medium text-[#6F6A64]">Recommended size</p>
+                    <p className="text-xs font-medium text-mk-muted-admin">Recommended size</p>
 
-                    <p className="mt-1 text-xs text-[#99938B]">Square logo • PNG, JPG, WEBP</p>
+                    <p className="mt-1 text-xs text-mk-subtle">Square logo • PNG, JPG, WEBP</p>
                   </div>
 
                   {/* CHANGE LOGO */}
                   {preview && (
-                    <button type="button" onClick={() => fileInputRef.current?.click()} className="mt-4 h-10 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4]">
+                    <button type="button" onClick={() => fileInputRef.current?.click()} className="mt-4 h-10 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm font-medium text-mk-muted-admin transition hover:bg-mk-surface">
                       Change Logo
                     </button>
                   )}
@@ -300,7 +300,7 @@ export default function AdminBrandForm() {
                 <div className="space-y-6">
                   {/* BRAND NAME */}
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#292725]">Brand Name</label>
+                    <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Brand Name</label>
 
                     <input
                       type="text"
@@ -309,19 +309,19 @@ export default function AdminBrandForm() {
                       onChange={handleChange}
                       placeholder="e.g. Samsung"
                       required
-                      className="h-14 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+                      className="h-14 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-surface"
                     />
                   </div>
 
                   {/* STATUS */}
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#292725]">Status</label>
+                    <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Status</label>
 
                     <select
                       name="status"
                       value={brandData.status}
                       onChange={handleChange}
-                      className="h-14 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+                      className="h-14 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-surface"
                     >
                       <option value="Active">Active</option>
 
@@ -331,7 +331,7 @@ export default function AdminBrandForm() {
 
                   {/* DESCRIPTION */}
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-[#292725]">Description</label>
+                    <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Description</label>
 
                     <textarea
                       name="description"
@@ -339,7 +339,7 @@ export default function AdminBrandForm() {
                       onChange={handleChange}
                       rows={7}
                       placeholder="Enter brand description..."
-                      className="w-full resize-none rounded-xl border border-[#E3DED6] bg-white px-4 py-3 text-sm leading-6 text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#EEEAE4]"
+                      className="w-full resize-none rounded-xl border border-mk-border-admin bg-white px-4 py-3 text-sm leading-6 text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-surface"
                     />
                   </div>
                 </div>
@@ -348,12 +348,12 @@ export default function AdminBrandForm() {
           </div>
 
           {/*  ACTIONS  */}
-          <div className="mt-8 flex items-center justify-end gap-3 border-t border-[#E3DED6] pt-6">
-            <button type="button" onClick={closeForm} className="h-11 rounded-xl border border-[#E3DED6] bg-white px-6 text-sm font-medium text-[#6F6A64] transition hover:bg-[#EEEAE4]">
+          <div className="mt-8 flex items-center justify-end gap-3 border-t border-mk-border-admin pt-6">
+            <button type="button" onClick={closeForm} className="h-11 rounded-xl border border-mk-border-admin bg-white px-6 text-sm font-medium text-mk-muted-admin transition hover:bg-mk-surface">
               Cancel
             </button>
 
-            <button type="submit" disabled={loading} className="h-11 rounded-xl bg-[#6B6258] px-7 text-sm font-semibold text-white transition hover:bg-[#3F3A35] disabled:cursor-not-allowed disabled:opacity-60">
+            <button type="submit" disabled={loading} className="h-11 rounded-xl bg-mk-admin px-7 text-sm font-semibold text-white transition hover:bg-mk-ink-admin disabled:cursor-not-allowed disabled:opacity-60">
               {loading ? 'Saving...' : isEdit ? 'Update Brand' : 'Create Brand'}
             </button>
           </div>

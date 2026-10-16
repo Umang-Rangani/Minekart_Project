@@ -56,14 +56,14 @@ export default function Notifications() {
   return (
     <div className="w-full py-5 sm:py-6">
       {/* HEADER */}
-      <div className="mb-5 overflow-hidden rounded-2xl border border-[#E8DDD4] bg-[#351C18] shadow-[0_8px_25px_rgba(73,54,49,0.12)]">
+      <div className="mb-5 overflow-hidden rounded-2xl border border-mk-border bg-mk-ink shadow-[0_8px_25px_rgba(73,54,49,0.12)]">
         <div className="relative px-4 py-5 sm:px-6 sm:py-6">
-          <div className="absolute -right-10 -top-14 h-36 w-36 rounded-full bg-[#A51D26]/25" />
-          <div className="absolute -bottom-16 left-1/3 h-32 w-32 rounded-full bg-[#D4A373]/10" />
+          <div className="absolute -right-10 -top-14 h-36 w-36 rounded-full bg-mk-primary/25" />
+          <div className="absolute -bottom-16 left-1/3 h-32 w-32 rounded-full bg-mk-accent/10" />
 
           <div className="relative flex items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[#F3D6B8] backdrop-blur-sm sm:h-12 sm:w-12">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-mk-border backdrop-blur-sm sm:h-12 sm:w-12">
                 <Bell size={22} strokeWidth={1.8} />
               </div>
 
@@ -88,18 +88,18 @@ export default function Notifications() {
       {notificationLoading ? (
         <div className="space-y-3">
           {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="h-24 animate-pulse rounded-2xl border border-[#E8DDD4] bg-white" />
+            <div key={item} className="h-24 animate-pulse rounded-2xl border border-mk-border bg-white" />
           ))}
         </div>
       ) : notifications.length === 0 ? (
-        <div className="flex min-h-80 flex-col items-center justify-center rounded-2xl border border-[#E8DDD4] bg-white px-5 text-center shadow-[0_5px_20px_rgba(73,54,49,0.05)]">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EEE7] text-[#8E181F]">
+        <div className="flex min-h-80 flex-col items-center justify-center rounded-2xl border border-mk-border bg-white px-5 text-center shadow-[0_5px_20px_rgba(73,54,49,0.05)]">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-mk-primary-soft text-mk-primary-hover">
             <Bell size={28} strokeWidth={1.7} />
           </div>
 
-          <h2 className="mt-4 text-base font-black text-[#351C18]">No notifications yet</h2>
+          <h2 className="mt-4 text-base font-black text-mk-ink">No notifications yet</h2>
 
-          <p className="mt-1 max-w-sm text-xs leading-5 text-[#806C63]">We will notify you about orders, payments, offers and other important updates.</p>
+          <p className="mt-1 max-w-sm text-xs leading-5 text-mk-muted">We will notify you about orders, payments, offers and other important updates.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -112,15 +112,15 @@ export default function Notifications() {
               <div
                 key={notification._id}
                 className={`group relative overflow-hidden rounded-2xl border transition-all duration-200 ${
-                  isCancelled ? 'border-[#E7D8D5] bg-[#F8F6F5]' : notification.isRead ? 'border-[#E8DDD4] bg-white' : 'border-[#DCC6BC] bg-[#FFFCFA] shadow-[0_5px_18px_rgba(73,54,49,0.06)]'
+                  isCancelled ? 'border-mk-border bg-mk-bg-admin' : notification.isRead ? 'border-mk-border bg-white' : 'border-mk-border bg-mk-card shadow-[0_5px_18px_rgba(73,54,49,0.06)]'
                 }`}
               >
                 {/* LEFT STATUS LINE */}
-                <span className={`absolute left-0 top-0 h-full w-1 ${isCancelled ? 'bg-[#C98F89]' : notification.isRead ? 'bg-transparent' : 'bg-[#A51D26]'}`} />
+                <span className={`absolute left-0 top-0 h-full w-1 ${isCancelled ? 'bg-mk-accent' : notification.isRead ? 'bg-transparent' : 'bg-mk-primary'}`} />
 
                 <div className="flex items-start gap-3 p-4 sm:p-5">
                   {/* ICON */}
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${isCancelled ? 'bg-[#EEE9E7] text-[#9A817B]' : notification.isRead ? 'bg-[#F7EEE7] text-[#806C63]' : 'bg-[#F8E8E5] text-[#A51D26]'}`}>
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${isCancelled ? 'bg-mk-danger-soft text-mk-disabled' : notification.isRead ? 'bg-mk-primary-soft text-mk-muted' : 'bg-mk-primary-soft text-mk-primary'}`}>
                     <Icon size={19} strokeWidth={1.8} />
                   </div>
 
@@ -129,12 +129,12 @@ export default function Notifications() {
                     <button type="button" onClick={() => markAsRead(notification)} className="w-full text-left">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className={`text-sm ${isCancelled ? 'font-bold text-[#6F625E]' : notification.isRead ? 'font-bold text-[#493631]' : 'font-extrabold text-[#351C18]'}`}>{notification.title}</h3>
+                          <h3 className={`text-sm ${isCancelled ? 'font-bold text-mk-admin' : notification.isRead ? 'font-bold text-mk-ink' : 'font-extrabold text-mk-ink'}`}>{notification.title}</h3>
 
-                          <p className="mt-1 text-xs leading-5 text-[#806C63]">{notification.message}</p>
+                          <p className="mt-1 text-xs leading-5 text-mk-muted">{notification.message}</p>
                         </div>
 
-                        <span className="shrink-0 text-[9px] font-medium text-[#9A857B]">{formatDate(notification.createdAt)}</span>
+                        <span className="shrink-0 text-[9px] font-medium text-mk-muted">{formatDate(notification.createdAt)}</span>
                       </div>
                     </button>
 
@@ -145,7 +145,7 @@ export default function Notifications() {
                           markAsRead(notification)
                           navigate(`/orders/${notification.orderId?.orderId}`)
                         }}
-                        className={`mt-3 inline-flex items-center gap-1 text-[10px] font-bold ${isCancelled ? 'text-[#9A817B] hover:text-[#A51D26]' : 'text-[#A51D26] hover:text-[#7D171C]'}`}
+                        className={`mt-3 inline-flex items-center gap-1 text-[10px] font-bold ${isCancelled ? 'text-mk-disabled hover:text-mk-primary' : 'text-mk-primary hover:text-mk-primary-deep'}`}
                       >
                         View order
                         <ArrowRight size={12} />
@@ -158,7 +158,7 @@ export default function Notifications() {
                     type="button"
                     onClick={() => deleteNotification(notification._id)}
                     className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all ${
-                      isCancelled ? 'text-[#A89A95] hover:bg-[#F0E4E1] hover:text-[#9A4E47]' : 'text-[#9A857B] opacity-100 hover:bg-[#FFF0F0] hover:text-[#A51D26] sm:opacity-0 sm:group-hover:opacity-100'
+                      isCancelled ? 'text-mk-subtle hover:bg-mk-danger-soft hover:text-mk-danger' : 'text-mk-muted opacity-100 hover:bg-mk-bg hover:text-mk-primary sm:opacity-0 sm:group-hover:opacity-100'
                     }`}
                     title="Delete notification"
                   >

@@ -87,30 +87,30 @@ export default function AdminContactMessages() {
     switch (status) {
       case 'Pending':
         return {
-          bg: 'bg-[#F1EEE8]',
-          text: 'text-[#8A6A3D]',
-          dot: 'bg-[#8A6A3D]',
+          bg: 'bg-mk-surface',
+          text: 'text-mk-warning',
+          dot: 'bg-mk-warning',
         }
 
       case 'In Progress':
         return {
-          bg: 'bg-[#EAE7E1]',
-          text: 'text-[#6B6258]',
-          dot: 'bg-[#6B6258]',
+          bg: 'bg-mk-surface',
+          text: 'text-mk-admin',
+          dot: 'bg-mk-admin',
         }
 
       case 'Resolved':
         return {
-          bg: 'bg-[#EAEDE7]',
-          text: 'text-[#5E6C55]',
-          dot: 'bg-[#5E6C55]',
+          bg: 'bg-mk-success-soft',
+          text: 'text-mk-success',
+          dot: 'bg-mk-success',
         }
 
       default:
         return {
-          bg: 'bg-[#F8F6F2]',
-          text: 'text-[#6F6A64]',
-          dot: 'bg-[#99938B]',
+          bg: 'bg-mk-bg-admin',
+          text: 'text-mk-muted-admin',
+          dot: 'bg-mk-subtle',
         }
     }
   }
@@ -333,15 +333,15 @@ export default function AdminContactMessages() {
           const Icon = item.icon
 
           return (
-            <div key={item.title} className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+            <div key={item.title} className="rounded-2xl border border-mk-border-admin bg-white p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-[#99938B]">{item.title}</p>
+                  <p className="text-xs font-medium text-mk-subtle">{item.title}</p>
 
-                  <h2 className="mt-2 text-2xl font-bold text-[#292725]">{item.value}</h2>
+                  <h2 className="mt-2 text-2xl font-bold text-mk-ink-admin">{item.value}</h2>
                 </div>
 
-                <div className="flex size-11 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                <div className="flex size-11 items-center justify-center rounded-xl bg-mk-surface text-mk-admin">
                   <Icon size={21} />
                 </div>
               </div>
@@ -351,22 +351,22 @@ export default function AdminContactMessages() {
       </div>
 
       {/* Messages Table */}
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-mk-border-admin bg-white">
         {/* Search + Sort + Filter */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-4 border-b border-mk-border-admin p-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full lg:max-w-xl">
-            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-mk-subtle" />
 
             <input
               type="text"
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search messages..."
-              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+              className="h-10 w-full rounded-xl border border-mk-border-admin bg-mk-bg-admin pl-10 pr-10 text-sm text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin"
             />
 
             {search && (
-              <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]" title="Clear Search">
+              <button type="button" onClick={clearSearch} className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-mk-subtle transition hover:bg-mk-surface hover:text-mk-ink-admin" title="Clear Search">
                 <X size={16} />
               </button>
             )}
@@ -375,7 +375,7 @@ export default function AdminContactMessages() {
           <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto">
             {/* Sort */}
             <div className="relative">
-              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+              <ArrowUpDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-mk-admin" />
 
               <select
                 value={sortOrder}
@@ -386,7 +386,7 @@ export default function AdminContactMessages() {
                   localStorage.setItem('adminContactMessagesSort', value)
                   setCurrentPage(1)
                 }}
-                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-9 pr-8 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-44"
+                className="h-10 w-full appearance-none rounded-xl border border-mk-border-admin bg-mk-bg-admin pl-9 pr-8 text-sm font-semibold text-mk-muted-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin sm:w-44"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -398,7 +398,7 @@ export default function AdminContactMessages() {
               <select
                 value={statusFilter}
                 onChange={(e) => handleStatusFilter(e.target.value)}
-                className="h-10 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 pr-10 text-sm font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-40"
+                className="h-10 w-full appearance-none rounded-xl border border-mk-border-admin bg-mk-bg-admin px-4 pr-10 text-sm font-semibold text-mk-muted-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin sm:w-40"
               >
                 <option value="All">All Status</option>
                 <option value="Pending">Pending</option>
@@ -406,14 +406,14 @@ export default function AdminContactMessages() {
                 <option value="Resolved">Resolved</option>
               </select>
 
-              <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#6F6A64]" />
+              <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-mk-muted-admin" />
             </div>
 
             {/* Message Count */}
-            <div className="flex h-10 items-center justify-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 sm:w-auto">
-              <MessageSquare size={17} className="text-[#6B6258]" />
+            <div className="flex h-10 items-center justify-center gap-2 rounded-xl border border-mk-border-admin bg-mk-bg-admin px-4 sm:w-auto">
+              <MessageSquare size={17} className="text-mk-admin" />
 
-              <span className="whitespace-nowrap text-sm font-semibold text-[#292725]">{filteredContacts.length} Messages</span>
+              <span className="whitespace-nowrap text-sm font-semibold text-mk-ink-admin">{filteredContacts.length} Messages</span>
             </div>
           </div>
         </div>
@@ -422,27 +422,27 @@ export default function AdminContactMessages() {
         <div className="w-full overflow-x-auto">
           <table className="w-full min-w-275">
             <thead>
-              <tr className="border-b border-[#E3DED6] bg-[#F8F6F2]">
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Index</th>
+              <tr className="border-b border-mk-border-admin bg-mk-bg-admin">
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Index</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Customer</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Customer</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Subject</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Subject</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Message</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Message</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Status</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Status</th>
 
-                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Date</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Date</th>
 
-                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[#99938B]">Action</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-mk-subtle">Action</th>
               </tr>
             </thead>
 
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="px-5 py-12 text-center text-sm text-[#99938B]">
+                  <td colSpan="7" className="px-5 py-12 text-center text-sm text-mk-subtle">
                     Loading support messages...
                   </td>
                 </tr>
@@ -455,28 +455,28 @@ export default function AdminContactMessages() {
                   const isDeleting = deletingId === contact._id
 
                   return (
-                    <tr key={contact._id} className="border-b border-[#E3DED6] transition hover:bg-[#FCFBF9]">
+                    <tr key={contact._id} className="border-b border-mk-border-admin transition hover:bg-mk-bg-admin">
                       <td className="px-5 py-4">
-                        <span className="text-sm text-[#6F6A64]">{startIndex + index + 1}</span>
+                        <span className="text-sm text-mk-muted-admin">{startIndex + index + 1}</span>
                       </td>
 
                       <td className="px-5 py-4">
                         <div className="min-w-40">
-                          <p className="max-w-45 truncate text-sm font-semibold text-[#292725]">{contact.name || 'N/A'}</p>
+                          <p className="max-w-45 truncate text-sm font-semibold text-mk-ink-admin">{contact.name || 'N/A'}</p>
 
-                          <p className="mt-1 max-w-50 truncate text-xs text-[#99938B]">{contact.email || 'N/A'}</p>
+                          <p className="mt-1 max-w-50 truncate text-xs text-mk-subtle">{contact.email || 'N/A'}</p>
                         </div>
                       </td>
 
                       <td className="px-5 py-4">
-                        <p className="max-w-40 truncate text-sm font-semibold text-[#292725]">{contact.subject || 'Customer Support'}</p>
+                        <p className="max-w-40 truncate text-sm font-semibold text-mk-ink-admin">{contact.subject || 'Customer Support'}</p>
                       </td>
 
                       <td className="px-5 py-4">
                         <div className="max-w-70">
-                          <p className="line-clamp-2 text-xs leading-5 text-[#6F6A64]">{latestMessage?.message || 'No message'}</p>
+                          <p className="line-clamp-2 text-xs leading-5 text-mk-muted-admin">{latestMessage?.message || 'No message'}</p>
 
-                          {contact.messages?.length > 1 && <p className="mt-1 text-[10px] font-semibold text-[#99938B]">{contact.messages.length} messages</p>}
+                          {contact.messages?.length > 1 && <p className="mt-1 text-[10px] font-semibold text-mk-subtle">{contact.messages.length} messages</p>}
                         </div>
                       </td>
 
@@ -486,19 +486,19 @@ export default function AdminContactMessages() {
                             value={contact.status}
                             disabled={updatingStatusId === contact._id}
                             onChange={(e) => handleStatusChange(contact._id, e.target.value)}
-                            className={`appearance-none rounded-lg border border-[#E3DED6] py-2 pl-3 pr-8 text-xs font-semibold outline-none transition disabled:cursor-not-allowed disabled:opacity-60 ${statusStyle.bg} ${statusStyle.text}`}
+                            className={`appearance-none rounded-lg border border-mk-border-admin py-2 pl-3 pr-8 text-xs font-semibold outline-none transition disabled:cursor-not-allowed disabled:opacity-60 ${statusStyle.bg} ${statusStyle.text}`}
                           >
                             <option value="Pending">Pending</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Resolved">Resolved</option>
                           </select>
 
-                          <ChevronDown size={14} className="pointer-events-none absolute right-2 top-2.5 text-[#6F6A64]" />
+                          <ChevronDown size={14} className="pointer-events-none absolute right-2 top-2.5 text-mk-muted-admin" />
                         </div>
                       </td>
 
                       <td className="px-5 py-4">
-                        <span className="text-xs font-medium text-[#6F6A64]">{formatDate(contact.updatedAt || contact.createdAt)}</span>
+                        <span className="text-xs font-medium text-mk-muted-admin">{formatDate(contact.updatedAt || contact.createdAt)}</span>
                       </td>
 
                       <td className="px-5 py-4">
@@ -506,13 +506,13 @@ export default function AdminContactMessages() {
                           <button
                             type="button"
                             onClick={() => navigate(`/admin/contact-messages/${contact._id}`)}
-                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            className="flex size-9 items-center justify-center rounded-lg text-mk-muted-admin transition hover:bg-mk-surface hover:text-mk-ink-admin"
                             title="View Message"
                           >
                             <Eye size={16} />
                           </button>
 
-                          <button type="button" onClick={() => handleDeleteOpen(contact)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete">
+                          <button type="button" onClick={() => handleDeleteOpen(contact)} className="flex size-9 items-center justify-center rounded-lg text-mk-muted-admin transition hover:bg-mk-danger-soft hover:text-mk-danger" title="Delete">
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -524,13 +524,13 @@ export default function AdminContactMessages() {
                 <tr>
                   <td colSpan="7" className="px-5 py-12 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <div className="flex size-14 items-center justify-center rounded-2xl bg-[#F1EEE8] text-[#6B6258]">
+                      <div className="flex size-14 items-center justify-center rounded-2xl bg-mk-surface text-mk-admin">
                         <MessageSquare size={27} />
                       </div>
 
-                      <p className="mt-3 text-sm font-semibold text-[#292725]">No support messages found</p>
+                      <p className="mt-3 text-sm font-semibold text-mk-ink-admin">No support messages found</p>
 
-                      <p className="mt-1 text-xs text-[#99938B]">Try changing your search or status filter.</p>
+                      <p className="mt-1 text-xs text-mk-subtle">Try changing your search or status filter.</p>
                     </div>
                   </td>
                 </tr>
@@ -540,9 +540,9 @@ export default function AdminContactMessages() {
         </div>
 
         {/* Pagination */}
-        <div className="flex flex-col gap-3 border-t border-[#E3DED6] bg-[#FCFBF9] px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-t border-mk-border-admin bg-mk-bg-admin px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#99938B]">Show</span>
+            <span className="text-xs text-mk-subtle">Show</span>
 
             <select
               value={itemsPerPage}
@@ -551,7 +551,7 @@ export default function AdminContactMessages() {
 
                 handleItemsPerPageChange(value === 'all' ? 'all' : Number(value))
               }}
-              className="h-8 rounded-lg border border-[#E3DED6] bg-white px-2.5 pr-7 text-xs font-semibold text-[#6F6A64] outline-none transition focus:border-[#6B6258]"
+              className="h-8 rounded-lg border border-mk-border-admin bg-white px-2.5 pr-7 text-xs font-semibold text-mk-muted-admin outline-none transition focus:border-mk-admin"
             >
               <option value={5}>5 Documents</option>
               <option value={10}>10 Documents</option>
@@ -559,7 +559,7 @@ export default function AdminContactMessages() {
               <option value="all">All Documents</option>
             </select>
 
-            <span className="text-xs text-[#99938B]">of {filteredContacts.length}</span>
+            <span className="text-xs text-mk-subtle">of {filteredContacts.length}</span>
           </div>
 
           {itemsPerPage !== 'all' && totalPages > 1 && (
@@ -568,7 +568,7 @@ export default function AdminContactMessages() {
                 type="button"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                className="flex size-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex size-8 items-center justify-center rounded-lg border border-mk-border-admin bg-white text-mk-muted-admin transition hover:bg-mk-surface disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronLeft size={16} />
               </button>
@@ -578,7 +578,7 @@ export default function AdminContactMessages() {
                   key={page}
                   type="button"
                   onClick={() => setCurrentPage(page)}
-                  className={`flex size-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-[#6B6258] text-white' : 'border border-[#E3DED6] bg-white text-[#6F6A64] hover:bg-[#EEEAE4]'}`}
+                  className={`flex size-8 items-center justify-center rounded-lg px-2 text-xs font-semibold transition ${currentPage === page ? 'bg-mk-admin text-white' : 'border border-mk-border-admin bg-white text-mk-muted-admin hover:bg-mk-surface'}`}
                 >
                   {page}
                 </button>
@@ -588,7 +588,7 @@ export default function AdminContactMessages() {
                 type="button"
                 disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                className="flex size-8 items-center justify-center rounded-lg border border-[#E3DED6] bg-white text-[#6F6A64] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex size-8 items-center justify-center rounded-lg border border-mk-border-admin bg-white text-mk-muted-admin transition hover:bg-mk-surface disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronRight size={16} />
               </button>
@@ -600,62 +600,62 @@ export default function AdminContactMessages() {
       {/* Contact Details Modal */}
       {selectedContact && (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-          <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-[#E3DED6] bg-[#FBFAF7] shadow-2xl">
+          <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-mk-border-admin bg-mk-bg shadow-2xl">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-[#E3DED6] bg-white px-5 py-4">
+            <div className="flex items-center justify-between border-b border-mk-border-admin bg-white px-5 py-4">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mk-surface text-mk-admin">
                   <MessageSquare size={19} />
                 </div>
 
                 <div className="min-w-0">
-                  <h2 className="truncate text-sm font-bold text-[#292725]">{selectedContact.subject || 'Customer Support'}</h2>
+                  <h2 className="truncate text-sm font-bold text-mk-ink-admin">{selectedContact.subject || 'Customer Support'}</h2>
 
-                  <p className="mt-0.5 truncate text-[11px] text-[#99938B]">Support ticket • {formatDate(selectedContact.createdAt)}</p>
+                  <p className="mt-0.5 truncate text-[11px] text-mk-subtle">Support ticket • {formatDate(selectedContact.createdAt)}</p>
                 </div>
               </div>
 
-              <button type="button" onClick={() => setSelectedContact(null)} className="flex size-9 shrink-0 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]">
+              <button type="button" onClick={() => setSelectedContact(null)} className="flex size-9 shrink-0 items-center justify-center rounded-lg text-mk-muted-admin transition hover:bg-mk-surface hover:text-mk-ink-admin">
                 <X size={18} />
               </button>
             </div>
 
             {/* Customer Info */}
-            <div className="border-b border-[#E3DED6] bg-[#F8F6F2] px-5 py-4">
+            <div className="border-b border-mk-border-admin bg-mk-bg-admin px-5 py-4">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="flex min-w-0 items-center gap-2.5">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#6B6258]">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-mk-admin">
                     <User size={15} />
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-[10px] font-medium text-[#99938B]">Customer</p>
+                    <p className="text-[10px] font-medium text-mk-subtle">Customer</p>
 
-                    <p className="truncate text-xs font-semibold text-[#292725]">{selectedContact.name || 'N/A'}</p>
+                    <p className="truncate text-xs font-semibold text-mk-ink-admin">{selectedContact.name || 'N/A'}</p>
                   </div>
                 </div>
 
                 <div className="flex min-w-0 items-center gap-2.5">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#6B6258]">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-mk-admin">
                     <Mail size={15} />
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-[10px] font-medium text-[#99938B]">Email</p>
+                    <p className="text-[10px] font-medium text-mk-subtle">Email</p>
 
-                    <p className="truncate text-xs font-semibold text-[#292725]">{selectedContact.email || 'N/A'}</p>
+                    <p className="truncate text-xs font-semibold text-mk-ink-admin">{selectedContact.email || 'N/A'}</p>
                   </div>
                 </div>
 
                 <div className="flex min-w-0 items-center gap-2.5">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#6B6258]">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-mk-admin">
                     <Phone size={15} />
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-[10px] font-medium text-[#99938B]">Phone</p>
+                    <p className="text-[10px] font-medium text-mk-subtle">Phone</p>
 
-                    <p className="truncate text-xs font-semibold text-[#292725]">{selectedContact.userId?.phone || 'N/A'}</p>
+                    <p className="truncate text-xs font-semibold text-mk-ink-admin">{selectedContact.userId?.phone || 'N/A'}</p>
                   </div>
                 </div>
               </div>
@@ -669,16 +669,16 @@ export default function AdminContactMessages() {
 
                   return (
                     <div key={message._id || index} className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[85%] rounded-2xl border px-4 py-3 ${isAdmin ? 'border-[#6B6258] bg-[#6B6258] text-white' : 'border-[#E3DED6] bg-white text-[#292725]'}`}>
+                      <div className={`max-w-[85%] rounded-2xl border px-4 py-3 ${isAdmin ? 'border-mk-admin bg-mk-admin text-white' : 'border-mk-border-admin bg-white text-mk-ink-admin'}`}>
                         <div className="mb-1.5 flex items-center gap-2">
                           {isAdmin ? <ShieldCheck size={13} /> : <User size={13} />}
 
-                          <span className={`text-[10px] font-bold ${isAdmin ? 'text-white/80' : 'text-[#6B6258]'}`}>{isAdmin ? 'Admin' : selectedContact.name}</span>
+                          <span className={`text-[10px] font-bold ${isAdmin ? 'text-white/80' : 'text-mk-admin'}`}>{isAdmin ? 'Admin' : selectedContact.name}</span>
 
-                          <span className={`text-[9px] ${isAdmin ? 'text-white/60' : 'text-[#99938B]'}`}>{formatDateTime(message.createdAt)}</span>
+                          <span className={`text-[9px] ${isAdmin ? 'text-white/60' : 'text-mk-subtle'}`}>{formatDateTime(message.createdAt)}</span>
                         </div>
 
-                        <p className={`whitespace-pre-wrap text-xs leading-5 ${isAdmin ? 'text-white' : 'text-[#6F6A64]'}`}>{message.message}</p>
+                        <p className={`whitespace-pre-wrap text-xs leading-5 ${isAdmin ? 'text-white' : 'text-mk-muted-admin'}`}>{message.message}</p>
                       </div>
                     </div>
                   )
@@ -687,12 +687,12 @@ export default function AdminContactMessages() {
             </div>
 
             {/* Reply + Status */}
-            <div className="border-t border-[#E3DED6] bg-white p-5">
+            <div className="border-t border-mk-border-admin bg-white p-5">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs font-bold text-[#292725]">Reply to customer</p>
+                  <p className="text-xs font-bold text-mk-ink-admin">Reply to customer</p>
 
-                  <p className="mt-0.5 text-[10px] text-[#99938B]">Send a response to this support ticket.</p>
+                  <p className="mt-0.5 text-[10px] text-mk-subtle">Send a response to this support ticket.</p>
                 </div>
 
                 <div className="relative shrink-0">
@@ -700,24 +700,24 @@ export default function AdminContactMessages() {
                     value={selectedContact.status}
                     disabled={updatingStatusId === selectedContact._id}
                     onChange={(e) => handleStatusChange(selectedContact._id, e.target.value)}
-                    className={`appearance-none rounded-lg border border-[#E3DED6] py-2 pl-3 pr-8 text-[11px] font-semibold outline-none ${getStatusStyle(selectedContact.status).bg} ${getStatusStyle(selectedContact.status).text}`}
+                    className={`appearance-none rounded-lg border border-mk-border-admin py-2 pl-3 pr-8 text-[11px] font-semibold outline-none ${getStatusStyle(selectedContact.status).bg} ${getStatusStyle(selectedContact.status).text}`}
                   >
                     <option value="Pending">Pending</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Resolved">Resolved</option>
                   </select>
 
-                  <ChevronDown size={13} className="pointer-events-none absolute right-2 top-2.5 text-[#6F6A64]" />
+                  <ChevronDown size={13} className="pointer-events-none absolute right-2 top-2.5 text-mk-muted-admin" />
                 </div>
               </div>
 
               {selectedContact.status === 'Resolved' ? (
-                <div className="rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 py-3 text-center">
-                  <CircleCheck size={20} className="mx-auto text-[#5E6C55]" />
+                <div className="rounded-xl border border-mk-border-admin bg-mk-bg-admin px-4 py-3 text-center">
+                  <CircleCheck size={20} className="mx-auto text-mk-success" />
 
-                  <p className="mt-1.5 text-xs font-semibold text-[#292725]">This ticket is resolved</p>
+                  <p className="mt-1.5 text-xs font-semibold text-mk-ink-admin">This ticket is resolved</p>
 
-                  <p className="mt-0.5 text-[10px] text-[#99938B]">Change the status to continue the conversation.</p>
+                  <p className="mt-0.5 text-[10px] text-mk-subtle">Change the status to continue the conversation.</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2 sm:flex-row">
@@ -726,14 +726,14 @@ export default function AdminContactMessages() {
                     onChange={(e) => setReplyMessage(e.target.value)}
                     placeholder="Write your reply..."
                     rows={3}
-                    className="min-h-20 flex-1 resize-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3.5 py-3 text-xs leading-5 text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+                    className="min-h-20 flex-1 resize-none rounded-xl border border-mk-border-admin bg-mk-bg-admin px-3.5 py-3 text-xs leading-5 text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin"
                   />
 
                   <button
                     type="button"
                     onClick={handleReply}
                     disabled={replying || !replyMessage.trim()}
-                    className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-xs font-bold text-white transition hover:bg-[#5D554C] disabled:cursor-not-allowed disabled:opacity-50 sm:self-end"
+                    className="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-mk-admin px-4 text-xs font-bold text-white transition hover:bg-mk-admin-hover disabled:cursor-not-allowed disabled:opacity-50 sm:self-end"
                   >
                     {replying ? <LoaderCircle size={15} className="animate-spin" /> : <Send size={15} />}
 

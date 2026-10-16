@@ -87,20 +87,20 @@ export default function MySupportDetails() {
   const getStatusStyle = (status) => {
     if (status === 'Resolved') {
       return {
-        wrapper: 'border-[#D8E5DA] bg-[#EAEDE7] text-[#5E6C55]',
+        wrapper: 'border-mk-border-admin bg-mk-success-soft text-mk-success',
         icon: <CheckCircle2 size={13} />,
       }
     }
 
     if (status === 'In Progress') {
       return {
-        wrapper: 'border-[#DED9D0] bg-[#F1EEE8] text-[#6B6258]',
+        wrapper: 'border-mk-border-admin bg-mk-surface text-mk-admin',
         icon: <Clock3 size={13} />,
       }
     }
 
     return {
-      wrapper: 'border-[#E5D8C8] bg-[#F1EEE8] text-[#8A6A3D]',
+      wrapper: 'border-mk-border bg-mk-surface text-mk-warning',
       icon: <Clock3 size={13} />,
     }
   }
@@ -136,18 +136,18 @@ export default function MySupportDetails() {
 
       <div className=" py-5 ">
         {/* Header */}
-        <div className="mb-4 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5">
+        <div className="mb-4 overflow-hidden rounded-xl border border-mk-border bg-white shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:mb-5">
           <div className="flex min-h-16 items-center justify-between gap-3 px-3 py-2.5 sm:min-h-17 sm:px-4">
             <div className="flex min-w-0 items-center gap-2.5">
-              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-[#7D171C] to-[#A51D26] text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
+              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-linear-to-br from-mk-primary-deep to-mk-primary text-white shadow-[0_4px_12px_rgba(125,23,28,0.15)] sm:h-10 sm:w-10">
                 <div className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-white/10" />
                 <MessageSquare size={18} strokeWidth={1.8} className="relative z-10" />
               </div>
 
               <div className="min-w-0">
-                <p className="text-[9px] font-bold uppercase tracking-wide text-[#9A857B]">Support Request</p>
+                <p className="text-[9px] font-bold uppercase tracking-wide text-mk-muted">Support Request</p>
 
-                <h1 className="mt-0.5 truncate text-xs font-extrabold tracking-tight text-[#351C18] sm:text-sm">{contact.subject || 'Customer Support'}</h1>
+                <h1 className="mt-0.5 truncate text-xs font-extrabold tracking-tight text-mk-ink sm:text-sm">{contact.subject || 'Customer Support'}</h1>
               </div>
             </div>
 
@@ -157,48 +157,48 @@ export default function MySupportDetails() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 border-t border-[#F0E7E1] bg-[#FBF7F2]">
-            <div className="border-r border-[#E8DDD4] px-3 py-2.5">
-              <p className="text-[8px] font-semibold uppercase tracking-wide text-[#9A857B]">Subject</p>
+          <div className="grid grid-cols-3 border-t border-mk-primary-soft bg-mk-bg">
+            <div className="border-r border-mk-border px-3 py-2.5">
+              <p className="text-[8px] font-semibold uppercase tracking-wide text-mk-muted">Subject</p>
 
-              <p className="mt-0.5 truncate text-[10px] font-bold text-[#351C18] sm:text-xs">{contact.subject || 'Customer Support'}</p>
+              <p className="mt-0.5 truncate text-[10px] font-bold text-mk-ink sm:text-xs">{contact.subject || 'Customer Support'}</p>
             </div>
 
-            <div className="border-r border-[#E8DDD4] px-3 py-2.5">
-              <p className="text-[8px] font-semibold uppercase tracking-wide text-[#9A857B]">Created</p>
+            <div className="border-r border-mk-border px-3 py-2.5">
+              <p className="text-[8px] font-semibold uppercase tracking-wide text-mk-muted">Created</p>
 
-              <p className="mt-0.5 text-[10px] font-bold text-[#351C18] sm:text-xs">{formatDate(contact.createdAt)}</p>
+              <p className="mt-0.5 text-[10px] font-bold text-mk-ink sm:text-xs">{formatDate(contact.createdAt)}</p>
             </div>
 
             <div className="px-3 py-2.5">
-              <p className="text-[8px] font-semibold uppercase tracking-wide text-[#9A857B]">Updated</p>
+              <p className="text-[8px] font-semibold uppercase tracking-wide text-mk-muted">Updated</p>
 
-              <p className="mt-0.5 text-[10px] font-bold text-[#351C18] sm:text-xs">{formatDate(contact.updatedAt)}</p>
+              <p className="mt-0.5 text-[10px] font-bold text-mk-ink sm:text-xs">{formatDate(contact.updatedAt)}</p>
             </div>
           </div>
         </div>
 
         {/* Conversation */}
-        <div className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
+        <div className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_4px_16px_rgba(73,54,49,0.05)]">
           {/* Conversation Header */}
-          <div className="flex items-center justify-between border-b border-[#E8DDD4] bg-[#FBF7F2] px-4 py-3">
+          <div className="flex items-center justify-between border-b border-mk-border bg-mk-bg px-4 py-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F1E5DE] text-[#7D171C]">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-mk-danger-soft text-mk-primary-deep">
                 <MessageSquare size={15} />
               </div>
 
               <div>
-                <h2 className="text-xs font-extrabold text-[#351C18]">Conversation</h2>
+                <h2 className="text-xs font-extrabold text-mk-ink">Conversation</h2>
 
-                <p className="text-[9px] text-[#806C63]">Customer support messages</p>
+                <p className="text-[9px] text-mk-muted">Customer support messages</p>
               </div>
             </div>
 
-            <ShieldCheck size={17} className="text-[#6B6258]" />
+            <ShieldCheck size={17} className="text-mk-admin" />
           </div>
 
           {/* Messages */}
-          <div className="max-h-140 min-h-75 space-y-4 overflow-y-auto bg-[#FFFDFC] p-3 sm:p-5">
+          <div className="max-h-140 min-h-75 space-y-4 overflow-y-auto bg-mk-card p-3 sm:p-5">
             {contact.messages?.map((item, index) => {
               const isUser = item.senderType === 'User'
 
@@ -206,15 +206,15 @@ export default function MySupportDetails() {
                 <div key={item._id || index} className={`flex ${isUser ? 'justify-start' : 'justify-end'}`}>
                   <div className={`flex max-w-[88%] items-end gap-2 sm:max-w-[75%] ${isUser ? 'flex-row' : 'flex-row-reverse'}`}>
                     {/* Avatar */}
-                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${isUser ? 'border border-[#E8DDD4] bg-[#F7EEE7] text-[#7D171C]' : 'bg-[#A51D26] text-white'}`}>
+                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${isUser ? 'border border-mk-border bg-mk-primary-soft text-mk-primary-deep' : 'bg-mk-primary text-white'}`}>
                       {isUser ? <User size={14} /> : <ShieldCheck size={14} />}
                     </div>
 
                     {/* Message */}
                     <div>
-                      <div className={`rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${isUser ? 'rounded-bl-md border border-[#E8DDD4] bg-[#F7EEE7] text-[#4C3B35]' : 'rounded-br-md bg-[#A51D26] text-white'}`}>{item.message}</div>
+                      <div className={`rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${isUser ? 'rounded-bl-md border border-mk-border bg-mk-primary-soft text-mk-admin-hover' : 'rounded-br-md bg-mk-primary text-white'}`}>{item.message}</div>
 
-                      <p className={`mt-1 text-[8px] text-[#9A857B] ${isUser ? 'text-left' : 'text-right'}`}>
+                      <p className={`mt-1 text-[8px] text-mk-muted ${isUser ? 'text-left' : 'text-right'}`}>
                         {isUser ? 'You' : 'Support Team'} · {formatDate(item.createdAt)}
                       </p>
                     </div>
@@ -226,9 +226,9 @@ export default function MySupportDetails() {
             {(!contact.messages || contact.messages.length === 0) && (
               <div className="flex min-h-65 items-center justify-center">
                 <div className="text-center">
-                  <MessageSquare size={30} className="mx-auto text-[#C8B9B0]" />
+                  <MessageSquare size={30} className="mx-auto text-mk-border-admin" />
 
-                  <p className="mt-2 text-xs font-bold text-[#67544D]">No messages yet</p>
+                  <p className="mt-2 text-xs font-bold text-mk-muted">No messages yet</p>
                 </div>
               </div>
             )}
@@ -236,15 +236,15 @@ export default function MySupportDetails() {
 
           {/* Reply Area */}
           {contact.status === 'Resolved' ? (
-            <div className="border-t border-[#E8DDD4] bg-[#F8FAF7] p-4">
-              <div className="flex items-center justify-center gap-2 rounded-xl border border-[#D8E5DA] bg-[#EAEDE7] px-3 py-3 text-xs font-semibold text-[#5E6C55]">
+            <div className="border-t border-mk-border bg-mk-bg-admin p-4">
+              <div className="flex items-center justify-center gap-2 rounded-xl border border-mk-border-admin bg-mk-success-soft px-3 py-3 text-xs font-semibold text-mk-success">
                 <CheckCircle2 size={16} />
                 <span>This support ticket has been resolved.</span>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleReply} className="border-t border-[#E8DDD4] bg-[#FBF7F2] p-3 sm:p-4">
-              <div className="rounded-xl border border-[#E8DDD4] bg-white p-2 shadow-[0_2px_8px_rgba(73,54,49,0.03)]">
+            <form onSubmit={handleReply} className="border-t border-mk-border bg-mk-bg p-3 sm:p-4">
+              <div className="rounded-xl border border-mk-border bg-white p-2 shadow-[0_2px_8px_rgba(73,54,49,0.03)]">
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -252,16 +252,16 @@ export default function MySupportDetails() {
                   maxLength={1000}
                   placeholder="Write your reply..."
                   disabled={sending}
-                  className="w-full resize-none bg-transparent px-2 py-1 text-xs text-[#351C18] outline-none placeholder:text-[#B1A19A] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full resize-none bg-transparent px-2 py-1 text-xs text-mk-ink outline-none placeholder:text-mk-subtle disabled:cursor-not-allowed disabled:opacity-60"
                 />
 
-                <div className="flex items-center justify-between gap-2 border-t border-[#F0E8E3] pt-2">
-                  <span className="px-2 text-[8px] text-[#9A857B]">{message.length}/1000</span>
+                <div className="flex items-center justify-between gap-2 border-t border-mk-danger-soft pt-2">
+                  <span className="px-2 text-[8px] text-mk-muted">{message.length}/1000</span>
 
                   <button
                     type="submit"
                     disabled={sending || !message.trim()}
-                    className="flex h-8 items-center gap-1.5 rounded-lg bg-[#A51D26] px-3 text-[9px] font-bold text-white transition hover:bg-[#7D171C] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-8 items-center gap-1.5 rounded-lg bg-mk-primary px-3 text-[9px] font-bold text-white transition hover:bg-mk-primary-deep disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {sending ? (
                       <>
@@ -282,7 +282,7 @@ export default function MySupportDetails() {
         </div>
 
         {/* Bottom Note */}
-        <div className="mt-3 flex items-center justify-center gap-1.5 text-[9px] text-[#9A857B]">
+        <div className="mt-3 flex items-center justify-center gap-1.5 text-[9px] text-mk-muted">
           <ShieldCheck size={12} />
           Your conversation is securely handled by MineKart Support.
         </div>

@@ -49,33 +49,33 @@ const AdminNotifications = () => {
     switch (type) {
       case 'NEW_ORDER':
         return {
-          wrapper: 'bg-[#EAEDE7] text-[#5E6C55]',
-          badge: 'bg-[#EAEDE7] text-[#5E6C55]',
+          wrapper: 'bg-mk-success-soft text-mk-success',
+          badge: 'bg-mk-success-soft text-mk-success',
         }
 
       case 'USER_CANCELLED_ORDER':
       case 'PAYMENT_FAILED':
         return {
-          wrapper: 'bg-[#F1E7E5] text-[#A44A3F]',
-          badge: 'bg-[#F1E7E5] text-[#A44A3F]',
+          wrapper: 'bg-mk-danger-soft text-mk-danger',
+          badge: 'bg-mk-danger-soft text-mk-danger',
         }
 
       case 'ORDER_RETURN_REQUESTED':
         return {
-          wrapper: 'bg-[#F1EEE8] text-[#8A6A3D]',
-          badge: 'bg-[#F1EEE8] text-[#8A6A3D]',
+          wrapper: 'bg-mk-surface text-mk-warning',
+          badge: 'bg-mk-surface text-mk-warning',
         }
 
       case 'PAYMENT_RECEIVED':
         return {
-          wrapper: 'bg-[#EAEDE7] text-[#5E6C55]',
-          badge: 'bg-[#EAEDE7] text-[#5E6C55]',
+          wrapper: 'bg-mk-success-soft text-mk-success',
+          badge: 'bg-mk-success-soft text-mk-success',
         }
 
       default:
         return {
-          wrapper: 'bg-[#F1EEE8] text-[#6B6258]',
-          badge: 'bg-[#F1EEE8] text-[#6B6258]',
+          wrapper: 'bg-mk-surface text-mk-admin',
+          badge: 'bg-mk-surface text-mk-admin',
         }
     }
   }
@@ -205,54 +205,54 @@ const AdminNotifications = () => {
 
       {/* STATS */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <div className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+        <div className="rounded-2xl border border-mk-border-admin bg-white p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-[#99938B]">Total Notifications</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-mk-subtle">Total Notifications</p>
 
-              <p className="mt-2 text-2xl font-bold text-[#292725]">{notifications.length}</p>
+              <p className="mt-2 text-2xl font-bold text-mk-ink-admin">{notifications.length}</p>
             </div>
 
-            <div className="flex size-11 items-center justify-center rounded-xl bg-[#F1EEE8] text-[#6B6258]">
+            <div className="flex size-11 items-center justify-center rounded-xl bg-mk-surface text-mk-admin">
               <Bell size={21} />
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+        <div className="rounded-2xl border border-mk-border-admin bg-white p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-[#99938B]">Unread</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-mk-subtle">Unread</p>
 
-              <p className="mt-2 text-2xl font-bold text-[#292725]">{unreadCount}</p>
+              <p className="mt-2 text-2xl font-bold text-mk-ink-admin">{unreadCount}</p>
             </div>
 
-            <div className="flex size-11 items-center justify-center rounded-xl bg-[#EEEAE4] text-[#6B6258]">
+            <div className="flex size-11 items-center justify-center rounded-xl bg-mk-surface text-mk-admin">
               <Clock size={21} />
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[#E3DED6] bg-white p-5">
+        <div className="rounded-2xl border border-mk-border-admin bg-white p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-[#99938B]">Read</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-mk-subtle">Read</p>
 
-              <p className="mt-2 text-2xl font-bold text-[#292725]">{notifications.length - unreadCount}</p>
+              <p className="mt-2 text-2xl font-bold text-mk-ink-admin">{notifications.length - unreadCount}</p>
             </div>
 
-            <div className="flex size-11 items-center justify-center rounded-xl bg-[#EAEDE7] text-[#5E6C55]">
+            <div className="flex size-11 items-center justify-center rounded-xl bg-mk-success-soft text-mk-success">
               <CheckCircle2 size={21} />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-mk-border-admin bg-white">
         {/* TOOLBAR */}
-        <div className="flex flex-col gap-4 border-b border-[#E3DED6] p-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-4 border-b border-mk-border-admin p-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full lg:max-w-xl">
-            <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99938B]" />
+            <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-mk-subtle" />
 
             <input
               type="text"
@@ -263,7 +263,7 @@ const AdminNotifications = () => {
                 localStorage.setItem('adminNotificationsSearch', value)
               }}
               placeholder="Search notifications..."
-              className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-10 pr-10 text-sm text-[#292725] outline-none transition placeholder:text-[#99938B] focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6]"
+              className="h-10 w-full rounded-xl border border-mk-border-admin bg-mk-bg-admin pl-10 pr-10 text-sm text-mk-ink-admin outline-none transition placeholder:text-mk-subtle focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin"
             />
 
             {search && (
@@ -273,7 +273,7 @@ const AdminNotifications = () => {
                   setSearch('')
                   localStorage.removeItem('adminNotificationsSearch')
                 }}
-                className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-mk-subtle transition hover:bg-mk-surface hover:text-mk-ink-admin"
                 title="Clear Search"
               >
                 <X size={15} />
@@ -283,7 +283,7 @@ const AdminNotifications = () => {
 
           <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap lg:w-auto lg:items-center">
             <div className="relative">
-              <ArrowUpDown size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6258]" />
+              <ArrowUpDown size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-mk-admin" />
 
               <select
                 value={sortOrder}
@@ -292,18 +292,18 @@ const AdminNotifications = () => {
                   setSortOrder(value)
                   localStorage.setItem('adminNotificationsSort', value)
                 }}
-                className="h-9 w-full appearance-none rounded-xl border border-[#E3DED6] bg-[#F8F6F2] pl-8 pr-8 text-[10px] font-bold text-[#6F6A64] outline-none transition focus:border-[#6B6258] focus:ring-2 focus:ring-[#E3DED6] sm:w-40"
+                className="h-9 w-full appearance-none rounded-xl border border-mk-border-admin bg-mk-bg-admin pl-8 pr-8 text-[10px] font-bold text-mk-muted-admin outline-none transition focus:border-mk-admin focus:ring-2 focus:ring-mk-border-admin sm:w-40"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
               </select>
             </div>
 
-            <div className="flex h-9 w-full items-center rounded-xl border border-[#E3DED6] bg-[#F8F6F2] p-1 sm:w-auto">
+            <div className="flex h-9 w-full items-center rounded-xl border border-mk-border-admin bg-mk-bg-admin p-1 sm:w-auto">
               <button
                 type="button"
                 onClick={() => setFilter('all')}
-                className={`flex-1 rounded-lg px-3 py-1.5 text-[10px] font-bold transition sm:flex-none ${filter === 'all' ? 'bg-[#6B6258] text-white shadow-sm' : 'text-[#6F6A64] hover:bg-[#EEEAE4] hover:text-[#292725]'}`}
+                className={`flex-1 rounded-lg px-3 py-1.5 text-[10px] font-bold transition sm:flex-none ${filter === 'all' ? 'bg-mk-admin text-white shadow-sm' : 'text-mk-muted-admin hover:bg-mk-surface hover:text-mk-ink-admin'}`}
               >
                 All
               </button>
@@ -311,7 +311,7 @@ const AdminNotifications = () => {
               <button
                 type="button"
                 onClick={() => setFilter('unread')}
-                className={`flex-1 rounded-lg px-3 py-1.5 text-[10px] font-bold transition sm:flex-none ${filter === 'unread' ? 'bg-[#6B6258] text-white shadow-sm' : 'text-[#6F6A64] hover:bg-[#EEEAE4] hover:text-[#292725]'}`}
+                className={`flex-1 rounded-lg px-3 py-1.5 text-[10px] font-bold transition sm:flex-none ${filter === 'unread' ? 'bg-mk-admin text-white shadow-sm' : 'text-mk-muted-admin hover:bg-mk-surface hover:text-mk-ink-admin'}`}
               >
                 Unread
               </button>
@@ -319,7 +319,7 @@ const AdminNotifications = () => {
               <button
                 type="button"
                 onClick={() => setFilter('read')}
-                className={`flex-1 rounded-lg px-3 py-1.5 text-[10px] font-bold transition sm:flex-none ${filter === 'read' ? 'bg-[#6B6258] text-white shadow-sm' : 'text-[#6F6A64] hover:bg-[#EEEAE4] hover:text-[#292725]'}`}
+                className={`flex-1 rounded-lg px-3 py-1.5 text-[10px] font-bold transition sm:flex-none ${filter === 'read' ? 'bg-mk-admin text-white shadow-sm' : 'text-mk-muted-admin hover:bg-mk-surface hover:text-mk-ink-admin'}`}
               >
                 Read
               </button>
@@ -329,7 +329,7 @@ const AdminNotifications = () => {
               type="button"
               onClick={markAllAsRead}
               disabled={unreadCount === 0}
-              className="flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-4 text-[10px] font-bold text-[#6B6258] transition hover:bg-[#EEEAE4] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+              className="flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-mk-border-admin bg-mk-bg-admin px-4 text-[10px] font-bold text-mk-admin transition hover:bg-mk-surface disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
             >
               <CheckCheck size={15} />
               Mark all read
@@ -338,9 +338,9 @@ const AdminNotifications = () => {
         </div>
 
         {/* NOTIFICATIONS */}
-        <div className="mt-5 overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+        <div className="mt-5 overflow-hidden rounded-2xl border border-mk-border-admin bg-white">
           {loading ? (
-            <div className="divide-y divide-[#E3DED6]">
+            <div className="divide-y divide-mk-border-admin">
               {[1, 2, 3, 4, 5].map((item) => (
                 <div key={item} className="flex gap-4 p-5">
                   <div className="minekart-admin-page-shimmer size-11 shrink-0 rounded-xl" />
@@ -355,22 +355,22 @@ const AdminNotifications = () => {
             </div>
           ) : filteredNotifications.length === 0 ? (
             <div className="flex min-h-90 flex-col items-center justify-center px-5 text-center">
-              <div className="flex size-16 items-center justify-center rounded-2xl bg-[#F1EEE8] text-[#99938B]">
+              <div className="flex size-16 items-center justify-center rounded-2xl bg-mk-surface text-mk-subtle">
                 <Bell size={28} strokeWidth={1.6} />
               </div>
 
-              <h3 className="mt-5 text-sm font-bold text-[#292725]">No notifications found</h3>
+              <h3 className="mt-5 text-sm font-bold text-mk-ink-admin">No notifications found</h3>
 
-              <p className="mt-1 max-w-md text-[11px] leading-5 text-[#99938B]">{search ? 'Try changing your search keyword or filter.' : 'New store activity and alerts will appear here.'}</p>
+              <p className="mt-1 max-w-md text-[11px] leading-5 text-mk-subtle">{search ? 'Try changing your search keyword or filter.' : 'New store activity and alerts will appear here.'}</p>
             </div>
           ) : (
-            <div className="divide-y divide-[#E3DED6]">
+            <div className="divide-y divide-mk-border-admin">
               {filteredNotifications.map((notification) => {
                 const Icon = getNotificationIcon(notification.type)
                 const styles = getNotificationStyle(notification.type)
 
                 return (
-                  <div key={notification._id} className={`group flex gap-4 p-5 transition ${notification.isRead ? 'bg-white hover:bg-[#FBFAF7]' : 'bg-[#F8F6F2] hover:bg-[#F1EEE8]'}`}>
+                  <div key={notification._id} className={`group flex gap-4 p-5 transition ${notification.isRead ? 'bg-white hover:bg-mk-bg' : 'bg-mk-bg-admin hover:bg-mk-surface'}`}>
                     {/* ICON */}
                     <button type="button" onClick={() => handleNotificationClick(notification)} className={`flex size-11 shrink-0 items-center justify-center rounded-xl ${styles.wrapper}`}>
                       <Icon size={20} />
@@ -379,30 +379,30 @@ const AdminNotifications = () => {
                     {/* CONTENT */}
                     <button type="button" onClick={() => handleNotificationClick(notification)} className="min-w-0 flex-1 text-left">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className={`text-sm ${notification.isRead ? 'font-semibold text-[#4B4743]' : 'font-bold text-[#292725]'}`}>{notification.title}</h3>
+                        <h3 className={`text-sm ${notification.isRead ? 'font-semibold text-mk-admin-hover' : 'font-bold text-mk-ink-admin'}`}>{notification.title}</h3>
 
                         <span className={`rounded-full px-2 py-1 text-[9px] font-bold ${styles.badge}`}>{getTypeLabel(notification.type)}</span>
 
-                        {!notification.isRead && <span className="size-1.5 rounded-full bg-[#6B6258]" />}
+                        {!notification.isRead && <span className="size-1.5 rounded-full bg-mk-admin" />}
                       </div>
 
-                      <p className="mt-1.5 max-w-3xl text-xs leading-5 text-[#6F6A64]">{notification.message}</p>
+                      <p className="mt-1.5 max-w-3xl text-xs leading-5 text-mk-muted-admin">{notification.message}</p>
 
                       <div className="mt-2.5 flex flex-wrap items-center gap-3">
-                        <span className="flex items-center gap-1.5 text-[10px] font-medium text-[#99938B]">
+                        <span className="flex items-center gap-1.5 text-[10px] font-medium text-mk-subtle">
                           <Clock size={12} />
                           {formatDate(notification.createdAt)}
                         </span>
 
                         {notification.orderId?.orderId && (
-                          <span className="flex items-center gap-1.5 text-[10px] font-bold text-[#6B6258]">
+                          <span className="flex items-center gap-1.5 text-[10px] font-bold text-mk-admin">
                             <ShoppingCart size={12} />
                             {notification.orderId.orderId}
                           </span>
                         )}
 
                         {notification.userId?.name && (
-                          <span className="flex items-center gap-1.5 text-[10px] font-medium text-[#99938B]">
+                          <span className="flex items-center gap-1.5 text-[10px] font-medium text-mk-subtle">
                             <UserRound size={12} />
                             {notification.userId.name}
                           </span>
@@ -413,12 +413,12 @@ const AdminNotifications = () => {
                     {/* ACTIONS */}
                     <div className="flex shrink-0 items-start gap-1">
                       {!notification.isRead && (
-                        <button type="button" title="Mark as read" onClick={() => markAsRead(notification._id)} className="flex size-9 items-center justify-center rounded-lg text-[#99938B] transition hover:bg-[#EEEAE4] hover:text-[#6B6258]">
+                        <button type="button" title="Mark as read" onClick={() => markAsRead(notification._id)} className="flex size-9 items-center justify-center rounded-lg text-mk-subtle transition hover:bg-mk-surface hover:text-mk-admin">
                           <CheckCheck size={16} />
                         </button>
                       )}
 
-                      <button type="button" title="Delete" onClick={() => handleDelete(notification._id)} className="flex size-9 items-center justify-center rounded-lg text-[#99938B] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]">
+                      <button type="button" title="Delete" onClick={() => handleDelete(notification._id)} className="flex size-9 items-center justify-center rounded-lg text-mk-subtle transition hover:bg-mk-danger-soft hover:text-mk-danger">
                         <Trash2 size={16} />
                       </button>
                     </div>
@@ -432,7 +432,7 @@ const AdminNotifications = () => {
         {/* RESULT INFO */}
         {!loading && filteredNotifications.length > 0 && (
           <div className="flex items-center justify-between px-1 py-4">
-            <p className="text-[10px] font-medium text-[#99938B]">
+            <p className="text-[10px] font-medium text-mk-subtle">
               Showing {filteredNotifications.length} of {notifications.length} notifications
             </p>
 
@@ -443,7 +443,7 @@ const AdminNotifications = () => {
                   setSearch('')
                   setFilter('all')
                 }}
-                className="text-[10px] font-bold text-[#6B6258] hover:text-[#3F3A35]"
+                className="text-[10px] font-bold text-mk-admin hover:text-mk-ink-admin"
               >
                 Clear filters
               </button>

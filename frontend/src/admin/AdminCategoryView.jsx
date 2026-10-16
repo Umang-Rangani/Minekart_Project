@@ -35,7 +35,7 @@ export default function AdminCategoryView() {
   if (loading) {
     return (
       <div className="flex min-h-100 items-center justify-center">
-        <p className="text-sm font-medium text-[#6F6A64]">Loading category...</p>
+        <p className="text-sm font-medium text-mk-muted-admin">Loading category...</p>
       </div>
     )
   }
@@ -44,9 +44,9 @@ export default function AdminCategoryView() {
   if (!category) {
     return (
       <div className="flex min-h-100 flex-col items-center justify-center">
-        <p className="text-sm font-semibold text-[#292725]">Category not found</p>
+        <p className="text-sm font-semibold text-mk-ink-admin">Category not found</p>
 
-        <button type="button" onClick={() => navigate('/admin/category')} className="mt-4 rounded-xl bg-[#6B6258] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3F3A35]">
+        <button type="button" onClick={() => navigate('/admin/category')} className="mt-4 rounded-xl bg-mk-admin px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-mk-ink-admin">
           Back to Categories
         </button>
       </div>
@@ -69,18 +69,18 @@ export default function AdminCategoryView() {
       <AdminBreadCrumb items={items} />
 
       {/* CATEGORY MAIN CARD */}
-      <div className="overflow-hidden rounded-2xl border border-[#E3DED6] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-mk-border-admin bg-white">
         <div className="grid grid-cols-1 gap-8 p-5 lg:grid-cols-[360px_1fr]">
           {/* CATEGORY IMAGE */}
           <div>
-            <div className="flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-[#E3DED6] bg-[#F8F6F2]">
+            <div className="flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-mk-border-admin bg-mk-bg-admin">
               {category.categoryImage ? (
                 <img src={getImageUrl(category.categoryImage)} alt={category.categoryName} className="h-full w-full object-contain p-8" />
               ) : (
                 <div className="text-center">
-                  <ImageIcon size={40} className="mx-auto text-[#99938B]" />
+                  <ImageIcon size={40} className="mx-auto text-mk-subtle" />
 
-                  <p className="mt-2 text-sm text-[#99938B]">No image available</p>
+                  <p className="mt-2 text-sm text-mk-subtle">No image available</p>
                 </div>
               )}
             </div>
@@ -89,17 +89,17 @@ export default function AdminCategoryView() {
           {/* BASIC CATEGORY INFO */}
           <div>
             {/* CATEGORY NAME */}
-            <div className="border-b border-[#E3DED6] pb-5">
+            <div className="border-b border-mk-border-admin pb-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-[11px] font-medium uppercase tracking-wide text-[#99938B]">Category</p>
+                  <p className="text-[11px] font-medium uppercase tracking-wide text-mk-subtle">Category</p>
 
-                  <h2 className="mt-1 text-2xl font-bold text-[#292725]">{category.categoryName}</h2>
+                  <h2 className="mt-1 text-2xl font-bold text-mk-ink-admin">{category.categoryName}</h2>
                 </div>
 
                 {/* STATUS */}
-                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${category.status === 'Active' ? 'bg-[#EAE7E1] text-[#5D554C]' : 'bg-[#F1E7E5] text-[#A44A3F]'}`}>
-                  <span className={`size-1.5 rounded-full ${category.status === 'Active' ? 'bg-[#6B6258]' : 'bg-[#A44A3F]'}`} />
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${category.status === 'Active' ? 'bg-mk-surface text-mk-admin-hover' : 'bg-mk-danger-soft text-mk-danger'}`}>
+                  <span className={`size-1.5 rounded-full ${category.status === 'Active' ? 'bg-mk-admin' : 'bg-mk-danger'}`} />
 
                   {category.status}
                 </span>
@@ -108,17 +108,17 @@ export default function AdminCategoryView() {
 
             {/* QUICK INFO */}
             <div className="grid grid-cols-1 gap-3 py-5 sm:grid-cols-2">
-              <div className="rounded-xl bg-[#F1EEE8] p-4">
-                <p className="text-[11px] text-[#99938B]">Category Name</p>
+              <div className="rounded-xl bg-mk-surface p-4">
+                <p className="text-[11px] text-mk-subtle">Category Name</p>
 
-                <p className="mt-1 text-sm font-bold text-[#292725]">{category.categoryName || '-'}</p>
+                <p className="mt-1 text-sm font-bold text-mk-ink-admin">{category.categoryName || '-'}</p>
               </div>
 
-              <div className="rounded-xl bg-[#F1EEE8] p-4">
-                <p className="text-[11px] text-[#99938B]">Status</p>
+              <div className="rounded-xl bg-mk-surface p-4">
+                <p className="text-[11px] text-mk-subtle">Status</p>
 
-                <span className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${category.status === 'Active' ? 'bg-[#EAE7E1] text-[#5D554C]' : 'bg-[#F1E7E5] text-[#A44A3F]'}`}>
-                  <span className={`size-1.5 rounded-full ${category.status === 'Active' ? 'bg-[#6B6258]' : 'bg-[#A44A3F]'}`} />
+                <span className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${category.status === 'Active' ? 'bg-mk-surface text-mk-admin-hover' : 'bg-mk-danger-soft text-mk-danger'}`}>
+                  <span className={`size-1.5 rounded-full ${category.status === 'Active' ? 'bg-mk-admin' : 'bg-mk-danger'}`} />
 
                   {category.status}
                 </span>
@@ -126,22 +126,22 @@ export default function AdminCategoryView() {
             </div>
 
             {/* CATEGORY IMAGE */}
-            <div className="border-t border-[#E3DED6] pt-5">
-              <p className="text-[11px] text-[#99938B]">Category Image</p>
+            <div className="border-t border-mk-border-admin pt-5">
+              <p className="text-[11px] text-mk-subtle">Category Image</p>
 
-              <p className="mt-1 break-all text-sm font-semibold text-[#292725]">{category.categoryImage || '-'}</p>
+              <p className="mt-1 break-all text-sm font-semibold text-mk-ink-admin">{category.categoryImage || '-'}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* DESCRIPTION */}
-      <div className="rounded-2xl border border-[#E3DED6] bg-white p-5">
-        <div className="border-b border-[#E3DED6] pb-4">
-          <h3 className="text-base font-bold text-[#292725]">Category Description</h3>
+      <div className="rounded-2xl border border-mk-border-admin bg-white p-5">
+        <div className="border-b border-mk-border-admin pb-4">
+          <h3 className="text-base font-bold text-mk-ink-admin">Category Description</h3>
         </div>
 
-        <p className="pt-4 text-sm leading-7 text-[#6F6A64]">{category.description || 'No description available.'}</p>
+        <p className="pt-4 text-sm leading-7 text-mk-muted-admin">{category.description || 'No description available.'}</p>
       </div>
     </div>
   )

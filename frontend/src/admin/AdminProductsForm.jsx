@@ -342,7 +342,7 @@ export default function AdminProductsForm() {
   if (pageLoading) {
     return (
       <div className="flex min-h-100 items-center justify-center">
-        <div className="text-sm font-medium text-[#6F6A64]">Loading product...</div>
+        <div className="text-sm font-medium text-mk-muted-admin">Loading product...</div>
       </div>
     )
   }
@@ -367,25 +367,25 @@ export default function AdminProductsForm() {
       <AdminBreadCrumb items={items} />
 
       {/* FORM */}
-      <div className="overflow-hidden rounded-3xl border border-[#E3DED6] bg-white shadow-[0_10px_40px_rgba(63,58,53,0.06)]">
+      <div className="overflow-hidden rounded-3xl border border-mk-border-admin bg-white shadow-[0_10px_40px_rgba(63,58,53,0.06)]">
         <form onSubmit={submitHandle} className="p-5 sm:p-7 lg:p-8">
           <div className="space-y-10">
             {/* BASIC INFORMATION */}
             <section>
               <div className="mb-6 flex items-start gap-3">
-                <div className="mt-1 h-9 w-1 rounded-full bg-[#6B6258]" />
+                <div className="mt-1 h-9 w-1 rounded-full bg-mk-admin" />
 
                 <div>
-                  <h3 className="text-lg font-semibold tracking-tight text-[#292725]">Basic Information</h3>
+                  <h3 className="text-lg font-semibold tracking-tight text-mk-ink-admin">Basic Information</h3>
 
-                  <p className="mt-1 text-xs text-[#99938B]">Add basic details about your product.</p>
+                  <p className="mt-1 text-xs text-mk-subtle">Add basic details about your product.</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                 {/* PRODUCT NAME */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Product Name</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Product Name</label>
 
                   <input
                     type="text"
@@ -394,19 +394,19 @@ export default function AdminProductsForm() {
                     onChange={handleChange}
                     placeholder="e.g. Men Regular Fit Printed Shirt"
                     required
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   />
                 </div>
 
                 {/* BRAND */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Brand</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Brand</label>
 
                   <select
                     name="brand"
                     value={productData.brand}
                     onChange={handleChange}
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   >
                     <option value="">Select Brand</option>
 
@@ -420,14 +420,14 @@ export default function AdminProductsForm() {
 
                 {/* CATEGORY */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Category</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Category</label>
 
                   <select
                     name="category"
                     value={productData.category}
                     onChange={handleChange}
                     required
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   >
                     <option value="">Select Category</option>
 
@@ -441,13 +441,13 @@ export default function AdminProductsForm() {
 
                 {/* SUBCATEGORY */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">SubCategory</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">SubCategory</label>
 
                   <select
                     name="subCategory"
                     value={productData.subCategory}
                     onChange={handleChange}
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   >
                     <option value="">Select SubCategory</option>
 
@@ -462,12 +462,12 @@ export default function AdminProductsForm() {
                 {/* SIZES */}
                 <div className="lg:col-span-2">
                   <div className="mb-3 flex items-center justify-between">
-                    <label className="block text-sm font-semibold text-[#292725]">Available Sizes</label>
+                    <label className="block text-sm font-semibold text-mk-ink-admin">Available Sizes</label>
 
-                    <span className="rounded-full bg-[#F1EEE8] px-3 py-1 text-[10px] font-semibold text-[#6B6258]">{productData.sizes.length} Selected</span>
+                    <span className="rounded-full bg-mk-surface px-3 py-1 text-[10px] font-semibold text-mk-admin">{productData.sizes.length} Selected</span>
                   </div>
 
-                  <div className="rounded-2xl border border-[#E3DED6] bg-[#F8F6F2] p-4">
+                  <div className="rounded-2xl border border-mk-border-admin bg-mk-bg-admin p-4">
                     <div className="flex flex-wrap gap-2.5">
                       {['S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL', '28', '30', '32', '34', '36', '38', '40'].map((size) => {
                         const selected = productData.sizes.includes(size)
@@ -477,7 +477,7 @@ export default function AdminProductsForm() {
                             key={size}
                             type="button"
                             onClick={() => handleSizeChange(size)}
-                            className={` flex h-11 min-w-14 items-center justify-center rounded-xl border px-4 text-sm font-semibold transition-all duration-200 ${selected ? 'border-[#6B6258] bg-[#6B6258] text-white shadow-sm' : 'border-[#E3DED6] bg-white text-[#6F6A64] hover:border-[#BDB5AB] hover:bg-[#EEEAE4] hover:text-[#292725]'} `}
+                            className={` flex h-11 min-w-14 items-center justify-center rounded-xl border px-4 text-sm font-semibold transition-all duration-200 ${selected ? 'border-mk-admin bg-mk-admin text-white shadow-sm' : 'border-mk-border-admin bg-white text-mk-muted-admin hover:border-mk-subtle hover:bg-mk-surface hover:text-mk-ink-admin'} `}
                           >
                             {size}
                           </button>
@@ -486,21 +486,21 @@ export default function AdminProductsForm() {
                     </div>
                   </div>
 
-                  <p className="mt-2 text-xs text-[#99938B]">Select the sizes available for this product.</p>
+                  <p className="mt-2 text-xs text-mk-subtle">Select the sizes available for this product.</p>
                 </div>
               </div>
             </section>
 
             {/*  PRICING & INVENTORY */}
             <section>
-              <div className="mb-6 border-t border-[#E8E3DC] pt-8">
+              <div className="mb-6 border-t border-mk-border-admin pt-8">
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 h-9 w-1 rounded-full bg-[#6B6258]" />
+                  <div className="mt-1 h-9 w-1 rounded-full bg-mk-admin" />
 
                   <div>
-                    <h3 className="text-lg font-semibold tracking-tight text-[#292725]">Pricing & Inventory</h3>
+                    <h3 className="text-lg font-semibold tracking-tight text-mk-ink-admin">Pricing & Inventory</h3>
 
-                    <p className="mt-1 text-xs text-[#99938B]">Manage pricing, discount, stock and rating.</p>
+                    <p className="mt-1 text-xs text-mk-subtle">Manage pricing, discount, stock and rating.</p>
                   </div>
                 </div>
               </div>
@@ -508,10 +508,10 @@ export default function AdminProductsForm() {
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {/* PRICE */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Price</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Price</label>
 
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-[#99938B]">₹</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-mk-subtle">₹</span>
 
                     <input
                       type="number"
@@ -521,14 +521,14 @@ export default function AdminProductsForm() {
                       placeholder="0"
                       required
                       min="0"
-                      className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white pl-9 pr-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                      className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white pl-9 pr-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                     />
                   </div>
                 </div>
 
                 {/* DISCOUNT */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Discount</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Discount</label>
 
                   <div className="relative">
                     <input
@@ -539,19 +539,19 @@ export default function AdminProductsForm() {
                       placeholder="0"
                       min="0"
                       max="100"
-                      className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 pr-10 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                      className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 pr-10 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                     />
 
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-[#99938B]">%</span>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-mk-subtle">%</span>
                   </div>
                 </div>
 
                 {/* DISCOUNT PRICE */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Discount Price</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Discount Price</label>
 
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-[#99938B]">₹</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-mk-subtle">₹</span>
 
                     <input
                       type="number"
@@ -560,14 +560,14 @@ export default function AdminProductsForm() {
                       onChange={handleChange}
                       placeholder="0"
                       min="0"
-                      className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white pl-9 pr-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                      className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white pl-9 pr-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                     />
                   </div>
                 </div>
 
                 {/* STOCK */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Stock</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Stock</label>
 
                   <input
                     type="number"
@@ -576,13 +576,13 @@ export default function AdminProductsForm() {
                     onChange={handleChange}
                     placeholder="0"
                     min="0"
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   />
                 </div>
 
                 {/* RATING */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Rating</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Rating</label>
 
                   <input
                     type="number"
@@ -593,7 +593,7 @@ export default function AdminProductsForm() {
                     min="0"
                     max="5"
                     step="0.1"
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   />
                 </div>
               </div>
@@ -601,37 +601,37 @@ export default function AdminProductsForm() {
 
             {/*  PRODUCT IMAGES */}
             <section>
-              <div className="mb-6 border-t border-[#E8E3DC] pt-8">
+              <div className="mb-6 border-t border-mk-border-admin pt-8">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3">
-                    <div className="mt-1 h-9 w-1 rounded-full bg-[#6B6258]" />
+                    <div className="mt-1 h-9 w-1 rounded-full bg-mk-admin" />
 
                     <div>
-                      <h3 className="text-lg font-semibold tracking-tight text-[#292725]">Product Images</h3>
+                      <h3 className="text-lg font-semibold tracking-tight text-mk-ink-admin">Product Images</h3>
 
-                      <p className="mt-1 text-xs text-[#99938B]">Add clear images of your product.</p>
+                      <p className="mt-1 text-xs text-mk-subtle">Add clear images of your product.</p>
                     </div>
                   </div>
 
-                  <span className="shrink-0 rounded-full bg-[#F1EEE8] px-3 py-1.5 text-[10px] font-bold text-[#6B6258]">{previewImages.length} Images</span>
+                  <span className="shrink-0 rounded-full bg-mk-surface px-3 py-1.5 text-[10px] font-bold text-mk-admin">{previewImages.length} Images</span>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#E3DED6] bg-[#F8F6F2] p-4 sm:p-5">
+              <div className="rounded-2xl border border-mk-border-admin bg-mk-bg-admin p-4 sm:p-5">
                 <div className="flex flex-wrap gap-4">
                   {previewImages.map((image, index) => (
-                    <div key={`${image.type}-${index}`} className=" group relative h-40 w-32 overflow-hidden rounded-2xl border border-[#E3DED6] bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ">
+                    <div key={`${image.type}-${index}`} className=" group relative h-40 w-32 overflow-hidden rounded-2xl border border-mk-border-admin bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ">
                       <img src={image.url} alt={`Product ${index + 1}`} className="h-full w-full object-contain p-2transition-transform duration-300group-hover:scale-105 " />
 
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
-                        className=" absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-[#A44A3F] text-white opacity-0 shadow-md transition-all duration-200 group-hover:opacity-100 hover:bg-[#913C33] "
+                        className=" absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-mk-danger text-white opacity-0 shadow-md transition-all duration-200 group-hover:opacity-100 hover:bg-mk-danger "
                       >
                         <X size={13} strokeWidth={2.5} />
                       </button>
 
-                      <div className="absolute bottom-2 left-2 rounded-md bg-[#292725]/75 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">Image {index + 1}</div>
+                      <div className="absolute bottom-2 left-2 rounded-md bg-mk-ink-admin/75 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">Image {index + 1}</div>
                     </div>
                   ))}
 
@@ -639,15 +639,15 @@ export default function AdminProductsForm() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className=" group flex h-40 w-32 flex-col items-center justify-center rounded-2xl border border-dashed border-[#CFC8BF] bg-white transition-all duration-200 hover:-translate-y-1 hover:border-[#6B6258] hover:bg-[#FAF9F7] hover:shadow-md "
+                    className=" group flex h-40 w-32 flex-col items-center justify-center rounded-2xl border border-dashed border-mk-border-admin bg-white transition-all duration-200 hover:-translate-y-1 hover:border-mk-admin hover:bg-mk-bg hover:shadow-md "
                   >
-                    <div className="flex size-12 items-center justify-center rounded-xl bg-[#F1EEE8] transition-all duration-200 group-hover:bg-[#6B6258]">
-                      <Plus size={23} strokeWidth={1.8} className="text-[#6B6258] transition-colors group-hover:text-white" />
+                    <div className="flex size-12 items-center justify-center rounded-xl bg-mk-surface transition-all duration-200 group-hover:bg-mk-admin">
+                      <Plus size={23} strokeWidth={1.8} className="text-mk-admin transition-colors group-hover:text-white" />
                     </div>
 
-                    <span className="mt-3 text-xs font-semibold text-[#292725]">Add Image</span>
+                    <span className="mt-3 text-xs font-semibold text-mk-ink-admin">Add Image</span>
 
-                    <span className="mt-1 text-[10px] text-[#99938B]">JPG / PNG</span>
+                    <span className="mt-1 text-[10px] text-mk-subtle">JPG / PNG</span>
                   </button>
 
                   <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleImageChange} className="hidden" />
@@ -657,14 +657,14 @@ export default function AdminProductsForm() {
 
             {/*   STORE & DISPLAY */}
             <section>
-              <div className="mb-6 border-t border-[#E8E3DC] pt-8">
+              <div className="mb-6 border-t border-mk-border-admin pt-8">
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 h-9 w-1 rounded-full bg-[#6B6258]" />
+                  <div className="mt-1 h-9 w-1 rounded-full bg-mk-admin" />
 
                   <div>
-                    <h3 className="text-lg font-semibold tracking-tight text-[#292725]">Store & Display</h3>
+                    <h3 className="text-lg font-semibold tracking-tight text-mk-ink-admin">Store & Display</h3>
 
-                    <p className="mt-1 text-xs text-[#99938B]">Control product visibility and offer settings.</p>
+                    <p className="mt-1 text-xs text-mk-subtle">Control product visibility and offer settings.</p>
                   </div>
                 </div>
               </div>
@@ -672,13 +672,13 @@ export default function AdminProductsForm() {
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                 {/* STATUS */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Status</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Status</label>
 
                   <select
                     name="status"
                     value={productData.status}
                     onChange={handleChange}
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -687,19 +687,19 @@ export default function AdminProductsForm() {
 
                 {/* OFFER TOGGLE */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Offer Product</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Offer Product</label>
 
-                  <div className="flex h-13 items-center justify-between rounded-xl border border-[#E3DED6] bg-white px-4 shadow-sm">
+                  <div className="flex h-13 items-center justify-between rounded-xl border border-mk-border-admin bg-white px-4 shadow-sm">
                     <div>
-                      <p className="text-sm font-semibold text-[#292725]">Special Offer</p>
+                      <p className="text-sm font-semibold text-mk-ink-admin">Special Offer</p>
 
-                      <p className="mt-0.5 text-[11px] text-[#99938B]">Enable promotional display</p>
+                      <p className="mt-0.5 text-[11px] text-mk-subtle">Enable promotional display</p>
                     </div>
 
                     <label className="relative inline-flex cursor-pointer items-center">
                       <input type="checkbox" name="isOffer" checked={productData.isOffer} onChange={handleChange} className="peer sr-only" />
 
-                      <div className=" relative h-6 w-11 rounded-full bg-[#D8D2C9] transition-all duration-200 peer-checked:bg-[#6B6258] peer-focus:ring-4 peer-focus:ring-[#6B6258]/10 after:absolute after:left-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-sm after:transition-transform after:duration-200 after:content-[''] peer-checked:after:translate-x-5 " />
+                      <div className=" relative h-6 w-11 rounded-full bg-mk-border-admin transition-all duration-200 peer-checked:bg-mk-admin peer-focus:ring-4 peer-focus:ring-mk-admin/10 after:absolute after:left-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-sm after:transition-transform after:duration-200 after:content-[''] peer-checked:after:translate-x-5 " />
                     </label>
                   </div>
                 </div>
@@ -709,26 +709,26 @@ export default function AdminProductsForm() {
             {/* OFFER IMAGE */}
             {productData.isOffer && (
               <section>
-                <div className="mb-6 border-t border-[#E8E3DC] pt-8">
+                <div className="mb-6 border-t border-mk-border-admin pt-8">
                   <div className="flex items-start gap-3">
-                    <div className="mt-1 h-9 w-1 rounded-full bg-[#A44A3F]" />
+                    <div className="mt-1 h-9 w-1 rounded-full bg-mk-danger" />
 
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="text-lg font-semibold tracking-tight text-[#292725]">Offer Image</h3>
+                        <h3 className="text-lg font-semibold tracking-tight text-mk-ink-admin">Offer Image</h3>
 
-                        <span className="rounded-full bg-[#F8E9E6] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#A44A3F]">Special Offer</span>
+                        <span className="rounded-full bg-mk-primary-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-mk-danger">Special Offer</span>
                       </div>
 
-                      <p className="mt-1 text-xs text-[#99938B]">Add a dedicated promotional image for this product.</p>
+                      <p className="mt-1 text-xs text-mk-subtle">Add a dedicated promotional image for this product.</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-[#E8D8D3] bg-[#FCF8F6] p-5">
+                <div className="rounded-2xl border border-mk-border bg-mk-bg p-5">
                   <div className="flex flex-wrap gap-4">
                     {offerImagePreview ? (
-                      <div className=" group relative h-44 w-36 overflow-hidden rounded-2xl border border-[#E3DED6]  bg-white shadow-sm ">
+                      <div className=" group relative h-44 w-36 overflow-hidden rounded-2xl border border-mk-border-admin  bg-white shadow-sm ">
                         <img src={offerImagePreview} alt="Offer" className=" h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105 " />
 
                         <button
@@ -746,26 +746,26 @@ export default function AdminProductsForm() {
                               offerImage: '',
                             }))
                           }}
-                          className=" absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-[#A44A3F] text-white shadow-md transition hover:bg-[#913C33] "
+                          className=" absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-mk-danger text-white shadow-md transition hover:bg-mk-danger "
                         >
                           <X size={13} strokeWidth={2.5} />
                         </button>
 
-                        <div className="absolute bottom-2 left-2 rounded-md bg-[#292725]/75 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">Offer Image</div>
+                        <div className="absolute bottom-2 left-2 rounded-md bg-mk-ink-admin/75 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">Offer Image</div>
                       </div>
                     ) : (
                       <button
                         type="button"
                         onClick={() => offerImageInputRef.current?.click()}
-                        className=" group flex h-44 w-36 flex-col items-center justify-center rounded-2xl border border-dashed border-[#D8C8C2] bg-white transition-all duration-200 hover:-translate-y-1 hover:border-[#A44A3F] hover:shadow-md "
+                        className=" group flex h-44 w-36 flex-col items-center justify-center rounded-2xl border border-dashed border-mk-border-admin bg-white transition-all duration-200 hover:-translate-y-1 hover:border-mk-danger hover:shadow-md "
                       >
-                        <div className="flex size-12 items-center justify-center rounded-xl bg-[#F8E9E6] transition group-hover:bg-[#A44A3F]">
-                          <Plus size={23} strokeWidth={1.8} className="text-[#A44A3F] transition group-hover:text-white" />
+                        <div className="flex size-12 items-center justify-center rounded-xl bg-mk-primary-soft transition group-hover:bg-mk-danger">
+                          <Plus size={23} strokeWidth={1.8} className="text-mk-danger transition group-hover:text-white" />
                         </div>
 
-                        <span className="mt-3 text-xs font-semibold text-[#292725]">Add Offer Image</span>
+                        <span className="mt-3 text-xs font-semibold text-mk-ink-admin">Add Offer Image</span>
 
-                        <span className="mt-1 text-[10px] text-[#99938B]">JPG / PNG</span>
+                        <span className="mt-1 text-[10px] text-mk-subtle">JPG / PNG</span>
                       </button>
                     )}
 
@@ -777,14 +777,14 @@ export default function AdminProductsForm() {
 
             {/* DESCRIPTION */}
             <section>
-              <div className="mb-6 border-t border-[#E8E3DC] pt-8">
+              <div className="mb-6 border-t border-mk-border-admin pt-8">
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 h-9 w-1 rounded-full bg-[#6B6258]" />
+                  <div className="mt-1 h-9 w-1 rounded-full bg-mk-admin" />
 
                   <div>
-                    <h3 className="text-lg font-semibold tracking-tight text-[#292725]">Product Description</h3>
+                    <h3 className="text-lg font-semibold tracking-tight text-mk-ink-admin">Product Description</h3>
 
-                    <p className="mt-1 text-xs text-[#99938B]">Add detailed information about the product.</p>
+                    <p className="mt-1 text-xs text-mk-subtle">Add detailed information about the product.</p>
                   </div>
                 </div>
               </div>
@@ -795,20 +795,20 @@ export default function AdminProductsForm() {
                 onChange={handleChange}
                 rows={7}
                 placeholder="Enter product description..."
-                className=" w-full resize-none rounded-2xl border border-[#E3DED6] bg-white px-4 py-4 text-sm leading-6 text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                className=" w-full resize-none rounded-2xl border border-mk-border-admin bg-white px-4 py-4 text-sm leading-6 text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
               />
             </section>
 
             {/* FULFILLMENT & POLICIES */}
             <section>
-              <div className="mb-6 border-t border-[#E8E3DC] pt-8">
+              <div className="mb-6 border-t border-mk-border-admin pt-8">
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 h-9 w-1 rounded-full bg-[#6B6258]" />
+                  <div className="mt-1 h-9 w-1 rounded-full bg-mk-admin" />
 
                   <div>
-                    <h3 className="text-lg font-semibold tracking-tight text-[#292725]">Fulfillment & Policies</h3>
+                    <h3 className="text-lg font-semibold tracking-tight text-mk-ink-admin">Fulfillment & Policies</h3>
 
-                    <p className="mt-1 text-xs text-[#99938B]">Add warranty, return and delivery information.</p>
+                    <p className="mt-1 text-xs text-mk-subtle">Add warranty, return and delivery information.</p>
                   </div>
                 </div>
               </div>
@@ -816,7 +816,7 @@ export default function AdminProductsForm() {
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                 {/* WARRANTY */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Warranty Information</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Warranty Information</label>
 
                   <input
                     type="text"
@@ -824,13 +824,13 @@ export default function AdminProductsForm() {
                     value={productData.warranty}
                     onChange={handleChange}
                     placeholder="e.g. 1 Year Manufacturer Warranty"
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   />
                 </div>
 
                 {/* WARRANTY DURATION */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Warranty Duration</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Warranty Duration</label>
 
                   <input
                     type="text"
@@ -838,19 +838,19 @@ export default function AdminProductsForm() {
                     value={productData.warrantyDuration}
                     onChange={handleChange}
                     placeholder="e.g. 1 Year"
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   />
                 </div>
 
                 {/* WARRANTY TYPE */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Warranty Type</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Warranty Type</label>
 
                   <select
                     name="warrantyType"
                     value={productData.warrantyType}
                     onChange={handleChange}
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   >
                     <option value="No Warranty">No Warranty</option>
                     <option value="Brand Warranty">Brand Warranty</option>
@@ -860,7 +860,7 @@ export default function AdminProductsForm() {
 
                 {/* RETURN POLICY */}
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Return Policy</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Return Policy</label>
 
                   <input
                     type="text"
@@ -868,13 +868,13 @@ export default function AdminProductsForm() {
                     value={productData.returnPolicy}
                     onChange={handleChange}
                     placeholder="e.g. 7 Days Return"
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   />
                 </div>
 
                 {/* DELIVERY */}
                 <div className="lg:col-span-2">
-                  <label className="mb-2 block text-sm font-semibold text-[#292725]">Delivery Information</label>
+                  <label className="mb-2 block text-sm font-semibold text-mk-ink-admin">Delivery Information</label>
 
                   <input
                     type="text"
@@ -882,7 +882,7 @@ export default function AdminProductsForm() {
                     value={productData.deliveryInfo}
                     onChange={handleChange}
                     placeholder="e.g. Delivery in 3-5 days"
-                    className=" h-13 w-full rounded-xl border border-[#E3DED6] bg-white px-4 text-sm text-[#292725] outline-none transition-all duration-200 placeholder:text-[#B0AAA2] hover:border-[#CFC8BF] focus:border-[#6B6258] focus:ring-4 focus:ring-[#6B6258]/10 "
+                    className=" h-13 w-full rounded-xl border border-mk-border-admin bg-white px-4 text-sm text-mk-ink-admin outline-none transition-all duration-200 placeholder:text-mk-subtle hover:border-mk-border-admin focus:border-mk-admin focus:ring-4 focus:ring-mk-admin/10 "
                   />
                 </div>
               </div>
@@ -890,15 +890,15 @@ export default function AdminProductsForm() {
           </div>
 
           {/*    FORM ACTIONS */}
-          <div className="mt-10 flex flex-col-reverse gap-3 border-t border-[#E8E3DC] pt-6 sm:flex-row sm:justify-end">
-            <button type="button" onClick={closeForm} className=" h-11 rounded-xl border border-[#E3DED6] bg-white px-6 text-sm font-semibold text-[#6F6A64] transition-all duration-200 hover:border-[#CFC8BF] hover:bg-[#F8F6F2] hover:text-[#292725] ">
+          <div className="mt-10 flex flex-col-reverse gap-3 border-t border-mk-border-admin pt-6 sm:flex-row sm:justify-end">
+            <button type="button" onClick={closeForm} className=" h-11 rounded-xl border border-mk-border-admin bg-white px-6 text-sm font-semibold text-mk-muted-admin transition-all duration-200 hover:border-mk-border-admin hover:bg-mk-bg-admin hover:text-mk-ink-admin ">
               Cancel
             </button>
 
             <button
               type="submit"
               disabled={loading}
-              className=" h-11 rounded-xl bg-[#6B6258] px-7 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#3F3A35] hover:shadow-md focus:outline-none focus:ring-4 focus:ring-[#6B6258]/15 disabled:cursor-not-allowed disabled:opacity-60 "
+              className=" h-11 rounded-xl bg-mk-admin px-7 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-mk-ink-admin hover:shadow-md focus:outline-none focus:ring-4 focus:ring-mk-admin/15 disabled:cursor-not-allowed disabled:opacity-60 "
             >
               {loading ? 'Saving...' : isEdit ? 'Update Product' : 'Create Product'}
             </button>

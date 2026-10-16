@@ -46,7 +46,7 @@ export default function MySupportShimmer() {
 
       <div className="py-5">
         {/* Header */}
-        <div className="mb-5 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-[#E8DDD4] bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:h-17 sm:px-4">
+        <div className="mb-5 flex h-16 items-center justify-between gap-3 overflow-hidden rounded-xl border border-mk-border bg-white px-3 shadow-[0_3px_12px_rgba(73,54,49,0.05)] sm:h-17 sm:px-4">
           <div className="flex min-w-0 items-center gap-2.5">
             <Shimmer className="h-9 w-9 shrink-0 rounded-lg sm:h-10 sm:w-10" />
 
@@ -86,9 +86,9 @@ export default function MySupportShimmer() {
         {/* Support Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((item) => (
-            <div key={item} className="overflow-hidden rounded-2xl border border-[#E8DDD4] bg-white shadow-[0_3px_15px_rgba(73,54,49,0.04)]">
+            <div key={item} className="overflow-hidden rounded-2xl border border-mk-border bg-white shadow-[0_3px_15px_rgba(73,54,49,0.04)]">
               {/* Card Top */}
-              <div className="border-b border-[#F0E7E1] bg-[#FBF7F2] p-4">
+              <div className="border-b border-mk-primary-soft bg-mk-bg p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-3">
                     <Shimmer className="h-10 w-10 shrink-0 rounded-xl" />
@@ -119,12 +119,12 @@ export default function MySupportShimmer() {
 
                 {/* Properties */}
                 <div className="mt-4 grid grid-cols-2 gap-2">
-                  <div className="rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-2.5 py-2">
+                  <div className="rounded-lg border border-mk-border bg-mk-bg px-2.5 py-2">
                     <Shimmer className="h-2.5 w-16 rounded" />
                     <Shimmer className="mt-1.5 h-3 w-8 rounded" />
                   </div>
 
-                  <div className="rounded-lg border border-[#E8DDD4] bg-[#FBF7F2] px-2.5 py-2">
+                  <div className="rounded-lg border border-mk-border bg-mk-bg px-2.5 py-2">
                     <Shimmer className="h-2.5 w-14 rounded" />
 
                     <div className="mt-1.5 flex items-center gap-1">
@@ -135,7 +135,7 @@ export default function MySupportShimmer() {
                 </div>
 
                 {/* View */}
-                <div className="mt-4 flex items-center justify-between border-t border-[#F0E7E1] pt-3">
+                <div className="mt-4 flex items-center justify-between border-t border-mk-primary-soft pt-3">
                   <Shimmer className="h-2.5 w-28 rounded" />
 
                   <div className="flex items-center gap-1">
