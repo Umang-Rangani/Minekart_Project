@@ -3,7 +3,8 @@ const router = express.Router()
 
 const Contact = require('../model/contact')
 const authMiddleware = require('../middleware/authMiddleware')
-const roleMiddleware = require('../middleware/roleMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { SECTION_KEYS, ACTIONS } = require('../constants/permission')
 
 /* User - Create Support Ticket */
 router.post('/', authMiddleware, async (req, res) => {
@@ -61,7 +62,7 @@ router.post('/', authMiddleware, async (req, res) => {
 })
 
 /* Admin - Get All Support Tickets */
-router.get('/admin', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.get('/admin', authMiddleware, requirePermission(SECTION_KEYS.Contact, ACTIONS.Contact.LISTING), async (req, res) => {
   try {
     const contacts = await Contact.find().populate('userId', 'name email phone').populate('messages.senderId', 'name email role').sort({ updatedAt: -1 })
 
@@ -81,7 +82,7 @@ router.get('/admin', authMiddleware, roleMiddleware('Admin'), async (req, res) =
 })
 
 /* Admin - Get Single Support Ticket */
-router.get('/admin/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.get('/admin/:id', authMiddleware, requirePermission(SECTION_KEYS.Contact, ACTIONS.Contact.VIEW), async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id).populate('userId', 'name email phone').populate('messages.senderId', 'name email role')
 
@@ -107,7 +108,7 @@ router.get('/admin/:id', authMiddleware, roleMiddleware('Admin'), async (req, re
 })
 
 /* Admin - Reply to Support Ticket */
-router.post('/admin/:id/reply', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.post('/admin/:id/reply', authMiddleware, requirePermission(SECTION_KEYS.Contact, ACTIONS.Contact.REPLY), async (req, res) => {
   try {
     const { message } = req.body
 
@@ -155,7 +156,7 @@ router.post('/admin/:id/reply', authMiddleware, roleMiddleware('Admin'), async (
 })
 
 /* Admin - Update Support Ticket Status */
-router.put('/admin/:id/status', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.put('/admin/:id/status', authMiddleware, requirePermission(SECTION_KEYS.Contact, ACTIONS.Contact.UPDATE_STATUS), async (req, res) => {
   try {
     const { status } = req.body
 
@@ -200,7 +201,7 @@ router.put('/admin/:id/status', authMiddleware, roleMiddleware('Admin'), async (
 })
 
 /* Admin - Delete Support Ticket */
-router.delete('/admin/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.delete('/admin/:id', authMiddleware, requirePermission(SECTION_KEYS.Contact, ACTIONS.Contact.DELETE), async (req, res) => {
   try {
     const contact = await Contact.findByIdAndDelete(req.params.id)
 

@@ -1,12 +1,13 @@
 const express = require('express')
 const authMiddleware = require('../middleware/authMiddleware')
 const AdminNotification = require('../model/adminNotification')
-const roleMiddleware = require('../middleware/roleMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { SECTION_KEYS, ACTIONS } = require('../constants/permission')
 
 const router = express.Router()
 
 // GET ALL ADMIN NOTIFICATIONS
-router.get('/', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.get('/', authMiddleware, requirePermission(SECTION_KEYS.Notification, ACTIONS.Notification.LISTING), async (req, res) => {
   try {
     const notifications = await AdminNotification.find().populate('orderId', '_id orderId orderStatus totalAmount').populate('userId', '_id name email').sort({ createdAt: -1 }).limit(50)
 
@@ -30,7 +31,7 @@ router.get('/', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
 })
 
 // GET UNREAD COUNT
-router.get('/unread-count', authMiddleware,roleMiddleware('Admin'), async (req, res) => {
+router.get('/unread-count', authMiddleware, requirePermission(SECTION_KEYS.Notification, ACTIONS.Notification.LISTING), async (req, res) => {
   try {
     const unreadCount = await AdminNotification.countDocuments({
       isRead: false,
@@ -51,7 +52,7 @@ router.get('/unread-count', authMiddleware,roleMiddleware('Admin'), async (req, 
 })
 
 // MARK SINGLE NOTIFICATION AS READ
-router.patch('/:id/read', authMiddleware,roleMiddleware('Admin'), async (req, res) => {
+router.patch('/:id/read', authMiddleware, requirePermission(SECTION_KEYS.Notification, ACTIONS.Notification.UPDATE), async (req, res) => {
   try {
     const notification = await AdminNotification.findById(req.params.id)
 
@@ -85,7 +86,7 @@ router.patch('/:id/read', authMiddleware,roleMiddleware('Admin'), async (req, re
 })
 
 // MARK ALL AS READ
-router.patch('/read-all', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.patch('/read-all', authMiddleware, requirePermission(SECTION_KEYS.Notification, ACTIONS.Notification.UPDATE), async (req, res) => {
   try {
     await AdminNotification.updateMany(
       {
@@ -114,7 +115,7 @@ router.patch('/read-all', authMiddleware, roleMiddleware('Admin'), async (req, r
 })
 
 // DELETE NOTIFICATION
-router.delete('/:id', authMiddleware,roleMiddleware('Admin'), async (req, res) => {
+router.delete('/:id', authMiddleware, requirePermission(SECTION_KEYS.Notification, ACTIONS.Notification.DELETE), async (req, res) => {
   try {
     const notification = await AdminNotification.findByIdAndDelete(req.params.id)
 

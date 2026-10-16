@@ -2,13 +2,15 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { axiosInstance } from '../config/axiosConfig'
 import { useUser } from './userProvider'
 import { ADMIN_CHANNEL, POLL_INTERVAL, subscribeToChannel } from '../utils/realtime'
+import { SECTION_KEYS, ACTIONS } from '../constants/permission'
+import { hasPermission, isAdminRole } from '../lib/permission'
 
 const AdminNotificationContext = createContext(null)
 
 export const AdminNotificationProvider = ({ children }) => {
   const { user, loading: userLoading } = useUser()
 
-  const isAdmin = user?.role === 'Admin'
+  const isAdmin = isAdminRole(user?.role) && hasPermission(user, SECTION_KEYS.Notification, ACTIONS.Notification.LISTING)
 
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)

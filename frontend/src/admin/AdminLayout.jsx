@@ -5,6 +5,8 @@ import { MdDashboard } from 'react-icons/md'
 import { TbCategory2 } from 'react-icons/tb'
 import { useUser } from '../context/userProvider'
 import { useAdminNotifications } from '../context/AdminNotificationProvider'
+import { SECTION_KEYS } from '../constants/permission'
+import { hasAnySectionPermission } from '../lib/permission'
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -22,48 +24,57 @@ export default function AdminLayout() {
       name: 'Dashboard',
       path: '/admin',
       icon: MdDashboard,
+      section: SECTION_KEYS.Dashboard,
     },
     {
       name: 'Category',
       path: '/admin/category',
       icon: LayoutGrid,
+      section: SECTION_KEYS.Category,
     },
     {
       name: 'SubCategory',
       path: '/admin/subcategory',
       icon: TbCategory2,
+      section: SECTION_KEYS.SubCategory,
     },
     {
       name: 'Brand',
       path: '/admin/brand',
       icon: Tag,
+      section: SECTION_KEYS.Brand,
     },
     {
       name: 'Products',
       path: '/admin/products',
       icon: Package,
+      section: SECTION_KEYS.Product,
     },
     {
       name: 'Orders',
       path: '/admin/orders',
       icon: ShoppingBag,
+      section: SECTION_KEYS.Order,
     },
     {
       name: 'Users',
       path: '/admin/users',
       icon: Users,
+      section: SECTION_KEYS.User,
     },
     {
       name: 'Notifications',
       path: '/admin/notifications',
       icon: Bell,
+      section: SECTION_KEYS.Notification,
     },
     {
       name: 'Contact Messages',
       path: '/admin/contact-messages',
       icon: MessageSquare,
+      section: SECTION_KEYS.Contact,
     },
-  ]
+  ].filter((item) => hasAnySectionPermission(user, item.section))
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -346,7 +357,7 @@ export default function AdminLayout() {
 
               <p className="text-sm font-semibold text-[#292725]">{user?.name}</p>
 
-              <span className="rounded-full bg-[#EAE7E1] px-2.5 py-1 text-[10px] font-bold text-[#5D554C]">Admin</span>
+              <span className="rounded-full bg-[#EAE7E1] px-2.5 py-1 text-[10px] font-bold text-[#5D554C]">{user?.role.toUpperCase()}</span>
             </div>
 
             {/* LOGOUT */}

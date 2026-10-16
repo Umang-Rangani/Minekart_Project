@@ -7,9 +7,17 @@ import AdminBreadCrumb from './AdminBreadCrumb'
 import AdminTrashBox from './AdminTrashBox'
 import toast from 'react-hot-toast'
 import { getImageUrl } from '../utils/imageUrl'
+import { useUser } from '../context/userProvider'
+import { ACTIONS, SECTION_KEYS } from '../constants/permission'
+import { hasPermission } from '../lib/permission'
 
 export default function AdminBrand() {
   const navigate = useNavigate()
+  const { user } = useUser()
+  const canCreate = hasPermission(user, SECTION_KEYS.Brand, ACTIONS.Brand.CREATE)
+  const canView = hasPermission(user, SECTION_KEYS.Brand, ACTIONS.Brand.VIEW)
+  const canUpdate = hasPermission(user, SECTION_KEYS.Brand, ACTIONS.Brand.UPDATE)
+  const canDelete = hasPermission(user, SECTION_KEYS.Brand, ACTIONS.Brand.DELETE)
 
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminBrandsSearch') || ''
@@ -228,11 +236,12 @@ export default function AdminBrand() {
               </select>
             </div>
 
-            {/* Add Brand */}
-            <button type="button" onClick={() => navigate('/admin/brand/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
-              <Plus size={18} />
-              Add Brand
-            </button>
+            {canCreate && (
+              <button type="button" onClick={() => navigate('/admin/brand/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+                <Plus size={18} />
+                Add Brand
+              </button>
+            )}
           </div>
         </div>
 
@@ -313,25 +322,28 @@ export default function AdminBrand() {
                     {/* ACTIONS */}
                     <td className="px-5 py-4">
                       <div className="flex justify-end gap-1">
-                        {/* VIEW */}
-                        <button type="button" onClick={() => navigate(`/admin/brand/${brand._id}`)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]" title="View Brand">
-                          <Eye size={16} />
-                        </button>
+                        {canView && (
+                          <button type="button" onClick={() => navigate(`/admin/brand/${brand._id}`)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]" title="View Brand">
+                            <Eye size={16} />
+                          </button>
+                        )}
 
-                        {/* EDIT */}
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/admin/brand/${brand._id}/update`)}
-                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-                          title="Edit Brand"
-                        >
-                          <Pencil size={16} />
-                        </button>
+                        {canUpdate && (
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/admin/brand/${brand._id}/update`)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            title="Edit Brand"
+                          >
+                            <Pencil size={16} />
+                          </button>
+                        )}
 
-                        {/* DELETE */}
-                        <button type="button" onClick={() => handleModalOpen(brand)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Brand">
-                          <Trash2 size={16} />
-                        </button>
+                        {canDelete && (
+                          <button type="button" onClick={() => handleModalOpen(brand)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Brand">
+                            <Trash2 size={16} />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

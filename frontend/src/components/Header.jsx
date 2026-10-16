@@ -7,6 +7,7 @@ import { useUser } from '../context/userProvider'
 import { useCart } from '../context/CartProvider'
 import { useNotifications } from '../context/NotificationProvider'
 import { getImageUrl } from '../utils/imageUrl'
+import { isAdminRole } from '../lib/permission'
 
 const getNotificationIcon = (type) => {
   if (['ORDER_PLACED', 'ORDER_CONFIRMED', 'ORDER_PACKED', 'ORDER_SHIPPED', 'OUT_FOR_DELIVERY', 'ORDER_DELIVERED', 'ORDER_CANCELLED'].includes(type)) {
@@ -407,7 +408,7 @@ export default function Header() {
                         </Link>
 
                         {/* ADMIN PANEL */}
-                        {user?.role === 'Admin' && (
+                        {isAdminRole(user?.role) && (
                           <Link
                             to="/admin"
                             onClick={() => {

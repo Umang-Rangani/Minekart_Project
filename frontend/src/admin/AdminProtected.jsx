@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useUser } from '../context/userProvider'
+import { isAdminRole } from '../lib/permission'
 
 function AdminProtected() {
   const { user, loading } = useUser()
@@ -12,17 +13,14 @@ function AdminProtected() {
     )
   }
 
-  // Not logged in
   if (!user) {
     return <Navigate to="/" replace />
   }
 
-  // Logged in but not admin
-  if (user.role !== 'Admin') {
+  if (!isAdminRole(user.role)) {
     return <Navigate to="/" replace />
   }
 
-  // Logged in + admin
   return <Outlet />
 }
 

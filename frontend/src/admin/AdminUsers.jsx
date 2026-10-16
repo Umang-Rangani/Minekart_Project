@@ -1,12 +1,32 @@
 import { getImageUrl } from '../utils/imageUrl'
-import React, { useEffect, useState } from 'react'
-import { Search, Users, UserCheck, UserX, Ellipsis, Mail, Phone, X, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Search, Users, UserCheck, UserX, Mail, Phone, X, ChevronLeft, ChevronRight, ArrowUpDown, Plus, Shield, Trash2 } from 'lucide-react'
 import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import toast from 'react-hot-toast'
 import AdminTrashBox from './AdminTrashBox'
+import { useUser } from '../context/userProvider'
+import { ACTIONS, EMPLOYEE_ROLES, ROLES, SECTION_KEYS } from '../constants/permission'
+import { canGrantPermission, getEffectivePermissions, getRoleDefaultPermissions, hasPermission, isSuperAdmin } from '../lib/permission'
+
+const ALL_ACTION_ENTRIES = Object.entries(ACTIONS).flatMap(([section, actions]) =>
+  Object.entries(actions).map(([key, value]) => ({
+    section,
+    key,
+    value,
+  })),
+)
 
 export default function AdminUsers() {
+  const { user: currentUser, getCurrentUser } = useUser()
+
+  const canCreateEmployee = hasPermission(currentUser, SECTION_KEYS.User, ACTIONS.User.CREATE)
+  const canManagePermissions = hasPermission(currentUser, SECTION_KEYS.User, ACTIONS.User.MANAGE_PERMISSIONS)
+  const canUpdateStatus = hasPermission(currentUser, SECTION_KEYS.User, ACTIONS.User.UPDATE_STATUS)
+  const canDeleteUser = hasPermission(currentUser, SECTION_KEYS.User, ACTIONS.User.DELETE)
+
+  
+
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminUsersSearch') || ''
   })
@@ -18,14 +38,32 @@ export default function AdminUsers() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const [openMenu, setOpenMenu] = useState(null)
-
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [deleteItem, setDeleteItem] = useState(null)
   const [deleteProcessing, setDeleteProcessing] = useState(false)
 
+  const [createOpen, setCreateOpen] = useState(false)
+  const [createSaving, setCreateSaving] = useState(false)
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    role: ROLES.SUPPORT,
+  })
+
+  const [permOpen, setPermOpen] = useState(false)
+  const [permSaving, setPermSaving] = useState(false)
+  const [permTarget, setPermTarget] = useState(null)
+  const [permMap, setPermMap] = useState({})
+
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(5)
+
+  const grantableActions = useMemo(() => {
+    if (isSuperAdmin(currentUser)) return ALL_ACTION_ENTRIES
+    return ALL_ACTION_ENTRIES.filter((entry) => canGrantPermission(currentUser, entry.section, entry.value))
+  }, [currentUser])
 
   // Get all users
   const getUsers = async () => {
@@ -44,21 +82,6 @@ export default function AdminUsers() {
 
   useEffect(() => {
     getUsers()
-  }, [])
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('[data-user-menu]')) {
-        setOpenMenu(null)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
   }, [])
 
   // Update user status
@@ -82,8 +105,6 @@ export default function AdminUsers() {
 
         toast.success(status === 'Active' ? 'User activated successfully' : 'User deactivated successfully')
       }
-
-      setOpenMenu(null)
     } catch (error) {
       console.error('Update user status error:', error.response?.data || error.message)
 
@@ -127,6 +148,95 @@ export default function AdminUsers() {
   const handleModalOpen = (user) => {
     setDeleteItem(user)
     setDeleteModalOpen(true)
+  }
+
+  const openCreateModal = () => {
+    setCreateForm({
+      name: '',
+      email: '',
+      password: '',
+      phone: '',
+      role: ROLES.SUPPORT,
+    })
+    setCreateOpen(true)
+  }
+
+  const createEmployee = async (e) => {
+    e.preventDefault()
+
+    try {
+      setCreateSaving(true)
+
+      const res = await axiosInstance.post('/users/employees', createForm)
+
+      if (res.data.success) {
+        toast.success('Employee created successfully')
+        setCreateOpen(false)
+        await getUsers()
+
+        if (canManagePermissions && res.data.user) {
+          openPermissionsModal(res.data.user)
+        }
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to create employee')
+    } finally {
+      setCreateSaving(false)
+    }
+  }
+
+  const openPermissionsModal = (targetUser) => {
+    if (isSuperAdmin(targetUser) || targetUser.role === ROLES.USER) {
+      toast.error('Permissions apply to employees only')
+      return
+    }
+
+    const current = getEffectivePermissions(targetUser) || getRoleDefaultPermissions(targetUser.role)
+    setPermTarget(targetUser)
+    setPermMap(current)
+    setPermOpen(true)
+  }
+
+  const togglePerm = (section, action) => {
+    setPermMap((prev) => {
+      const list = prev[section] || []
+      const nextList = list.includes(action) ? list.filter((a) => a !== action) : [...list, action]
+      return {
+        ...prev,
+        [section]: nextList,
+      }
+    })
+  }
+
+  const savePermissions = async () => {
+    if (!permTarget?._id) return
+
+    try {
+      setPermSaving(true)
+
+      const res = await axiosInstance.put(`/users/${permTarget._id}/permissions`, {
+        admin_permissions: permMap,
+      })
+
+      if (res.data.success) {
+        toast.success('Permissions updated')
+        setPermOpen(false)
+        setPermTarget(null)
+        await getUsers()
+        if (String(permTarget._id) === String(currentUser?._id || currentUser?.id)) {
+          await getCurrentUser()
+        }
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update permissions')
+    } finally {
+      setPermSaving(false)
+    }
+  }
+
+  const canActOnUser = (target) => {
+    if (isSuperAdmin(target)) return false
+    return canUpdateStatus || canDeleteUser || (canManagePermissions && target.role !== ROLES.USER && EMPLOYEE_ROLES.includes(target.role))
   }
 
   // Delete user
@@ -296,6 +406,13 @@ export default function AdminUsers() {
 
               <span className="whitespace-nowrap text-sm font-semibold text-[#292725]">{filteredUsers.length} Users</span>
             </div>
+
+            {canCreateEmployee && (
+              <button type="button" onClick={openCreateModal} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white transition hover:bg-[#5a534a]">
+                <Plus size={17} />
+                Add Employee
+              </button>
+            )}
           </div>
         </div>
 
@@ -402,34 +519,39 @@ export default function AdminUsers() {
                     </td>
 
                     <td className="px-5 py-4">
-                      {user.role !== 'Admin' && (
-                        <div data-user-menu className="relative flex justify-end">
-                          <button
-                            type="button"
-                            onClick={() => setOpenMenu(openMenu === user._id ? null : user._id)}
-                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-                            title="More"
-                          >
-                            <Ellipsis size={17} />
-                          </button>
+                      {canActOnUser(user) && (
+                        <div className="flex items-center justify-end gap-1">
+                          {canManagePermissions && EMPLOYEE_ROLES.includes(user.role) && (
+                            <button
+                              type="button"
+                              onClick={() => openPermissionsModal(user)}
+                              className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                              title="Permissions"
+                            >
+                              <Shield size={17} />
+                            </button>
+                          )}
 
-                          {openMenu === user._id && (
-                            <div className="absolute bottom-10 right-0 z-50 w-44 overflow-hidden rounded-xl border border-[#E3DED6] bg-white py-1 shadow-lg">
-                              <button type="button" onClick={() => updateUserStatus(user._id, user.status === 'Active' ? 'Inactive' : 'Active')} className="w-full px-4 py-2.5 text-left text-sm text-[#6F6A64] transition hover:bg-[#F8F6F2]">
-                                {user.status === 'Active' ? 'Deactivate User' : 'Activate User'}
-                              </button>
+                          {canUpdateStatus && (
+                            <button
+                              type="button"
+                              onClick={() => updateUserStatus(user._id, user.status === 'Active' ? 'Inactive' : 'Active')}
+                              className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                              title={user.status === 'Active' ? 'Deactivate User' : 'Activate User'}
+                            >
+                              {user.status === 'Active' ? <UserX size={17} /> : <UserCheck size={17} />}
+                            </button>
+                          )}
 
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  handleModalOpen(user)
-                                  setOpenMenu(null)
-                                }}
-                                className="w-full px-4 py-2.5 text-left text-sm font-medium text-[#A44A3F] transition hover:bg-[#F8F6F2]"
-                              >
-                                Delete User
-                              </button>
-                            </div>
+                          {canDeleteUser && (
+                            <button
+                              type="button"
+                              onClick={() => handleModalOpen(user)}
+                              className="flex size-9 items-center justify-center rounded-lg text-[#A44A3F] transition hover:bg-[#F8F6F2]"
+                              title="Delete User"
+                            >
+                              <Trash2 size={17} />
+                            </button>
                           )}
                         </div>
                       )}
@@ -513,6 +635,95 @@ export default function AdminUsers() {
         onAction={deleteHandle}
         isProcessing={deleteProcessing}
       />
+
+      {createOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <form onSubmit={createEmployee} className="w-full max-w-md rounded-2xl border border-[#E3DED6] bg-white p-6 shadow-xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-[#292725]">Add Employee</h3>
+              <button type="button" onClick={() => setCreateOpen(false)} className="rounded-lg p-1 text-[#99938B] hover:bg-[#F1EEE8]">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <input required value={createForm.name} onChange={(e) => setCreateForm((f) => ({ ...f, name: e.target.value }))} placeholder="Name" className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3 text-sm outline-none focus:border-[#6B6258]" />
+              <input required type="email" value={createForm.email} onChange={(e) => setCreateForm((f) => ({ ...f, email: e.target.value }))} placeholder="Email" className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3 text-sm outline-none focus:border-[#6B6258]" />
+              <input required type="password" value={createForm.password} onChange={(e) => setCreateForm((f) => ({ ...f, password: e.target.value }))} placeholder="Password" className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3 text-sm outline-none focus:border-[#6B6258]" />
+              <input value={createForm.phone} onChange={(e) => setCreateForm((f) => ({ ...f, phone: e.target.value }))} placeholder="Phone (optional)" className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3 text-sm outline-none focus:border-[#6B6258]" />
+              <select required value={createForm.role} onChange={(e) => setCreateForm((f) => ({ ...f, role: e.target.value }))} className="h-10 w-full rounded-xl border border-[#E3DED6] bg-[#F8F6F2] px-3 text-sm outline-none focus:border-[#6B6258]">
+                {EMPLOYEE_ROLES.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" onClick={() => setCreateOpen(false)} className="h-10 rounded-xl border border-[#E3DED6] px-4 text-sm font-semibold text-[#6F6A64]">
+                Cancel
+              </button>
+              <button type="submit" disabled={createSaving} className="h-10 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white disabled:opacity-50">
+                {createSaving ? 'Creating...' : 'Create'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {permOpen && permTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border border-[#E3DED6] bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-[#E3DED6] p-5">
+              <div>
+                <h3 className="text-lg font-semibold text-[#292725]">Permissions</h3>
+                <p className="text-sm text-[#99938B]">
+                  {permTarget.name} · {permTarget.role}
+                </p>
+              </div>
+              <button type="button" onClick={() => setPermOpen(false)} className="rounded-lg p-1 text-[#99938B] hover:bg-[#F1EEE8]">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="flex-1 space-y-4 overflow-y-auto p-5">
+              {Object.keys(ACTIONS).map((section) => {
+                const sectionActions = grantableActions.filter((a) => a.section === section)
+                if (sectionActions.length === 0) return null
+
+                return (
+                  <div key={section}>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#99938B]">{section}</p>
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {sectionActions.map((entry) => {
+                        const checked = (permMap[section] || []).includes(entry.value)
+                        return (
+                          <label key={entry.value} className="flex cursor-pointer items-center gap-2 rounded-lg border border-[#E3DED6] bg-[#FCFBF9] px-3 py-2 text-sm text-[#6F6A64]">
+                            <input type="checkbox" checked={checked} onChange={() => togglePerm(section, entry.value)} className="accent-[#6B6258]" />
+                            <span>
+                              {entry.key} <span className="text-[11px] text-[#99938B]">({entry.value})</span>
+                            </span>
+                          </label>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="flex justify-end gap-2 border-t border-[#E3DED6] p-5">
+              <button type="button" onClick={() => setPermOpen(false)} className="h-10 rounded-xl border border-[#E3DED6] px-4 text-sm font-semibold text-[#6F6A64]">
+                Cancel
+              </button>
+              <button type="button" disabled={permSaving} onClick={savePermissions} className="h-10 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white disabled:opacity-50">
+                {permSaving ? 'Saving...' : 'Save Permissions'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

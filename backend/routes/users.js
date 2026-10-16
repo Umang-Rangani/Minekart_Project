@@ -15,12 +15,93 @@ const { passwordResetOtpEmail } = require('../utils/emailTemplates/passwordReset
 const { passwordResetSuccessEmail } = require('../utils/emailTemplates/passwordResetSuccessEmail')
 
 const { authCookieOptions, AUTH_COOKIE_MAX_AGE } = require('../utils/cookieOptions')
-const roleMiddleware = require('../middleware/roleMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { ROLES, EMPLOYEE_ROLES, SECTION_KEYS, ACTIONS } = require('../constants/permission')
+const {
+  getRoleDefaultPermissions,
+  getEffectivePermissions,
+  isSuperAdmin,
+  canGrantPermission,
+  clonePermissions,
+} = require('../utils/permission')
 
-/* GET users listing. */
+const toPublicUser = (user) => {
+  const obj = user.toObject ? user.toObject() : { ...user }
+  delete obj.password
 
-// ! check API
-router.get('/', async (req, res) => {
+  // SuperAdmin: null = full bypass. Everyone else: computed from admin_permissions or role defaults.
+  const effective = isSuperAdmin(obj) ? null : getEffectivePermissions(obj)
+
+  return {
+    ...obj,
+    admin_permissions: obj.admin_permissions || {},
+    effective_permissions: effective,
+  }
+}
+
+// ! Postman: create SuperAdmin (Header: x-bootstrap-secret)
+router.post('/bootstrap-superadmin', async (req, res) => {
+  try {
+    const secret = req.headers['x-bootstrap-secret']
+    const expected = process.env.SUPERADMIN_BOOTSTRAP_SECRET
+
+    if (!expected || secret !== expected) {
+      return res.status(403).json({
+        success: false,
+        message: 'Invalid or missing bootstrap secret',
+      })
+    }
+
+    const { avatar, name, email, password, phone } = req.body
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email and password are required',
+      })
+    }
+
+    const existingUser = await User.findOne({
+      email: email.toLowerCase(),
+    })
+
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: 'User with this email already exists',
+      })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const newUser = await User.create({
+      avatar: avatar || '',
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashedPassword,
+      phone: phone || '',
+      role: ROLES.SUPER_ADMIN,
+      admin_permissions: {},
+      status: 'Active',
+    })
+
+    return res.status(201).json({
+      success: true,
+      message: 'SuperAdmin created successfully',
+      user: toPublicUser(newUser),
+    })
+  } catch (error) {
+    console.error('Bootstrap SuperAdmin Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to create SuperAdmin',
+    })
+  }
+})
+
+/* GET users listing — admin panel */
+router.get('/', authMiddleware, requirePermission(SECTION_KEYS.User, ACTIONS.User.LISTING), async (req, res) => {
   try {
     const data = await User.find().select('-password')
 
@@ -38,7 +119,141 @@ router.get('/', async (req, res) => {
   }
 })
 
-// ! signup
+// ! Create employee (Users page +) — not website customers, not SuperAdmin
+router.post('/employees', authMiddleware, requirePermission(SECTION_KEYS.User, ACTIONS.User.CREATE), async (req, res) => {
+  try {
+    const { avatar, name, email, password, phone, role } = req.body
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email, password and role are required',
+      })
+    }
+
+    if (!EMPLOYEE_ROLES.includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid employee role. Use Admin, CatalogManager, OrderManager, or Support.',
+      })
+    }
+
+    const existingUser = await User.findOne({
+      email: email.toLowerCase(),
+    })
+
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: 'User with this email already exists',
+      })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+    const defaults = getRoleDefaultPermissions(role)
+
+    const newUser = await User.create({
+      avatar: avatar || '',
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashedPassword,
+      phone: phone || '',
+      role,
+      admin_permissions: defaults,
+      status: 'Active',
+    })
+
+    return res.status(201).json({
+      success: true,
+      message: 'Employee created successfully',
+      user: toPublicUser(newUser),
+    })
+  } catch (error) {
+    console.error('Create employee Error:', error)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to create employee',
+    })
+  }
+})
+
+// ! Update employee permissions (after create)
+router.put(
+  '/:id/permissions',
+  authMiddleware,
+  requirePermission(SECTION_KEYS.User, ACTIONS.User.MANAGE_PERMISSIONS),
+  async (req, res) => {
+    try {
+      const { id } = req.params
+      const { admin_permissions } = req.body
+      const actor = req.userDoc
+
+      if (!admin_permissions || typeof admin_permissions !== 'object') {
+        return res.status(400).json({
+          success: false,
+          message: 'admin_permissions object is required',
+        })
+      }
+
+      const target = await User.findById(id)
+
+      if (!target) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found',
+        })
+      }
+
+      if (target.role === ROLES.USER) {
+        return res.status(400).json({
+          success: false,
+          message: 'Cannot set admin permissions on a customer account',
+        })
+      }
+
+      if (isSuperAdmin(target)) {
+        return res.status(400).json({
+          success: false,
+          message: 'SuperAdmin does not use a permission map',
+        })
+      }
+
+      const nextMap = clonePermissions(admin_permissions)
+
+      if (!isSuperAdmin(actor)) {
+        for (const [section, actions] of Object.entries(nextMap)) {
+          for (const action of actions) {
+            if (!canGrantPermission(actor, section, action)) {
+              return res.status(403).json({
+                success: false,
+                message: `Cannot grant permission you do not have: ${action}`,
+              })
+            }
+          }
+        }
+      }
+
+      target.admin_permissions = nextMap
+      await target.save()
+
+      return res.status(200).json({
+        success: true,
+        message: 'Permissions updated successfully',
+        user: toPublicUser(target),
+      })
+    } catch (error) {
+      console.error('Update permissions Error:', error)
+
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to update permissions',
+      })
+    }
+  },
+)
+
+// ! signup — website customers only (always User)
 router.post('/register', async (req, res) => {
   try {
     const { avatar, name, email, password, phone } = req.body
@@ -66,13 +281,15 @@ router.post('/register', async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create user
+    // Create customer only — ignore any role from client
     const newUser = await User.create({
       avatar,
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
       phone,
+      role: ROLES.USER,
+      admin_permissions: {},
     })
 
     const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '7d' })
@@ -97,7 +314,7 @@ router.post('/register', async (req, res) => {
     return res.status(201).json({
       success: true,
       message: 'User registered successfully',
-      user: newUser,
+      user: toPublicUser(newUser),
     })
   } catch (error) {
     console.error('Signup Error:', error)
@@ -174,15 +391,7 @@ router.post('/login', async (req, res) => {
     return res.status(200).json({
       success: true,
       message: 'Login successful',
-      user: {
-        id: user._id,
-        avatar: user.avatar,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        phone: user.phone,
-        status: user.status,
-      },
+      user: toPublicUser(user),
     })
   } catch (error) {
     console.log('Login Error:', error)
@@ -225,9 +434,12 @@ router.get('/profile', authMiddleware, async (req, res) => {
       })
     }
 
+    console.log("user", user);
+    
+
     return res.status(200).json({
       success: true,
-      user,
+      user: toPublicUser(user),
     })
   } catch (error) {
     console.log('Profile Error:', error)
@@ -284,7 +496,7 @@ router.put('/profile', authMiddleware, async (req, res) => {
     return res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
-      user: updatedUser,
+      user: toPublicUser(updatedUser),
     })
   } catch (error) {
     console.error('Profile Update Error:', error)
@@ -587,15 +799,7 @@ router.post('/reset-password', async (req, res) => {
     return res.status(200).json({
       success: true,
       message: 'Password reset successfully',
-      user: {
-        id: user._id,
-        avatar: user.avatar,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        phone: user.phone,
-        status: user.status,
-      },
+      user: toPublicUser(user),
     })
   } catch (error) {
     console.error('Reset Password Error:', error)
@@ -608,7 +812,7 @@ router.post('/reset-password', async (req, res) => {
 })
 
 // ! Admin Activate / Deactivate
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, requirePermission(SECTION_KEYS.User, ACTIONS.User.UPDATE_STATUS), async (req, res) => {
   try {
     const { id } = req.params
     const { status } = req.body
@@ -620,26 +824,29 @@ router.put('/:id', async (req, res) => {
       })
     }
 
-    const user = await User.findByIdAndUpdate(
-      id,
-      { status },
-      {
-        new: true,
-        runValidators: true,
-      },
-    ).select('-password')
+    const target = await User.findById(id)
 
-    if (!user) {
+    if (!target) {
       return res.status(404).json({
         success: false,
         message: 'User not found',
       })
     }
 
+    if (isSuperAdmin(target) && !isSuperAdmin(req.userDoc)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Cannot change SuperAdmin status',
+      })
+    }
+
+    target.status = status
+    await target.save()
+
     return res.status(200).json({
       success: true,
       message: `User ${status.toLowerCase()} successfully`,
-      user,
+      user: toPublicUser(target),
     })
   } catch (error) {
     console.error('Update user status error:', error)
@@ -652,7 +859,7 @@ router.put('/:id', async (req, res) => {
 })
 
 // ! Delete User - Admin
-router.delete('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.delete('/:id', authMiddleware, requirePermission(SECTION_KEYS.User, ACTIONS.User.DELETE), async (req, res) => {
   try {
     const { id } = req.params
 
@@ -662,6 +869,20 @@ router.delete('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) 
       return res.status(404).json({
         success: false,
         message: 'User not found',
+      })
+    }
+
+    if (isSuperAdmin(user)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Cannot delete SuperAdmin',
+      })
+    }
+
+    if (String(user._id) === String(req.user.userId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot delete your own account',
       })
     }
 

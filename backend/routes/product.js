@@ -3,6 +3,9 @@ const Product = require('../model/product')
 const SubCategory = require('../model/subcategory')
 const { default: mongoose } = require('mongoose')
 const Category = require('../model/category')
+const authMiddleware = require('../middleware/authMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { SECTION_KEYS, ACTIONS } = require('../constants/permission')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -750,7 +753,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, requirePermission(SECTION_KEYS.Product, ACTIONS.Product.CREATE), async (req, res) => {
   try {
     const { productName, description, category, subCategory, brand, images, offerImage, sizes, price, discount, discountPrice, status, isOffer, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } =
       req.body
@@ -871,7 +874,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, requirePermission(SECTION_KEYS.Product, ACTIONS.Product.UPDATE), async (req, res) => {
   try {
     const { productName, description, category, subCategory, brand, images, offerImage, sizes, price, discount, discountPrice, status, isOffer, rating, stock, soldCount, warranty, warrantyDuration, warrantyType, returnPolicy, deliveryInfo } =
       req.body
@@ -986,7 +989,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, requirePermission(SECTION_KEYS.Product, ACTIONS.Product.DELETE), async (req, res) => {
   try {
     const data = await Product.findByIdAndDelete(req.params.id)
 

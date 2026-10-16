@@ -16,6 +16,9 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await axiosInstance.get('/users/profile')
 
+      console.log({response: response.data.user});
+      
+
       setUser(response.data.user)
     } catch (error) {
       if (error.response?.status === 401) {

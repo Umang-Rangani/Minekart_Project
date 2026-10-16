@@ -13,10 +13,11 @@ const { orderCancelledEmail } = require('../utils/emailTemplates/orderCancelledE
 const createNotification = require('../utils/createNotification')
 const NOTIFICATION_TYPES = require('../constants/notificationTypes')
 const { orderConfirmationEmail } = require('../utils/emailTemplates/orderConfirmationEmail')
-const roleMiddleware = require('../middleware/roleMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { SECTION_KEYS, ACTIONS } = require('../constants/permission')
 
 // GET ALL ORDERS
-router.get('/', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.get('/', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.LISTING), async (req, res) => {
   try {
     const orders = await Order.find()
       .populate({
@@ -59,7 +60,7 @@ router.get('/', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
 })
 
 // GET CANCELLATION STATISTICS
-router.get('/cancellation-stats', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.get('/cancellation-stats', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.LISTING), async (req, res) => {
   try {
     const [userCancelled, adminCancelled, totalCancelled] = await Promise.all([
       Order.countDocuments({
@@ -98,7 +99,7 @@ router.get('/cancellation-stats', authMiddleware, roleMiddleware('Admin'), async
 })
 
 // GET SINGLE ORDER
-router.get('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.get('/:id', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.VIEW), async (req, res) => {
   try {
     const { id } = req.params
 
@@ -146,7 +147,7 @@ router.get('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => 
 })
 
 // REVIEW RETURN REQUEST => Admin Approve / Reject
-router.put('/:id/return-review', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.put('/:id/return-review', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.RETURN_REVIEW), async (req, res) => {
   try {
     const { id } = req.params
     const { action, rejectionReason = '' } = req.body
@@ -220,7 +221,7 @@ router.put('/:id/return-review', authMiddleware, roleMiddleware('Admin'), async 
 })
 
 // CONFIRM RETURNED ITEM RECEIVED
-router.put('/:id/item-received', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.put('/:id/item-received', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.ITEM_RECEIVED), async (req, res) => {
   try {
     const { id } = req.params
 
@@ -274,7 +275,7 @@ router.put('/:id/item-received', authMiddleware, roleMiddleware('Admin'), async 
 })
 
 // UPDATE ORDER STATUS
-router.put('/:id/status', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.put('/:id/status', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.UPDATE_STATUS), async (req, res) => {
   try {
     const { id } = req.params
     const { orderStatus, cancellationReason = '' } = req.body
@@ -515,7 +516,7 @@ router.put('/:id/status', authMiddleware, roleMiddleware('Admin'), async (req, r
 })
 
 // DELETE CANCELLED ORDER
-router.delete('/:id', authMiddleware, roleMiddleware('Admin'), async (req, res) => {
+router.delete('/:id', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.DELETE), async (req, res) => {
   try {
     const { id } = req.params
 

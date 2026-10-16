@@ -6,9 +6,17 @@ import { getImageUrl } from '../utils/imageUrl'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import AdminTrashBox from './AdminTrashBox'
 import toast from 'react-hot-toast'
+import { useUser } from '../context/userProvider'
+import { ACTIONS, SECTION_KEYS } from '../constants/permission'
+import { hasPermission } from '../lib/permission'
 
 export default function AdminCategory() {
   const navigate = useNavigate()
+  const { user } = useUser()
+  const canCreate = hasPermission(user, SECTION_KEYS.Category, ACTIONS.Category.CREATE)
+  const canView = hasPermission(user, SECTION_KEYS.Category, ACTIONS.Category.VIEW)
+  const canUpdate = hasPermission(user, SECTION_KEYS.Category, ACTIONS.Category.UPDATE)
+  const canDelete = hasPermission(user, SECTION_KEYS.Category, ACTIONS.Category.DELETE)
 
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminCategoriesSearch') || ''
@@ -209,11 +217,12 @@ export default function AdminCategory() {
               </select>
             </div>
 
-            {/* Add Category */}
-            <button type="button" onClick={() => navigate('/admin/category/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
-              <Plus size={18} />
-              Add Category
-            </button>
+            {canCreate && (
+              <button type="button" onClick={() => navigate('/admin/category/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+                <Plus size={18} />
+                Add Category
+              </button>
+            )}
           </div>
         </div>
 
@@ -280,30 +289,33 @@ export default function AdminCategory() {
                       {/* Actions */}
                       <td className="px-5 py-4">
                         <div className="flex justify-end gap-1">
-                          {/* View */}
-                          <button
-                            type="button"
-                            onClick={() => navigate(`/admin/category/${category._id}`)}
-                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-                            title="View Category"
-                          >
-                            <Eye size={16} />
-                          </button>
+                          {canView && (
+                            <button
+                              type="button"
+                              onClick={() => navigate(`/admin/category/${category._id}`)}
+                              className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                              title="View Category"
+                            >
+                              <Eye size={16} />
+                            </button>
+                          )}
 
-                          {/* Edit */}
-                          <button
-                            type="button"
-                            onClick={() => navigate(`/admin/category/${category._id}/update`)}
-                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-                            title="Edit Category"
-                          >
-                            <Pencil size={16} />
-                          </button>
+                          {canUpdate && (
+                            <button
+                              type="button"
+                              onClick={() => navigate(`/admin/category/${category._id}/update`)}
+                              className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                              title="Edit Category"
+                            >
+                              <Pencil size={16} />
+                            </button>
+                          )}
 
-                          {/* Delete */}
-                          <button type="button" onClick={() => handleModalOpen(category)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Category">
-                            <Trash2 size={16} />
-                          </button>
+                          {canDelete && (
+                            <button type="button" onClick={() => handleModalOpen(category)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete Category">
+                              <Trash2 size={16} />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

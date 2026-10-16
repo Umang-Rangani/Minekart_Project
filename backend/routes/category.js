@@ -2,6 +2,9 @@ var express = require('express')
 const mongoose = require('mongoose')
 const Category = require('../model/category')
 const Product = require('../model/product')
+const authMiddleware = require('../middleware/authMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { SECTION_KEYS, ACTIONS } = require('../constants/permission')
 var router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -91,7 +94,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, requirePermission(SECTION_KEYS.Category, ACTIONS.Category.CREATE), async (req, res) => {
   try {
     const { categoryName, categoryImage, description, status } = req.body
 
@@ -140,7 +143,7 @@ router.post('/', async (req, res) => {
 
 // UPDATE CATEGORY
 // PUT /category/:id
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, requirePermission(SECTION_KEYS.Category, ACTIONS.Category.UPDATE), async (req, res) => {
   try {
     const { id } = req.params
 
@@ -212,7 +215,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, requirePermission(SECTION_KEYS.Category, ACTIONS.Category.DELETE), async (req, res) => {
   try {
     const { id } = req.params
 

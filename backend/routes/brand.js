@@ -2,6 +2,9 @@ const express = require('express')
 
 const Brand = require('../model/brand')
 const Product = require('../model/product')
+const authMiddleware = require('../middleware/authMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { SECTION_KEYS, ACTIONS } = require('../constants/permission')
 
 const router = express.Router()
 
@@ -90,7 +93,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, requirePermission(SECTION_KEYS.Brand, ACTIONS.Brand.CREATE), async (req, res) => {
   try {
     const { brandName, brandLogo, description, status } = req.body
 
@@ -136,7 +139,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, requirePermission(SECTION_KEYS.Brand, ACTIONS.Brand.UPDATE), async (req, res) => {
   try {
     const { brandName, brandLogo, description, status } = req.body
 
@@ -194,7 +197,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, requirePermission(SECTION_KEYS.Brand, ACTIONS.Brand.DELETE), async (req, res) => {
   try {
     const data = await Brand.findByIdAndDelete(req.params.id)
 

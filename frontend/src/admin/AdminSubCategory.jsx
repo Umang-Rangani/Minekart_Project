@@ -5,9 +5,17 @@ import { axiosInstance } from '../config/axiosConfig'
 import AdminBreadCrumb from './AdminBreadCrumb'
 import AdminTrashBox from './AdminTrashBox'
 import toast from 'react-hot-toast'
+import { useUser } from '../context/userProvider'
+import { ACTIONS, SECTION_KEYS } from '../constants/permission'
+import { hasPermission } from '../lib/permission'
 
 export default function AdminSubCategory() {
   const navigate = useNavigate()
+  const { user } = useUser()
+  const canCreate = hasPermission(user, SECTION_KEYS.SubCategory, ACTIONS.SubCategory.CREATE)
+  const canView = hasPermission(user, SECTION_KEYS.SubCategory, ACTIONS.SubCategory.VIEW)
+  const canUpdate = hasPermission(user, SECTION_KEYS.SubCategory, ACTIONS.SubCategory.UPDATE)
+  const canDelete = hasPermission(user, SECTION_KEYS.SubCategory, ACTIONS.SubCategory.DELETE)
 
   const [search, setSearch] = useState(() => {
     return localStorage.getItem('adminSubCategoriesSearch') || ''
@@ -230,11 +238,12 @@ export default function AdminSubCategory() {
               </select>
             </div>
 
-            {/* Add SubCategory */}
-            <button type="button" onClick={() => navigate('/admin/subcategory/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
-              <Plus size={18} />
-              Add SubCategory
-            </button>
+            {canCreate && (
+              <button type="button" onClick={() => navigate('/admin/subcategory/new')} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#6B6258] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5D554C]">
+                <Plus size={18} />
+                Add SubCategory
+              </button>
+            )}
           </div>
         </div>
 
@@ -303,30 +312,33 @@ export default function AdminSubCategory() {
                     {/* Actions */}
                     <td className="px-5 py-4">
                       <div className="flex justify-end gap-1">
-                        {/* View */}
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/admin/subcategory/${subCategory._id}`)}
-                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-                          title="View SubCategory"
-                        >
-                          <Eye size={16} />
-                        </button>
+                        {canView && (
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/admin/subcategory/${subCategory._id}`)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            title="View SubCategory"
+                          >
+                            <Eye size={16} />
+                          </button>
+                        )}
 
-                        {/* Edit */}
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/admin/subcategory/${subCategory._id}/update`)}
-                          className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
-                          title="Edit SubCategory"
-                        >
-                          <Pencil size={16} />
-                        </button>
+                        {canUpdate && (
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/admin/subcategory/${subCategory._id}/update`)}
+                            className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#EEEAE4] hover:text-[#292725]"
+                            title="Edit SubCategory"
+                          >
+                            <Pencil size={16} />
+                          </button>
+                        )}
 
-                        {/* Delete */}
-                        <button type="button" onClick={() => handleModalOpen(subCategory)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete SubCategory">
-                          <Trash2 size={16} />
-                        </button>
+                        {canDelete && (
+                          <button type="button" onClick={() => handleModalOpen(subCategory)} className="flex size-9 items-center justify-center rounded-lg text-[#6F6A64] transition hover:bg-[#F1E7E5] hover:text-[#A44A3F]" title="Delete SubCategory">
+                            <Trash2 size={16} />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

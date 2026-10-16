@@ -21,6 +21,8 @@ const createAdminNotification = require('../utils/createAdminNotification')
 const ADMIN_NOTIFICATION_TYPES = require('../constants/adminNotificationTypes')
 const { generateInvoicePdf } = require('../utils/generateInvoicePdf')
 const adminMiddleware = require('../middleware/adminMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { SECTION_KEYS, ACTIONS } = require('../constants/permission')
 
 // RAZORPAY CLIENT
 const getRazorpay = () => {
@@ -602,7 +604,7 @@ router.post('/razorpay/verify', authMiddleware, async (req, res) => {
 })
 
 // START RAZORPAY REFUND
-router.post('/admin/:id/refund', authMiddleware, adminMiddleware, async (req, res) => {
+router.post('/admin/:id/refund', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.REFUND), async (req, res) => {
   let lockedOrderId = null
 
   try {
@@ -757,7 +759,7 @@ router.post('/admin/:id/refund', authMiddleware, adminMiddleware, async (req, re
 })
 
 // VERIFY RAZORPAY REFUND STATUS
-router.put('/admin/:id/refund/verify', authMiddleware, adminMiddleware, async (req, res) => {
+router.put('/admin/:id/refund/verify', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.REFUND), async (req, res) => {
   try {
     const { id } = req.params
 
@@ -988,7 +990,7 @@ router.get('/', authMiddleware, adminMiddleware, async (req, res) => {
 })
 
 // MANUAL REFUND CONFIRMATION FOR COD / ONLINE-ON-DELIVERY
-router.put('/admin/:id/manual-refund', authMiddleware, adminMiddleware, async (req, res) => {
+router.put('/admin/:id/manual-refund', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.REFUND), async (req, res) => {
   try {
     const { id } = req.params
     const { refundReference } = req.body
@@ -1172,7 +1174,7 @@ router.put('/admin/:id/manual-refund', authMiddleware, adminMiddleware, async (r
 })
 
 // EXISTING: CONFIRM COD / ONLINE-ON-DELIVERY PAYMENT
-router.put('/admin/:id/confirm', authMiddleware, adminMiddleware, async (req, res) => {
+router.put('/admin/:id/confirm', authMiddleware, requirePermission(SECTION_KEYS.Order, ACTIONS.Order.CONFIRM_PAYMENT), async (req, res) => {
   try {
     const { id } = req.params
 

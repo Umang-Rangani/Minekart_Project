@@ -2,6 +2,7 @@ const express = require('express')
 
 const authMiddleware = require('../middleware/authMiddleware')
 const { ADMIN_CHANNEL, getUserChannel, getPusher, isRealtimeEnabled } = require('../utils/realtime')
+const { isAdminRole } = require('../utils/permission')
 
 const router = express.Router()
 
@@ -43,7 +44,7 @@ router.post('/auth', authMiddleware, (req, res) => {
   }
 
   const isOwnChannel = channelName === getUserChannel(req.user.userId)
-  const isAdminChannel = channelName === ADMIN_CHANNEL && req.user.role === 'Admin'
+  const isAdminChannel = channelName === ADMIN_CHANNEL && isAdminRole(req.user.role)
 
   if (!isOwnChannel && !isAdminChannel) {
     return res.status(403).json({

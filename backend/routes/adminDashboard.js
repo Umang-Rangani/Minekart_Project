@@ -1,15 +1,15 @@
 
-
 const express = require('express')
 const User = require('../model/users')
 const Product = require('../model/product')
 const Order = require('../model/order')
-const roleMiddleware = require('../middleware/roleMiddleware')
+const authMiddleware = require('../middleware/authMiddleware')
+const { requirePermission } = require('../middleware/permissionMiddleware')
+const { SECTION_KEYS, ACTIONS } = require('../constants/permission')
 
 const router = express.Router()
 
-
-router.get('/',   async (req, res) => {
+router.get('/', authMiddleware, requirePermission(SECTION_KEYS.Dashboard, ACTIONS.Dashboard.VIEW), async (req, res) => {
   try {
     // BASIC COUNTS
     const totalUsers = await User.countDocuments()
